@@ -8,43 +8,16 @@
 package com.facebook.fresco.vito.core.impl
 
 import android.graphics.Color
-import android.graphics.drawable.Drawable
-import com.facebook.fresco.ui.common.VitoUtils
-import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayImageOriginColor
-import java.util.Locale
+import com.facebook.fresco.vito.core.impl.debug.StringAndColorDebugDataProvider
+import com.facebook.fresco.vito.core.impl.debug.StringDebugDataProvider
+import com.facebook.fresco.vito.core.impl.debug.formatDimensions
 
-sealed class DebugDataProvider(
-    val shortName: String,
-    val longName: String,
-    val description: String,
-)
+// ============================================================================
+// KFrescoVitoDrawable-specific providers
+// ============================================================================
 
-class StringDebugDataProvider(
-    shortName: String,
-    longName: String,
-    description: String,
-    val extractData: (FrescoDrawableInterface) -> String,
-) : DebugDataProvider(shortName, longName, description)
-
-val imageIDProvider =
-    StringDebugDataProvider("id", "image ID", "The ID of the image") {
-      VitoUtils.getStringId(it.imageId)
-    }
-
-val drawableDimensionsProvider =
-    StringDebugDataProvider(
-        "D",
-        "Drawable dimensions",
-        "The visible Drawable dimensions on screen",
-    ) {
-      if (it is Drawable) {
-        formatDimensions(it.bounds.width(), it.bounds.height())
-      } else {
-        ""
-      }
-    }
-
+/** Provides image dimensions for KFrescoVitoDrawable. */
 val imageDimensionsProvider =
     StringDebugDataProvider("I", "Image dimensions", "The dimensions of the decoded image") {
       if (it is KFrescoVitoDrawable) {
@@ -57,16 +30,6 @@ val imageDimensionsProvider =
       }
     }
 
-fun formatDimensions(width: Int, height: Int): String =
-    String.format(Locale.US, "%dx%d", width, height)
-
-class StringAndColorDebugDataProvider(
-    shortName: String,
-    longName: String,
-    description: String,
-    val extractDataAndColor: (FrescoDrawableInterface) -> Pair<String, Int>,
-) : DebugDataProvider(shortName, longName, description)
-
 private fun KFrescoVitoDrawable.extractOriginExtras(): Map<String, Any>? =
     dataSource?.extras
         ?:
@@ -74,6 +37,7 @@ private fun KFrescoVitoDrawable.extractOriginExtras(): Map<String, Any>? =
         // pipeline but from the bitmap memory cache shortcut
         obtainExtras().shortcutExtras
 
+/** Provides image origin with color for KFrescoVitoDrawable. */
 val imageOriginProvider =
     StringAndColorDebugDataProvider("o", "Origin", "The source of the image") {
       if (it is KFrescoVitoDrawable) {
@@ -86,6 +50,7 @@ val imageOriginProvider =
       }
     }
 
+/** Provides image origin subcategory with color for KFrescoVitoDrawable. */
 val imageOriginSubcategoryProvider =
     StringAndColorDebugDataProvider(
         "o_s",
@@ -99,13 +64,4 @@ val imageOriginSubcategoryProvider =
       } else {
         "" to Color.WHITE
       }
-    }
-
-val hdrGainmapProvider =
-    StringDebugDataProvider(
-        shortName = "hdr",
-        longName = "hdrGainmap",
-        description = "Has Bitmap with HDR Gainmap",
-    ) { drawable ->
-      drawable.hasBitmapWithGainmap().toString()
     }

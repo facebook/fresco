@@ -18,7 +18,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
-import com.facebook.fresco.vito.core.impl.StringDebugDataProvider
+import com.facebook.fresco.vito.core.impl.debug.StringDebugDataProvider
 
 class LiveEditorUiUtils(
     var liveEditor: ImageLiveEditor?,

@@ -28,7 +28,7 @@ import android.widget.Toast
 import androidx.annotation.ColorInt
 import com.facebook.common.internal.Supplier
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
-import com.facebook.fresco.vito.core.impl.StringDebugDataProvider
+import com.facebook.fresco.vito.core.impl.debug.StringDebugDataProvider
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.tools.liveeditor.ImageOptionsSampleValues.Entry
 import com.facebook.fresco.vito.tools.liveeditor.LiveEditorUiUtils.Companion.dpToPx

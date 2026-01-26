@@ -8,7 +8,13 @@
 package com.facebook.fresco.vito.core.impl
 
 import com.facebook.common.internal.Supplier
+import com.facebook.fresco.vito.core.impl.debug.DebugDataProvider
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayDrawable
+import com.facebook.fresco.vito.core.impl.debug.StringAndColorDebugDataProvider
+import com.facebook.fresco.vito.core.impl.debug.StringDebugDataProvider
+import com.facebook.fresco.vito.core.impl.debug.drawableDimensionsProvider
+import com.facebook.fresco.vito.core.impl.debug.hdrGainmapProvider
+import com.facebook.fresco.vito.core.impl.debug.imageIDProvider
 import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 
 class DebugOverlayHandler(
