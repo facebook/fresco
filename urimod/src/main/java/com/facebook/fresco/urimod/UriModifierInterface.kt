@@ -67,6 +67,10 @@ interface UriModifierInterface {
       class ModifiedQuality(newUrl: Uri) : Modified(newUrl, "ModifiedQuality") {
         override val bestAllowlistedSize: Int? = null
       }
+
+      class ModifiedByAiqConfig(newUrl: Uri) : Modified(newUrl, "ModifiedByAiqConfig") {
+        override val bestAllowlistedSize: Int? = null
+      }
     }
 
     data class FallbackToOriginalUrl(override val bestAllowlistedSize: Int?) :
