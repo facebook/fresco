@@ -10,7 +10,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Print pre-setup debug info
       run: ./ci/print-debug-info.sh
     - uses: nttld/setup-ndk@v1
@@ -18,7 +18,7 @@ jobs:
       with:
         ndk-version: r27b
     - name: Install JDK
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         distribution: 'temurin'
         java-version: |
@@ -40,6 +40,6 @@ jobs:
       run: |
         mkdir -p ./gh_actions/test-results/junit
         find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ./gh_actions/test-results/junit \;
-    - uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v6
       with:
         path: "./gh_actions/test-results"
