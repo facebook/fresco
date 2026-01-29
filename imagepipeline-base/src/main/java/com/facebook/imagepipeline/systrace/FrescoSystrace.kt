@@ -51,14 +51,12 @@ object FrescoSystrace {
 
   @JvmStatic fun isTracing(): Boolean = instance.isTracing()
 
-  private var _instance: Systrace? = null
+  @Volatile private var _instance: Systrace? = null
   private val instance: Systrace
     get() {
       return _instance
           ?: synchronized(FrescoSystrace::class.java) {
-            val systrace = DefaultFrescoSystrace()
-            _instance = systrace
-            systrace
+            _instance ?: DefaultFrescoSystrace().also { _instance = it }
           }
     }
 
