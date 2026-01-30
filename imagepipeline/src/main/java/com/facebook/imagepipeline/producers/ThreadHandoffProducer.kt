@@ -7,7 +7,6 @@
 
 package com.facebook.imagepipeline.producers
 
-import android.os.Looper
 import com.facebook.imagepipeline.instrumentation.FrescoInstrumenter
 import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import java.lang.Exception
@@ -27,6 +26,7 @@ class ThreadHandoffProducer<T>(
         inputProducer.produceResults(consumer, context)
         return
       }
+
       val statefulRunnable: StatefulProducerRunnable<T> =
           object : StatefulProducerRunnable<T>(consumer, producerListener, context, PRODUCER_NAME) {
             override fun onSuccess(ignored: T?) {
@@ -64,10 +64,7 @@ class ThreadHandoffProducer<T>(
     }
 
     private fun shouldRunImmediately(context: ProducerContext): Boolean {
-      if (!context.imagePipelineConfig.experiments.handOffOnUiThreadOnly) {
-        return false
-      }
-      return Looper.getMainLooper().thread !== Thread.currentThread()
+      return !context.imagePipelineConfig.experiments.isCriticalThread()
     }
   }
 }

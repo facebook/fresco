@@ -64,6 +64,7 @@ class ThreadHandoffProducerTest {
 
     Mockito.doReturn(imagePipelineExperiments).`when`(config).experiments
     Mockito.doReturn(false).`when`(imagePipelineExperiments).handOffOnUiThreadOnly
+    Mockito.doReturn({ true }).`when`(imagePipelineExperiments).isCriticalThread
   }
 
   @Test

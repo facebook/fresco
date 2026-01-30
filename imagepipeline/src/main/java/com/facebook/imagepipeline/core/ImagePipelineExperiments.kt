@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.core
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.os.Looper
 import com.facebook.cache.common.CacheKey
 import com.facebook.common.internal.Supplier
 import com.facebook.common.internal.Suppliers
@@ -65,6 +66,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val trackedKeysSize: Int
   val allowDelay: Boolean
   val handOffOnUiThreadOnly: Boolean
+  val isCriticalThread: () -> Boolean
   val shouldStoreCacheEntrySize: Boolean
   val shouldIgnoreCacheSizeMismatch: Boolean
   val shouldUseDecodingBufferHelper: Boolean
@@ -125,6 +127,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var trackedKeysSize = 20
     @JvmField var allowDelay = false
     @JvmField var handOffOnUiThreadOnly = false
+    @JvmField var isCriticalThread: (() -> Boolean)? = null
     @JvmField var shouldStoreCacheEntrySize = false
 
     @JvmField var shouldIgnoreCacheSizeMismatch = false
@@ -159,6 +162,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     fun setHandOffOnUiThreadOnly(handOffOnUiThreadOnly: Boolean) = asBuilder {
       this.handOffOnUiThreadOnly = handOffOnUiThreadOnly
+    }
+
+    fun setIsCriticalThread(isCriticalThread: () -> Boolean) = asBuilder {
+      this.isCriticalThread = isCriticalThread
     }
 
     fun setStoreCacheEntrySize(shouldStoreCacheEntrySize: Boolean) = asBuilder {
@@ -507,6 +514,18 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     animationRenderFpsLimit = builder.animationRenderFpsLimit
     allowDelay = builder.allowDelay
     handOffOnUiThreadOnly = builder.handOffOnUiThreadOnly
+    isCriticalThread =
+        builder.isCriticalThread
+            ?: {
+              // If handOffOnUiThreadOnly is false, treat every thread as critical so handoff always
+              // happens
+              if (!handOffOnUiThreadOnly) {
+                true
+              } else {
+                // Otherwise, only the main thread is critical
+                Looper.getMainLooper().thread === Thread.currentThread()
+              }
+            }
     shouldStoreCacheEntrySize = builder.shouldStoreCacheEntrySize
     shouldIgnoreCacheSizeMismatch = builder.shouldIgnoreCacheSizeMismatch
     shouldUseDecodingBufferHelper = builder.shouldUseDecodingBufferHelper
