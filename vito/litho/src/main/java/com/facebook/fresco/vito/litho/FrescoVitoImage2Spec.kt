@@ -39,6 +39,7 @@ import com.facebook.litho.ComponentContext
 import com.facebook.litho.ComponentLayout
 import com.facebook.litho.ContextUtils
 import com.facebook.litho.Diff
+import com.facebook.litho.DynamicValue
 import com.facebook.litho.Output
 import com.facebook.litho.Ref
 import com.facebook.litho.Size
@@ -334,6 +335,7 @@ object FrescoVitoImage2Spec {
       @Prop(optional = true) callerContext: Any?,
       @Prop(optional = true) forceReloadImageIfAlreadySet: Boolean?,
       @Prop(optional = true) retriggerListenersIfImageAlreadySet: Boolean?,
+      @Prop(optional = true) alphaDynamicValue: DynamicValue<Float>?,
       @TreeProp contextChain: ContextChain?,
       @CachedValue requestBeforeLayout: VitoImageRequest?,
       @FromBoundsDefined requestWithLayout: VitoImageRequest?,
@@ -341,6 +343,7 @@ object FrescoVitoImage2Spec {
       @FromBoundsDefined prefetchDataSourceFromBoundsDefined: DataSource<Void?>?,
       @FromBoundsDefined viewportDimensions: Rect,
       @FromPrepare fetchStrategy: FetchStrategy,
+      @State frescoDrawableRef: Ref<OnDetachedHolder?>?,
   ) {
     if (FrescoVitoProvider.getConfig().useBind()) {
       // if requestWithLayout is not null, we are using SF
@@ -367,6 +370,19 @@ object FrescoVitoImage2Spec {
       prefetchDataSource?.close()
       prefetchDataSourceFromBoundsDefined?.close()
     }
+    // Listen for alpha changes to cancel image request when transparent
+    if (alphaDynamicValue != null) {
+      val listener =
+          DynamicValue.OnValueChangeListener<Float> { dynamicValue ->
+            if (dynamicValue.get() == 0f) {
+              // Alpha is transparent, release the image
+              prefetchDataSource?.close()
+              prefetchDataSourceFromBoundsDefined?.close()
+            }
+          }
+      alphaDynamicValue.attachListener(listener)
+      frescoDrawableRef?.value?.alphaListener = listener
+    }
   }
 
   @JvmStatic
@@ -374,9 +390,16 @@ object FrescoVitoImage2Spec {
   fun onUnbind(
       c: ComponentContext,
       frescoDrawable: FrescoDrawableInterface,
+      @Prop(optional = true) alphaDynamicValue: DynamicValue<Float>?,
       @FromPrepare prefetchDataSource: DataSource<Void?>?,
       @FromBoundsDefined prefetchDataSourceFromBoundsDefined: DataSource<Void?>?,
+      @State frescoDrawableRef: Ref<OnDetachedHolder?>?,
   ) {
+    // Detach alpha listener
+    if (alphaDynamicValue != null) {
+      frescoDrawableRef?.value?.alphaListener?.let { alphaDynamicValue.detach(it) }
+      frescoDrawableRef?.value?.alphaListener = null
+    }
     if (FrescoVitoProvider.getConfig().useUnbind()) {
       frescoDrawable.imagePerfListener.onImageUnbind(frescoDrawable)
       if (FrescoVitoProvider.getConfig().useBindOnly()) {
@@ -634,5 +657,6 @@ object FrescoVitoImage2Spec {
       val drawable: FrescoDrawableInterface?,
       val prefetchDataSource: DataSource<Void?>?,
       val prefetchDataSourceFromBoundsDefined: DataSource<Void?>?,
+      var alphaListener: DynamicValue.OnValueChangeListener<Float>? = null,
   )
 }
