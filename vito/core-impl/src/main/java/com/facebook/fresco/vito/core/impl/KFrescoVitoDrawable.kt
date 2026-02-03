@@ -57,12 +57,12 @@ class KFrescoVitoDrawable(
   var _intrinsicWidth: Int = -1
   var _intrinsicHeight: Int = -1
 
-  private val closeableCleanupFunction: (Closeable) -> Unit = { closeableResource ->
+  private val closeableCleanupFunction: (Closeable) -> Unit = { resource ->
     ImageReleaseScheduler.cancelAllReleasing(this)
     try {
-      closeableResource.close()
-    } catch (e: IOException) {
-      // swallow
+      resource.close()
+    } catch (_: IOException) {
+      // Ignore IOException on cleanup
     }
   }
 
@@ -84,12 +84,7 @@ class KFrescoVitoDrawable(
   }
 
   override val actualImageDrawable: Drawable?
-    get() {
-      return when (val model = actualImageLayer.getDataModel()) {
-        is DrawableImageDataModel -> model.drawable
-        else -> null
-      }
-    }
+    get() = (actualImageLayer.getDataModel() as? DrawableImageDataModel)?.drawable
 
   override fun hasImage(): Boolean = actualImageLayer.getDataModel() != null
 
@@ -111,13 +106,11 @@ class KFrescoVitoDrawable(
     }
 
   override fun setOverlayDrawable(drawable: Drawable?): Drawable? {
-    overlayImageLayer.apply {
-      configure(
-          dataModel = if (drawable == null) null else DrawableImageDataModel(drawable),
-          roundingOptions = null,
-          borderOptions = null,
-      )
-    }
+    overlayImageLayer.configure(
+        dataModel = drawable?.let { DrawableImageDataModel(it) },
+        roundingOptions = null,
+        borderOptions = null,
+    )
     return drawable
   }
 
@@ -187,13 +180,13 @@ class KFrescoVitoDrawable(
   }
 
   private fun setLayerBounds(bounds: Rect?) {
-    if (bounds != null) {
-      placeholderLayer.configure(bounds = bounds)
-      actualImageLayer.configure(bounds = bounds)
-      progressLayer?.configure(bounds = bounds)
-      overlayImageLayer.configure(bounds = bounds)
-      debugOverlayImageLayer?.configure(bounds = bounds)
-      backgroundLayer?.configure(bounds = bounds)
+    bounds?.let { rect ->
+      placeholderLayer.configure(bounds = rect)
+      actualImageLayer.configure(bounds = rect)
+      progressLayer?.configure(bounds = rect)
+      overlayImageLayer.configure(bounds = rect)
+      debugOverlayImageLayer?.configure(bounds = rect)
+      backgroundLayer?.configure(bounds = rect)
       hasBoundsSet = true
     }
   }
@@ -248,15 +241,9 @@ class KFrescoVitoDrawable(
     getImagePerfLoggingListener()?.reportVisible(visible)
   }
 
-  override fun getIntrinsicWidth(): Int {
-    return if (_intrinsicWidth !== -1) {
-      _intrinsicWidth
-    } else super.getIntrinsicWidth()
-  }
+  override fun getIntrinsicWidth(): Int =
+      if (_intrinsicWidth != -1) _intrinsicWidth else super.getIntrinsicWidth()
 
-  override fun getIntrinsicHeight(): Int {
-    return if (_intrinsicHeight !== -1) {
-      _intrinsicHeight
-    } else super.getIntrinsicHeight()
-  }
+  override fun getIntrinsicHeight(): Int =
+      if (_intrinsicHeight != -1) _intrinsicHeight else super.getIntrinsicHeight()
 }
