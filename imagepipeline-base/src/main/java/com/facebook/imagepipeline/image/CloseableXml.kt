@@ -10,7 +10,7 @@ package com.facebook.imagepipeline.image
 import android.graphics.drawable.Drawable
 
 /** [CloseableImage] that wraps an Android binary XML. */
-public interface CloseableXml : CloseableImage {
+interface CloseableXml : CloseableImage {
 
   /**
    * Builds the underlying drawable. This method will yield null if the image has been closed.

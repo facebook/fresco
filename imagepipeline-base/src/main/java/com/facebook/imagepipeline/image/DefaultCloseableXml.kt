@@ -9,8 +9,7 @@ package com.facebook.imagepipeline.image
 
 import android.graphics.drawable.Drawable
 
-public class DefaultCloseableXml(private var drawable: Drawable?) :
-    DefaultCloseableImage(), CloseableXml {
+class DefaultCloseableXml(private var drawable: Drawable?) : DefaultCloseableImage(), CloseableXml {
   private var closed = false
 
   override fun getSizeInBytes(): Int {
