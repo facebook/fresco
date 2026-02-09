@@ -19,6 +19,7 @@ import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
 import com.facebook.fresco.vito.core.impl.debug.StringDebugDataProvider
+import com.facebook.fresco.vito.options.ImageOptions
 
 class LiveEditorUiUtils(
     var liveEditor: ImageLiveEditor?,
@@ -78,20 +79,28 @@ class LiveEditorUiUtils(
 
   fun createImageInfoView(context: Context, closeAction: (View) -> Unit): View =
       createScrollingList(context, closeAction) {
-        var source: List<Pair<String, String>> =
+        // 1. ImageSource info
+        var info: List<Pair<String, String>> =
             ImageSourceParser.convertSourceToKeyValue(liveEditor?.getSource().toString())
+
+        // 2. ImageOptions info
+        liveEditor?.let { editor -> info = info + extractImageOptionsInfo(editor.getOptions()) }
+
+        // 3. Debug provider data
         liveEditor?.let { liveEditorNonNull ->
           debugDataProviders?.forEach { debugProvider ->
             val debugData: Pair<String, String> =
                 Pair(debugProvider.longName, debugProvider.extractData(liveEditorNonNull.drawable))
-            source = source + debugData
+            info = info + debugData
           }
         }
-        if (source.isEmpty()) {
+
+        // Render all info
+        if (info.isEmpty()) {
           addView(TextView(context).apply { text = "Source is Empty" })
         }
-        source.forEach { sourceInfo ->
-          val view = ImageSourceUiUtil(context).createImageInfoView(sourceInfo, this)
+        info.forEach { infoItem ->
+          val view = ImageSourceUiUtil(context).createImageInfoView(infoItem, this)
           addView(view)
         }
       }
@@ -165,6 +174,66 @@ class LiveEditorUiUtils(
             }
           }
     }
+  }
+
+  private fun extractImageOptionsInfo(options: ImageOptions): List<Pair<String, String>> {
+    val result = mutableListOf<Pair<String, String>>()
+
+    // Section header
+    result.add("--- ImageOptions ---" to "")
+
+    // Parse the toString() output which is maintained alongside ImageOptions class.
+    // Format: "ImageOptions{key=value, key2=value2, ...}"
+    val content = options.toString().removePrefix("ImageOptions{").removeSuffix("}")
+
+    // Parse key=value pairs. We split on ", " but need to handle nested objects
+    // that may contain commas (e.g., "RoundingOptions{...}").
+    parseKeyValuePairs(content).forEach { (key, value) -> result.add(key to value) }
+
+    return result
+  }
+
+  private fun parseKeyValuePairs(content: String): List<Pair<String, String>> {
+    val result = mutableListOf<Pair<String, String>>()
+    var remaining = content.trim()
+
+    while (remaining.isNotEmpty()) {
+      // Find the key (everything before '=')
+      val equalsIndex = remaining.indexOf('=')
+      if (equalsIndex == -1) {
+        break
+      }
+
+      val key = remaining.substring(0, equalsIndex).trim()
+      remaining = remaining.substring(equalsIndex + 1)
+
+      // Find the value - handle nested braces
+      val (value, rest) = extractValue(remaining)
+      result.add(key to value)
+      remaining = rest.trimStart(',', ' ')
+    }
+
+    return result
+  }
+
+  private fun extractValue(s: String): Pair<String, String> {
+    var braceDepth = 0
+    var i = 0
+
+    while (i < s.length) {
+      val codePoint = s.codePointAt(i)
+      when (codePoint) {
+        '{'.code -> braceDepth++
+        '}'.code -> braceDepth--
+        ','.code ->
+            if (braceDepth == 0) {
+              return s.substring(0, i).trim() to s.substring(i)
+            }
+      }
+      i += Character.charCount(codePoint)
+    }
+
+    return s.trim() to ""
   }
 
   companion object {
