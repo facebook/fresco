@@ -9,7 +9,6 @@ package com.facebook.fresco.vito.tools.liveeditor
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.graphics.PixelFormat
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
@@ -23,7 +22,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.annotation.ColorInt
@@ -36,11 +35,33 @@ import com.facebook.fresco.vito.tools.liveeditor.LiveEditorUiUtils.Companion.dpT
 import com.facebook.fresco.vito.tools.liveeditor.LiveEditorUiUtils.Companion.dpToPxF
 import kotlin.math.abs
 
+/**
+ * Styling configuration for the live editor overlay buttons.
+ *
+ * Each app (FB, IG, FBLite) must provide their own branded colors and icons when constructing this
+ * style.
+ *
+ * @param textColor Color for button icons/text
+ * @param backgroundColor Color for button backgrounds
+ * @param editorBackgroundColor Color for the editor panel background
+ * @param iconPrevious Drawable resource for the "previous image" button
+ * @param iconNext Drawable resource for the "next image" button
+ * @param iconEdit Drawable resource for the "edit image" button
+ * @param iconInfo Drawable resource for the "image info" button
+ */
+data class ButtonStyle(
+    @ColorInt val textColor: Int,
+    @ColorInt val backgroundColor: Int,
+    @ColorInt val editorBackgroundColor: Int,
+    val iconPrevious: Int,
+    val iconNext: Int,
+    val iconEdit: Int,
+    val iconInfo: Int,
+)
+
 class LiveEditorOnScreenButtonController(
     private val isEnabled: Supplier<Boolean>,
-    @ColorInt private val buttonTextColor: Int = Color.WHITE,
-    @ColorInt private val buttonBackgroundColor: Int = Color.BLUE,
-    @ColorInt private val editorBackgroundColor: Int = Color.WHITE,
+    private val buttonStyle: ButtonStyle,
     additionalButtonConfig: ButtonConfig? = null,
     private val customOptions: CustomOptions,
     private val debugDataProviders: List<StringDebugDataProvider> = emptyList(),
@@ -59,33 +80,63 @@ class LiveEditorOnScreenButtonController(
     private const val DRAG_TOUCH_SLOP = 10
   }
 
-  /** Called from fblite java code */
+  /**
+   * Secondary constructor for backward compatibility with FBLite Java code. Uses Android system
+   * icons as fallbacks since FBLite doesn't provide custom icons.
+   */
   constructor(
       isEnabled: Supplier<Boolean>,
-      @ColorInt buttonTextColor: Int = Color.WHITE,
-      @ColorInt buttonBackgroundColor: Int = Color.BLUE,
-      @ColorInt editorBackgroundColor: Int = Color.WHITE,
+      @ColorInt buttonTextColor: Int,
+      @ColorInt buttonBackgroundColor: Int,
+      @ColorInt editorBackgroundColor: Int,
       additionalButtonConfig: ButtonConfig? = null,
   ) : this(
-      isEnabled,
-      buttonTextColor,
-      buttonBackgroundColor,
-      editorBackgroundColor,
-      additionalButtonConfig,
-      CustomOptions(emptyList()),
+      isEnabled = isEnabled,
+      buttonStyle =
+          ButtonStyle(
+              textColor = buttonTextColor,
+              backgroundColor = buttonBackgroundColor,
+              editorBackgroundColor = editorBackgroundColor,
+              iconPrevious = android.R.drawable.ic_media_rew,
+              iconNext = android.R.drawable.ic_media_ff,
+              iconEdit = android.R.drawable.ic_menu_edit,
+              iconInfo = android.R.drawable.ic_menu_info_details,
+          ),
+      additionalButtonConfig = additionalButtonConfig,
+      customOptions = CustomOptions(emptyList()),
   )
 
-  class ButtonConfig(val title: String, val action: View.OnClickListener)
+  class ButtonConfig(
+      val title: String,
+      val iconResId: Int,
+      val action: View.OnClickListener,
+  ) {
+    /** Secondary constructor for FBLite backward compatibility (uses system icon). */
+    constructor(
+        title: String,
+        action: View.OnClickListener,
+    ) : this(
+        title = title,
+        iconResId = android.R.drawable.ic_menu_add,
+        action = action,
+    )
+  }
 
   class CustomOptions(val entries: List<Entry<out Any>>)
 
+  // Button order: left nav, middle actions, right nav
+  // Navigation buttons are on far left and far right edges
   private val buttons =
       listOfNotNull(
-          ButtonConfig("Prev img") { imageSelector?.selectPrevious(it.context) },
-          ButtonConfig("Next img") { imageSelector?.selectNext(it.context) },
-          ButtonConfig("Edit img") { showLiveEditor(it.context) },
-          ButtonConfig("Info") { showImageInfo(it.context) },
+          ButtonConfig("Previous image", buttonStyle.iconPrevious) {
+            imageSelector?.selectPrevious(it.context)
+          },
+          ButtonConfig("Edit image", buttonStyle.iconEdit) { showLiveEditor(it.context) },
+          ButtonConfig("Image info", buttonStyle.iconInfo) { showImageInfo(it.context) },
           additionalButtonConfig,
+          ButtonConfig("Next image", buttonStyle.iconNext) {
+            imageSelector?.selectNext(it.context)
+          },
       )
 
   val imageTrackerListener: ImageTracker =
@@ -182,7 +233,7 @@ class LiveEditorOnScreenButtonController(
     val infoView =
         LiveEditorUiUtils(imageSelector?.currentEditor, debugDataProviders)
             .createImageInfoView(windowContext) { showImageToggleButtons(windowContext) }
-            .apply { background = ColorDrawable(editorBackgroundColor) }
+            .apply { background = ColorDrawable(buttonStyle.editorBackgroundColor) }
 
     // Wrap in OverlayHandlerView so Flipper UI Debugger excludes it from inspection
     addWindow(windowContext, OverlayHandlerView(windowContext).apply { addView(infoView) })
@@ -197,7 +248,7 @@ class LiveEditorOnScreenButtonController(
             .createView(windowContext, customOptions.entries) {
               showImageToggleButtons(windowContext)
             }
-            .apply { background = ColorDrawable(editorBackgroundColor) }
+            .apply { background = ColorDrawable(buttonStyle.editorBackgroundColor) }
 
     // Wrap in OverlayHandlerView so Flipper UI Debugger excludes it from inspection
     val (_, screenHeight) = getScreenDimensions(getWindowManager(context))
@@ -328,20 +379,46 @@ class LiveEditorOnScreenButtonController(
       private var isDragging = false
 
       init {
-        orientation = VERTICAL
-        val cornerRadius = 16.dpToPxF(context)
-        val buttonLayoutParams = LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
-        buttonLayoutParams.bottomMargin = 8.dpToPx(context)
-        val buttonPadding = 4.dpToPx(context)
-        for (button in buttons) {
+        orientation = HORIZONTAL
+        gravity = Gravity.CENTER_VERTICAL
+        val buttonWidth = 44.dpToPx(context)
+        val buttonHeight = 36.dpToPx(context) // Shorter height for non-square buttons
+        val buttonSpacing = 2.dpToPx(context) // Small spacing between icons
+        val buttonPadding = 8.dpToPx(context)
+        val edgeCornerRadius = (buttonHeight / 2).toFloat() // Pill-shaped for edge buttons
+        val innerCornerRadius = 4.dpToPxF(context) // Slight rounding for middle buttons
+
+        // Add elevation for shadow effect
+        elevation = 8.dpToPxF(context)
+
+        // No container background - each button has its own background
+        background = null
+
+        val buttonCount = buttons.size
+        buttons.forEachIndexed { index, button ->
+          val buttonLayoutParams = LayoutParams(buttonWidth, buttonHeight)
+
+          // Add spacing between buttons (not on the outer edges)
+          val leftMargin = if (index == 0) 0 else buttonSpacing
+          val rightMargin = if (index == buttonCount - 1) 0 else buttonSpacing
+          buttonLayoutParams.setMargins(leftMargin, 0, rightMargin, 0)
+
+          // Determine corner radii based on position
+          val isFirstButton = index == 0
+          val isLastButton = index == buttonCount - 1
+
           addView(
-              createButton(
+              createIconButton(
                   context,
                   buttonPadding,
                   buttonLayoutParams,
-                  cornerRadius,
+                  button.iconResId,
                   button.title,
                   button.action,
+                  isFirstButton = isFirstButton,
+                  isLastButton = isLastButton,
+                  edgeCornerRadius = edgeCornerRadius,
+                  innerCornerRadius = innerCornerRadius,
               )
           )
         }
@@ -429,25 +506,50 @@ class LiveEditorOnScreenButtonController(
     }
   }
 
-  private fun createButton(
+  private fun createIconButton(
       context: Context,
       paddingPx: Int,
       layoutParams: ViewGroup.LayoutParams,
-      cornerRadius: Float,
-      text: String,
+      iconResId: Int,
+      contentDescription: String,
       action: View.OnClickListener,
-  ): Button =
-      Button(context).apply {
-        setText(text)
-        setTextColor(buttonTextColor)
+      isFirstButton: Boolean = false,
+      isLastButton: Boolean = false,
+      edgeCornerRadius: Float = 0f,
+      innerCornerRadius: Float = 0f,
+  ): ImageButton =
+      ImageButton(context).apply {
+        setImageResource(iconResId)
+        setColorFilter(buttonStyle.textColor)
+        this.contentDescription = contentDescription
         setPadding(paddingPx, paddingPx, paddingPx, paddingPx)
         setLayoutParams(layoutParams)
         setOnClickListener(action)
+        scaleType = android.widget.ImageView.ScaleType.FIT_CENTER
+
+        // Create background with appropriate corner radii
+        // Corner order: top-left, top-right, bottom-right, bottom-left (each needs x,y radius)
         background =
             GradientDrawable().apply {
-              setColor(buttonBackgroundColor)
+              setColor(buttonStyle.backgroundColor)
               shape = GradientDrawable.RECTANGLE
-              setCornerRadius(cornerRadius)
+
+              val topLeftRadius = if (isFirstButton) edgeCornerRadius else innerCornerRadius
+              val bottomLeftRadius = if (isFirstButton) edgeCornerRadius else innerCornerRadius
+              val topRightRadius = if (isLastButton) edgeCornerRadius else innerCornerRadius
+              val bottomRightRadius = if (isLastButton) edgeCornerRadius else innerCornerRadius
+
+              cornerRadii =
+                  floatArrayOf(
+                      topLeftRadius,
+                      topLeftRadius, // top-left
+                      topRightRadius,
+                      topRightRadius, // top-right
+                      bottomRightRadius,
+                      bottomRightRadius, // bottom-right
+                      bottomLeftRadius,
+                      bottomLeftRadius, // bottom-left
+                  )
             }
       }
 
