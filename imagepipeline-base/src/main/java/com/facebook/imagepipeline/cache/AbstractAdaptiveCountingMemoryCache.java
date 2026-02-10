@@ -134,6 +134,7 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
   @GuardedBy("this")
   private long mLastCacheParamsCheck;
 
+  @SuppressWarnings("this-escape")
   public AbstractAdaptiveCountingMemoryCache(
       Supplier<MemoryCacheParams> memoryCacheParamsSupplier,
       CacheTrimStrategy cacheTrimStrategy,
@@ -816,7 +817,7 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
   protected abstract void logIllegalAdaptiveRate();
 
   @Override
-  public CountingLruMap getCachedEntries() {
+  public CountingLruMap<K, Entry<K, V>> getCachedEntries() {
     return mCachedEntries;
   }
 

@@ -102,7 +102,7 @@ class CountingMemoryCacheInspector<K, V>(
       val otherEntries = countingBitmapCache.otherEntries
       if (otherEntries != null) {
         for (entry in otherEntries.entries) {
-          if (entry != null && !entry.key.isRecycled) {
+          if (!entry.key.isRecycled) {
             dumpInfo.otherEntries[entry.key] = entry.value
           }
         }
