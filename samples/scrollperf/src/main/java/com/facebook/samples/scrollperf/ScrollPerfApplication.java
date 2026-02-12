@@ -12,6 +12,7 @@ import com.facebook.common.internal.Suppliers;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.fresco.vito.init.FrescoVito;
 import com.facebook.imagepipeline.core.DefaultExecutorSupplier;
+import com.facebook.imagepipeline.core.DownsampleMode;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.MemoryChunkType;
 import com.facebook.infer.annotation.Nullsafe;
@@ -30,7 +31,7 @@ public class ScrollPerfApplication extends Application {
     ImagePipelineConfig.Builder imagePipelineConfigBuilder =
         ImagePipelineConfig.newBuilder(this)
             .setResizeAndRotateEnabledForNetwork(false)
-            .setDownsampleEnabled(config.downsampling);
+            .setDownsampleMode(config.downsampling ? DownsampleMode.ALWAYS : DownsampleMode.AUTO);
     if (config.decodingThreadCount == 0) {
       imagePipelineConfigBuilder.setExecutorSupplier(
           new DefaultExecutorSupplier(

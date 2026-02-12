@@ -12,6 +12,7 @@ import com.facebook.cache.disk.DiskCacheConfig;
 import com.facebook.common.internal.Supplier;
 import com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory;
 import com.facebook.imagepipeline.cache.MemoryCacheParams;
+import com.facebook.imagepipeline.core.DownsampleMode;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.imagepipeline.listener.RequestLoggingListener;
@@ -87,6 +88,6 @@ public class ImagePipelineConfigFactory {
   }
 
   private static void configureOptions(ImagePipelineConfig.Builder configBuilder) {
-    configBuilder.setDownsampleEnabled(true);
+    configBuilder.setDownsampleMode(DownsampleMode.ALWAYS);
   }
 }
