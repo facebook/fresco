@@ -17,8 +17,8 @@ import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.common.RotationOptions
 import com.facebook.imagepipeline.core.DownsampleMode
 import com.facebook.imagepipeline.testing.TestNativeLoader
-import org.assertj.core.api.Java6Assertions
-import org.assertj.core.api.Java6Assertions.fail
+import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.fail
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,7 +45,7 @@ class ImagePipelineUtilsImplTest {
   @Test
   fun testBuildImageRequest_whenUriNull_thenReturnNull() {
     val imageRequest = imagePipelineUtils.buildImageRequest(null, ImageOptions.defaults())
-    Java6Assertions.assertThat(imageRequest).isNull()
+    Assertions.assertThat(imageRequest).isNull()
   }
 
   @Test
@@ -56,7 +56,7 @@ class ImagePipelineUtilsImplTest {
       return
     }
 
-    Java6Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
+    Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
   }
 
   @Test
@@ -68,9 +68,8 @@ class ImagePipelineUtilsImplTest {
       return
     }
 
-    Java6Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
-    Java6Assertions.assertThat(imageRequest.imageDecodeOptions)
-        .isEqualTo(ImageDecodeOptions.defaults())
+    Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
+    Assertions.assertThat(imageRequest.imageDecodeOptions).isEqualTo(ImageDecodeOptions.defaults())
   }
 
   @Test
@@ -82,9 +81,9 @@ class ImagePipelineUtilsImplTest {
       return
     }
 
-    Java6Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
+    Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
     val imageDecodeOptions = imageRequest.imageDecodeOptions
-    Java6Assertions.assertThat(imageDecodeOptions).isEqualTo(roundingDecodeOptions)
+    Assertions.assertThat(imageDecodeOptions).isEqualTo(roundingDecodeOptions)
   }
 
   @Test
@@ -96,9 +95,9 @@ class ImagePipelineUtilsImplTest {
       return
     }
 
-    Java6Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
+    Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
     val imageDecodeOptions = imageRequest.imageDecodeOptions
-    Java6Assertions.assertThat(imageDecodeOptions).isEqualTo(roundingDecodeOptionsAntiAliased)
+    Assertions.assertThat(imageDecodeOptions).isEqualTo(roundingDecodeOptionsAntiAliased)
   }
 
   @Test
@@ -110,9 +109,9 @@ class ImagePipelineUtilsImplTest {
       return
     }
 
-    Java6Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
+    Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
     val imageDecodeOptions = imageRequest.imageDecodeOptions
-    Java6Assertions.assertThat(imageDecodeOptions).isEqualTo(ImageDecodeOptions.defaults())
+    Assertions.assertThat(imageDecodeOptions).isEqualTo(ImageDecodeOptions.defaults())
   }
 
   @Test
@@ -124,9 +123,9 @@ class ImagePipelineUtilsImplTest {
       return
     }
 
-    Java6Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
+    Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
     val imageDecodeOptions = imageRequest.imageDecodeOptions
-    Java6Assertions.assertThat(imageDecodeOptions).isEqualTo(ImageDecodeOptions.defaults())
+    Assertions.assertThat(imageDecodeOptions).isEqualTo(ImageDecodeOptions.defaults())
   }
 
   @Test
@@ -139,8 +138,8 @@ class ImagePipelineUtilsImplTest {
       return
     }
 
-    Java6Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
-    Java6Assertions.assertThat(imageRequest.resizeOptions).isEqualTo(resizeOptions)
+    Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
+    Assertions.assertThat(imageRequest.resizeOptions).isEqualTo(resizeOptions)
   }
 
   @Test
@@ -154,9 +153,9 @@ class ImagePipelineUtilsImplTest {
       return
     }
 
-    Java6Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
-    Java6Assertions.assertThat(imageRequest.resizeOptions).isEqualTo(resizeOptions)
-    Java6Assertions.assertThat(imageRequest.downsampleOverride).isEqualTo(DownsampleMode.NEVER)
+    Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
+    Assertions.assertThat(imageRequest.resizeOptions).isEqualTo(resizeOptions)
+    Assertions.assertThat(imageRequest.downsampleOverride).isEqualTo(DownsampleMode.NEVER)
   }
 
   @Test
@@ -169,8 +168,8 @@ class ImagePipelineUtilsImplTest {
       return
     }
 
-    Java6Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
-    Java6Assertions.assertThat(imageRequest.rotationOptions).isEqualTo(rotationOptions)
+    Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
+    Assertions.assertThat(imageRequest.rotationOptions).isEqualTo(rotationOptions)
   }
 
   internal inner class TestCircularBitmapRounding : CircularBitmapRounding {
