@@ -100,101 +100,102 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     return equalDecodedOptions(other)
   }
 
-  override fun equals(otherObject: Any?): Boolean {
-    if (this === otherObject) return true
-    if (otherObject == null || javaClass != otherObject.javaClass) return false
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (other == null || javaClass != other.javaClass) return false
 
-    val other = otherObject as ImageOptions
+    val otherOptions = other as ImageOptions
     if (includeAllFieldsInEquals) {
       if (
-          placeholderColor != other.placeholderColor ||
-              placeholderRes != other.placeholderRes ||
-              !Objects.equal(placeholderDrawable, other.placeholderDrawable) ||
-              !Objects.equal(placeholderScaleType, other.placeholderScaleType) ||
-              !Objects.equal(placeholderFocusPoint, other.placeholderFocusPoint) ||
-              placeholderApplyRoundingOptions != other.placeholderApplyRoundingOptions ||
-              errorColor != other.errorColor ||
-              errorRes != other.errorRes ||
-              !Objects.equal(errorScaleType, other.errorScaleType) ||
-              !Objects.equal(errorFocusPoint, other.errorFocusPoint) ||
-              errorApplyRoundingOptions != other.errorApplyRoundingOptions ||
-              overlayRes != other.overlayRes ||
-              !Objects.equal(overlayDrawable, other.overlayDrawable) ||
-              !Objects.equal(backgroundDrawable, other.backgroundDrawable) ||
-              !Objects.equal(errorDrawable, other.errorDrawable) ||
-              progressRes != other.progressRes ||
-              !Objects.equal(progressDrawable, other.progressDrawable) ||
-              !Objects.equal(progressScaleType, other.progressScaleType) ||
-              !Objects.equal(actualImageColorFilter, other.actualImageColorFilter) ||
-              _resizeToViewport != other._resizeToViewport ||
-              fadeDurationMs != other.fadeDurationMs ||
-              _autoPlay != other._autoPlay ||
-              _autoStop != other._autoStop ||
-              !Objects.equal(customDrawableFactory, other.customDrawableFactory)
+          placeholderColor != otherOptions.placeholderColor ||
+              placeholderRes != otherOptions.placeholderRes ||
+              !Objects.equal(placeholderDrawable, otherOptions.placeholderDrawable) ||
+              !Objects.equal(placeholderScaleType, otherOptions.placeholderScaleType) ||
+              !Objects.equal(placeholderFocusPoint, otherOptions.placeholderFocusPoint) ||
+              placeholderApplyRoundingOptions != otherOptions.placeholderApplyRoundingOptions ||
+              errorColor != otherOptions.errorColor ||
+              errorRes != otherOptions.errorRes ||
+              !Objects.equal(errorScaleType, otherOptions.errorScaleType) ||
+              !Objects.equal(errorFocusPoint, otherOptions.errorFocusPoint) ||
+              errorApplyRoundingOptions != otherOptions.errorApplyRoundingOptions ||
+              overlayRes != otherOptions.overlayRes ||
+              !Objects.equal(overlayDrawable, otherOptions.overlayDrawable) ||
+              !Objects.equal(backgroundDrawable, otherOptions.backgroundDrawable) ||
+              !Objects.equal(errorDrawable, otherOptions.errorDrawable) ||
+              progressRes != otherOptions.progressRes ||
+              !Objects.equal(progressDrawable, otherOptions.progressDrawable) ||
+              !Objects.equal(progressScaleType, otherOptions.progressScaleType) ||
+              !Objects.equal(actualImageColorFilter, otherOptions.actualImageColorFilter) ||
+              _resizeToViewport != otherOptions._resizeToViewport ||
+              fadeDurationMs != otherOptions.fadeDurationMs ||
+              _autoPlay != otherOptions._autoPlay ||
+              _autoStop != otherOptions._autoStop ||
+              !Objects.equal(customDrawableFactory, otherOptions.customDrawableFactory)
       ) {
         return false
       }
     } else if (isPerfMediaRemountInstrumentationFix) {
       if (
-          placeholderColor != other.placeholderColor ||
-              placeholderRes != other.placeholderRes ||
-              !Objects.equal(placeholderDrawable, other.placeholderDrawable) ||
-              !Objects.equal(placeholderScaleType, other.placeholderScaleType) ||
-              !Objects.equal(placeholderFocusPoint, other.placeholderFocusPoint) ||
-              placeholderApplyRoundingOptions != other.placeholderApplyRoundingOptions ||
-              errorColor != other.errorColor ||
-              errorRes != other.errorRes ||
-              !Objects.equal(errorScaleType, other.errorScaleType) ||
-              !Objects.equal(errorFocusPoint, other.errorFocusPoint) ||
-              errorApplyRoundingOptions != other.errorApplyRoundingOptions ||
-              overlayRes != other.overlayRes ||
-              !Objects.equal(overlayDrawable, other.overlayDrawable) ||
-              !Objects.equal(errorDrawable, other.errorDrawable) ||
-              progressRes != other.progressRes ||
-              !Objects.equal(progressDrawable, other.progressDrawable) ||
-              !Objects.equal(progressScaleType, other.progressScaleType) ||
-              !Objects.equal(actualImageColorFilter, other.actualImageColorFilter) ||
-              _resizeToViewport != other._resizeToViewport ||
-              fadeDurationMs != other.fadeDurationMs ||
-              _autoPlay != other._autoPlay ||
-              _autoStop != other._autoStop ||
-              !Objects.equal(customDrawableFactory, other.customDrawableFactory) ||
-              !Objects.equal(errorDrawable, other.errorDrawable) ||
-              isPerfMediaRemountInstrumentationFix != other.isPerfMediaRemountInstrumentationFix
+          placeholderColor != otherOptions.placeholderColor ||
+              placeholderRes != otherOptions.placeholderRes ||
+              !Objects.equal(placeholderDrawable, otherOptions.placeholderDrawable) ||
+              !Objects.equal(placeholderScaleType, otherOptions.placeholderScaleType) ||
+              !Objects.equal(placeholderFocusPoint, otherOptions.placeholderFocusPoint) ||
+              placeholderApplyRoundingOptions != otherOptions.placeholderApplyRoundingOptions ||
+              errorColor != otherOptions.errorColor ||
+              errorRes != otherOptions.errorRes ||
+              !Objects.equal(errorScaleType, otherOptions.errorScaleType) ||
+              !Objects.equal(errorFocusPoint, otherOptions.errorFocusPoint) ||
+              errorApplyRoundingOptions != otherOptions.errorApplyRoundingOptions ||
+              overlayRes != otherOptions.overlayRes ||
+              !Objects.equal(overlayDrawable, otherOptions.overlayDrawable) ||
+              !Objects.equal(errorDrawable, otherOptions.errorDrawable) ||
+              progressRes != otherOptions.progressRes ||
+              !Objects.equal(progressDrawable, otherOptions.progressDrawable) ||
+              !Objects.equal(progressScaleType, otherOptions.progressScaleType) ||
+              !Objects.equal(actualImageColorFilter, otherOptions.actualImageColorFilter) ||
+              _resizeToViewport != otherOptions._resizeToViewport ||
+              fadeDurationMs != otherOptions.fadeDurationMs ||
+              _autoPlay != otherOptions._autoPlay ||
+              _autoStop != otherOptions._autoStop ||
+              !Objects.equal(customDrawableFactory, otherOptions.customDrawableFactory) ||
+              !Objects.equal(errorDrawable, otherOptions.errorDrawable) ||
+              isPerfMediaRemountInstrumentationFix !=
+                  otherOptions.isPerfMediaRemountInstrumentationFix
       ) {
         return false
       }
     } else {
       if (
-          placeholderColor != other.placeholderColor ||
-              placeholderRes != other.placeholderRes ||
-              !Objects.equal(placeholderDrawable, other.placeholderDrawable) ||
-              !Objects.equal(placeholderScaleType, other.placeholderScaleType) ||
-              !Objects.equal(placeholderFocusPoint, other.placeholderFocusPoint) ||
-              placeholderApplyRoundingOptions != other.placeholderApplyRoundingOptions ||
-              errorColor != other.errorColor ||
-              errorRes != other.errorRes ||
-              !Objects.equal(errorScaleType, other.errorScaleType) ||
-              !Objects.equal(errorFocusPoint, other.errorFocusPoint) ||
-              errorApplyRoundingOptions != other.errorApplyRoundingOptions ||
-              overlayRes != other.overlayRes ||
-              !Objects.equal(overlayDrawable, other.overlayDrawable) ||
-              !Objects.equal(errorDrawable, other.errorDrawable) ||
-              progressRes != other.progressRes ||
-              progressDrawable !== other.progressDrawable ||
-              progressScaleType !== other.progressScaleType ||
-              !Objects.equal(actualImageColorFilter, other.actualImageColorFilter) ||
-              _resizeToViewport != other._resizeToViewport ||
-              fadeDurationMs != other.fadeDurationMs ||
-              _autoPlay != other._autoPlay ||
-              _autoStop != other._autoStop ||
-              !Objects.equal(customDrawableFactory, other.customDrawableFactory) ||
-              errorDrawable !== other.errorDrawable
+          placeholderColor != otherOptions.placeholderColor ||
+              placeholderRes != otherOptions.placeholderRes ||
+              !Objects.equal(placeholderDrawable, otherOptions.placeholderDrawable) ||
+              !Objects.equal(placeholderScaleType, otherOptions.placeholderScaleType) ||
+              !Objects.equal(placeholderFocusPoint, otherOptions.placeholderFocusPoint) ||
+              placeholderApplyRoundingOptions != otherOptions.placeholderApplyRoundingOptions ||
+              errorColor != otherOptions.errorColor ||
+              errorRes != otherOptions.errorRes ||
+              !Objects.equal(errorScaleType, otherOptions.errorScaleType) ||
+              !Objects.equal(errorFocusPoint, otherOptions.errorFocusPoint) ||
+              errorApplyRoundingOptions != otherOptions.errorApplyRoundingOptions ||
+              overlayRes != otherOptions.overlayRes ||
+              !Objects.equal(overlayDrawable, otherOptions.overlayDrawable) ||
+              !Objects.equal(errorDrawable, otherOptions.errorDrawable) ||
+              progressRes != otherOptions.progressRes ||
+              progressDrawable !== otherOptions.progressDrawable ||
+              progressScaleType !== otherOptions.progressScaleType ||
+              !Objects.equal(actualImageColorFilter, otherOptions.actualImageColorFilter) ||
+              _resizeToViewport != otherOptions._resizeToViewport ||
+              fadeDurationMs != otherOptions.fadeDurationMs ||
+              _autoPlay != otherOptions._autoPlay ||
+              _autoStop != otherOptions._autoStop ||
+              !Objects.equal(customDrawableFactory, otherOptions.customDrawableFactory) ||
+              errorDrawable !== otherOptions.errorDrawable
       ) {
         return false
       }
     }
-    return equalDecodedOptions(other)
+    return equalDecodedOptions(otherOptions)
   }
 
   override fun hashCode(): Int {

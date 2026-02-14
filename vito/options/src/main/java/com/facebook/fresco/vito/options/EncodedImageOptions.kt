@@ -81,7 +81,7 @@ open class EncodedImageOptions(builder: Builder<*>) {
 
     open fun build(): EncodedImageOptions = EncodedImageOptions(this)
 
-    protected fun getThis(): T = this as T
+    @Suppress("UNCHECKED_CAST") protected fun getThis(): T = this as T
 
     private inline fun modify(block: Builder<T>.() -> Unit): T {
       block()

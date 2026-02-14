@@ -57,7 +57,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
             !Objects.equal(actualImageFocusPoint, other.actualImageFocusPoint) ||
             localThumbnailPreviewsEnabled != other.localThumbnailPreviewsEnabled ||
             loadThumbnailOnly != other.loadThumbnailOnly ||
-            isProgressiveDecodingEnabled !== other.isProgressiveDecodingEnabled ||
+            isProgressiveDecodingEnabled != other.isProgressiveDecodingEnabled ||
             !Objects.equal(bitmapConfig, other.bitmapConfig) ||
             isFirstFrameThumbnailEnabled != other.isFirstFrameThumbnailEnabled
     ) {
