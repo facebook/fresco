@@ -46,7 +46,7 @@ class DropFramesFrameScheduler(private val animationInformation: AnimationInform
   override fun getTargetRenderTimeMs(frameNumber: Int): Long {
     var targetRenderTimeMs = 0L
     for (i in 0 until frameNumber) {
-      targetRenderTimeMs += animationInformation.getFrameDurationMs(frameNumber).toLong()
+      targetRenderTimeMs += animationInformation.getFrameDurationMs(i).toLong()
     }
     return targetRenderTimeMs
   }
