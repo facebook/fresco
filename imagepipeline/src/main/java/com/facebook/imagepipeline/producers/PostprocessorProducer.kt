@@ -88,7 +88,7 @@ class PostprocessorProducer(
     init {
       mProducerContext.addCallbacks(
           object : BaseProducerContextCallbacks() {
-            public override fun onCancellationRequested() {
+            override fun onCancellationRequested() {
               maybeNotifyOnCancellation()
             }
           }
@@ -339,7 +339,7 @@ class PostprocessorProducer(
       repeatedPostprocessor.setCallback(this@RepeatedPostprocessorConsumer)
       context.addCallbacks(
           object : BaseProducerContextCallbacks() {
-            public override fun onCancellationRequested() {
+            override fun onCancellationRequested() {
               if (close()) {
                 consumer.onCancellation()
               }
