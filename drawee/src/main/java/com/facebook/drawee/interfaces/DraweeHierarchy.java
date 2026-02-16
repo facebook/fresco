@@ -9,6 +9,7 @@ package com.facebook.drawee.interfaces;
 
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -35,6 +36,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * </pre>
  */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface DraweeHierarchy {
 
   /**

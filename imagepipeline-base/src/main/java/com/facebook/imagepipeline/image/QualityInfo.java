@@ -7,7 +7,10 @@
 
 package com.facebook.imagepipeline.image;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Interface for image quality information */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface QualityInfo {
 
   /**

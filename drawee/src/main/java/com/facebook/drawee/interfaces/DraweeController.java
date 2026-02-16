@@ -9,6 +9,7 @@ package com.facebook.drawee.interfaces;
 
 import android.graphics.drawable.Animatable;
 import android.view.MotionEvent;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -19,6 +20,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * those events.
  */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface DraweeController {
 
   /** Gets the hierarchy. */
@@ -58,6 +60,7 @@ public interface DraweeController {
    *
    * @return animatable, or null if the image is not animated or not loaded yet
    */
+  @Nullable
   Animatable getAnimatable();
 
   /** Sets the accessibility content description. */
@@ -68,8 +71,9 @@ public interface DraweeController {
    *
    * @return content description, or null if the image has no content description
    */
+  @Nullable
   String getContentDescription();
 
   /** Returns whether {@code other} would fetch the same image as {@code this}. */
-  boolean isSameImageRequest(DraweeController other);
+  boolean isSameImageRequest(@Nullable DraweeController other);
 }
