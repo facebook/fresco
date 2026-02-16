@@ -7,7 +7,10 @@
 
 package com.facebook.imagepipeline.image;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /** Interface containing information about an image. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface ImageInfo extends HasImageMetadata {
   /**
    * @return width of the image

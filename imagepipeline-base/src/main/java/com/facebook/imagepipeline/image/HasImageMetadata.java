@@ -7,9 +7,11 @@
 
 package com.facebook.imagepipeline.image;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.Nonnull;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface HasImageMetadata {
 
   @Nonnull

@@ -7,6 +7,7 @@
 
 package com.facebook.drawee.backends.pipeline.info;
 
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -14,6 +15,7 @@ import javax.annotation.Nullable;
  * com.facebook.drawee.backends.pipeline.PipelineDraweeController} to observe the image origin
  * (cache, disk, network, ...) for a given controller.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface ImageOriginListener {
 
   /**

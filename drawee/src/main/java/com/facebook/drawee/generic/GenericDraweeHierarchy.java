@@ -27,6 +27,7 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
 import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -82,6 +83,7 @@ import javax.annotation.Nullable;
  *       built with the same builder, different drawable instances must be specified for each DH.
  * </ul>
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
 
   private static final int BACKGROUND_IMAGE_INDEX = 0;
@@ -163,7 +165,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
         WrappingUtils.maybeWrapWithRoundedOverlayColor(mFadeDrawable, mRoundingParams);
 
     // top-level drawable
-    mTopLevelDrawable = new RootDrawable(maybeRoundedDrawable);
+    mTopLevelDrawable = new RootDrawable(Preconditions.checkNotNull(maybeRoundedDrawable));
     mTopLevelDrawable.mutate();
 
     resetFade();
@@ -268,7 +270,9 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   @Override
   public void setImage(Drawable drawable, float progress, boolean immediate) {
     drawable = WrappingUtils.maybeApplyLeafRounding(drawable, mRoundingParams, mResources);
-    drawable.mutate();
+    if (drawable != null) {
+      drawable.mutate();
+    }
     mActualImageWrapper.setDrawable(drawable);
     mFadeDrawable.beginBatchMode();
     fadeOutBranches();
@@ -435,7 +439,7 @@ public class GenericDraweeHierarchy implements SettableDraweeHierarchy {
   }
 
   /** Sets a new placeholder drawable with scale type. */
-  public void setPlaceholderImage(Drawable drawable, ScalingUtils.ScaleType scaleType) {
+  public void setPlaceholderImage(@Nullable Drawable drawable, ScalingUtils.ScaleType scaleType) {
     setChildDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX, drawable);
     getScaleTypeDrawableAtIndex(PLACEHOLDER_IMAGE_INDEX).setScaleType(scaleType);
   }

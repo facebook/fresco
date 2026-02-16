@@ -8,6 +8,8 @@
 package com.facebook.drawee.interfaces;
 
 import android.graphics.drawable.Drawable;
+import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 /**
@@ -31,6 +33,7 @@ import javax.annotation.concurrent.ThreadSafe;
  * each.
  */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface SettableDraweeHierarchy extends DraweeHierarchy {
 
   /**
@@ -80,5 +83,5 @@ public interface SettableDraweeHierarchy extends DraweeHierarchy {
    *
    * @param drawable drawable to be displayed as controller overlay
    */
-  void setControllerOverlay(Drawable drawable);
+  void setControllerOverlay(@Nullable Drawable drawable);
 }

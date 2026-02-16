@@ -7,11 +7,14 @@
 
 package com.facebook.drawee.controller;
 
+import com.facebook.infer.annotation.Nullsafe;
+
 /**
  * A listener for {@link AbstractDraweeController} that listens to events regarding visibility of
  * the drawee in the viewport. As Android does not provide these events, the client must call {@link
  * AbstractDraweeController#onViewportVisibilityHint(boolean)} accordingly.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public interface ControllerViewportVisibilityListener {
 
   /**
