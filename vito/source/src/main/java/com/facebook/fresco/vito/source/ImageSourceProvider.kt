@@ -36,7 +36,7 @@ object ImageSourceProvider {
       lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
         val size = uriCacheSize
         if (size > 0) {
-          LruCache(uriCacheSize.toInt())
+          LruCache(uriCacheSize)
         } else {
           null
         }
