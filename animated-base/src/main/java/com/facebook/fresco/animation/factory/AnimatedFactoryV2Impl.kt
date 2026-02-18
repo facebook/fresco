@@ -50,6 +50,7 @@ constructor(
     var animationFpsLimit: Int,
     var bufferLengthMilliseconds: Int,
     var serialExecutorService: SerialExecutorService?,
+    private val enableBufferFrameLoaderFix: Boolean = false,
 ) : AnimatedFactory {
 
   private var animatedDrawableBackendProvider: AnimatedDrawableBackendProvider? = null
@@ -89,6 +90,8 @@ constructor(
         Suppliers.of(downscaleFrameToDrawableDimensions),
         Suppliers.of(animationFpsLimit),
         Suppliers.of(bufferLengthMilliseconds),
+        null,
+        enableBufferFrameLoaderFix,
     )
   }
 

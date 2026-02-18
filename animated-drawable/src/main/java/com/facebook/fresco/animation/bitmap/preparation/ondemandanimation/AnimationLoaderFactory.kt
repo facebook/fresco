@@ -18,6 +18,7 @@ class FrameLoaderFactory(
     private val platformBitmapFactory: PlatformBitmapFactory,
     private val maxFpsRender: Int,
     private val bufferLengthMilliseconds: Int,
+    private val enableBufferFrameLoaderFix: Boolean = false,
 ) {
 
   fun createBufferLoader(
@@ -39,6 +40,7 @@ class FrameLoaderFactory(
         FpsCompressorInfo(maxFpsRender),
         animationInformation,
         bufferLengthMilliseconds,
+        enableBufferFrameLoaderFix,
     )
   }
 

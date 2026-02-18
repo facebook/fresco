@@ -30,6 +30,31 @@ object AnimatedFactoryProvider {
       bufferLengthMilliseconds: Int,
       serialExecutorService: ExecutorService?,
   ): AnimatedFactory? {
+    return getAnimatedFactory(
+        platformBitmapFactory,
+        executorSupplier,
+        backingCache,
+        downscaleFrameToDrawableDimensions,
+        useBalancedAnimationStrategy,
+        animationFpsLimit,
+        bufferLengthMilliseconds,
+        serialExecutorService,
+        false,
+    )
+  }
+
+  @JvmStatic
+  fun getAnimatedFactory(
+      platformBitmapFactory: PlatformBitmapFactory?,
+      executorSupplier: ExecutorSupplier?,
+      backingCache: CountingMemoryCache<CacheKey?, CloseableImage?>?,
+      downscaleFrameToDrawableDimensions: Boolean,
+      useBalancedAnimationStrategy: Boolean,
+      animationFpsLimit: Int,
+      bufferLengthMilliseconds: Int,
+      serialExecutorService: ExecutorService?,
+      enableBufferFrameLoaderFix: Boolean,
+  ): AnimatedFactory? {
     if (!implLoaded) {
       try {
         val clazz = Class.forName("com.facebook.fresco.animation.factory.AnimatedFactoryV2Impl")
@@ -43,6 +68,7 @@ object AnimatedFactoryProvider {
                 Integer.TYPE,
                 Integer.TYPE,
                 SerialExecutorService::class.java,
+                java.lang.Boolean.TYPE,
             )
         impl =
             constructor.newInstance(
@@ -54,6 +80,7 @@ object AnimatedFactoryProvider {
                 animationFpsLimit,
                 bufferLengthMilliseconds,
                 serialExecutorService,
+                enableBufferFrameLoaderFix,
             ) as AnimatedFactory
       } catch (e: Throwable) {
         // Head in the sand
