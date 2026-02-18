@@ -16,7 +16,9 @@ kotlin {
 }
 
 dependencies {
-    implementation project(':drawee') // TODO RM; required for FadeDrawable access
+    // TODO: Review if drawee dependency can be removed. Currently kept for FadeDrawable access.
+    // Consider migrating to Vito APIs if FadeDrawable functionality is available there.
+    implementation project(':drawee')
     implementation project(':fbcore')
     implementation project(':middleware')
     implementation project(':ui-common')
