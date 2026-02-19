@@ -12,6 +12,22 @@ import androidx.annotation.UiThread
 import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.animation.backend.AnimationInformation
 
+/**
+ * Callback interface for logging when frame loading encounters zero dimensions. This allows
+ * app-specific error reporting implementations to be injected.
+ */
+fun interface ZeroFrameDimensionsListener {
+  /**
+   * Called when frame loading is skipped due to zero frame dimensions.
+   *
+   * @param origin the origin of the call (e.g., "BufferFrameLoader.getFrame")
+   * @param frameNumber the frame number being loaded (-1 if not applicable)
+   * @param width the frame width
+   * @param height the frame height
+   */
+  fun onZeroFrameDimensions(origin: String, frameNumber: Int, width: Int, height: Int)
+}
+
 /** This interface provides the basic O(1) methods to extract and prepare bitmap animations */
 interface FrameLoader {
 

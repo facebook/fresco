@@ -35,6 +35,7 @@ class BufferFrameLoader(
     override val animationInformation: AnimationInformation,
     private val bufferLengthMilliseconds: Int,
     private val enableBufferFrameLoaderFix: Boolean = false,
+    private val zeroFrameDimensionsListener: ZeroFrameDimensionsListener? = null,
 ) : FrameLoader {
 
   private val bufferSize =
@@ -58,7 +59,18 @@ class BufferFrameLoader(
     val cachedFrameIndex = compressionFrameMap[frameNumber]
 
     // Return the nearest frame if the frame is not in the buffer OR width or height is 0
-    if (cachedFrameIndex == null || (enableBufferFrameLoaderFix && (width == 0 || height == 0))) {
+    if (enableBufferFrameLoaderFix && (width == 0 || height == 0)) {
+      zeroFrameDimensionsListener?.onZeroFrameDimensions(
+          origin = "BufferFrameLoader.getFrame",
+          frameNumber,
+          width,
+          height,
+      )
+
+      return findNearestToRender(frameNumber)
+    }
+
+    if (cachedFrameIndex == null) {
       return findNearestToRender(frameNumber)
     }
 

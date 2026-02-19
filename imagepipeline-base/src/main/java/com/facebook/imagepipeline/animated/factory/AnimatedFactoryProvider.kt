@@ -58,6 +58,10 @@ object AnimatedFactoryProvider {
     if (!implLoaded) {
       try {
         val clazz = Class.forName("com.facebook.fresco.animation.factory.AnimatedFactoryV2Impl")
+        val zeroFrameDimensionsListenerClass =
+            Class.forName(
+                "com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.ZeroFrameDimensionsListener"
+            )
         val constructor =
             clazz.getConstructor(
                 PlatformBitmapFactory::class.java,
@@ -69,6 +73,7 @@ object AnimatedFactoryProvider {
                 Integer.TYPE,
                 SerialExecutorService::class.java,
                 java.lang.Boolean.TYPE,
+                zeroFrameDimensionsListenerClass,
             )
         impl =
             constructor.newInstance(
@@ -81,6 +86,7 @@ object AnimatedFactoryProvider {
                 bufferLengthMilliseconds,
                 serialExecutorService,
                 enableBufferFrameLoaderFix,
+                null,
             ) as AnimatedFactory
       } catch (e: Throwable) {
         // Head in the sand
