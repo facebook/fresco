@@ -11,7 +11,7 @@ import com.facebook.common.internal.Closeables;
 import java.io.Closeable;
 import java.io.IOException;
 import javax.annotation.Nullable;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
