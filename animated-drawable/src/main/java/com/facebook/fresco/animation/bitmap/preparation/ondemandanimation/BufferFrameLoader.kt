@@ -132,6 +132,13 @@ class BufferFrameLoader(
   private fun loadNextFrames(width: Int, height: Int) {
     // Skip frame if width or height is 0 OR if the buffer is already loading
     if ((enableBufferFrameLoaderFix && (width == 0 || height == 0)) || isFetching) {
+      zeroFrameDimensionsListener?.onZeroFrameDimensions(
+          origin = "BufferFrameLoader.loadNextFrames",
+          frameNumber = lastRenderedFrameNumber.coerceAtLeast(0),
+          width,
+          height,
+      )
+
       return
     }
 
