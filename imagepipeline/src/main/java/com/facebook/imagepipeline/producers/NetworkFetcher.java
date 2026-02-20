@@ -8,6 +8,8 @@
 package com.facebook.imagepipeline.producers;
 
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.imagepipeline.network.NetworkResponseData;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -29,6 +31,23 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
 
   /** Callback used to inform the network fetch producer. */
   interface Callback {
+
+    /**
+     * Called when response is received as structured data. Preferred for new implementations.
+     * Default bridges to legacy onResponse(InputStream, int) for backward compatibility.
+     */
+    default void onResponse(NetworkResponseData data) throws IOException {
+      if (data instanceof NetworkResponseData.Stream) {
+        NetworkResponseData.Stream stream = (NetworkResponseData.Stream) data;
+        onResponse(stream.getStream(), stream.getLength());
+      } else if (data instanceof NetworkResponseData.Bytes) {
+        NetworkResponseData.Bytes bytes = (NetworkResponseData.Bytes) data;
+        onResponse(
+            new ByteArrayInputStream(bytes.getData(), 0, bytes.getLength()), bytes.getLength());
+      } else {
+        throw new IllegalArgumentException("Unknown NetworkResponseData type: " + data.getClass());
+      }
+    }
 
     /**
      * Called upon a response from the network stack.
