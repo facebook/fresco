@@ -11,10 +11,10 @@ import android.content.Context;
 import android.net.Uri;
 import android.view.View;
 import com.facebook.common.util.UriUtil;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.fresco.vito.options.ImageOptions;
+import com.facebook.fresco.vito.source.ImageSourceProvider;
+import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 
@@ -32,21 +32,21 @@ public class FrescoHolder extends BaseViewHolder<InstrumentedDraweeView> {
   @Override
   protected void onBind(String uriString) {
     Uri uri = Uri.parse(uriString);
-    ImageRequestBuilder imageRequestBuilder = ImageRequestBuilder.newBuilderWithSource(uri);
+    ImageOptions.Builder optionsBuilder = mImageView.getImageOptions().extend();
     if (UriUtil.isNetworkUri(uri)) {
-      imageRequestBuilder.setProgressiveRenderingEnabled(true);
+      optionsBuilder.progressiveRendering(true);
     } else {
-      imageRequestBuilder.setResizeOptions(
+      optionsBuilder.resize(
           new ResizeOptions(
               mImageView.getLayoutParams().width, mImageView.getLayoutParams().height));
     }
-    DraweeController draweeController =
-        Fresco.newDraweeControllerBuilder()
-            .setImageRequest(imageRequestBuilder.build())
-            .setOldController(mImageView.getController())
-            .setControllerListener(mImageView.getListener())
-            .setAutoPlayAnimations(true)
-            .build();
-    mImageView.setController(draweeController);
+    optionsBuilder.autoPlay(true);
+
+    VitoView.show(
+        ImageSourceProvider.forUri(uri),
+        optionsBuilder.build(),
+        null,
+        mImageView.getListener(),
+        mImageView);
   }
 }

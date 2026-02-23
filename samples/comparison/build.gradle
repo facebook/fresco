@@ -43,6 +43,10 @@ dependencies {
     implementation project(':memory-types:simple')
     implementation project(':native-imagetranscoder')
     implementation project(':tools:stetho')
+    implementation project(':vito:core')
+    implementation project(':vito:options')
+    implementation project(':vito:source')
+    implementation project(':vito:view')
 }
 
 android {

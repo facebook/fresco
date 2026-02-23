@@ -9,13 +9,11 @@ package com.facebook.samples.comparison.adapters;
 
 import android.content.Context;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.drawable.ProgressBarDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.generic.GenericDraweeHierarchy;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
+import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
-import com.facebook.samples.comparison.Drawables;
 import com.facebook.samples.comparison.holders.FrescoHolder;
 import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
@@ -31,14 +29,14 @@ public class FrescoAdapter extends ImageListAdapter {
 
   @Override
   public FrescoHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-    GenericDraweeHierarchy gdh =
-        new GenericDraweeHierarchyBuilder(getContext().getResources())
-            .setPlaceholderImage(Drawables.sPlaceholderDrawable)
-            .setFailureImage(Drawables.sErrorDrawable)
-            .setProgressBarImage(new ProgressBarDrawable())
-            .setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER)
+    ImageOptions imageOptions =
+        ImageOptions.create()
+            .placeholderRes(android.R.drawable.ic_menu_report_image)
+            .errorRes(android.R.drawable.ic_menu_report_image)
+            .scale(ScalingUtils.ScaleType.FIT_CENTER)
             .build();
-    final InstrumentedDraweeView instrView = new InstrumentedDraweeView(getContext(), gdh);
+    final InstrumentedDraweeView instrView = new InstrumentedDraweeView(getContext(), imageOptions);
+    instrView.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
     return new FrescoHolder(getContext(), parent, instrView, getPerfListener());
   }

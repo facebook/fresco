@@ -13,7 +13,7 @@ import android.view.View;
 import com.facebook.samples.comparison.instrumentation.InstrumentedDraweeView;
 import com.facebook.samples.comparison.instrumentation.PerfListener;
 
-/** This is the Holder class for the RecycleView to use with Volley and Drawee */
+/** This is the Holder class for the RecycleView to use with Volley and Vito */
 public class VolleyDraweeHolder extends BaseViewHolder<InstrumentedDraweeView> {
 
   public VolleyDraweeHolder(
