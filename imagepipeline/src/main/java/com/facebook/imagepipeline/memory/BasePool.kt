@@ -118,9 +118,13 @@ abstract class BasePool<V : Any>(
   }
 
   @Synchronized
-  protected open fun getValue(bucket: Bucket<V>): V? =
-      // noinspection deprecation
-      bucket.get()
+  protected open fun getValue(bucket: Bucket<V>): V? {
+    val value = bucket.pop()
+    if (value != null) {
+      bucket.incrementInUseCount()
+    }
+    return value
+  }
 
   /**
    * Gets a new 'value' from the pool, if available. Allocates a new value if necessary. Bucket
