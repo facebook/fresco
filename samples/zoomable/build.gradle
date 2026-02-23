@@ -20,7 +20,10 @@ dependencies {
     compileOnly Deps.jsr305
 
     implementation project(':drawee-backends:drawee-pipeline')
+    implementation project(':fbcore')
+    implementation project(':imagepipeline-base')
     implementation project(':samples:gestures')
+    implementation project(':vito:source')
 }
 
 android {

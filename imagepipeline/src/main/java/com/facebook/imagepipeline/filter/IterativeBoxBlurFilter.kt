@@ -111,7 +111,7 @@ object IterativeBoxBlurFilter {
 
     // NTSC Dampening Postprocessing for removing higher frequencies
     if (ntscDampeningFactor > 0f) {
-      pixels.indices.toList().parallelStream().forEach { i ->
+      for (i in pixels.indices) {
         pixels[i] = NTSCDampeningFilterUtil.process(pixels[i], ntscDampeningFactor)
       }
     }
