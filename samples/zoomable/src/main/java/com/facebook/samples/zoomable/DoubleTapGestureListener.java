@@ -15,27 +15,32 @@ import com.facebook.infer.annotation.Nullsafe;
 /**
  * Tap gesture listener for double tap to zoom / unzoom and double-tap-and-drag to zoom.
  *
- * @see ZoomableDraweeView#setTapListener(GestureDetector.SimpleOnGestureListener)
+ * @see ZoomableVitoView#setTapListener(GestureDetector.SimpleOnGestureListener)
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class DoubleTapGestureListener extends GestureDetector.SimpleOnGestureListener {
   private static final int DURATION_MS = 300;
   private static final int DOUBLE_TAP_SCROLL_THRESHOLD = 20;
 
-  private final ZoomableDraweeView mDraweeView;
+  private final ZoomableController mZoomableController;
   private final PointF mDoubleTapViewPoint = new PointF();
   private final PointF mDoubleTapImagePoint = new PointF();
   private float mDoubleTapScale = 1;
   private boolean mDoubleTapScroll = false;
 
+  @SuppressWarnings("deprecation")
   public DoubleTapGestureListener(ZoomableDraweeView zoomableDraweeView) {
-    mDraweeView = zoomableDraweeView;
+    mZoomableController = zoomableDraweeView.getZoomableController();
+  }
+
+  public DoubleTapGestureListener(ZoomableVitoView zoomableVitoView) {
+    mZoomableController = zoomableVitoView.getZoomableController();
   }
 
   @Override
   public boolean onDoubleTapEvent(MotionEvent e) {
     AbstractAnimatedZoomableController zc =
-        (AbstractAnimatedZoomableController) mDraweeView.getZoomableController();
+        (AbstractAnimatedZoomableController) mZoomableController;
     PointF vp = new PointF(e.getX(), e.getY());
     PointF ip = zc.mapViewToImage(vp);
     switch (e.getActionMasked()) {
