@@ -66,4 +66,6 @@ dependencies {
 
     internalImplementation project(':drawee-backends:drawee-pipeline')
     implementation project(path: ':samples:zoomable')
+    implementation project(':vito:init')
+    implementation project(':vito:nativecode')
 }

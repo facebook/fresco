@@ -7,14 +7,13 @@
 
 package com.facebook.samples.zoomableapp;
 
+import android.net.Uri;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import androidx.viewpager.widget.PagerAdapter;
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.samples.zoomable.DoubleTapGestureListener;
-import com.facebook.samples.zoomable.ZoomableDraweeView;
+import com.facebook.samples.zoomable.ZoomableVitoView;
 
 class MyPagerAdapter extends PagerAdapter {
 
@@ -51,18 +50,12 @@ class MyPagerAdapter extends PagerAdapter {
     if (page == null) {
       return null;
     }
-    ZoomableDraweeView zoomableDraweeView =
-        (ZoomableDraweeView) page.findViewById(R.id.zoomableView);
-    zoomableDraweeView.setAllowTouchInterceptionWhileZoomed(mAllowSwipingWhileZoomed);
-    // needed for double tap to zoom
-    zoomableDraweeView.setIsLongpressEnabled(false);
-    zoomableDraweeView.setTapListener(new DoubleTapGestureListener(zoomableDraweeView));
-    DraweeController controller =
-        Fresco.newDraweeControllerBuilder()
-            .setUri(SAMPLE_URIS[position % SAMPLE_URIS.length])
-            .setCallerContext("ZoomableApp-MyPagerAdapter")
-            .build();
-    zoomableDraweeView.setController(controller);
+    ZoomableVitoView zoomableVitoView = (ZoomableVitoView) page.findViewById(R.id.zoomableView);
+    zoomableVitoView.setAllowTouchInterceptionWhileZoomed(mAllowSwipingWhileZoomed);
+    zoomableVitoView.setIsLongpressEnabled(false);
+    zoomableVitoView.setTapListener(new DoubleTapGestureListener(zoomableVitoView));
+    Uri uri = Uri.parse(SAMPLE_URIS[position % SAMPLE_URIS.length]);
+    zoomableVitoView.loadImage(uri, "ZoomableApp-MyPagerAdapter");
     page.requestLayout();
     return page;
   }
@@ -70,8 +63,8 @@ class MyPagerAdapter extends PagerAdapter {
   @Override
   public void destroyItem(ViewGroup container, int position, Object object) {
     FrameLayout page = (FrameLayout) container.getChildAt(position);
-    ZoomableDraweeView zoomableDraweeView = (ZoomableDraweeView) page.getChildAt(0);
-    zoomableDraweeView.resetActualImage();
+    ZoomableVitoView zoomableVitoView = (ZoomableVitoView) page.getChildAt(0);
+    zoomableVitoView.releaseImage();
   }
 
   @Override
@@ -86,7 +79,6 @@ class MyPagerAdapter extends PagerAdapter {
 
   @Override
   public int getItemPosition(Object object) {
-    // We want to create a new view when we call notifyDataSetChanged() to have the correct behavior
     return POSITION_NONE;
   }
 }
