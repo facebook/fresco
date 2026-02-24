@@ -13,7 +13,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Spinner
@@ -29,9 +28,9 @@ class LiveEditorUiUtils(
   fun createView(
       context: Context,
       customEntries: List<ImageOptionsSampleValues.Entry<out Any>> = emptyList(),
-      closeAction: ((View) -> Unit)? = null,
+      title: String? = null,
   ): View =
-      createScrollingList(context, closeAction) {
+      createScrollingList(context, title = title) {
         addView(createWithList(context, ImageSourceSampleValues.entries))
         addView(createWithList(context, ImageOptionsSampleValues.roundingOptions))
         addView(createWithList(context, ImageOptionsSampleValues.borderOptions))
@@ -52,7 +51,7 @@ class LiveEditorUiUtils(
 
   private fun createScrollingList(
       context: Context,
-      closeAction: ((View) -> Unit)? = null,
+      title: String? = null,
       block: LinearLayout.() -> Unit,
   ): View =
       ScrollView(context).apply {
@@ -61,6 +60,8 @@ class LiveEditorUiUtils(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT,
             )
+        isVerticalFadingEdgeEnabled = true
+        setFadingEdgeLength(24.dpToPx(context))
         addView(
             LinearLayout(context).apply {
               layoutParams =
@@ -69,16 +70,28 @@ class LiveEditorUiUtils(
                       ViewGroup.LayoutParams.WRAP_CONTENT,
                   )
               orientation = LinearLayout.VERTICAL
-              if (closeAction != null) {
-                addView(createButton(context, "Close", closeAction))
+              val horizontalPad = 4.dpToPx(context)
+              val topPad = 12.dpToPx(context)
+              setPadding(horizontalPad, topPad, horizontalPad, 0)
+              if (title != null) {
+                addView(
+                    TextView(context).apply {
+                      text = title
+                      textSize = 18f
+                      setTypeface(typeface, android.graphics.Typeface.BOLD)
+                      val titleHorizontalPad = 12.dpToPx(context)
+                      val titleBottomPad = 6.dpToPx(context)
+                      setPadding(titleHorizontalPad, 0, titleHorizontalPad, titleBottomPad)
+                    }
+                )
               }
               block(this)
             }
         )
       }
 
-  fun createImageInfoView(context: Context, closeAction: (View) -> Unit): View =
-      createScrollingList(context, closeAction) {
+  fun createImageInfoView(context: Context, title: String? = null): View =
+      createScrollingList(context, title = title) {
         // 1. ImageSource info
         var info: List<Pair<String, String>> =
             ImageSourceParser.convertSourceToKeyValue(liveEditor?.getSource().toString())
@@ -103,13 +116,6 @@ class LiveEditorUiUtils(
           val view = ImageSourceUiUtil(context).createImageInfoView(infoItem, this)
           addView(view)
         }
-      }
-
-  private fun createButton(context: Context, btnText: String, clickAction: (View) -> Unit): Button =
-      Button(context).apply {
-        text = btnText
-        setPadding(paddingLeft, 8.dpToPx(context), paddingRight, 8.dpToPx(context))
-        setOnClickListener(clickAction)
       }
 
   private fun <T> createWithList(
@@ -179,12 +185,11 @@ class LiveEditorUiUtils(
   private fun extractImageOptionsInfo(options: ImageOptions): List<Pair<String, String>> {
     val result = mutableListOf<Pair<String, String>>()
 
-    // Section header
-    result.add("--- ImageOptions ---" to "")
-
     // Parse the toString() output which is maintained alongside ImageOptions class.
-    // Format: "ImageOptions{key=value, key2=value2, ...}"
-    val content = options.toString().removePrefix("ImageOptions{").removeSuffix("}")
+    // Format: "ImageOptions{ImageOptions{key=value, key2=value2, ...}}" — the outer wrapper
+    // comes from ImageOptions.toString() and the inner one from Guava's ToStringHelper.
+    var content = options.toString().removePrefix("ImageOptions{").removeSuffix("}")
+    content = content.removePrefix("ImageOptions{").removeSuffix("}")
 
     // Parse key=value pairs. We split on ", " but need to handle nested objects
     // that may contain commas (e.g., "RoundingOptions{...}").

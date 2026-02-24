@@ -11,19 +11,18 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Application
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.PixelFormat
-import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
-import android.hardware.display.DisplayManager
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
-import android.view.Display.DEFAULT_DISPLAY
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowInsets
 import android.view.WindowManager
 import android.widget.ImageButton
 import android.widget.LinearLayout
@@ -51,6 +50,7 @@ import kotlin.math.abs
  * @param iconNext Drawable resource for the "next image" button
  * @param iconEdit Drawable resource for the "edit image" button
  * @param iconInfo Drawable resource for the "image info" button
+ * @param iconClose Drawable resource for the "close" button
  */
 data class ButtonStyle(
     @ColorInt val textColor: Int,
@@ -60,6 +60,7 @@ data class ButtonStyle(
     val iconNext: Int,
     val iconEdit: Int,
     val iconInfo: Int,
+    val iconClose: Int = android.R.drawable.ic_menu_close_clear_cancel,
 )
 
 class LiveEditorOnScreenButtonController(
@@ -81,6 +82,13 @@ class LiveEditorOnScreenButtonController(
   companion object {
     // Minimum movement in pixels to consider as a drag gesture (vs a tap)
     private const val DRAG_TOUCH_SLOP = 10
+    // Debug tool overlay colors — not a user-facing FDS component
+    @SuppressLint("HexColorValueUsage")
+    @ColorInt
+    private const val DIALOG_BACKGROUND_LIGHT = 0xFFF0F2F5.toInt()
+    @SuppressLint("HexColorValueUsage")
+    @ColorInt
+    private const val DIALOG_BACKGROUND_DARK = 0xFF1E1E2E.toInt()
   }
 
   /**
@@ -104,6 +112,7 @@ class LiveEditorOnScreenButtonController(
               iconNext = android.R.drawable.ic_media_ff,
               iconEdit = android.R.drawable.ic_menu_edit,
               iconInfo = android.R.drawable.ic_menu_info_details,
+              iconClose = android.R.drawable.ic_menu_close_clear_cancel,
           ),
       additionalButtonConfig = additionalButtonConfig,
       customOptions = CustomOptions(emptyList()),
@@ -189,6 +198,14 @@ class LiveEditorOnScreenButtonController(
   private var isAppInForeground = true
   private var lifecycleCallbacksRegistered = false
 
+  // Dialog panel state
+  private var isDialogOpen = false
+  private var activeDialogSourceIndex: Int? = null
+  private var dialogWindowView: View? = null
+  private var buttonBarView: ViewGroup? = null
+  private var buttonViews: List<ImageButton> = emptyList()
+  private var savedSourceIconResId: Int? = null
+
   private fun saveCurrentButtonPosition() {
     currentLayoutParams?.let { params ->
       lastButtonPositionX = params.x
@@ -240,14 +257,26 @@ class LiveEditorOnScreenButtonController(
   private fun hideOverlay() {
     val view = currentView ?: return
     saveCurrentButtonPosition()
+    val windowManager =
+        try {
+          view.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        } catch (_: Exception) {
+          null
+        }
+    removeDialogWindow(windowManager)
     try {
-      val windowManager = view.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-      windowManager.removeView(view)
+      windowManager?.removeView(view)
     } catch (_: IllegalArgumentException) {
       // View might not be attached to window manager
     }
     currentView = null
     currentLayoutParams = null
+    isDialogOpen = false
+    activeDialogSourceIndex = null
+    dialogWindowView = null
+    buttonBarView = null
+    buttonViews = emptyList()
+    savedSourceIconResId = null
   }
 
   private fun showOverlayIfNeeded(context: Context) {
@@ -282,66 +311,221 @@ class LiveEditorOnScreenButtonController(
       return
     }
 
+    saveCurrentButtonPosition()
     val windowManager = current.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+    removeDialogWindow(windowManager)
     windowManager.removeView(current)
     currentView = null
+    currentLayoutParams = null
+    isDialogOpen = false
+    activeDialogSourceIndex = null
+    dialogWindowView = null
+    buttonBarView = null
+    buttonViews = emptyList()
+    savedSourceIconResId = null
     isAttached = false
   }
 
   private fun showImageToggleButtons(
       context: Context,
   ) {
+    removeDialogWindow(getWindowManager(context))
+    isDialogOpen = false
+    activeDialogSourceIndex = null
+    dialogWindowView = null
+    savedSourceIconResId = null
     addWindow(context, createOnScreenButtons(context), isDraggable = true)
   }
 
   private fun showImageInfo(context: Context) {
-    // Save current button position before showing the modal
-    saveCurrentButtonPosition()
-    val windowContext = getWindowContext(context)
+    if (isDialogOpen) {
+      closeDialogPanel(context)
+    }
     val infoView =
         LiveEditorUiUtils(imageSelector?.currentEditor, debugDataProviders)
-            .createImageInfoView(windowContext) { showImageToggleButtons(windowContext) }
-            .apply { background = ColorDrawable(buttonStyle.editorBackgroundColor) }
+            .createImageInfoView(context, title = "Image info")
 
-    // Wrap in OverlayHandlerView so Flipper UI Debugger excludes it from inspection
-    addWindow(windowContext, OverlayHandlerView(windowContext).apply { addView(infoView) })
+    // Info button is at index 2 in the buttons list
+    showDialogPanel(context, infoView, sourceButtonIndex = 2)
   }
 
   private fun showLiveEditor(context: Context) {
-    // Save current button position before showing the modal
-    saveCurrentButtonPosition()
-    val windowContext = getWindowContext(context)
+    if (isDialogOpen) {
+      closeDialogPanel(context)
+    }
     val editorView =
         LiveEditorUiUtils(imageSelector?.currentEditor, debugDataProviders)
-            .createView(windowContext, customOptions.entries) {
-              showImageToggleButtons(windowContext)
-            }
-            .apply { background = ColorDrawable(buttonStyle.editorBackgroundColor) }
+            .createView(context, customOptions.entries, title = "Edit image")
 
-    // Wrap in OverlayHandlerView so Flipper UI Debugger excludes it from inspection
-    val (_, screenHeight) = getScreenDimensions(getWindowManager(context))
-    addWindow(
-        windowContext,
-        OverlayHandlerView(windowContext).apply { addView(editorView) },
-        screenHeight / 2,
-    )
+    // Edit button is at index 1 in the buttons list
+    showDialogPanel(context, editorView, sourceButtonIndex = 1)
   }
 
-  private fun getWindowContext(context: Context): Context {
-    val displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
-    val primaryDisplay = displayManager.getDisplay(DEFAULT_DISPLAY)
+  private fun showDialogPanel(
+      context: Context,
+      dialogView: View,
+      sourceButtonIndex: Int,
+  ) {
+    val layoutParams = currentLayoutParams ?: return
+    val view = currentView ?: return
+    val windowManager = getWindowManager(context)
+    val (screenWidth, screenHeight) = getScreenDimensions(windowManager)
+    val buttonBar = buttonBarView ?: return
 
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-      context
-          .createDisplayContext(primaryDisplay)
-          .createWindowContext(WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY, null)
-    } else {
-      context.createDisplayContext(primaryDisplay)
+    // Get system bar insets from the Activity's decorView (reliable source — overlay
+    // window metrics may report 0 insets since overlays can draw behind system bars)
+    val (statusBarInset, navBarInset) = getSystemBarInsets(context)
+    val renderableHeight = screenHeight - statusBarInset - navBarInset
+
+    // Ensure button bar window is in absolute positioning mode.
+    // On first show (no saved position), gravity is BOTTOM|END and layoutParams.y
+    // is an offset from the bottom — unusable for dialog positioning. Convert now.
+    // Use renderableHeight because TYPE_APPLICATION_OVERLAY windows are fit to the
+    // renderable area (between status bar and nav bar) by the window manager.
+    if (layoutParams.gravity != (Gravity.TOP or Gravity.LEFT)) {
+      val padding = 16.dpToPx(context)
+      layoutParams.gravity = Gravity.TOP or Gravity.LEFT
+      layoutParams.x = screenWidth - view.width - padding
+      layoutParams.y = renderableHeight - view.height - padding
+      windowManager.updateViewLayout(view, layoutParams)
     }
+
+    val preferredDialogHeight = renderableHeight / 2 - buttonBar.height
+    val dialogWidth = screenWidth * 2 / 3
+
+    // The window manager clamps overlay windows to the renderable area, so
+    // layoutParams.y may not reflect the actual rendered position. Compute the
+    // effective button position to ensure dialog placement matches reality.
+    val effectiveButtonY = layoutParams.y.coerceAtMost(renderableHeight - buttonBar.height)
+    val spaceAbove = effectiveButtonY
+    val spaceBelow = renderableHeight - effectiveButtonY - buttonBar.height
+    val dialogAbove = spaceAbove > spaceBelow
+
+    // Position dialog window adjacent to the button bar — the button bar window
+    // is never modified, so there is no blink or positional shift
+    val dialogSpacing = 4.dpToPx(context)
+    val availableSpace = if (dialogAbove) spaceAbove else spaceBelow
+    val dialogHeight =
+        preferredDialogHeight.coerceAtMost(availableSpace - dialogSpacing).coerceAtLeast(0)
+    val dialogY =
+        if (dialogAbove) {
+          effectiveButtonY - dialogHeight - dialogSpacing
+        } else {
+          effectiveButtonY + buttonBar.height + dialogSpacing
+        }
+
+    @Suppress("DEPRECATION")
+    val windowType =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+          WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
+        } else {
+          WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+        }
+
+    val dialogParams =
+        WindowManager.LayoutParams(
+                dialogWidth,
+                dialogHeight,
+                windowType,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
+                    WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                PixelFormat.TRANSLUCENT,
+            )
+            .apply {
+              gravity = Gravity.TOP or Gravity.LEFT
+              x = layoutParams.x
+              y = dialogY
+            }
+
+    dialogView.layoutParams =
+        LinearLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT,
+            ViewGroup.LayoutParams.MATCH_PARENT,
+        )
+
+    val dialogCornerRadius = (36.dpToPx(context) / 2).toFloat()
+    val wrapper =
+        LinearLayout(context).apply {
+          orientation = LinearLayout.VERTICAL
+          background =
+              GradientDrawable().apply {
+                setColor(dialogBackgroundColor(context))
+                setCornerRadius(dialogCornerRadius)
+              }
+          clipToOutline = true
+          addView(dialogView)
+        }
+    windowManager.addView(wrapper, dialogParams)
+    dialogWindowView = wrapper
+
+    // Toggle the source button to close icon
+    val sourceButton = buttonViews.getOrNull(sourceButtonIndex) ?: return
+    savedSourceIconResId = buttons.getOrNull(sourceButtonIndex)?.iconResId
+    sourceButton.setImageResource(buttonStyle.iconClose)
+    sourceButton.contentDescription = "Close"
+    sourceButton.setOnClickListener { closeDialogPanel(context) }
+
+    // Disable navigation buttons only — dialog buttons (Edit, Info) stay enabled
+    // so the user can switch between dialogs without closing first
+    val dialogButtonIndices = setOf(1, 2)
+    buttonViews.forEachIndexed { index, btn ->
+      if (index != sourceButtonIndex && index !in dialogButtonIndices) {
+        btn.isEnabled = false
+        btn.alpha = 0.4f
+      }
+    }
+
+    isDialogOpen = true
+    activeDialogSourceIndex = sourceButtonIndex
+  }
+
+  private fun closeDialogPanel(context: Context) {
+    val windowManager = getWindowManager(context)
+    val sourceIndex = activeDialogSourceIndex ?: return
+
+    // Remove the dialog window — the button bar window is untouched
+    removeDialogWindow(windowManager)
+
+    // Restore the source button
+    val sourceButton = buttonViews.getOrNull(sourceIndex)
+    savedSourceIconResId?.let { sourceButton?.setImageResource(it) }
+    sourceButton?.contentDescription = buttons.getOrNull(sourceIndex)?.title
+    sourceButton?.setOnClickListener(buttons.getOrNull(sourceIndex)?.action)
+
+    // Re-enable all buttons
+    buttonViews.forEach { btn ->
+      btn.isEnabled = true
+      btn.alpha = 1.0f
+    }
+
+    isDialogOpen = false
+    activeDialogSourceIndex = null
+    dialogWindowView = null
+    savedSourceIconResId = null
+  }
+
+  private fun removeDialogWindow(windowManager: WindowManager?) {
+    val dialogView = dialogWindowView ?: return
+    try {
+      windowManager?.removeView(dialogView)
+    } catch (_: IllegalArgumentException) {
+      // View might not be attached to window manager
+    }
+    dialogWindowView = null
   }
 
   private fun getWindowManager(context: Context): WindowManager =
       context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+
+  @ColorInt
+  private fun dialogBackgroundColor(context: Context): Int {
+    val nightMode = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
+    return if (nightMode == Configuration.UI_MODE_NIGHT_YES) {
+      DIALOG_BACKGROUND_DARK
+    } else {
+      DIALOG_BACKGROUND_LIGHT
+    }
+  }
 
   /** Returns the screen dimensions (width, height) using the modern API on Android R+. */
   private fun getScreenDimensions(windowManager: WindowManager): Pair<Int, Int> {
@@ -354,10 +538,31 @@ class LiveEditorOnScreenButtonController(
     }
   }
 
+  /**
+   * Returns system bar insets (top status bar height, bottom navigation bar height). Uses the
+   * Activity's decorView insets rather than WindowManager metrics, because overlay windows
+   * (TYPE_APPLICATION_OVERLAY) may report 0 insets since they can draw behind system bars.
+   */
+  @SuppressLint("DeprecatedMethod")
+  @Suppress("DEPRECATION")
+  private fun getSystemBarInsets(context: Context): Pair<Int, Int> {
+    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+      return Pair(0, 0)
+    }
+    val rootInsets = (context as? Activity)?.window?.decorView?.rootWindowInsets
+    return if (rootInsets != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+      val insets = rootInsets.getInsetsIgnoringVisibility(WindowInsets.Type.systemBars())
+      Pair(insets.top, insets.bottom)
+    } else if (rootInsets != null) {
+      Pair(rootInsets.stableInsetTop, rootInsets.stableInsetBottom)
+    } else {
+      Pair(0, 0)
+    }
+  }
+
   private fun addWindow(
       context: Context,
       view: View,
-      height: Int = WindowManager.LayoutParams.WRAP_CONTENT,
       isDraggable: Boolean = false,
   ) {
     if (!isEnabled.get()) {
@@ -383,7 +588,7 @@ class LiveEditorOnScreenButtonController(
     val layoutParams =
         WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                height,
+                WindowManager.LayoutParams.WRAP_CONTENT,
                 windowType,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
                     WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
@@ -416,11 +621,14 @@ class LiveEditorOnScreenButtonController(
           // After layout, convert gravity-based position to absolute position
           // This ensures dragging works correctly from the initial position
           val (screenWidth, screenHeight) = getScreenDimensions(windowManager)
+          val (statusBarInset, navBarInset) = getSystemBarInsets(context)
+          val renderableH = screenHeight - statusBarInset - navBarInset
 
-          // Calculate absolute position based on current gravity placement
+          // Position within renderable area (TYPE_APPLICATION_OVERLAY windows are
+          // fit between system bars by the window manager)
           layoutParams.gravity = Gravity.TOP or Gravity.LEFT
           layoutParams.x = screenWidth - view.width - padding
-          layoutParams.y = screenHeight - view.height - padding
+          layoutParams.y = renderableH - view.height - padding
           windowManager.updateViewLayout(view, layoutParams)
         }
       }
@@ -447,35 +655,37 @@ class LiveEditorOnScreenButtonController(
       private var isDragging = false
 
       init {
-        orientation = HORIZONTAL
-        gravity = Gravity.CENTER_VERTICAL
+        orientation = VERTICAL
+
+        // Create the button bar as a horizontal child
+        val buttonBar =
+            LinearLayout(context).apply {
+              orientation = HORIZONTAL
+              gravity = Gravity.CENTER_VERTICAL
+              background = null
+              elevation = 8.dpToPxF(context)
+            }
+
         val buttonWidth = 44.dpToPx(context)
-        val buttonHeight = 36.dpToPx(context) // Shorter height for non-square buttons
-        val buttonSpacing = 2.dpToPx(context) // Small spacing between icons
+        val buttonHeight = 36.dpToPx(context)
+        val buttonSpacing = 2.dpToPx(context)
         val buttonPadding = 8.dpToPx(context)
-        val edgeCornerRadius = (buttonHeight / 2).toFloat() // Pill-shaped for edge buttons
-        val innerCornerRadius = 4.dpToPxF(context) // Slight rounding for middle buttons
-
-        // Add elevation for shadow effect
-        elevation = 8.dpToPxF(context)
-
-        // No container background - each button has its own background
-        background = null
+        val edgeCornerRadius = (buttonHeight / 2).toFloat()
+        val innerCornerRadius = 4.dpToPxF(context)
 
         val buttonCount = buttons.size
+        val createdButtons = mutableListOf<ImageButton>()
         buttons.forEachIndexed { index, button ->
           val buttonLayoutParams = LayoutParams(buttonWidth, buttonHeight)
 
-          // Add spacing between buttons (not on the outer edges)
           val leftMargin = if (index == 0) 0 else buttonSpacing
           val rightMargin = if (index == buttonCount - 1) 0 else buttonSpacing
           buttonLayoutParams.setMargins(leftMargin, 0, rightMargin, 0)
 
-          // Determine corner radii based on position
           val isFirstButton = index == 0
           val isLastButton = index == buttonCount - 1
 
-          addView(
+          val imageButton =
               createIconButton(
                   context,
                   buttonPadding,
@@ -488,11 +698,19 @@ class LiveEditorOnScreenButtonController(
                   edgeCornerRadius = edgeCornerRadius,
                   innerCornerRadius = innerCornerRadius,
               )
-          )
+          createdButtons.add(imageButton)
+          buttonBar.addView(imageButton)
         }
+        controller.buttonViews = createdButtons
+        controller.buttonBarView = buttonBar
+
+        addView(buttonBar)
       }
 
       override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
+        if (controller.isDialogOpen) {
+          return false
+        }
         val layoutParams = controller.currentLayoutParams ?: return false
 
         when (ev.action) {
@@ -530,6 +748,9 @@ class LiveEditorOnScreenButtonController(
       }
 
       override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (controller.isDialogOpen) {
+          return false
+        }
         val layoutParams = controller.currentLayoutParams ?: return false
         val (screenWidth, screenHeight) = controller.getScreenDimensions(windowManager)
 
@@ -552,10 +773,12 @@ class LiveEditorOnScreenButtonController(
             }
 
             if (isDragging) {
-              // Calculate new position and clamp to screen bounds
-              // Use actual view dimensions (always available during touch events)
+              // Clamp to renderable area (TYPE_APPLICATION_OVERLAY windows are fit
+              // between system bars by the window manager)
+              val (statusBarInset, navBarInset) = controller.getSystemBarInsets(context)
+              val renderableH = screenHeight - statusBarInset - navBarInset
               val newX = (initialX + deltaX.toInt()).coerceIn(0, screenWidth - width)
-              val newY = (initialY + deltaY.toInt()).coerceIn(0, screenHeight - height)
+              val newY = (initialY + deltaY.toInt()).coerceIn(0, renderableH - height)
 
               layoutParams.x = newX
               layoutParams.y = newY
