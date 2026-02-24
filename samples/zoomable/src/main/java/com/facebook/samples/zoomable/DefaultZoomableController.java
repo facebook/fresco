@@ -81,6 +81,7 @@ public class DefaultZoomableController
     return new DefaultZoomableController(TransformGestureDetector.newInstance());
   }
 
+  @SuppressWarnings("this-escape")
   public DefaultZoomableController(TransformGestureDetector gestureDetector) {
     mGestureDetector = gestureDetector;
     mGestureDetector.setListener(this);

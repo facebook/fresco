@@ -56,7 +56,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
   private boolean mIsDialtoneEnabled = false;
   private boolean mZoomingEnabled = true;
 
-  private final ControllerListener mControllerListener =
+  private final ControllerListener<Object> mControllerListener =
       new BaseControllerListener<Object>() {
         @Override
         public void onFinalImageSet(
@@ -86,24 +86,28 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
 
   private final GestureListenerWrapper mTapListenerWrapper = new GestureListenerWrapper();
 
+  @SuppressWarnings("this-escape")
   public ZoomableDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
     super(context);
     setHierarchy(hierarchy);
     init();
   }
 
+  @SuppressWarnings("this-escape")
   public ZoomableDraweeView(Context context) {
     super(context);
     inflateHierarchy(context, null);
     init();
   }
 
+  @SuppressWarnings("this-escape")
   public ZoomableDraweeView(Context context, AttributeSet attrs) {
     super(context, attrs);
     inflateHierarchy(context, attrs);
     init();
   }
 
+  @SuppressWarnings("this-escape")
   public ZoomableDraweeView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
     inflateHierarchy(context, attrs);
@@ -256,15 +260,17 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void removeControllerListener(DraweeController controller) {
     if (controller instanceof AbstractDraweeController) {
-      ((AbstractDraweeController) controller).removeControllerListener(mControllerListener);
+      ((AbstractDraweeController<?, ?>) controller).removeControllerListener(mControllerListener);
     }
   }
 
+  @SuppressWarnings("unchecked")
   private void addControllerListener(DraweeController controller) {
     if (controller instanceof AbstractDraweeController) {
-      ((AbstractDraweeController) controller).addControllerListener(mControllerListener);
+      ((AbstractDraweeController<?, ?>) controller).addControllerListener(mControllerListener);
     }
   }
 
@@ -277,7 +283,7 @@ public class ZoomableDraweeView extends DraweeView<GenericDraweeHierarchy>
     } catch (Exception e) {
       DraweeController controller = getController();
       if (controller != null && controller instanceof AbstractDraweeController) {
-        Object callerContext = ((AbstractDraweeController) controller).getCallerContext();
+        Object callerContext = ((AbstractDraweeController<?, ?>) controller).getCallerContext();
         if (callerContext != null) {
           throw new RuntimeException(
               String.format("Exception in onDraw, callerContext=%s", callerContext.toString()), e);
