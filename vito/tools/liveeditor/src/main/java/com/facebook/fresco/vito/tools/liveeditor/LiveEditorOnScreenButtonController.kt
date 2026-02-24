@@ -8,6 +8,8 @@
 package com.facebook.fresco.vito.tools.liveeditor
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Application
 import android.content.Context
 import android.graphics.PixelFormat
 import android.graphics.drawable.ColorDrawable
@@ -15,6 +17,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.GradientDrawable
 import android.hardware.display.DisplayManager
 import android.os.Build
+import android.os.Bundle
 import android.provider.Settings
 import android.view.Display.DEFAULT_DISPLAY
 import android.view.Gravity
@@ -182,10 +185,74 @@ class LiveEditorOnScreenButtonController(
   private var lastButtonPositionX: Int? = null
   private var lastButtonPositionY: Int? = null
 
+  // Foreground/background tracking
+  private var isAppInForeground = true
+  private var lifecycleCallbacksRegistered = false
+
   private fun saveCurrentButtonPosition() {
     currentLayoutParams?.let { params ->
       lastButtonPositionX = params.x
       lastButtonPositionY = params.y
+    }
+  }
+
+  private fun registerLifecycleCallbacks(context: Context) {
+    if (lifecycleCallbacksRegistered) {
+      return
+    }
+    val app = context.applicationContext as? Application ?: return
+    // Start at 1: the current activity is already resumed when we register
+    var resumedActivityCount = 1
+
+    app.registerActivityLifecycleCallbacks(
+        object : Application.ActivityLifecycleCallbacks {
+          override fun onActivityResumed(activity: Activity) {
+            resumedActivityCount++
+            if (!isAppInForeground) {
+              isAppInForeground = true
+              showOverlayIfNeeded(activity)
+            }
+          }
+
+          override fun onActivityPaused(activity: Activity) {
+            resumedActivityCount--
+            if (resumedActivityCount <= 0) {
+              resumedActivityCount = 0
+              isAppInForeground = false
+              hideOverlay()
+            }
+          }
+
+          override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) = Unit
+
+          override fun onActivityStarted(activity: Activity) = Unit
+
+          override fun onActivityStopped(activity: Activity) = Unit
+
+          override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) = Unit
+
+          override fun onActivityDestroyed(activity: Activity) = Unit
+        }
+    )
+    lifecycleCallbacksRegistered = true
+  }
+
+  private fun hideOverlay() {
+    val view = currentView ?: return
+    saveCurrentButtonPosition()
+    try {
+      val windowManager = view.context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+      windowManager.removeView(view)
+    } catch (_: IllegalArgumentException) {
+      // View might not be attached to window manager
+    }
+    currentView = null
+    currentLayoutParams = null
+  }
+
+  private fun showOverlayIfNeeded(context: Context) {
+    if (isAttached && currentView == null && isEnabled.get()) {
+      showImageToggleButtons(context)
     }
   }
 
@@ -195,6 +262,7 @@ class LiveEditorOnScreenButtonController(
       return
     }
     isAttached = true
+    registerLifecycleCallbacks(context)
     imageSelector =
         ImageSelector(
             imageTrackerListener,
