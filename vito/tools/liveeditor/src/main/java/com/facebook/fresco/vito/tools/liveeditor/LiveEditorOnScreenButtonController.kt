@@ -49,6 +49,7 @@ import kotlin.math.abs
  * @param iconPrevious Drawable resource for the "previous image" button
  * @param iconNext Drawable resource for the "next image" button
  * @param iconEdit Drawable resource for the "edit image" button
+ * @param iconCode Drawable resource for the "image options" button
  * @param iconInfo Drawable resource for the "image info" button
  * @param iconClose Drawable resource for the "close" button
  */
@@ -59,6 +60,7 @@ data class ButtonStyle(
     val iconPrevious: Int,
     val iconNext: Int,
     val iconEdit: Int,
+    val iconCode: Int = android.R.drawable.ic_menu_manage,
     val iconInfo: Int,
     val iconClose: Int = android.R.drawable.ic_menu_close_clear_cancel,
 )
@@ -144,6 +146,7 @@ class LiveEditorOnScreenButtonController(
             imageSelector?.selectPrevious(it.context)
           },
           ButtonConfig("Edit image", buttonStyle.iconEdit) { showLiveEditor(it.context) },
+          ButtonConfig("Image options", buttonStyle.iconCode) { showImageOptions(it.context) },
           ButtonConfig("Image info", buttonStyle.iconInfo) { showImageInfo(it.context) },
           additionalButtonConfig,
           ButtonConfig("Next image", buttonStyle.iconNext) {
@@ -345,8 +348,20 @@ class LiveEditorOnScreenButtonController(
         LiveEditorUiUtils(imageSelector?.currentEditor, debugDataProviders)
             .createImageInfoView(context, title = "Image info")
 
-    // Info button is at index 2 in the buttons list
-    showDialogPanel(context, infoView, sourceButtonIndex = 2)
+    // Info button is at index 3 in the buttons list
+    showDialogPanel(context, infoView, sourceButtonIndex = 3)
+  }
+
+  private fun showImageOptions(context: Context) {
+    if (isDialogOpen) {
+      closeDialogPanel(context)
+    }
+    val optionsView =
+        LiveEditorUiUtils(imageSelector?.currentEditor, debugDataProviders)
+            .createImageOptionsView(context, title = "Image options")
+
+    // Code button is at index 2 in the buttons list
+    showDialogPanel(context, optionsView, sourceButtonIndex = 2)
   }
 
   private fun showLiveEditor(context: Context) {
@@ -465,9 +480,9 @@ class LiveEditorOnScreenButtonController(
     sourceButton.contentDescription = "Close"
     sourceButton.setOnClickListener { closeDialogPanel(context) }
 
-    // Disable navigation buttons only — dialog buttons (Edit, Info) stay enabled
+    // Disable navigation buttons only — dialog buttons (Edit, Code, Info) stay enabled
     // so the user can switch between dialogs without closing first
-    val dialogButtonIndices = setOf(1, 2)
+    val dialogButtonIndices = setOf(1, 2, 3)
     buttonViews.forEachIndexed { index, btn ->
       if (index != sourceButtonIndex && index !in dialogButtonIndices) {
         btn.isEnabled = false

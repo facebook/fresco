@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.tools.liveeditor
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.TypedValue
 import android.view.View
@@ -90,16 +91,32 @@ class LiveEditorUiUtils(
         )
       }
 
+  fun createImageOptionsView(context: Context, title: String? = null): View =
+      createScrollingList(context, title = title) {
+        val info: List<Pair<String, String>> =
+            liveEditor?.let { editor -> extractImageOptionsInfo(editor.getOptions()) }
+                ?: emptyList()
+
+        if (info.isEmpty()) {
+          addView(
+              TextView(context).apply {
+                @SuppressLint("SetTextI18n") text = "No image options available"
+              }
+          )
+        }
+        info.forEach { infoItem ->
+          val view = ImageSourceUiUtil(context).createImageInfoView(infoItem, this)
+          addView(view)
+        }
+      }
+
   fun createImageInfoView(context: Context, title: String? = null): View =
       createScrollingList(context, title = title) {
         // 1. ImageSource info
         var info: List<Pair<String, String>> =
             ImageSourceParser.convertSourceToKeyValue(liveEditor?.getSource().toString())
 
-        // 2. ImageOptions info
-        liveEditor?.let { editor -> info = info + extractImageOptionsInfo(editor.getOptions()) }
-
-        // 3. Debug provider data
+        // 2. Debug provider data
         liveEditor?.let { liveEditorNonNull ->
           debugDataProviders?.forEach { debugProvider ->
             val debugData: Pair<String, String> =
