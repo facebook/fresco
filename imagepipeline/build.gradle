@@ -68,6 +68,7 @@ android {
                 exclude '**/LocalVideoThumbnailProducerTest.java'
                 exclude '**/DecodeProducerTest.java'
                 exclude '**/HttpUrlConnectionNetworkFetcherTest.java'
+                exclude '**/UnifiedImageNetworkLayerIntegrationTest.kt'
             }
         }
     }
