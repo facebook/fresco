@@ -35,8 +35,6 @@ import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
 import com.facebook.fresco.ui.common.ForwardingControllerListener2;
-import com.facebook.fresco.ui.common.LegacyOnFadeListener;
-import com.facebook.fresco.ui.common.OnFadeListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ReturnsOwnership;
@@ -100,7 +98,6 @@ public abstract class AbstractDraweeController<T, INFO>
   protected @Nullable ControllerListener<INFO> mControllerListener;
   protected ForwardingControllerListener2<INFO> mControllerListener2 =
       new ForwardingControllerListener2<>();
-  protected @Nullable LegacyOnFadeListener mLegacyOnFadeListener;
 
   // Hierarchy
   private @Nullable SettableDraweeHierarchy mSettableDraweeHierarchy;
@@ -192,10 +189,6 @@ public abstract class AbstractDraweeController<T, INFO>
     mCallerContext = callerContext;
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.endSection();
-    }
-
-    if (mLegacyOnFadeListener != null) {
-      setUpLoggingListener();
     }
   }
 
@@ -325,14 +318,6 @@ public abstract class AbstractDraweeController<T, INFO>
     mControllerListener2.removeListener(controllerListener2);
   }
 
-  public void setLoggingListener(final LegacyOnFadeListener legacyOnFadeListener) {
-    mLegacyOnFadeListener = legacyOnFadeListener;
-  }
-
-  protected @Nullable LegacyOnFadeListener getLoggingListener() {
-    return mLegacyOnFadeListener;
-  }
-
   /** Removes controller listener. */
   public void removeControllerListener(ControllerListener<? super INFO> controllerListener) {
     Preconditions.checkNotNull(controllerListener, "Controller listener cannot be null");
@@ -402,35 +387,6 @@ public abstract class AbstractDraweeController<T, INFO>
       mSettableDraweeHierarchy = (SettableDraweeHierarchy) hierarchy;
       // NULLSAFE_FIXME[Parameter Not Nullable]
       mSettableDraweeHierarchy.setControllerOverlay(mControllerOverlay);
-    }
-
-    if (mLegacyOnFadeListener != null) {
-      setUpLoggingListener();
-    }
-  }
-
-  private void setUpLoggingListener() {
-    if (mSettableDraweeHierarchy instanceof GenericDraweeHierarchy) {
-      ((GenericDraweeHierarchy) mSettableDraweeHierarchy)
-          .setOnFadeListener(
-              new OnFadeListener() {
-                @Override
-                public void onFadeFinished() {
-                  if (mLegacyOnFadeListener != null) {
-                    mLegacyOnFadeListener.onFadeFinished(mId);
-                  }
-                }
-
-                @Override
-                public void onShownImmediately() {}
-
-                @Override
-                public void onFadeStarted() {
-                  if (mLegacyOnFadeListener != null) {
-                    mLegacyOnFadeListener.onFadeStarted(mId);
-                  }
-                }
-              });
     }
   }
 

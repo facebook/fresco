@@ -20,7 +20,6 @@ import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.SimpleDraweeControllerBuilder;
 import com.facebook.fresco.ui.common.ControllerListener2;
-import com.facebook.fresco.ui.common.LegacyOnFadeListener;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ReturnsOwnership;
@@ -65,7 +64,6 @@ public abstract class AbstractDraweeControllerBuilder<
   private boolean mTryCacheOnlyFirst;
   private @Nullable Supplier<DataSource<IMAGE>> mDataSourceSupplier;
   private @Nullable ControllerListener<? super INFO> mControllerListener;
-  private @Nullable LegacyOnFadeListener mLegacyOnFadeListener;
   private @Nullable ControllerViewportVisibilityListener mControllerViewportVisibilityListener;
   private boolean mTapToRetryEnabled;
   private boolean mAutoPlayAnimations;
@@ -95,7 +93,6 @@ public abstract class AbstractDraweeControllerBuilder<
     mMultiImageRequests = null;
     mTryCacheOnlyFirst = true;
     mControllerListener = null;
-    mLegacyOnFadeListener = null;
     mControllerViewportVisibilityListener = null;
     mTapToRetryEnabled = false;
     mAutoPlayAnimations = false;
@@ -255,16 +252,6 @@ public abstract class AbstractDraweeControllerBuilder<
       @Nullable ControllerListener<? super INFO> controllerListener) {
     mControllerListener = controllerListener;
     return getThis();
-  }
-
-  public BUILDER setLoggingListener(@Nullable LegacyOnFadeListener legacyOnFadeListener) {
-    mLegacyOnFadeListener = legacyOnFadeListener;
-    return getThis();
-  }
-
-  @Nullable
-  public LegacyOnFadeListener getLoggingListener() {
-    return mLegacyOnFadeListener;
   }
 
   /** Gets the controller listener */
