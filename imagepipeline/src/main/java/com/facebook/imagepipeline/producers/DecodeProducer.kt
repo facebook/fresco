@@ -116,7 +116,7 @@ class DecodeProducer(
     /** @return true if producer is finished */
     @get:Synchronized @GuardedBy("this") private var isFinished: Boolean = false
     private val jobScheduler: JobScheduler
-    protected var lastScheduledScanNumber = 0
+    var lastScheduledScanNumber = 0
 
     private fun maybeIncreaseSampleSize(encodedImage: EncodedImage) {
       if (encodedImage.imageFormat !== DefaultImageFormats.JPEG) {
@@ -185,7 +185,7 @@ class DecodeProducer(
     }
 
     /** Updates the decode job. */
-    protected open fun updateDecodeJob(ref: EncodedImage?, @Consumer.Status status: Int): Boolean =
+    open fun updateDecodeJob(ref: EncodedImage?, @Consumer.Status status: Int): Boolean =
         jobScheduler.updateJob(ref, status)
 
     /** Performs the decode synchronously. */
@@ -442,9 +442,9 @@ class DecodeProducer(
       consumer.onCancellation()
     }
 
-    protected abstract fun getIntermediateImageEndOffset(encodedImage: EncodedImage): Int
+    abstract fun getIntermediateImageEndOffset(encodedImage: EncodedImage): Int
 
-    protected abstract val qualityInfo: QualityInfo
+    abstract val qualityInfo: QualityInfo
 
     init {
       val job = JobRunnable { encodedImage, status ->
@@ -514,7 +514,7 @@ class DecodeProducer(
     override fun getIntermediateImageEndOffset(encodedImage: EncodedImage): Int = encodedImage.size
 
     override val qualityInfo: QualityInfo
-      protected get() = ImmutableQualityInfo.of(0, false, false)
+      get() = ImmutableQualityInfo.of(0, false, false)
   }
 
   private inner class NetworkImagesProgressiveDecoder(
@@ -568,7 +568,7 @@ class DecodeProducer(
         this.progressiveJpegParser.bestScanEndOffset
 
     override val qualityInfo: QualityInfo
-      protected get() =
+      get() =
           progressiveJpegConfig.getQualityInfo(
               producerContext.imageRequest,
               this.progressiveJpegParser.bestScanNumber,
