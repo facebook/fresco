@@ -74,18 +74,21 @@ public class ZoomableVitoView extends ImageView implements ScrollingView {
 
   private final GestureListenerWrapper mTapListenerWrapper = new GestureListenerWrapper();
 
+  @SuppressWarnings("this-escape")
   public ZoomableVitoView(Context context) {
     super(context);
     setScaleType(ScaleType.FIT_CENTER);
     init();
   }
 
+  @SuppressWarnings("this-escape")
   public ZoomableVitoView(Context context, AttributeSet attrs) {
     super(context, attrs);
     setScaleType(ScaleType.FIT_CENTER);
     init();
   }
 
+  @SuppressWarnings("this-escape")
   public ZoomableVitoView(Context context, AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
     setScaleType(ScaleType.FIT_CENTER);
