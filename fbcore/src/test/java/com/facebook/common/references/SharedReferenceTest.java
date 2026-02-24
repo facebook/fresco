@@ -7,11 +7,13 @@
 
 package com.facebook.common.references;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
+
 import com.facebook.common.internal.Closeables;
 import java.io.Closeable;
 import java.io.IOException;
 import javax.annotation.Nullable;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -27,34 +29,34 @@ public class SharedReferenceTest {
 
     // ref count = 1 after creation
     SharedReference<Thing> tRef = new SharedReference<Thing>(new Thing("abc"), THING_RELEASER);
-    Assert.assertTrue(SharedReference.isValid(tRef));
-    Assert.assertEquals(1, tRef.getRefCountTestOnly());
+    assertThat(SharedReference.isValid(tRef)).isTrue();
+    assertThat(tRef.getRefCountTestOnly()).isEqualTo(1);
     Thing t = tRef.get();
-    Assert.assertEquals("abc", t.get());
+    assertThat(t.get()).isEqualTo("abc");
 
     // adding a reference increases the ref count
     tRef.addReference();
-    Assert.assertTrue(SharedReference.isValid(tRef));
-    Assert.assertEquals(2, tRef.getRefCountTestOnly());
-    Assert.assertEquals(t, tRef.get());
-    Assert.assertEquals("abc", t.get());
+    assertThat(SharedReference.isValid(tRef)).isTrue();
+    assertThat(tRef.getRefCountTestOnly()).isEqualTo(2);
+    assertThat(tRef.get()).isEqualTo(t);
+    assertThat(t.get()).isEqualTo("abc");
 
     // deleting a reference drops the reference count
     tRef.deleteReference();
-    Assert.assertTrue(SharedReference.isValid(tRef));
-    Assert.assertEquals(1, tRef.getRefCountTestOnly());
-    Assert.assertEquals(t, tRef.get());
-    Assert.assertEquals("abc", t.get());
+    assertThat(SharedReference.isValid(tRef)).isTrue();
+    assertThat(tRef.getRefCountTestOnly()).isEqualTo(1);
+    assertThat(tRef.get()).isEqualTo(t);
+    assertThat(t.get()).isEqualTo("abc");
 
     // when the last reference is gone, the underlying object is disposed
     tRef.deleteReference();
-    Assert.assertFalse(SharedReference.isValid(tRef));
-    Assert.assertEquals(0, tRef.getRefCountTestOnly());
+    assertThat(SharedReference.isValid(tRef)).isFalse();
+    assertThat(tRef.getRefCountTestOnly()).isEqualTo(0);
 
     // adding a reference now should fail
     try {
       tRef.addReference();
-      Assert.fail();
+      fail("Expected NullReferenceException");
     } catch (SharedReference.NullReferenceException e) {
       // do nothing
     }
@@ -62,13 +64,13 @@ public class SharedReferenceTest {
     // so should deleting a reference
     try {
       tRef.deleteReference();
-      Assert.fail();
+      fail("Expected NullReferenceException");
     } catch (SharedReference.NullReferenceException e) {
       // do nothing
     }
 
     // null shared references are not 'valid'
-    Assert.assertFalse(SharedReference.isValid(null));
+    assertThat(SharedReference.isValid(null)).isFalse();
 
     // test out exceptions during a close
     SharedReference<Thing> t2Ref = new SharedReference<Thing>(new Thing2("abc"), THING_RELEASER);
@@ -79,7 +81,7 @@ public class SharedReferenceTest {
   @Test
   public void testNewSharedReference() {
     final Thing thing = new Thing("abc");
-    Assert.assertSame(thing, new SharedReference(thing, THING_RELEASER).get());
+    assertThat(new SharedReference(thing, THING_RELEASER).get()).isSameAs(thing);
   }
 
   @Test
@@ -128,7 +130,7 @@ public class SharedReferenceTest {
             Closeables.close(value, true);
           } catch (IOException ioe) {
             // this should not happen
-            Assert.fail();
+            fail("this should not happen");
           }
         }
       };
