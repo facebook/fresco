@@ -9,7 +9,7 @@ package com.facebook.imageutils
 
 import java.io.IOException
 import java.io.InputStream
-import org.junit.Assert
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -59,7 +59,7 @@ class WebPUtilTest {
   @Throws(IOException::class)
   private fun getResourceStream(name: String): InputStream {
     val `is` = WebPUtilTest::class.java.getResourceAsStream(name)
-    Assert.assertNotNull("failed to read resource: " + name, `is`)
+    assertThat(`is`).describedAs("failed to read resource: " + name).isNotNull()
     return `is`!!
   }
 
@@ -74,8 +74,10 @@ class WebPUtilTest {
   @Throws(IOException::class)
   private fun checkImage(imagePath: String, expectedWidth: Int, expectedHeight: Int) {
     val size: Pair<Int?, Int?>? = WebpUtil.getSize(getResourceStream(imagePath))
-    Assert.assertNotNull("Something went wrong during parsing WebP! " + imagePath, size)
-    Assert.assertEquals(expectedWidth, size!!.component1())
-    Assert.assertEquals(expectedHeight, size.component2())
+    assertThat(size)
+        .describedAs("Something went wrong during parsing WebP! " + imagePath)
+        .isNotNull()
+    assertThat(size!!.component1()).isEqualTo(expectedWidth)
+    assertThat(size.component2()).isEqualTo(expectedHeight)
   }
 }
