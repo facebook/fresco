@@ -7,13 +7,14 @@
 
 package com.facebook.drawee.components;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import com.facebook.drawee.components.DeferredReleaser.Releasable;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -66,7 +67,7 @@ public class DeferredReleaserStressTest {
         }
         durationScheduling += System.nanoTime() - start;
 
-        Assert.assertEquals(before, releaseCalls.get());
+        assertThat(releaseCalls.get()).isEqualTo(before);
       }
 
       {
@@ -76,11 +77,11 @@ public class DeferredReleaserStressTest {
         ShadowLooper.runUiThreadTasks();
         durationReleasing += System.nanoTime() - start;
 
-        Assert.assertEquals(before + batchSize, releaseCalls.get());
+        assertThat(releaseCalls.get()).isEqualTo(before + batchSize);
       }
     }
 
-    Assert.assertEquals(repeatCount * batchSize, releaseCalls.get());
+    assertThat(releaseCalls.get()).isEqualTo(repeatCount * batchSize);
 
     NumberFormat numberFormat = NumberFormat.getInstance();
     System.out.println(
