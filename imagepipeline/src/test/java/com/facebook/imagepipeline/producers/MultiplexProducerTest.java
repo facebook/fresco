@@ -7,9 +7,7 @@
 
 package com.facebook.imagepipeline.producers;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doAnswer;
@@ -172,7 +170,7 @@ public class MultiplexProducerTest {
     verify(mConsumer1).onNewResult(mIntermediateImageReference2, Consumer.NO_FLAGS);
     mForwardingConsumer1.onNewResult(mFinalImageReference1, Consumer.IS_LAST);
     verify(mConsumer1).onNewResult(mFinalImageReference1, Consumer.IS_LAST);
-    assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());
+    assertThat(mMultiplexProducer.mMultiplexers.isEmpty()).isTrue();
   }
 
   @Test
@@ -184,9 +182,8 @@ public class MultiplexProducerTest {
         ArgumentCaptor.forClass(CloseableReference.class);
     mMultiplexProducer.produceResults(mConsumer2, mProducerContext2);
     verify(mConsumer2).onNewResult(imageReferenceCaptor.capture(), eq(TEST_FLAG));
-    assertEquals(
-        imageReferenceCaptor.getValue().getUnderlyingReferenceTestOnly(),
-        mIntermediateImageReference2.getUnderlyingReferenceTestOnly());
+    assertThat(mIntermediateImageReference2.getUnderlyingReferenceTestOnly())
+        .isEqualTo(imageReferenceCaptor.getValue().getUnderlyingReferenceTestOnly());
   }
 
   @Test
@@ -202,19 +199,19 @@ public class MultiplexProducerTest {
     verify(mConsumer3).onNewResult(mIntermediateImageReference2, Consumer.NO_FLAGS);
     verify(mConsumer1, never()).onNewResult(mIntermediateImageReference2, Consumer.NO_FLAGS);
     verify(mConsumer2, never()).onNewResult(mIntermediateImageReference2, Consumer.NO_FLAGS);
-    assertTrue(mMultiplexProducer.mMultiplexers.size() == 2);
+    assertThat(mMultiplexProducer.mMultiplexers.size() == 2).isTrue();
 
     mForwardingConsumer1.onNewResult(mFinalImageReference1, Consumer.IS_LAST);
     verify(mConsumer1).onNewResult(mFinalImageReference1, Consumer.IS_LAST);
     verify(mConsumer2).onNewResult(mFinalImageReference1, Consumer.IS_LAST);
     verify(mConsumer3, never()).onNewResult(mFinalImageReference1, Consumer.IS_LAST);
-    assertTrue(mMultiplexProducer.mMultiplexers.size() == 1);
+    assertThat(mMultiplexProducer.mMultiplexers.size() == 1).isTrue();
 
     mForwardingConsumer2.onNewResult(mFinalImageReference2, Consumer.IS_LAST);
     verify(mConsumer3).onNewResult(mFinalImageReference2, Consumer.IS_LAST);
     verify(mConsumer1, never()).onNewResult(mFinalImageReference2, Consumer.IS_LAST);
     verify(mConsumer2, never()).onNewResult(mFinalImageReference2, Consumer.IS_LAST);
-    assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());
+    assertThat(mMultiplexProducer.mMultiplexers.isEmpty()).isTrue();
   }
 
   @Test
@@ -224,30 +221,30 @@ public class MultiplexProducerTest {
     mForwardingConsumer1.onFailure(mException);
     verify(mConsumer1).onFailure(mException);
     verify(mConsumer2).onFailure(mException);
-    assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());
+    assertThat(mMultiplexProducer.mMultiplexers.isEmpty()).isTrue();
   }
 
   @Test
   public void testTwoIdenticalInSequence() {
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mForwardingConsumer1.onNewResult(mFinalImageReference1, Consumer.IS_LAST);
-    assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());
+    assertThat(mMultiplexProducer.mMultiplexers.isEmpty()).isTrue();
 
     mMultiplexProducer.produceResults(mConsumer2, mProducerContext2);
     mForwardingConsumer2.onNewResult(mFinalImageReference2, Consumer.IS_LAST);
     verify(mConsumer2).onNewResult(mFinalImageReference2, Consumer.IS_LAST);
     verify(mConsumer1, never()).onNewResult(mFinalImageReference2, Consumer.IS_LAST);
-    assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());
+    assertThat(mMultiplexProducer.mMultiplexers.isEmpty()).isTrue();
   }
 
   @Test
   public void testCancelSingleRequest() {
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mProducerContext1.cancel();
-    assertTrue(mMultiplexedContext1.isCancelled());
+    assertThat(mMultiplexedContext1.isCancelled()).isTrue();
     mForwardingConsumer1.onCancellation();
     verify(mConsumer1).onCancellation();
-    assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());
+    assertThat(mMultiplexProducer.mMultiplexers.isEmpty()).isTrue();
     verifyNoMoreInteractions(mConsumer1);
   }
 
@@ -262,47 +259,47 @@ public class MultiplexProducerTest {
     verify(mConsumer1, never()).onNewResult(mIntermediateImageReference1, TEST_FLAG);
     verify(mConsumer2).onNewResult(mIntermediateImageReference1, TEST_FLAG);
     verify(mConsumer3, never()).onNewResult(mIntermediateImageReference1, TEST_FLAG);
-    assertTrue(mMultiplexProducer.mMultiplexers.size() == 2);
+    assertThat(mMultiplexProducer.mMultiplexers.size() == 2).isTrue();
 
     mForwardingConsumer2.onNewResult(mIntermediateImageReference2, Consumer.NO_FLAGS);
     verify(mConsumer3).onNewResult(mIntermediateImageReference2, Consumer.NO_FLAGS);
     verify(mConsumer1, never()).onNewResult(mIntermediateImageReference2, Consumer.NO_FLAGS);
     verify(mConsumer2, never()).onNewResult(mIntermediateImageReference2, Consumer.NO_FLAGS);
-    assertTrue(mMultiplexProducer.mMultiplexers.size() == 2);
+    assertThat(mMultiplexProducer.mMultiplexers.size() == 2).isTrue();
 
     mProducerContext3.cancel();
     mForwardingConsumer2.onCancellation();
-    assertTrue(mMultiplexProducer.mMultiplexers.size() == 1);
+    assertThat(mMultiplexProducer.mMultiplexers.size() == 1).isTrue();
 
     mProducerContext2.cancel();
     mForwardingConsumer1.onCancellation();
-    assertTrue(mMultiplexProducer.mMultiplexers.size() == 0);
+    assertThat(mMultiplexProducer.mMultiplexers.size() == 0).isTrue();
   }
 
   @Test
   public void testOnFailureThenCancel() {
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mForwardingConsumer1.onFailure(mException);
-    assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());
+    assertThat(mMultiplexProducer.mMultiplexers.isEmpty()).isTrue();
 
     mMultiplexProducer.produceResults(mConsumer2, mProducerContext2);
-    assertTrue(mMultiplexProducer.mMultiplexers.size() == 1);
+    assertThat(mMultiplexProducer.mMultiplexers.size() == 1).isTrue();
     mProducerContext1.cancel();
     mForwardingConsumer1.onCancellation();
-    assertTrue(mMultiplexProducer.mMultiplexers.size() == 1);
+    assertThat(mMultiplexProducer.mMultiplexers.size() == 1).isTrue();
   }
 
   @Test
   public void testCancelThenOnLastResult() {
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mProducerContext1.cancel();
-    assertFalse(mMultiplexProducer.mMultiplexers.isEmpty());
+    assertThat(mMultiplexProducer.mMultiplexers.isEmpty()).isFalse();
     mForwardingConsumer1.onCancellation();
-    assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());
+    assertThat(mMultiplexProducer.mMultiplexers.isEmpty()).isTrue();
     mMultiplexProducer.produceResults(mConsumer2, mProducerContext2);
-    assertTrue(mMultiplexProducer.mMultiplexers.size() == 1);
+    assertThat(mMultiplexProducer.mMultiplexers.size() == 1).isTrue();
     mForwardingConsumer1.onNewResult(mFinalImageReference1, Consumer.IS_LAST);
-    assertTrue(mMultiplexProducer.mMultiplexers.size() == 1);
+    assertThat(mMultiplexProducer.mMultiplexers.size() == 1).isTrue();
   }
 
   @Test
@@ -314,24 +311,24 @@ public class MultiplexProducerTest {
     mMultiplexProducer.produceResults(mConsumer2, mProducerContext2);
     verify(mInputProducer).produceResults(any(Consumer.class), any(ProducerContext.class));
     mForwardingConsumer1.onCancellation();
-    assertEquals(1, mMultiplexProducer.mMultiplexers.size());
+    assertThat(mMultiplexProducer.mMultiplexers.size()).isEqualTo(1);
     verify(mInputProducer).produceResults(mForwardingConsumer2, mMultiplexedContext2);
     mForwardingConsumer2.onNewResult(mFinalImageReference1, Consumer.IS_LAST);
     verify(mConsumer2).onNewResult(mFinalImageReference1, Consumer.IS_LAST);
-    assertTrue(mMultiplexProducer.mMultiplexers.isEmpty());
+    assertThat(mMultiplexProducer.mMultiplexers.isEmpty()).isTrue();
   }
 
   @Test
   public void testIsPrefetchTrue() {
     mProducerContext1.setIsPrefetch(true);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    assertTrue(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isTrue();
   }
 
   @Test
   public void testIsPrefetchFalse() {
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    assertFalse(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isFalse();
   }
 
   @Test
@@ -340,11 +337,11 @@ public class MultiplexProducerTest {
     mProducerContext2.setIsPrefetch(false);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertFalse(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isFalse();
     ProducerContextCallbacks callbacks = mock(ProducerContextCallbacks.class);
     mMultiplexedContext1.addCallbacks(callbacks);
     mProducerContext2.cancel();
-    assertTrue(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isTrue();
     verify(callbacks).onIsPrefetchChanged();
   }
 
@@ -354,9 +351,9 @@ public class MultiplexProducerTest {
     mProducerContext2.setIsPrefetch(false);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertFalse(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isFalse();
     mProducerContext2.cancel();
-    assertFalse(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isFalse();
   }
 
   @Test
@@ -365,9 +362,9 @@ public class MultiplexProducerTest {
     mProducerContext2.setIsPrefetch(true);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertTrue(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isTrue();
     mProducerContext2.cancel();
-    assertTrue(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isTrue();
   }
 
   @Test
@@ -375,11 +372,11 @@ public class MultiplexProducerTest {
     mProducerContext1.setIsPrefetch(true);
     mProducerContext2.setIsPrefetch(false);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    assertTrue(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isTrue();
     ProducerContextCallbacks callbacks = mock(ProducerContextCallbacks.class);
     mMultiplexedContext1.addCallbacks(callbacks);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertFalse(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isFalse();
     verify(callbacks).onIsPrefetchChanged();
   }
 
@@ -388,9 +385,9 @@ public class MultiplexProducerTest {
     mProducerContext1.setIsPrefetch(true);
     mProducerContext2.setIsPrefetch(true);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    assertTrue(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isTrue();
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertTrue(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isTrue();
   }
 
   @Test
@@ -398,9 +395,9 @@ public class MultiplexProducerTest {
     mProducerContext1.setIsPrefetch(false);
     mProducerContext2.setIsPrefetch(true);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    assertFalse(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isFalse();
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertFalse(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isFalse();
   }
 
   @Test
@@ -409,9 +406,9 @@ public class MultiplexProducerTest {
     mProducerContext2.setIsPrefetch(true);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertTrue(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isTrue();
     mProducerContext1.setIsPrefetch(false);
-    assertFalse(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isFalse();
   }
 
   @Test
@@ -420,9 +417,9 @@ public class MultiplexProducerTest {
     mProducerContext2.setIsPrefetch(false);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertFalse(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isFalse();
     mProducerContext2.setIsPrefetch(true);
-    assertTrue(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isTrue();
   }
 
   @Test
@@ -431,22 +428,22 @@ public class MultiplexProducerTest {
     mProducerContext2.setIsPrefetch(false);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertFalse(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isFalse();
     mProducerContext2.setIsPrefetch(true);
-    assertFalse(mMultiplexedContext1.isPrefetch());
+    assertThat(mMultiplexedContext1.isPrefetch()).isFalse();
   }
 
   @Test
   public void testIsIntermediateResultExpectedTrue() {
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    assertTrue(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isTrue();
   }
 
   @Test
   public void testIsIntermediateResultExpectedFalse() {
     mProducerContext1.setIsIntermediateResultExpected(false);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    assertFalse(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isFalse();
   }
 
   @Test
@@ -455,11 +452,11 @@ public class MultiplexProducerTest {
     mProducerContext2.setIsIntermediateResultExpected(false);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertTrue(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isTrue();
     ProducerContextCallbacks callbacks = mock(ProducerContextCallbacks.class);
     mMultiplexedContext1.addCallbacks(callbacks);
     mProducerContext1.cancel();
-    assertFalse(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isFalse();
     verify(callbacks).onIsIntermediateResultExpectedChanged();
   }
 
@@ -469,9 +466,9 @@ public class MultiplexProducerTest {
     mProducerContext2.setIsIntermediateResultExpected(false);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertFalse(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isFalse();
     mProducerContext2.cancel();
-    assertFalse(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isFalse();
   }
 
   @Test
@@ -480,9 +477,9 @@ public class MultiplexProducerTest {
     mProducerContext2.setIsIntermediateResultExpected(true);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertTrue(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isTrue();
     mProducerContext2.cancel();
-    assertTrue(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isTrue();
   }
 
   @Test
@@ -490,11 +487,11 @@ public class MultiplexProducerTest {
     mProducerContext1.setIsIntermediateResultExpected(false);
     mProducerContext2.setIsIntermediateResultExpected(true);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    assertFalse(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isFalse();
     ProducerContextCallbacks callbacks = mock(ProducerContextCallbacks.class);
     mMultiplexedContext1.addCallbacks(callbacks);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertTrue(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isTrue();
     verify(callbacks).onIsIntermediateResultExpectedChanged();
   }
 
@@ -503,9 +500,9 @@ public class MultiplexProducerTest {
     mProducerContext1.setIsIntermediateResultExpected(false);
     mProducerContext2.setIsIntermediateResultExpected(false);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    assertFalse(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isFalse();
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertFalse(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isFalse();
   }
 
   @Test
@@ -513,9 +510,9 @@ public class MultiplexProducerTest {
     mProducerContext1.setIsIntermediateResultExpected(true);
     mProducerContext2.setIsIntermediateResultExpected(false);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    assertTrue(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isTrue();
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertTrue(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isTrue();
   }
 
   @Test
@@ -524,9 +521,9 @@ public class MultiplexProducerTest {
     mProducerContext2.setIsIntermediateResultExpected(false);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertFalse(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isFalse();
     mProducerContext1.setIsIntermediateResultExpected(true);
-    assertTrue(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isTrue();
   }
 
   @Test
@@ -535,9 +532,9 @@ public class MultiplexProducerTest {
     mProducerContext2.setIsIntermediateResultExpected(false);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertTrue(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isTrue();
     mProducerContext1.setIsIntermediateResultExpected(false);
-    assertFalse(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isFalse();
   }
 
   @Test
@@ -546,15 +543,15 @@ public class MultiplexProducerTest {
     mProducerContext2.setIsIntermediateResultExpected(true);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertTrue(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isTrue();
     mProducerContext2.setIsIntermediateResultExpected(false);
-    assertTrue(mMultiplexedContext1.isIntermediateResultExpected());
+    assertThat(mMultiplexedContext1.isIntermediateResultExpected()).isTrue();
   }
 
   @Test
   public void testGetPriority() {
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    assertEquals(Priority.MEDIUM, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.MEDIUM);
   }
 
   @Test
@@ -562,9 +559,9 @@ public class MultiplexProducerTest {
     mProducerContext1.setPriority(Priority.MEDIUM);
     mProducerContext2.setPriority(Priority.HIGH);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    assertEquals(Priority.MEDIUM, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.MEDIUM);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertEquals(Priority.HIGH, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.HIGH);
   }
 
   @Test
@@ -572,9 +569,9 @@ public class MultiplexProducerTest {
     mProducerContext1.setPriority(Priority.MEDIUM);
     mProducerContext2.setPriority(Priority.LOW);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
-    assertEquals(Priority.MEDIUM, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.MEDIUM);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertEquals(Priority.MEDIUM, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.MEDIUM);
   }
 
   @Test
@@ -583,9 +580,9 @@ public class MultiplexProducerTest {
     mProducerContext2.setPriority(Priority.HIGH);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertEquals(Priority.HIGH, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.HIGH);
     mProducerContext2.cancel();
-    assertEquals(Priority.MEDIUM, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.MEDIUM);
   }
 
   @Test
@@ -594,9 +591,9 @@ public class MultiplexProducerTest {
     mProducerContext2.setPriority(Priority.HIGH);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertEquals(Priority.HIGH, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.HIGH);
     mProducerContext1.cancel();
-    assertEquals(Priority.HIGH, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.HIGH);
   }
 
   @Test
@@ -605,9 +602,9 @@ public class MultiplexProducerTest {
     mProducerContext2.setPriority(Priority.MEDIUM);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertEquals(Priority.HIGH, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.HIGH);
     mProducerContext1.setPriority(Priority.LOW);
-    assertEquals(Priority.MEDIUM, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.MEDIUM);
   }
 
   @Test
@@ -616,9 +613,9 @@ public class MultiplexProducerTest {
     mProducerContext2.setPriority(Priority.MEDIUM);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertEquals(Priority.MEDIUM, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.MEDIUM);
     mProducerContext1.setPriority(Priority.HIGH);
-    assertEquals(Priority.HIGH, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.HIGH);
   }
 
   @Test
@@ -627,9 +624,9 @@ public class MultiplexProducerTest {
     mProducerContext2.setPriority(Priority.HIGH);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertEquals(Priority.HIGH, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.HIGH);
     mProducerContext1.setPriority(Priority.MEDIUM);
-    assertEquals(Priority.HIGH, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.HIGH);
   }
 
   @Test
@@ -638,8 +635,8 @@ public class MultiplexProducerTest {
     mProducerContext2.setPriority(Priority.HIGH);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext1);
     mMultiplexProducer.produceResults(mConsumer1, mProducerContext2);
-    assertEquals(Priority.HIGH, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.HIGH);
     mProducerContext1.setPriority(Priority.MEDIUM);
-    assertEquals(Priority.HIGH, mMultiplexedContext1.getPriority());
+    assertThat(mMultiplexedContext1.getPriority()).isEqualTo(Priority.HIGH);
   }
 }
