@@ -215,13 +215,13 @@ jobject nativeDecodeByteArray(
   // get image into decoded heap
   jbyte* data = env->GetByteArrayElements(array, nullptr);
   if (env->ExceptionCheck() == JNI_TRUE) {
-    env->ReleaseByteArrayElements(inTempStorage, data, JNI_ABORT);
+    env->ReleaseByteArrayElements(array, data, JNI_ABORT);
     RETURN_NULL_IF_EXCEPTION(env);
   }
   if (data == nullptr || 0 > offset ||
       offset + length > env->GetArrayLength(array)) {
     env->ReleaseByteArrayElements(array, data, JNI_ABORT);
-    RETURN_NULL_IF_EXCEPTION(env);
+    return {};
   }
   jobject bitmap = doDecode(
       env,
