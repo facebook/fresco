@@ -345,6 +345,12 @@ jobject WebPImage_nativeCreateFromNativeMemory(
     jlong nativePtr,
     jint sizeInBytes) {
   jbyte* const pointer = (jbyte*)nativePtr;
+
+  if (sizeInBytes < 0) {
+    throwIllegalArgumentException(pEnv, "Size must be non-negative");
+    return 0;
+  }
+
   std::vector<uint8_t> vBuffer(pointer, pointer + sizeInBytes);
   return WebPImage_nativeCreateFromByteVector(pEnv, vBuffer);
 }
