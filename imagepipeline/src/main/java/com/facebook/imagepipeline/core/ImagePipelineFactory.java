@@ -77,6 +77,12 @@ public class ImagePipelineFactory {
     return Preconditions.checkNotNull(sInstance, "ImagePipelineFactory was not initialized!");
   }
 
+  /** Gets the instance of {@link ImagePipelineFactory}. */
+  @Nullable
+  public static ImagePipelineFactory getInstanceOrNull() {
+    return sInstance;
+  }
+
   /**
    * Overrides current instance with a new one. Usually used when dealing with multiple
    * ImagePipelineFactories
