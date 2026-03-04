@@ -107,7 +107,8 @@ class LiveEditorUiUtils(
         if (info.isEmpty()) {
           addView(
               TextView(context).apply {
-                @SuppressLint("SetTextI18n") text = "No image options available"
+                @SuppressLint("SetTextI18n")
+                text = "No image options available"
               }
           )
         }

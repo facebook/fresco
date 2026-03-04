@@ -54,9 +54,9 @@ import kotlin.math.abs
  * @param iconClose Drawable resource for the "close" button
  */
 data class ButtonStyle(
-    @ColorInt val textColor: Int,
-    @ColorInt val backgroundColor: Int,
-    @ColorInt val editorBackgroundColor: Int,
+    @param:ColorInt val textColor: Int,
+    @param:ColorInt val backgroundColor: Int,
+    @param:ColorInt val editorBackgroundColor: Int,
     val iconPrevious: Int,
     val iconNext: Int,
     val iconEdit: Int,
