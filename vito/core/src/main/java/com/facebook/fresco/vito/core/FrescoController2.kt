@@ -20,6 +20,7 @@ interface FrescoController2 {
 
   fun <T> createDrawable(uiFramework: String?): T where T : Drawable, T : FrescoDrawableInterface
 
+  /** @return true if the image was set immediately, false if it was queued for later */
   fun fetch(
       drawable: FrescoDrawableInterface,
       imageRequest: VitoImageRequest,
