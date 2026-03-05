@@ -971,6 +971,9 @@ class ImagePipeline(
    * @return true if the image was found in the disk cache, false otherwise.
    */
   fun isInDiskCache(imageRequest: ImageRequest?): DataSource<Boolean> {
+    if (imageRequest == null) {
+      return DataSources.immediateFailedDataSource(NULL_IMAGEREQUEST_EXCEPTION)
+    }
     val diskCachesStore = diskCachesStoreSupplier.get()
     val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, null)
     val dataSource = SimpleDataSource.create<Boolean>()
