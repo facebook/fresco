@@ -508,7 +508,7 @@ open class FrescoController2Impl(
     }
   }
 
-  fun setActualDrawable(
+  private fun setActualDrawable(
       drawable: FrescoDrawable2Impl,
       imageRequest: VitoImageRequest,
       extras: Extras,
