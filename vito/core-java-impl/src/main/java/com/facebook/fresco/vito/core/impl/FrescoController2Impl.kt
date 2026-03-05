@@ -207,21 +207,23 @@ open class FrescoController2Impl(
         CloseableReference.closeSafely(bitmapRef)
       }
     } else if (imageRequest.imageSource is ColorImageSource) {
-      return setActualDrawable(
+      setActualDrawable(
           drawable,
           imageRequest,
           extras,
           ColorDrawable((imageRequest.imageSource as ColorImageSource).color),
       )
+      return true
     } else if (imageRequest.imageSource is DrawableImageSource) {
-      return setActualDrawable(
+      setActualDrawable(
           drawable,
           imageRequest,
           extras,
           (imageRequest.imageSource as DrawableImageSource).drawable,
       )
+      return true
     } else if (imageRequest.imageSource is DrawableResImageSource) {
-      return setActualDrawable(
+      setActualDrawable(
           drawable,
           imageRequest,
           extras,
@@ -229,6 +231,7 @@ open class FrescoController2Impl(
               imageRequest.resources
           ),
       )
+      return true
     }
 
     // Check if the image is in cache
@@ -513,7 +516,7 @@ open class FrescoController2Impl(
       imageRequest: VitoImageRequest,
       extras: Extras,
       actualImageDrawable: Drawable,
-  ): Boolean {
+  ) {
     val actualImageWrapperDrawable = drawable.actualImageWrapper
     hierarcher.setupActualImageWrapper(
         actualImageWrapperDrawable,
@@ -551,7 +554,6 @@ open class FrescoController2Impl(
     )
     drawable.imagePerfListener.onImageSuccess(drawable, true)
     debugOverlayFactory.update(drawable, extras)
-    return true
   }
 
   companion object {
