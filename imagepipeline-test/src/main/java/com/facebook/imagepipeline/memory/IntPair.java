@@ -8,8 +8,10 @@
 package com.facebook.imagepipeline.memory;
 
 import com.facebook.common.internal.Objects;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** Surprise! A pair of integers */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class IntPair {
   public final int a;
   public final int b;
