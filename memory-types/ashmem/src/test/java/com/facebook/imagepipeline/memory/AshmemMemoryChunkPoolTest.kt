@@ -46,11 +46,11 @@ class AshmemMemoryChunkPoolTest {
   @Test
   fun testFree() {
     val b = pool.alloc(1)
-    assertThat(b.isClosed).isFalse()
+    assertThat(b.isClosed()).isFalse()
     pool.free(b)
-    assertThat(b.isClosed).isTrue()
+    assertThat(b.isClosed()).isTrue()
     pool.free(b)
-    assertThat(b.isClosed).isTrue()
+    assertThat(b.isClosed()).isTrue()
   }
 
   @Test
