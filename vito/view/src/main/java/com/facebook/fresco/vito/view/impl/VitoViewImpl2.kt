@@ -58,16 +58,7 @@ object VitoViewImpl2 {
       }
 
   private val onLayoutChangeListener: View.OnLayoutChangeListener =
-      View.OnLayoutChangeListener {
-          view,
-          left,
-          top,
-          right,
-          bottom,
-          oldLeft,
-          oldTop,
-          oldRight,
-          oldBottom,
+      View.OnLayoutChangeListener { view, _, _, _, _, _, _, _, _,
         ->
         if (useOnLayoutChange.get()) {
           getDrawable(view)?.apply {
