@@ -98,7 +98,7 @@ public class GenericDraweeHierarchyInflater {
    */
   public static GenericDraweeHierarchyBuilder updateBuilder(
       GenericDraweeHierarchyBuilder builder, Context context, @Nullable AttributeSet attrs) {
-    // these paramters cannot be applied immediately so we store them first
+    // these parameters cannot be applied immediately so we store them first
     int progressBarAutoRotateInterval = 0;
     int roundedCornerRadius = 0;
     boolean roundTopLeft = true;
