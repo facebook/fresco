@@ -70,6 +70,7 @@ class DefaultBitmapAnimationDrawableFactory(
     private val animatedImagePerfLoggingListener: AnimatedImagePerfLoggingListener? = null,
     private val enableBufferFrameLoaderFix: Boolean = false,
     private val zeroFrameDimensionsListener: ZeroFrameDimensionsListener? = null,
+    private val enableSingleFrameRendering: Boolean = false,
 ) : DrawableFactory, ImageOptionsDrawableFactory {
 
   // Change the value to true to use KAnimatedDrawable2.kt
@@ -201,6 +202,7 @@ class DefaultBitmapAnimationDrawableFactory(
                   bufferLengthMilliseconds.get(),
                   enableBufferFrameLoaderFix,
                   zeroFrameDimensionsListener,
+                  enableSingleFrameRendering,
               ),
               downscaleFrameToDrawableDimensions.get(),
           )

@@ -20,6 +20,7 @@ class FrameLoaderFactory(
     private val bufferLengthMilliseconds: Int,
     private val enableBufferFrameLoaderFix: Boolean = false,
     private val zeroFrameDimensionsListener: ZeroFrameDimensionsListener? = null,
+    private val enableSingleFrameRendering: Boolean = false,
 ) {
 
   fun createBufferLoader(
@@ -43,6 +44,7 @@ class FrameLoaderFactory(
         bufferLengthMilliseconds,
         enableBufferFrameLoaderFix,
         zeroFrameDimensionsListener,
+        enableSingleFrameRendering,
     )
   }
 

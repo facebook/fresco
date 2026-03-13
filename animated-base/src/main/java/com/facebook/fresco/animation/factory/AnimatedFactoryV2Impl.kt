@@ -53,6 +53,7 @@ constructor(
     var serialExecutorService: SerialExecutorService?,
     private val enableBufferFrameLoaderFix: Boolean = false,
     private val zeroFrameDimensionsListener: ZeroFrameDimensionsListener? = null,
+    private val enableSingleFrameRendering: Boolean = false,
 ) : AnimatedFactory {
 
   private var animatedDrawableBackendProvider: AnimatedDrawableBackendProvider? = null
@@ -95,6 +96,7 @@ constructor(
         null,
         enableBufferFrameLoaderFix,
         zeroFrameDimensionsListener,
+        enableSingleFrameRendering,
     )
   }
 

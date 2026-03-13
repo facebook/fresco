@@ -36,10 +36,14 @@ class BufferFrameLoader(
     private val bufferLengthMilliseconds: Int,
     private val enableBufferFrameLoaderFix: Boolean = false,
     private val zeroFrameDimensionsListener: ZeroFrameDimensionsListener? = null,
+    private val enableSingleFrameRendering: Boolean = false,
 ) : FrameLoader {
 
   private val bufferSize =
       ((animationInformation.fps() * bufferLengthMilliseconds) / 1000).coerceAtLeast(1)
+  private val isSingleFrame = enableSingleFrameRendering && animationInformation.frameCount == 1
+  @Volatile private var singleFrameRef: CloseableReference<Bitmap>? = null
+
   private val bufferFramesHash = ConcurrentHashMap<Int, BufferFrame>()
   @Volatile private var thresholdFrame: Int
   @Volatile private var isFetching = false
@@ -56,6 +60,10 @@ class BufferFrameLoader(
 
   @UiThread
   override fun getFrame(frameNumber: Int, width: Int, height: Int): FrameResult {
+    if (isSingleFrame) {
+      return getSingleFrame(width, height)
+    }
+
     val cachedFrameIndex = compressionFrameMap[frameNumber]
 
     // Return the nearest frame if the frame is not in the buffer OR width or height is 0
@@ -91,6 +99,25 @@ class BufferFrameLoader(
   }
 
   @UiThread
+  private fun getSingleFrame(width: Int, height: Int): FrameResult {
+    singleFrameRef?.let { ref ->
+      val clone = ref.cloneOrNull()
+      if (clone != null) {
+        return FrameResult(clone, FrameResult.FrameType.SUCCESS)
+      }
+    }
+
+    if (width == 0 || height == 0) {
+      return FrameResult(null, FrameResult.FrameType.MISSING)
+    }
+
+    val bitmapRef = platformBitmapFactory.createBitmap(width, height)
+    bitmapFrameRenderer.renderFrame(0, bitmapRef.get())
+    singleFrameRef = bitmapRef
+    return FrameResult(bitmapRef.clone(), FrameResult.FrameType.SUCCESS)
+  }
+
+  @UiThread
   private fun findNearestToRender(targetFrame: Int): FrameResult {
     val nearestFrame = findNearestFrame(targetFrame)
 
@@ -105,6 +132,10 @@ class BufferFrameLoader(
 
   @UiThread
   override fun prepareFrames(width: Int, height: Int, onAnimationLoaded: () -> Unit) {
+    if (isSingleFrame) {
+      onAnimationLoaded()
+      return
+    }
     loadNextFrames(width, height)
     onAnimationLoaded()
   }
@@ -124,6 +155,8 @@ class BufferFrameLoader(
 
   /** Release all bitmaps */
   override fun clear() {
+    CloseableReference.closeSafely(singleFrameRef)
+    singleFrameRef = null
     bufferFramesHash.values.forEach { it.release() }
     bufferFramesHash.clear()
     lastRenderedFrameNumber = -1
