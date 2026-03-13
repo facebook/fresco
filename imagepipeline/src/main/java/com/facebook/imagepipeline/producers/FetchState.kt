@@ -26,7 +26,7 @@ open class FetchState(val consumer: Consumer<EncodedImage?>, val context: Produc
   @get:Consumer.Status var onNewResultStatusFlags: Int = 0
 
   /**
-   * EXPERIMENTAL: Allows the fetcher to identify that the reponse is for an imcomplete portion of
+   * EXPERIMENTAL: Allows the fetcher to identify that the response is for an incomplete portion of
    * the whole image by defining the range of bytes being provided.
    */
   var responseBytesRange: BytesRange? = null
