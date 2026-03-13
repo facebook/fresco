@@ -85,9 +85,9 @@ object AnimatedFactoryProvider {
     if (!implLoaded) {
       try {
         val clazz = Class.forName("com.facebook.fresco.animation.factory.AnimatedFactoryV2Impl")
-        val zeroFrameDimensionsListenerClass =
+        val frameLoaderListenerClass =
             Class.forName(
-                "com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.ZeroFrameDimensionsListener"
+                "com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoaderListener"
             )
         val constructor =
             clazz.getConstructor(
@@ -100,7 +100,7 @@ object AnimatedFactoryProvider {
                 Integer.TYPE,
                 SerialExecutorService::class.java,
                 java.lang.Boolean.TYPE,
-                zeroFrameDimensionsListenerClass,
+                frameLoaderListenerClass,
                 java.lang.Boolean.TYPE,
             )
         impl =

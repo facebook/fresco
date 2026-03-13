@@ -35,7 +35,7 @@ class BufferFrameLoader(
     override val animationInformation: AnimationInformation,
     private val bufferLengthMilliseconds: Int,
     private val enableBufferFrameLoaderFix: Boolean = false,
-    private val zeroFrameDimensionsListener: ZeroFrameDimensionsListener? = null,
+    private val frameLoaderListener: FrameLoaderListener? = null,
     private val enableSingleFrameRendering: Boolean = false,
 ) : FrameLoader {
 
@@ -68,7 +68,7 @@ class BufferFrameLoader(
 
     // Return the nearest frame if the frame is not in the buffer OR width or height is 0
     if (enableBufferFrameLoaderFix && (width == 0 || height == 0)) {
-      zeroFrameDimensionsListener?.onZeroFrameDimensions(
+      frameLoaderListener?.onZeroFrameDimensions(
           origin = "BufferFrameLoader.getFrame",
           frameNumber,
           width,
@@ -100,6 +100,12 @@ class BufferFrameLoader(
 
   @UiThread
   private fun getSingleFrame(width: Int, height: Int): FrameResult {
+    frameLoaderListener?.onSingleFrameRender(
+        origin = "BufferFrameLoader.getSingleFrame",
+        width,
+        height,
+    )
+
     singleFrameRef?.let { ref ->
       val clone = ref.cloneOrNull()
       if (clone != null) {
@@ -165,7 +171,7 @@ class BufferFrameLoader(
   private fun loadNextFrames(width: Int, height: Int) {
     // Skip frame if width or height is 0 OR if the buffer is already loading
     if ((enableBufferFrameLoaderFix && (width == 0 || height == 0)) || isFetching) {
-      zeroFrameDimensionsListener?.onZeroFrameDimensions(
+      frameLoaderListener?.onZeroFrameDimensions(
           origin = "BufferFrameLoader.loadNextFrames",
           frameNumber = lastRenderedFrameNumber.coerceAtLeast(0),
           width,

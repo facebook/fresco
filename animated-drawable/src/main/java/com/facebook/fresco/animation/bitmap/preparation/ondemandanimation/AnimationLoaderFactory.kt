@@ -19,7 +19,7 @@ class FrameLoaderFactory(
     private val maxFpsRender: Int,
     private val bufferLengthMilliseconds: Int,
     private val enableBufferFrameLoaderFix: Boolean = false,
-    private val zeroFrameDimensionsListener: ZeroFrameDimensionsListener? = null,
+    private val frameLoaderListener: FrameLoaderListener? = null,
     private val enableSingleFrameRendering: Boolean = false,
 ) {
 
@@ -43,7 +43,7 @@ class FrameLoaderFactory(
         animationInformation,
         bufferLengthMilliseconds,
         enableBufferFrameLoaderFix,
-        zeroFrameDimensionsListener,
+        frameLoaderListener,
         enableSingleFrameRendering,
     )
   }

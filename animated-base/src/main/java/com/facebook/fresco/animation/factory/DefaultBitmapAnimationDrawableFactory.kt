@@ -31,7 +31,7 @@ import com.facebook.fresco.animation.bitmap.preparation.DefaultBitmapFramePrepar
 import com.facebook.fresco.animation.bitmap.preparation.FixedNumberBitmapFramePreparationStrategy
 import com.facebook.fresco.animation.bitmap.preparation.FrameLoaderStrategy
 import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoaderFactory
-import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.ZeroFrameDimensionsListener
+import com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoaderListener
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendAnimationInformation
 import com.facebook.fresco.animation.bitmap.wrapper.AnimatedDrawableBackendFrameRenderer
 import com.facebook.fresco.animation.drawable.AnimatedDrawable2
@@ -69,7 +69,7 @@ class DefaultBitmapAnimationDrawableFactory(
     private val bufferLengthMilliseconds: Supplier<Int>,
     private val animatedImagePerfLoggingListener: AnimatedImagePerfLoggingListener? = null,
     private val enableBufferFrameLoaderFix: Boolean = false,
-    private val zeroFrameDimensionsListener: ZeroFrameDimensionsListener? = null,
+    private val frameLoaderListener: FrameLoaderListener? = null,
     private val enableSingleFrameRendering: Boolean = false,
 ) : DrawableFactory, ImageOptionsDrawableFactory {
 
@@ -201,7 +201,7 @@ class DefaultBitmapAnimationDrawableFactory(
                   animationFpsLimit.get(),
                   bufferLengthMilliseconds.get(),
                   enableBufferFrameLoaderFix,
-                  zeroFrameDimensionsListener,
+                  frameLoaderListener,
                   enableSingleFrameRendering,
               ),
               downscaleFrameToDrawableDimensions.get(),
