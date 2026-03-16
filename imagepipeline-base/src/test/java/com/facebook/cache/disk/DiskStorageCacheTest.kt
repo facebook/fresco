@@ -784,8 +784,7 @@ class DiskStorageCacheTest {
 
     // Ensure all resources were found
     for (i in 0..<numberItems) {
-      val message =
-          String.format("Expected eviction of resource %s but wasn't evicted", resourceIds[i])
+      val message = "Expected eviction of resource ${resourceIds[i]} but wasn't evicted"
       assertThat(found[i]).`as`(message).isTrue()
     }
   }
