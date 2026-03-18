@@ -123,7 +123,7 @@ class VitoImagePipelineImpl(
             imagePipelineUtils,
             imageOptions,
         )
-    val finalImageCacheKey = finalImageRequest?.let { imagePipeline.getCacheKey(it, null) }
+    val finalImageCacheKey = finalImageRequest?.let { imagePipeline.getCacheKey(it, callerContext) }
 
     return VitoImageRequest(
         resources,
