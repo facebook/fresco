@@ -34,6 +34,7 @@ import com.facebook.fresco.vito.source.FirstAvailableImageSource
 import com.facebook.fresco.vito.source.ImageSource
 import com.facebook.fresco.vito.source.ImageSourceProvider
 import com.facebook.fresco.vito.source.IncreasingQualityImageSource
+import com.facebook.fresco.vito.source.SmartFetchOptIn
 import com.facebook.fresco.vito.source.SmartImageSource
 import com.facebook.fresco.vito.source.UriImageSource
 import com.facebook.imagepipeline.core.ImagePipeline
@@ -79,7 +80,12 @@ class VitoImagePipelineImpl(
           if (result is UriModifierInterface.ModificationResult.Modified) {
             finalImageSource =
                 if (imageSource is SmartImageSource) {
-                  SmartImageSource(result.newUri, imageSource.sizingHint, imageSource.extras)
+                  SmartImageSource(
+                      result.newUri,
+                      imageSource.sizingHint,
+                      imageSource.extras,
+                      imageSource.smartFetchOptIn,
+                  )
                 } else {
                   ImageSourceProvider.forUri(result.newUri)
                 }
@@ -229,15 +235,24 @@ class VitoImagePipelineImpl(
       }
     }
 
-    if (isProductEnabled(callerContext, contextChain) == false) {
-      return ClassicFetchStrategy.PRODUCT_DISABLED
+    val smartFetchOptIn = (requestBeforeLayout?.imageSource as? SmartImageSource)?.smartFetchOptIn
+
+    if (smartFetchOptIn == null) {
+      if (isProductEnabled(callerContext, contextChain) == false) {
+        return ClassicFetchStrategy.PRODUCT_DISABLED
+      }
     }
 
-    if (
-        experimentalDynamicSizeWithCacheFallbackVito2() &&
-            !isFallbackEnabled(callerContext, contextChain)
-    ) {
-      return SmartFetchStrategy.FALLBACK_DISABLED
+    if (experimentalDynamicSizeWithCacheFallbackVito2()) {
+      val fallbackDisabled =
+          when (smartFetchOptIn) {
+            SmartFetchOptIn.ENABLED_NO_FALLBACK -> true
+            SmartFetchOptIn.ENABLED_WITH_FALLBACK -> false
+            null -> !isFallbackEnabled(callerContext, contextChain)
+          }
+      if (fallbackDisabled) {
+        return SmartFetchStrategy.FALLBACK_DISABLED
+      }
     }
 
     if (

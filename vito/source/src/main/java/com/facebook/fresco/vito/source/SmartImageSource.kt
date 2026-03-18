@@ -10,10 +10,13 @@ package com.facebook.fresco.vito.source
 import android.net.Uri
 import com.facebook.drawee.drawable.SizingHint
 
-class SmartImageSource(
+class SmartImageSource
+@JvmOverloads
+constructor(
     override val imageUri: Uri,
     val sizingHint: SizingHint = SizingHint.DEFAULT,
     override val extras: Map<String, Any>? = null,
+    val smartFetchOptIn: SmartFetchOptIn? = null,
 ) : SingleImageSource {
   override val uri: Uri = imageUri
 
@@ -39,13 +42,17 @@ class SmartImageSource(
     if (sizingHint != other.sizingHint) {
       return false
     }
-    return extras == other.extras
+    if (extras != other.extras) {
+      return false
+    }
+    return smartFetchOptIn == other.smartFetchOptIn
   }
 
   override fun hashCode(): Int {
     var result = imageUri.hashCode()
     result = 31 * result + sizingHint.hashCode()
     result = 31 * result + (extras?.hashCode() ?: 0)
+    result = 31 * result + (smartFetchOptIn?.hashCode() ?: 0)
     return result
   }
 
