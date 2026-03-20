@@ -10,8 +10,8 @@ package com.facebook.samples.comparison;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.imagepipeline.stetho.FrescoStethoPlugin;
+import com.meta.dumpapp.internal.DumpappServer;
 import com.meta.dumpapp.internal.DumperPluginsProvider;
-import com.meta.dumpapp.internal.Stetho;
 import com.meta.dumpapp.internal.cli.DumperPlugin;
 
 public class ComparisonApp extends Application {
@@ -20,13 +20,13 @@ public class ComparisonApp extends Application {
   public void onCreate() {
     super.onCreate();
     final Context context = this;
-    Stetho.initialize(
-        Stetho.newInitializerBuilder(context)
+    DumpappServer.initialize(
+        DumpappServer.newInitializerBuilder(context)
             .enableDumpapp(
                 new DumperPluginsProvider() {
                   @Override
                   public Iterable<DumperPlugin> get() {
-                    return new Stetho.DefaultDumperPluginsBuilder(context)
+                    return new DumpappServer.DefaultDumperPluginsBuilder(context)
                         .provide(new FrescoStethoPlugin())
                         .finish();
                   }
