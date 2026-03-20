@@ -10,9 +10,9 @@ package com.facebook.samples.comparison;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.imagepipeline.stetho.FrescoStethoPlugin;
-import com.facebook.stetho.DumperPluginsProvider;
-import com.facebook.stetho.Stetho;
-import com.facebook.stetho.dumpapp.DumperPlugin;
+import com.meta.dumpapp.internal.DumperPluginsProvider;
+import com.meta.dumpapp.internal.Stetho;
+import com.meta.dumpapp.internal.cli.DumperPlugin;
 
 public class ComparisonApp extends Application {
 

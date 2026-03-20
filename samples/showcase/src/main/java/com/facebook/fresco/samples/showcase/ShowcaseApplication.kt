@@ -51,8 +51,8 @@ import com.facebook.imagepipeline.listener.RequestListener
 import com.facebook.imagepipeline.listener.RequestLoggingListener
 import com.facebook.imagepipeline.stetho.FrescoStethoPlugin
 import com.facebook.soloader.SoLoader
-import com.facebook.stetho.Stetho
 import com.facebook.stetho.okhttp3.StethoInterceptor
+import com.meta.dumpapp.internal.Stetho
 import okhttp3.OkHttpClient
 
 /** Showcase Application implementation where we set up Fresco */
