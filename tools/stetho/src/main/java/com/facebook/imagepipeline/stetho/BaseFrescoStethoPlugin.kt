@@ -22,10 +22,10 @@ import com.facebook.imagepipeline.core.DiskCachesStore
 import com.facebook.imagepipeline.core.ImagePipeline
 import com.facebook.imagepipeline.core.ImagePipelineFactory
 import com.facebook.imagepipeline.image.CloseableImage
-import com.meta.dumpapp.internal.cli.DumpException
-import com.meta.dumpapp.internal.cli.DumpUsageException
-import com.meta.dumpapp.internal.cli.DumperContext
-import com.meta.dumpapp.internal.cli.DumperPlugin
+import com.facebook.stetho.dumpapp.DumpException
+import com.facebook.stetho.dumpapp.DumpUsageException
+import com.facebook.stetho.dumpapp.DumperContext
+import com.facebook.stetho.dumpapp.DumperPlugin
 import java.io.IOException
 import java.io.PrintStream
 import java.util.ArrayList

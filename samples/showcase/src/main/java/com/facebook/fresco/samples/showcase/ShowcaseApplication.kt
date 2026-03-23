@@ -51,8 +51,8 @@ import com.facebook.imagepipeline.listener.RequestListener
 import com.facebook.imagepipeline.listener.RequestLoggingListener
 import com.facebook.imagepipeline.stetho.FrescoStethoPlugin
 import com.facebook.soloader.SoLoader
+import com.facebook.stetho.Stetho
 import com.facebook.stetho.okhttp3.StethoInterceptor
-import com.meta.dumpapp.internal.DumpappServer
 import okhttp3.OkHttpClient
 
 /** Showcase Application implementation where we set up Fresco */
@@ -135,14 +135,12 @@ class ShowcaseApplication : Application() {
             FrescoVitoProvider.getController(),
         )
     val context = this
-    DumpappServer.initialize(
-        DumpappServer.newInitializerBuilder(context)
+    Stetho.initialize(
+        Stetho.newInitializerBuilder(context)
             .enableDumpapp {
-              DumpappServer.DefaultDumperPluginsBuilder(context)
-                  .provide(FrescoStethoPlugin())
-                  .finish()
+              Stetho.DefaultDumperPluginsBuilder(context).provide(FrescoStethoPlugin()).finish()
             }
-            .enableWebKitInspector(DumpappServer.defaultInspectorModulesProvider(context))
+            .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(context))
             .build()
     )
 
