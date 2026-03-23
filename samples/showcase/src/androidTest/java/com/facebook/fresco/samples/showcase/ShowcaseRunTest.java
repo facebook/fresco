@@ -18,15 +18,11 @@ import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.CoreMatchers.allOf;
 
-import android.view.View;
 import android.widget.TextView;
-import androidx.test.espresso.UiController;
-import androidx.test.espresso.ViewAction;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.runner.AndroidJUnit4;
 import com.google.android.material.internal.NavigationMenuItemView;
-import org.hamcrest.Matcher;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,24 +47,5 @@ public class ShowcaseRunTest {
     onView(withContentDescription(R.string.navigation_drawer_open)).perform(click());
     onView(allOf(withParent(isAssignableFrom(NavigationMenuItemView.class)), withText(title)))
         .perform(click());
-  }
-
-  private static ViewAction waitFor(final long millis) {
-    return new ViewAction() {
-      @Override
-      public Matcher<View> getConstraints() {
-        return withId(R.id.drawee_view);
-      }
-
-      @Override
-      public String getDescription() {
-        return "Waiting for " + millis + " milliseconds.";
-      }
-
-      @Override
-      public void perform(UiController uiController, final View view) {
-        uiController.loopMainThreadForAtLeast(millis);
-      }
-    };
   }
 }
