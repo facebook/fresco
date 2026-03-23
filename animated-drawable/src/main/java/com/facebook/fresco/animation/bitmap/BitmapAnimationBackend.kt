@@ -65,18 +65,17 @@ constructor(
   private val isCircular: Boolean = roundingOptions?.isCircular == true
   private val isAntiAliased: Boolean = roundingOptions?.isAntiAliased == true
 
-  val cornerRadii: FloatArray? =
-      roundingOptions?.let { roundingOptions ->
-        if (isCircular) {
-          null
-        } else if (roundingOptions.cornerRadius != RoundingOptions.CORNER_RADIUS_UNSET) {
-          val corners = FloatArray(8)
-          corners.fill(roundingOptions.cornerRadius)
-          corners
-        } else {
-          roundingOptions.cornerRadii
-        }
-      }
+  val cornerRadii: FloatArray? = roundingOptions?.let { roundingOptions ->
+    if (isCircular) {
+      null
+    } else if (roundingOptions.cornerRadius != RoundingOptions.CORNER_RADIUS_UNSET) {
+      val corners = FloatArray(8)
+      corners.fill(roundingOptions.cornerRadius)
+      corners
+    } else {
+      roundingOptions.cornerRadii
+    }
+  }
 
   interface FrameListener {
     /**

@@ -95,6 +95,7 @@ class LogcatRequestListener2(
   override fun requiresExtraMap(producerContext: ProducerContext, producerName: String) =
       logExtraMap
 
-  private fun toString(producerContext: ProducerContext) =
-      producerContext.run { "id=$id, extras=${getExtras()}, request=$imageRequest" }
+  private fun toString(producerContext: ProducerContext) = producerContext.run {
+    "id=$id, extras=${getExtras()}, request=$imageRequest"
+  }
 }

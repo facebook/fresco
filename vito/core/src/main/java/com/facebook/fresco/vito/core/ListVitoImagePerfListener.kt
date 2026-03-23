@@ -9,48 +9,66 @@ package com.facebook.fresco.vito.core
 
 class ListVitoImagePerfListener(private vararg val listeners: VitoImagePerfListener) :
     VitoImagePerfListener {
-  override fun onImageMount(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onImageMount(drawable) }
+  override fun onImageMount(drawable: FrescoDrawableInterface): Unit = listeners.forEach {
+    it.onImageMount(drawable)
+  }
 
-  override fun onImageUnmount(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onImageUnmount(drawable) }
+  override fun onImageUnmount(drawable: FrescoDrawableInterface): Unit = listeners.forEach {
+    it.onImageUnmount(drawable)
+  }
 
-  override fun onImageBind(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onImageBind(drawable) }
+  override fun onImageBind(drawable: FrescoDrawableInterface): Unit = listeners.forEach {
+    it.onImageBind(drawable)
+  }
 
-  override fun onImageUnbind(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onImageUnbind(drawable) }
+  override fun onImageUnbind(drawable: FrescoDrawableInterface): Unit = listeners.forEach {
+    it.onImageUnbind(drawable)
+  }
 
-  override fun onImageFetch(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onImageFetch(drawable) }
+  override fun onImageFetch(drawable: FrescoDrawableInterface): Unit = listeners.forEach {
+    it.onImageFetch(drawable)
+  }
 
   override fun onImageSuccess(drawable: FrescoDrawableInterface, wasImmediate: Boolean): Unit =
-      listeners.forEach { it.onImageSuccess(drawable, wasImmediate) }
+      listeners.forEach {
+        it.onImageSuccess(drawable, wasImmediate)
+      }
 
-  override fun onImageError(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onImageError(drawable) }
+  override fun onImageError(drawable: FrescoDrawableInterface): Unit = listeners.forEach {
+    it.onImageError(drawable)
+  }
 
-  override fun onImageRelease(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onImageRelease(drawable) }
+  override fun onImageRelease(drawable: FrescoDrawableInterface): Unit = listeners.forEach {
+    it.onImageRelease(drawable)
+  }
 
   override fun onScheduleReleaseDelayed(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onScheduleReleaseDelayed(drawable) }
+      listeners.forEach {
+        it.onScheduleReleaseDelayed(drawable)
+      }
 
   override fun onScheduleReleaseNextFrame(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onScheduleReleaseNextFrame(drawable) }
+      listeners.forEach {
+        it.onScheduleReleaseNextFrame(drawable)
+      }
 
-  override fun onReleaseImmediately(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onReleaseImmediately(drawable) }
+  override fun onReleaseImmediately(drawable: FrescoDrawableInterface): Unit = listeners.forEach {
+    it.onReleaseImmediately(drawable)
+  }
 
-  override fun onDrawableReconfigured(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onDrawableReconfigured(drawable) }
+  override fun onDrawableReconfigured(drawable: FrescoDrawableInterface): Unit = listeners.forEach {
+    it.onDrawableReconfigured(drawable)
+  }
 
-  override fun onIgnoreResult(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onIgnoreResult(drawable) }
+  override fun onIgnoreResult(drawable: FrescoDrawableInterface): Unit = listeners.forEach {
+    it.onIgnoreResult(drawable)
+  }
 
-  override fun onIgnoreFailure(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onIgnoreFailure(drawable) }
+  override fun onIgnoreFailure(drawable: FrescoDrawableInterface): Unit = listeners.forEach {
+    it.onIgnoreFailure(drawable)
+  }
 
-  override fun onDetached(drawable: FrescoDrawableInterface): Unit =
-      listeners.forEach { it.onDetached(drawable) }
+  override fun onDetached(drawable: FrescoDrawableInterface): Unit = listeners.forEach {
+    it.onDetached(drawable)
+  }
 }

@@ -42,24 +42,23 @@ class ImageSourceUiUtil(private val context: Context) {
       return null
     }
 
-    val items =
-        source.map { pair ->
-          val spannable = SpannableString("${pair.first} \n${pair.second}")
-          spannable.apply {
-            setSpan(
-                StyleSpan(Typeface.BOLD),
-                0,
-                pair.first.length,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE,
-            )
-            setSpan(
-                StyleSpan(Typeface.ITALIC),
-                pair.first.length,
-                spannable.length,
-                Spannable.SPAN_INCLUSIVE_INCLUSIVE,
-            )
-          }
-        }
+    val items = source.map { pair ->
+      val spannable = SpannableString("${pair.first} \n${pair.second}")
+      spannable.apply {
+        setSpan(
+            StyleSpan(Typeface.BOLD),
+            0,
+            pair.first.length,
+            Spannable.SPAN_INCLUSIVE_INCLUSIVE,
+        )
+        setSpan(
+            StyleSpan(Typeface.ITALIC),
+            pair.first.length,
+            spannable.length,
+            Spannable.SPAN_INCLUSIVE_INCLUSIVE,
+        )
+      }
+    }
 
     val dialogBuilder = AlertDialog.Builder(context)
     val layout = createView()

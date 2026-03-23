@@ -20,8 +20,7 @@ class ArrayVitoDrawableFactory(private vararg val drawableFactories: ImageOption
       resources: Resources,
       closeableImage: CloseableImage,
       imageOptions: ImageOptions,
-  ): Drawable? =
-      drawableFactories.firstNotNullOfOrNull { factory ->
-        factory.createDrawable(resources, closeableImage, imageOptions)
-      }
+  ): Drawable? = drawableFactories.firstNotNullOfOrNull { factory ->
+    factory.createDrawable(resources, closeableImage, imageOptions)
+  }
 }

@@ -75,8 +75,9 @@ constructor(private var _animationBackend: AnimationBackend? = null) :
   @Volatile private var animationListener = NO_OP_LISTENER
 
   @Volatile private var drawListener: DrawListener? = null
-  private val animationBackendListener =
-      AnimationBackend.Listener { animationListener.onAnimationLoaded() }
+  private val animationBackendListener = AnimationBackend.Listener {
+    animationListener.onAnimationLoaded()
+  }
 
   // Holder for drawable properties like alpha to be able to re-apply if the backend changes.
   // The instance is created lazily only if needed.

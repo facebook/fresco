@@ -116,7 +116,9 @@ class ForwardingRequestListener2 : RequestListener2 {
   }
 
   override fun requiresExtraMap(producerContext: ProducerContext, producerName: String): Boolean =
-      requestListeners.any { it.requiresExtraMap(producerContext, producerName) }
+      requestListeners.any {
+        it.requiresExtraMap(producerContext, producerName)
+      }
 
   companion object {
     private const val TAG = "ForwardingRequestListener2"

@@ -62,20 +62,19 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
   protected fun createDecodedImageRequestBuilder(
       imageRequestBuilder: ImageRequestBuilder?,
       imageOptions: DecodedImageOptions,
-  ): ImageRequestBuilder? =
-      imageRequestBuilder?.apply {
-        imageOptions.resizeOptions?.let { resizeOptions = it }
-        imageOptions.downsampleOverride?.let { downsampleOverride = it }
-        imageOptions.rotationOptions?.let { rotationOptions = it }
-        imageDecodeOptionsProvider.create(imageRequestBuilder, imageOptions)?.let {
-          imageDecodeOptions = it
-        }
-        isLocalThumbnailPreviewsEnabled = imageOptions.areLocalThumbnailPreviewsEnabled()
-        loadThumbnailOnly = imageOptions.loadThumbnailOnly
-        imageOptions.postprocessor?.let { postprocessor = it }
-        imageOptions.isProgressiveDecodingEnabled?.let { isProgressiveRenderingEnabled = it }
-        isFirstFrameThumbnailEnabled = imageOptions.isFirstFrameThumbnailEnabled
-      }
+  ): ImageRequestBuilder? = imageRequestBuilder?.apply {
+    imageOptions.resizeOptions?.let { resizeOptions = it }
+    imageOptions.downsampleOverride?.let { downsampleOverride = it }
+    imageOptions.rotationOptions?.let { rotationOptions = it }
+    imageDecodeOptionsProvider.create(imageRequestBuilder, imageOptions)?.let {
+      imageDecodeOptions = it
+    }
+    isLocalThumbnailPreviewsEnabled = imageOptions.areLocalThumbnailPreviewsEnabled()
+    loadThumbnailOnly = imageOptions.loadThumbnailOnly
+    imageOptions.postprocessor?.let { postprocessor = it }
+    imageOptions.isProgressiveDecodingEnabled?.let { isProgressiveRenderingEnabled = it }
+    isFirstFrameThumbnailEnabled = imageOptions.isFirstFrameThumbnailEnabled
+  }
 
   protected fun createEncodedImageRequestBuilder(
       uri: Uri?,

@@ -40,8 +40,9 @@ class ImageLayerDataModel(
 
   private var fadeAnimator: ValueAnimator? = null
 
-  private val animatorUpdateListener =
-      ValueAnimator.AnimatorUpdateListener { setAlpha(it.animatedValue as Int) }
+  private val animatorUpdateListener = ValueAnimator.AnimatorUpdateListener {
+    setAlpha(it.animatedValue as Int)
+  }
 
   fun getDataModel(): ImageDataModel? {
     return dataModel
@@ -61,11 +62,10 @@ class ImageLayerDataModel(
         onDetach()
         setCallback(null)
       }
-      this.dataModel =
-          dataModel?.apply {
-            setCallback(drawableCallbackProvider?.invoke())
-            onAttach()
-          }
+      this.dataModel = dataModel?.apply {
+        setCallback(drawableCallbackProvider?.invoke())
+        onAttach()
+      }
     }
     this.roundingOptions = roundingOptions
     this.borderOptions = borderOptions
@@ -182,6 +182,7 @@ class ImageLayerDataModel(
 
   fun getAlpha(): Int = paint.alpha
 
-  fun hasBitmapWithGainmap(): Boolean =
-      dataModel.let { it is BitmapImageDataModel && it.hasGainmap() }
+  fun hasBitmapWithGainmap(): Boolean = dataModel.let {
+    it is BitmapImageDataModel && it.hasGainmap()
+  }
 }
