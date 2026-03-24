@@ -8,6 +8,7 @@
 package com.facebook.drawee.drawable
 
 enum class SizingHint {
+  LOWEST_QUALITY_FASTEST_LOADING,
   LOW_QUALITY_FAST_LOADING,
   DEFAULT,
   HIGH_QUALITY_SLOW_LOADING,
