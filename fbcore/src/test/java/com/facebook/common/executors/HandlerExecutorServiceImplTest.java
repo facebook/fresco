@@ -17,9 +17,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
-import org.robolectric.Shadows;
 import org.robolectric.annotation.Config;
 import org.robolectric.annotation.LooperMode;
+import org.robolectric.shadow.api.Shadow;
 import org.robolectric.shadows.ShadowLooper;
 
 @RunWith(RobolectricTestRunner.class)
@@ -58,7 +58,7 @@ public class HandlerExecutorServiceImplTest {
   public void testDelay() {
     mExecutorService.schedule(mIncrementCounterRunnable, 30, TimeUnit.SECONDS);
     assertThat(mCounter.get()).isEqualTo(0);
-    Shadows.shadowOf(Looper.getMainLooper()).getScheduler().advanceBy(30 * 1000);
+    ((ShadowLooper) Shadow.extract(Looper.getMainLooper())).getScheduler().advanceBy(30 * 1000);
     assertThat(mCounter.get()).isEqualTo(1);
   }
 }
