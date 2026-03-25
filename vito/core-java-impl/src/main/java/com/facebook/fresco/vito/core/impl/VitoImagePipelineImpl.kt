@@ -235,7 +235,7 @@ class VitoImagePipelineImpl(
       }
     }
 
-    val smartFetchOptIn = (requestBeforeLayout?.imageSource as? SmartImageSource)?.smartFetchOptIn
+    val smartFetchOptIn = (requestBeforeLayout.imageSource as? SmartImageSource)?.smartFetchOptIn
 
     if (smartFetchOptIn == null) {
       if (isProductEnabled(callerContext, contextChain) == false) {
