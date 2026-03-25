@@ -10,4 +10,11 @@ package com.facebook.imagepipeline.platform
 class PlatformDecoderOptions(
     val avoidPoolGet: Boolean = false,
     val avoidPoolRelease: Boolean = false,
-)
+    val enableDecodeDimensionValidation: Boolean = false,
+    val catchNativeDecoderErrors: Boolean = false,
+    val errorReporter: DecoderErrorReporter? = null,
+) {
+  fun interface DecoderErrorReporter {
+    fun reportError(category: String, message: String, cause: Throwable?)
+  }
+}

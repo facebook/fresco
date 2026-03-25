@@ -31,6 +31,7 @@ import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.Locale;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
@@ -44,6 +45,9 @@ public abstract class DefaultDecoder implements PlatformDecoder {
   private final BitmapPool mBitmapPool;
   private boolean mAvoidPoolGet;
   private boolean mAvoidPoolRelease;
+  private boolean mEnableDecodeDimensionValidation;
+  private boolean mCatchNativeDecoderErrors;
+  private @Nullable PlatformDecoderOptions.DecoderErrorReporter mErrorReporter;
 
   private final @Nullable PreverificationHelper mPreverificationHelper;
 
@@ -71,6 +75,9 @@ public abstract class DefaultDecoder implements PlatformDecoder {
       mAvoidPoolGet = platformDecoderOptions.getAvoidPoolGet();
       mAvoidPoolRelease = platformDecoderOptions.getAvoidPoolRelease();
     }
+    mEnableDecodeDimensionValidation = platformDecoderOptions.getEnableDecodeDimensionValidation();
+    mCatchNativeDecoderErrors = platformDecoderOptions.getCatchNativeDecoderErrors();
+    mErrorReporter = platformDecoderOptions.getErrorReporter();
     mDecodeBuffers = decodeBuffers;
   }
 
@@ -201,6 +208,10 @@ public abstract class DefaultDecoder implements PlatformDecoder {
    *     assumed if the SDK version >= 26.
    * @return the bitmap
    */
+  // Maximum image dimension (width or height) to decode. Images exceeding this are rejected to
+  // guard against buggy vendor JPEG decoders (e.g. libjpeg-alpha.so) that crash on large inputs.
+  private static final int MAX_DECODE_DIMENSION = 32768;
+
   private @Nullable CloseableReference<Bitmap> decodeFromStream(
       InputStream inputStream,
       BitmapFactory.Options options,
@@ -209,6 +220,27 @@ public abstract class DefaultDecoder implements PlatformDecoder {
     Preconditions.checkNotNull(inputStream);
     int targetWidth = options.outWidth;
     int targetHeight = options.outHeight;
+
+    // Reject images with invalid or excessively large dimensions before passing to the native
+    // decoder. Some vendor JPEG libraries (libjpeg-alpha.so) crash on malformed or oversized data.
+    if (mEnableDecodeDimensionValidation
+        && (targetWidth <= 0
+            || targetHeight <= 0
+            || targetWidth > MAX_DECODE_DIMENSION
+            || targetHeight > MAX_DECODE_DIMENSION)) {
+      String message =
+          String.format(
+              Locale.ROOT,
+              "Rejecting decode with invalid dimensions: %dx%d",
+              targetWidth,
+              targetHeight);
+      FLog.e(TAG, message);
+      if (mErrorReporter != null) {
+        mErrorReporter.reportError("DECODE_DIMENSION_VALIDATION", message, null);
+      }
+      return null;
+    }
+
     if (regionToDecode != null) {
       targetWidth = regionToDecode.width() / options.inSampleSize;
       targetHeight = regionToDecode.height() / options.inSampleSize;
@@ -297,6 +329,21 @@ public abstract class DefaultDecoder implements PlatformDecoder {
         mBitmapPool.release(bitmapToReuse);
       }
       throw re;
+    } catch (Error error) {
+      // Catch native decoder errors (e.g. from buggy vendor JPEG libraries like libjpeg-alpha.so)
+      // that surface as UnsatisfiedLinkError or other Errors. Release the pooled bitmap and
+      // return null so the caller treats this as a failed decode instead of crashing.
+      if (mCatchNativeDecoderErrors) {
+        if (bitmapToReuse != null) {
+          mBitmapPool.release(bitmapToReuse);
+        }
+        FLog.e(TAG, "Native decoder error", error);
+        if (mErrorReporter != null) {
+          mErrorReporter.reportError("NATIVE_DECODER_ERROR", "Native decoder error", error);
+        }
+        return null;
+      }
+      throw error;
     } finally {
       mDecodeBuffers.release(byteBuffer);
     }
