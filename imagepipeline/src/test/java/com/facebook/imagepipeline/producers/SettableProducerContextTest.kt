@@ -35,7 +35,7 @@ class SettableProducerContextTest {
 
   @Before
   fun setUp() {
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     settableProducerContext =
         SettableProducerContext(
             imageRequest,

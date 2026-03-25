@@ -48,7 +48,7 @@ class HttpUrlConnectionNetworkFetcherTest {
   @Throws(Exception::class)
   fun setUp() {
     mockedUri = Mockito.mockStatic(Uri::class.java)
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
 
     fetcher =
         HttpUrlConnectionNetworkFetcher(

@@ -49,7 +49,7 @@ class QualifiedResourceFetchProducerTest {
   @Before
   @Throws(Exception::class)
   fun setUp() {
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     executor = TestExecutorService(FakeClock())
     qualifiedResourceFetchProducer =
         QualifiedResourceFetchProducer(executor, pooledByteBufferFactory, contentResolver)

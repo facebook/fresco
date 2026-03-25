@@ -54,7 +54,7 @@ class LocalContentUriFetchProducerTest {
   @Before
   @Throws(Exception::class)
   fun setUp() {
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     executor = TestExecutorService(FakeClock())
     localContentUriFetchProducer =
         LocalContentUriFetchProducer(executor, pooledByteBufferFactory, contentResolver)

@@ -57,7 +57,7 @@ class LocalAssetFetchProducerTest {
   @Before
   @Throws(Exception::class)
   fun setUp() {
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     Mockito.`when`(assetManager.openFd(ArgumentMatchers.eq(TEST_FILENAME)))
         .thenReturn(assetFileDescriptor)
     Mockito.`when`(assetFileDescriptor.length).thenReturn(TEST_DATA_LENGTH.toLong())

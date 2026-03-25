@@ -78,7 +78,7 @@ class JobSchedulerTest {
     mockedJobSchedulerJobStartExecutorSupplier =
         Mockito.mockStatic(JobStartExecutorSupplier::class.java)
     mockedSystemClock = Mockito.mockStatic(SystemClock::class.java)
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     fakeClockForTime = FakeClock()
     fakeClockForWorker = FakeClock()
     fakeClockForScheduled = FakeClock()

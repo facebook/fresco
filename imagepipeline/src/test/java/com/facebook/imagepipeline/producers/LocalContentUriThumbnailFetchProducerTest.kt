@@ -69,7 +69,7 @@ class LocalContentUriThumbnailFetchProducerTest {
   @Throws(Exception::class)
   fun setUp() {
     mockedMediaStoreImagesThumbnails = Mockito.mockStatic(MediaStore.Images.Thumbnails::class.java)
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
 
     executor = TestExecutorService(FakeClock())
     localContentUriThumbnailFetchProducer =

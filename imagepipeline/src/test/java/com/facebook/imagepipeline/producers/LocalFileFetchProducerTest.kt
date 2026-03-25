@@ -55,7 +55,7 @@ class LocalFileFetchProducerTest {
   @Before
   @Throws(Exception::class)
   fun setUp() {
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     executor = TestExecutorService(FakeClock())
     localFileFetchProducer = LocalFileFetchProducer(executor, pooledByteBufferFactory)
     file = File(RuntimeEnvironment.application.getExternalFilesDir(null), TEST_FILENAME)

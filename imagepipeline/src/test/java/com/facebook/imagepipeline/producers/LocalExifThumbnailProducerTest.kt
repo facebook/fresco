@@ -65,7 +65,7 @@ class LocalExifThumbnailProducerTest {
   fun setUp() {
     mockedBitmapUtil = Mockito.mockStatic(BitmapUtil::class.java)
     mockedJfifUtil = Mockito.mockStatic(JfifUtil::class.java)
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     testExecutorService = TestExecutorService(FakeClock())
 
     testLocalExifThumbnailProducer =

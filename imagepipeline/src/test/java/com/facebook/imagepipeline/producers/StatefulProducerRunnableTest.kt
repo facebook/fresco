@@ -44,7 +44,7 @@ class StatefulProducerRunnableTest {
 
   @Before
   fun setUp() {
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     exception = ConcurrentModificationException()
     successMap = mutableMapOf<String?, String?>("state" to "success")
     failureMap = mutableMapOf("state" to "failure")

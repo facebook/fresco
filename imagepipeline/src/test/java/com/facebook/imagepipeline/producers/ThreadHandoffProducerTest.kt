@@ -43,7 +43,7 @@ class ThreadHandoffProducerTest {
 
   @Before
   fun setUp() {
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     producerContext =
         SettableProducerContext(
             imageRequest,
