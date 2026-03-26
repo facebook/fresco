@@ -335,7 +335,7 @@ public class PipelineDraweeController
    * updateDebugOverlay updates the debug overlay. Subclasses of {@link PipelineDraweeController}
    * can override this method (and call <code>super</code>) to provide additional debug information.
    */
-  protected void updateDebugOverlay(
+  private void updateDebugOverlay(
       @Nullable CloseableImage image, DebugControllerOverlayDrawable debugOverlay) {
     debugOverlay.setControllerId(getId());
 
