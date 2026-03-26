@@ -319,6 +319,7 @@ public class WrappingUtils {
     return drawable;
   }
 
+  private
   /** Applies the given rounding params on the specified rounded drawable. */
   static void applyRoundingParams(Rounded rounded, RoundingParams roundingParams) {
     rounded.setCircle(roundingParams.getRoundAsCircle());
