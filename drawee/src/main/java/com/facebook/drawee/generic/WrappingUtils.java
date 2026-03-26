@@ -341,6 +341,7 @@ public class WrappingUtils {
     rounded.setRepeatEdgePixels(RoundedBitmapDrawable.getDefaultRepeatEdgePixels());
   }
 
+  private
   /** Finds the immediate parent of a leaf drawable. */
   static DrawableParent findDrawableParentForLeaf(DrawableParent parent) {
     while (true) {
