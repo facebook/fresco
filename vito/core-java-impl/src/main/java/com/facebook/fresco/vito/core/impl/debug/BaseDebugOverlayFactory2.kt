@@ -23,8 +23,8 @@ abstract class BaseDebugOverlayFactory2(private val debugOverlayEnabled: Supplie
       return
     }
     val overlay = extractOrCreate(drawable)
-    overlay.onBoundsChangedCallback = { _: Rect? -> update(drawable, extras) }
     overlay.reset()
+    overlay.onBoundsChangedCallback = { _: Rect? -> update(drawable, extras) }
     setData(overlay, drawable, extras)
     overlay.invalidateSelf()
   }

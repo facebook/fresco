@@ -13,6 +13,7 @@ import android.annotation.SuppressLint
 import android.graphics.Color
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
 import com.facebook.fresco.vito.core.impl.FrescoDrawable2
+import com.facebook.fresco.vito.core.impl.KFrescoVitoDrawable
 
 // ============================================================================
 // FrescoDrawable2-specific providers
@@ -177,4 +178,45 @@ val imageOriginSubcategoryWithExtrasProvider: StringAndColorDebugDataProvider =
       val originExtras = getOriginExtras(extras)
       val originSubcategory = originExtras?.get("origin_sub")?.toString() ?: "unknown"
       originSubcategory to Color.GRAY
+    }
+
+/** Creates an I:D fit ratio provider for FrescoDrawable2 and KFrescoVitoDrawable. */
+fun createImageFitRatioProvider(
+    config: ImageFitRatioConfig,
+): StringAndColorDebugDataProvider =
+    StringAndColorDebugDataProvider(
+        "I:D",
+        "Image fit ratio",
+        "The ratio of image dimensions to target dimensions",
+    ) { drawable, _ ->
+      if (drawable is FrescoDrawable2) {
+        val viewport = drawable.viewportDimensions
+        val targetWidth =
+            if (viewport != null && viewport.width() > 0) viewport.width()
+            else drawable.bounds.width()
+        val targetHeight =
+            if (viewport != null && viewport.height() > 0) viewport.height()
+            else drawable.bounds.height()
+        computeImageFitRatioAndColor(
+            drawable.actualImageWidthPx,
+            drawable.actualImageHeightPx,
+            targetWidth,
+            targetHeight,
+            config,
+        )
+      } else if (drawable is KFrescoVitoDrawable) {
+        val model =
+            drawable.actualImageLayer.getDataModel()
+                ?: return@StringAndColorDebugDataProvider "" to Color.GRAY
+        val viewport = drawable.viewportDimensions
+        val targetWidth =
+            if (viewport != null && viewport.width() > 0) viewport.width()
+            else drawable.bounds.width()
+        val targetHeight =
+            if (viewport != null && viewport.height() > 0) viewport.height()
+            else drawable.bounds.height()
+        computeImageFitRatioAndColor(model.width, model.height, targetWidth, targetHeight, config)
+      } else {
+        "" to Color.TRANSPARENT
+      }
     }

@@ -5,11 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@file:SuppressLint("HexColorValueUsage")
+
 package com.facebook.fresco.vito.core.impl
 
+import android.annotation.SuppressLint
 import com.facebook.common.internal.Supplier
 import com.facebook.fresco.vito.core.impl.debug.DebugDataProvider
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayDrawable
+import com.facebook.fresco.vito.core.impl.debug.ImageFitRatioConfig
 import com.facebook.fresco.vito.core.impl.debug.StringAndColorDebugDataProvider
 import com.facebook.fresco.vito.core.impl.debug.StringDebugDataProvider
 import com.facebook.fresco.vito.core.impl.debug.drawableDimensionsProvider
@@ -19,15 +23,15 @@ import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 
 class DebugOverlayHandler(
     private val isEnabled: Supplier<Boolean>,
-    private val debugDataProviders: List<DebugDataProvider> =
-        listOf(
-            imageIDProvider,
-            drawableDimensionsProvider,
-            imageDimensionsProvider,
-            imageOriginProvider,
-            imageOriginSubcategoryProvider,
-            hdrGainmapProvider,
-        ),
+    private val debugDataProviders: List<DebugDataProvider> = buildList {
+      add(imageIDProvider)
+      add(drawableDimensionsProvider)
+      add(imageDimensionsProvider)
+      add(createImageFitRatioProvider(ImageFitRatioConfig()))
+      add(imageOriginProvider)
+      add(imageOriginSubcategoryProvider)
+      add(hdrGainmapProvider)
+    },
 ) {
   constructor(isEnabled: Boolean) : this(Supplier { isEnabled }) {}
 
@@ -37,6 +41,8 @@ class DebugOverlayHandler(
     }
 
     val debugOverlayDrawable = extractDebugOverlayDrawable(drawable)
+    drawable.onBoundsChangedCallback = { update(drawable) }
+    debugOverlayDrawable.reset()
     debugDataProviders.forEach {
       when (it) {
         is StringDebugDataProvider ->
@@ -44,6 +50,9 @@ class DebugOverlayHandler(
         is StringAndColorDebugDataProvider -> {
           val (data, color) = it.extractDataAndColor(drawable)
           debugOverlayDrawable.addDebugData(it.shortName, data, color)
+          if (it.shortName == "I:D" && data.isNotEmpty()) {
+            debugOverlayDrawable.backgroundColor = (0x50 shl 24) or (color and 0x00FFFFFF)
+          }
         }
       }
     }

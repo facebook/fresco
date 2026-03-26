@@ -31,7 +31,9 @@ dependencies {
     implementation project(':urimod')
     implementation project(':vito:core')
     implementation project(':vito:core-common-impl')
+    implementation project(':vito:core-impl')
     implementation project(':vito:options')
+    implementation project(':vito:renderer')
     implementation project(':vito:source')
 
     testImplementation TestDeps.junit

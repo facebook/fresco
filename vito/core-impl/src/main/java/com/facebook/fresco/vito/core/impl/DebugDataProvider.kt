@@ -5,14 +5,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@file:SuppressLint("ColorConstantUsageIssue")
+
 package com.facebook.fresco.vito.core.impl
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayImageOriginColor
+import com.facebook.fresco.vito.core.impl.debug.ImageFitRatioConfig
 import com.facebook.fresco.vito.core.impl.debug.StringAndColorDebugDataProvider
 import com.facebook.fresco.vito.core.impl.debug.StringDebugDataProvider
+import com.facebook.fresco.vito.core.impl.debug.computeImageFitRatioAndColor
 import com.facebook.fresco.vito.core.impl.debug.formatDimensions
 import com.facebook.fresco.vito.core.impl.debug.getOriginExtras
 
@@ -113,4 +118,32 @@ val kFrescoImageOriginWithExtrasProvider =
       val origin = originExtras?.get("origin")?.toString() ?: "unknown"
       val color = DebugOverlayImageOriginColor.getImageOriginColor(origin)
       origin to color
+    }
+
+/** Creates an I:D fit ratio provider for KFrescoVitoDrawable. */
+fun createImageFitRatioProvider(
+    config: ImageFitRatioConfig,
+): StringAndColorDebugDataProvider =
+    StringAndColorDebugDataProvider(
+        "I:D",
+        "Image fit ratio",
+        "The ratio of image dimensions to target dimensions",
+    ) { drawable, _ ->
+      if (drawable is KFrescoVitoDrawable) {
+        val model = drawable.actualImageLayer.getDataModel()
+        val viewport = drawable.viewportDimensions
+        val targetWidth =
+            if (viewport != null && viewport.width() > 0) viewport.width()
+            else drawable.bounds.width()
+        val targetHeight =
+            if (viewport != null && viewport.height() > 0) viewport.height()
+            else drawable.bounds.height()
+        if (model != null) {
+          computeImageFitRatioAndColor(model.width, model.height, targetWidth, targetHeight, config)
+        } else {
+          "" to Color.GRAY
+        }
+      } else {
+        "" to Color.GRAY
+      }
     }

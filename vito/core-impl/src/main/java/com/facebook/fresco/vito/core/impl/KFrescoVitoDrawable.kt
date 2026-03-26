@@ -52,6 +52,8 @@ class KFrescoVitoDrawable(
   val releaseState = ImageReleaseScheduler.createReleaseState(this)
   private var hasBoundsSet = false
 
+  var onBoundsChangedCallback: (() -> Unit)? = null
+
   override var imageRequest: VitoImageRequest? = null
 
   var _intrinsicWidth: Int = -1
@@ -141,6 +143,7 @@ class KFrescoVitoDrawable(
     debugOverlayImageLayer?.reset()
     backgroundLayer?.reset()
     hasBoundsSet = false
+    onBoundsChangedCallback = null
 
     listenerManager.onReset(
         resetVitoImageRequestListener,
@@ -177,6 +180,7 @@ class KFrescoVitoDrawable(
   override fun onBoundsChange(bounds: Rect) {
     super.onBoundsChange(bounds)
     setLayerBounds(bounds)
+    onBoundsChangedCallback?.invoke()
   }
 
   private fun setLayerBounds(bounds: Rect?) {

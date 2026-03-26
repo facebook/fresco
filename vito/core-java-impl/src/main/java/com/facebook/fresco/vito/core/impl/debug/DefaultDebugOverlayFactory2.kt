@@ -5,8 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+@file:SuppressLint("HexColorValueUsage", "ColorConstantUsageIssue")
+
 package com.facebook.fresco.vito.core.impl.debug
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import com.facebook.common.internal.Supplier
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
@@ -58,6 +61,22 @@ open class DefaultDebugOverlayFactory2(
           (abstractDrawable.actualImageWidthPx / abstractDrawable.actualImageHeightPx.toFloat())
               .toString(),
       )
+    }
+    val viewport = abstractDrawable.viewportDimensions
+    val viewportWidth = if (viewport != null && viewport.width() > 0) viewport.width() else 0
+    val viewportHeight = if (viewport != null && viewport.height() > 0) viewport.height() else 0
+    val targetWidth = if (viewportWidth > 0) viewportWidth else bounds.width()
+    val targetHeight = if (viewportHeight > 0) viewportHeight else bounds.height()
+    val (ratioText, ratioColor) =
+        computeImageFitRatioAndColor(
+            abstractDrawable.actualImageWidthPx,
+            abstractDrawable.actualImageHeightPx,
+            targetWidth,
+            targetHeight,
+        )
+    if (ratioText.isNotEmpty()) {
+      overlay.addDebugData("I:D", ratioText, ratioColor)
+      overlay.backgroundColor = (0x50 shl 24) or (ratioColor and 0x00FFFFFF)
     }
     val focusPoint = abstractDrawable.actualImageFocusPoint
     if (focusPoint != null) {
