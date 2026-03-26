@@ -85,7 +85,7 @@ public class ImagePerfMonitor implements ImagePerfNotifier {
     mImagePerfDataListeners.remove(imagePerfDataListener);
   }
 
-  public void clearImagePerfDataListeners() {
+  private void clearImagePerfDataListeners() {
     if (mImagePerfDataListeners != null) {
       mImagePerfDataListeners.clear();
     }
