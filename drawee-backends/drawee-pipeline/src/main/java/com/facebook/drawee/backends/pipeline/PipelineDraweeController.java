@@ -455,7 +455,7 @@ public class PipelineDraweeController
   }
 
   @Nullable
-  public static ScaleTypeDrawable getActiveScaleTypeDrawable(@Nullable Drawable drawable) {
+  private static ScaleTypeDrawable getActiveScaleTypeDrawable(@Nullable Drawable drawable) {
     if (drawable == null) {
       return null;
     } else if (drawable instanceof ScaleTypeDrawable) {
