@@ -184,8 +184,8 @@ constructor(
     private const val TEXT_COLOR = Color.WHITE
     private const val OUTLINE_STROKE_WIDTH_PX = 2
     private const val MAX_TEXT_SIZE_PX = 72
-    private const val MIN_TEXT_SIZE_PX = 16
-    private const val TEXT_LINE_SPACING_PX = 8
+    private const val MIN_TEXT_SIZE_PX = 9
+    private const val TEXT_LINE_SPACING_PX = 4
     private const val TEXT_PADDING_PX = 10
     private const val INITIAL_MAX_LINE_LENGTH = 4
     private const val MARGIN = TEXT_LINE_SPACING_PX / 2

@@ -11,12 +11,14 @@ package com.facebook.fresco.vito.core.impl.debug
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.graphics.drawable.BitmapDrawable
 import com.facebook.common.internal.Supplier
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
 import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.core.impl.FrescoDrawable2
+import com.facebook.imageutils.BitmapUtil
 import java.util.Locale
 
 open class DefaultDebugOverlayFactory2(
@@ -77,6 +79,21 @@ open class DefaultDebugOverlayFactory2(
     if (ratioText.isNotEmpty()) {
       overlay.addDebugData("I:D", ratioText, ratioColor)
       overlay.backgroundColor = (0x50 shl 24) or (ratioColor and 0x00FFFFFF)
+    }
+    val actualBitmap = (abstractDrawable.actualImageDrawable as? BitmapDrawable)?.bitmap
+    val bytesPerPixel =
+        actualBitmap?.let { BitmapUtil.getPixelSizeForBitmapConfig(it.config) }
+            ?: DEFAULT_BYTES_PER_PIXEL
+    val (wasteText, wasteColor) =
+        computeWastedMemoryAndColor(
+            abstractDrawable.actualImageWidthPx,
+            abstractDrawable.actualImageHeightPx,
+            targetWidth,
+            targetHeight,
+            bytesPerPixel,
+        )
+    if (wasteText.isNotEmpty()) {
+      overlay.addDebugData("waste", wasteText, wasteColor)
     }
     val focusPoint = abstractDrawable.actualImageFocusPoint
     if (focusPoint != null) {

@@ -18,8 +18,11 @@ import com.facebook.fresco.vito.core.impl.debug.ImageFitRatioConfig
 import com.facebook.fresco.vito.core.impl.debug.StringAndColorDebugDataProvider
 import com.facebook.fresco.vito.core.impl.debug.StringDebugDataProvider
 import com.facebook.fresco.vito.core.impl.debug.computeImageFitRatioAndColor
+import com.facebook.fresco.vito.core.impl.debug.computeWastedMemoryAndColor
 import com.facebook.fresco.vito.core.impl.debug.formatDimensions
 import com.facebook.fresco.vito.core.impl.debug.getOriginExtras
+import com.facebook.fresco.vito.renderer.BitmapImageDataModel
+import com.facebook.imageutils.BitmapUtil
 
 // ============================================================================
 // KFrescoVitoDrawable-specific providers
@@ -141,6 +144,43 @@ fun createImageFitRatioProvider(
         if (model != null) {
           computeImageFitRatioAndColor(model.width, model.height, targetWidth, targetHeight, config)
         } else {
+          "" to Color.GRAY
+        }
+      } else {
+        "" to Color.GRAY
+      }
+    }
+
+/** Creates a wasted memory provider for KFrescoVitoDrawable. */
+fun createWastedMemoryProvider(
+    config: ImageFitRatioConfig,
+): StringAndColorDebugDataProvider =
+    StringAndColorDebugDataProvider(
+        "waste",
+        "Wasted memory",
+        "Memory wasted by oversized image (image bytes - target bytes)",
+    ) { drawable, _ ->
+      if (drawable is KFrescoVitoDrawable) {
+        val model = drawable.actualImageLayer.getDataModel()
+        if (model is BitmapImageDataModel) {
+          val viewport = drawable.viewportDimensions
+          val targetWidth =
+              if (viewport != null && viewport.width() > 0) viewport.width()
+              else drawable.bounds.width()
+          val targetHeight =
+              if (viewport != null && viewport.height() > 0) viewport.height()
+              else drawable.bounds.height()
+          val bytesPerPixel = BitmapUtil.getPixelSizeForBitmapConfig(model.bitmap.config)
+          computeWastedMemoryAndColor(
+              model.width,
+              model.height,
+              targetWidth,
+              targetHeight,
+              bytesPerPixel,
+              config,
+          )
+        } else {
+          // Non-bitmap images (vector graphics, etc.) have no wasted memory
           "" to Color.GRAY
         }
       } else {

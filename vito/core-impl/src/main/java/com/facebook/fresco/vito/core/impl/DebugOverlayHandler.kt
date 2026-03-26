@@ -28,6 +28,7 @@ class DebugOverlayHandler(
       add(drawableDimensionsProvider)
       add(imageDimensionsProvider)
       add(createImageFitRatioProvider(ImageFitRatioConfig()))
+      add(createWastedMemoryProvider(ImageFitRatioConfig()))
       add(imageOriginProvider)
       add(imageOriginSubcategoryProvider)
       add(hdrGainmapProvider)

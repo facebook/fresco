@@ -82,11 +82,14 @@ fun abbreviateOrigin(origin: String): String =
  * @param greenMaxRatio maximum ratio for green (perfect fit). Default 1.1
  * @param yellowMaxRatio maximum ratio for yellow (slightly oversized). Default 1.5. Ratios below
  *   [greenMinRatio] or above [yellowMaxRatio] are red.
+ * @param wastedMemoryRedThresholdBytes wasted memory threshold in bytes above which the overlay
+ *   turns red. Default 1 MiB.
  */
 data class ImageFitRatioConfig(
     val greenMinRatio: Float = 0.9f,
     val greenMaxRatio: Float = 1.1f,
     val yellowMaxRatio: Float = 1.5f,
+    val wastedMemoryRedThresholdBytes: Long = 1L * 1024 * 1024,
 )
 
 /**
@@ -122,6 +125,55 @@ fun computeImageFitRatioAndColor(
         ratio <= config.yellowMaxRatio -> Color.YELLOW
         else -> Color.RED
       }
+  return formatted to color
+}
+
+/** Default bytes per pixel, assuming ARGB_8888 bitmap config. */
+const val DEFAULT_BYTES_PER_PIXEL = 4
+
+/**
+ * Computes the wasted memory from an oversized image and returns a formatted string with a color.
+ *
+ * Memory usage per image = width * height * bytesPerPixel. Wasted memory is the difference between
+ * the image's memory footprint and what would be needed for the target dimensions.
+ *
+ * Color coding:
+ * - Red: wasted > (default 1 MiB)
+ * - Green: wasted > 0 but within threshold
+ * - Gray: no waste or invalid dimensions
+ */
+fun computeWastedMemoryAndColor(
+    imageWidth: Int,
+    imageHeight: Int,
+    drawableWidth: Int,
+    drawableHeight: Int,
+    bytesPerPixel: Int = DEFAULT_BYTES_PER_PIXEL,
+    config: ImageFitRatioConfig = ImageFitRatioConfig(),
+): Pair<String, Int> {
+  // bytesPerPixel <= 0 covers vector graphics and other non-raster images
+  if (
+      imageWidth <= 0 ||
+          imageHeight <= 0 ||
+          drawableWidth <= 0 ||
+          drawableHeight <= 0 ||
+          bytesPerPixel <= 0
+  ) {
+    return "" to Color.GRAY
+  }
+  val imageBytes = imageWidth.toLong() * imageHeight * bytesPerPixel
+  val targetBytes = drawableWidth.toLong() * drawableHeight * bytesPerPixel
+  val wastedBytes = maxOf(0L, imageBytes - targetBytes)
+  if (wastedBytes == 0L) {
+    return "0 B" to Color.GREEN
+  }
+  val formatted =
+      when {
+        wastedBytes >= 1024L * 1024 ->
+            String.format(Locale.US, "%.1f MiB", wastedBytes / (1024.0 * 1024))
+        wastedBytes >= 1024L -> String.format(Locale.US, "%.1f KiB", wastedBytes / 1024.0)
+        else -> "$wastedBytes B"
+      }
+  val color = if (wastedBytes > config.wastedMemoryRedThresholdBytes) Color.RED else Color.GREEN
   return formatted to color
 }
 
