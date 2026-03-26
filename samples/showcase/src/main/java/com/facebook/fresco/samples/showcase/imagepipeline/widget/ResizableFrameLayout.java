@@ -15,8 +15,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import androidx.annotation.RequiresApi;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ResizableFrameLayout extends FrameLayout {
 
   public interface SizeChangedListener {
@@ -24,7 +26,7 @@ public class ResizableFrameLayout extends FrameLayout {
     void onSizeChanged(int widthPx, int heightPx);
   }
 
-  private View mCornerIndicator;
+  private @Nullable View mCornerIndicator;
   private boolean mResizing;
   private float mLastX;
   private float mLastY;
@@ -64,7 +66,8 @@ public class ResizableFrameLayout extends FrameLayout {
 
   @Override
   public boolean onInterceptTouchEvent(MotionEvent event) {
-    if (event.getAction() == MotionEvent.ACTION_DOWN
+    if (mCornerIndicator != null
+        && event.getAction() == MotionEvent.ACTION_DOWN
         && event.getX() >= mCornerIndicator.getX()
         && event.getY() >= mCornerIndicator.getY()) {
       ViewGroup.LayoutParams layoutParams = getLayoutParams();
@@ -99,13 +102,10 @@ public class ResizableFrameLayout extends FrameLayout {
         setLayoutParams(layoutParams);
     }
 
-    mLastX =
-        Math.max(
-            Math.min(event.getX(), mMaximumWidth), getMinimumWidth() - mCornerIndicator.getWidth());
-    mLastY =
-        Math.max(
-            Math.min(event.getY(), mMaximumHeight),
-            getMinimumHeight() - mCornerIndicator.getHeight());
+    int cornerWidth = mCornerIndicator != null ? mCornerIndicator.getWidth() : 0;
+    int cornerHeight = mCornerIndicator != null ? mCornerIndicator.getHeight() : 0;
+    mLastX = Math.max(Math.min(event.getX(), mMaximumWidth), getMinimumWidth() - cornerWidth);
+    mLastY = Math.max(Math.min(event.getY(), mMaximumHeight), getMinimumHeight() - cornerHeight);
     return true;
   }
 

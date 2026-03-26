@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.samples.showcase.vito;
 
+import android.app.Activity;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -34,8 +35,10 @@ import com.facebook.fresco.vito.options.RoundingOptions;
 import com.facebook.fresco.vito.source.ImageSource;
 import com.facebook.fresco.vito.source.ImageSourceProvider;
 import com.facebook.fresco.vito.view.VitoView;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** A {@link Fragment} that illustrates using rounded corners with Fresco. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class VitoRoundedCornersFragment extends BaseShowcaseFragment {
 
   private static final String CALLER_CONTEXT = "VitoRoundedCornersFragment";
@@ -45,18 +48,18 @@ public class VitoRoundedCornersFragment extends BaseShowcaseFragment {
 
   private int mColorPrimary;
 
-  private ImageView mImageRound;
+  private @Nullable ImageView mImageRound;
   private ImageOptions mImageRoundOptions = BASE_IMAGE_OPTIONS;
 
-  private ImageView mImageRadius;
+  private @Nullable ImageView mImageRadius;
   private ImageOptions mImageRadiusOptions = BASE_IMAGE_OPTIONS;
-  private ImageView mImageSome;
+  private @Nullable ImageView mImageSome;
   private ImageOptions mImageSomeOptions = BASE_IMAGE_OPTIONS;
-  private ImageView mImageFancy;
+  private @Nullable ImageView mImageFancy;
   private ImageOptions mImageFancyOptions = BASE_IMAGE_OPTIONS;
 
-  private CheckBox mShowBordersCheck;
-  private CheckBox mScaleInsideBordersCheck;
+  private @Nullable CheckBox mShowBordersCheck;
+  private @Nullable CheckBox mScaleInsideBordersCheck;
   private ImageSource mImageSource = ImageSourceProvider.emptySource();
 
   public VitoRoundedCornersFragment() {
@@ -78,37 +81,43 @@ public class VitoRoundedCornersFragment extends BaseShowcaseFragment {
 
     final Spinner scaleType = view.findViewById(R.id.scaleType);
     final SimpleScaleTypeAdapter scaleTypeAdapter = SimpleScaleTypeAdapter.createForAllScaleTypes();
-    scaleType.setAdapter(scaleTypeAdapter);
-    scaleType.setOnItemSelectedListener(
-        new AdapterView.OnItemSelectedListener() {
-          @Override
-          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            final SimpleScaleTypeAdapter.Entry spinnerEntry =
-                (SimpleScaleTypeAdapter.Entry) scaleTypeAdapter.getItem(position);
-            changeImageScaleType(spinnerEntry.scaleType, spinnerEntry.focusPoint);
-          }
+    if (scaleType != null) {
+      scaleType.setAdapter(scaleTypeAdapter);
+      scaleType.setOnItemSelectedListener(
+          new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+              final SimpleScaleTypeAdapter.Entry spinnerEntry =
+                  (SimpleScaleTypeAdapter.Entry) scaleTypeAdapter.getItem(position);
+              changeImageScaleType(spinnerEntry.scaleType, spinnerEntry.focusPoint);
+            }
 
-          @Override
-          public void onNothingSelected(AdapterView<?> parent) {}
-        });
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+          });
+    }
 
     mShowBordersCheck = view.findViewById(R.id.borders);
-    mShowBordersCheck.setOnCheckedChangeListener(
-        new CompoundButton.OnCheckedChangeListener() {
-          @Override
-          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            updateRounding();
-          }
-        });
+    if (mShowBordersCheck != null) {
+      mShowBordersCheck.setOnCheckedChangeListener(
+          new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+              updateRounding();
+            }
+          });
+    }
 
     mScaleInsideBordersCheck = view.findViewById(R.id.scaleInside);
-    mScaleInsideBordersCheck.setOnCheckedChangeListener(
-        new CompoundButton.OnCheckedChangeListener() {
-          @Override
-          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            updateRounding();
-          }
-        });
+    if (mScaleInsideBordersCheck != null) {
+      mScaleInsideBordersCheck.setOnCheckedChangeListener(
+          new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+              updateRounding();
+            }
+          });
+    }
 
     final ImageUriProvider imageUriProvider = sampleUris();
     mImageSource = ImageSourceProvider.forUri(imageUriProvider.createSampleUri(ImageSize.L));
@@ -152,16 +161,28 @@ public class VitoRoundedCornersFragment extends BaseShowcaseFragment {
   }
 
   private void loadImages() {
-    VitoView.show(mImageSource, mImageRoundOptions, CALLER_CONTEXT, mImageRound);
-    VitoView.show(mImageSource, mImageRadiusOptions, CALLER_CONTEXT, mImageRadius);
-    VitoView.show(mImageSource, mImageSomeOptions, CALLER_CONTEXT, mImageSome);
-    VitoView.show(mImageSource, mImageFancyOptions, CALLER_CONTEXT, mImageFancy);
+    if (mImageRound != null) {
+      VitoView.show(mImageSource, mImageRoundOptions, CALLER_CONTEXT, mImageRound);
+    }
+    if (mImageRadius != null) {
+      VitoView.show(mImageSource, mImageRadiusOptions, CALLER_CONTEXT, mImageRadius);
+    }
+    if (mImageSome != null) {
+      VitoView.show(mImageSource, mImageSomeOptions, CALLER_CONTEXT, mImageSome);
+    }
+    if (mImageFancy != null) {
+      VitoView.show(mImageSource, mImageFancyOptions, CALLER_CONTEXT, mImageFancy);
+    }
   }
 
   @SuppressWarnings("ResourceType")
   private void initColors() {
+    Activity activity = getActivity();
+    if (activity == null) {
+      return;
+    }
     final TypedArray attrs =
-        getActivity()
+        activity
             .getTheme()
             .obtainStyledAttributes(
                 R.style.AppTheme,
@@ -191,13 +212,13 @@ public class VitoRoundedCornersFragment extends BaseShowcaseFragment {
 
   private void updateRounding() {
     BorderOptions borderOptions = null;
-    if (mShowBordersCheck.isChecked()) {
+    if (mShowBordersCheck != null && mShowBordersCheck.isChecked()) {
       borderOptions =
           BorderOptions.create(
               mColorPrimary,
               getResources().getDimensionPixelSize(R.dimen.image_rounded_corners_border_width),
               0f,
-              mScaleInsideBordersCheck.isChecked());
+              mScaleInsideBordersCheck != null && mScaleInsideBordersCheck.isChecked());
     }
 
     mImageRoundOptions = mImageRoundOptions.extend().borders(borderOptions).build();

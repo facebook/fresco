@@ -32,15 +32,17 @@ import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.ImageDecodeOptionsBuilder;
+import com.facebook.infer.annotation.Nullsafe;
 
 /** GIF example that illustrates how to display a simple GIF file */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImageFormatGifFragment extends BaseShowcaseFragment {
 
   private static final String CALLER_CONTEXT = "ImageFormatGifFragment";
   private Entry[] mSpinnerEntries;
 
-  private Spinner mSpinner;
-  private ImageView mImageView;
+  private @Nullable Spinner mSpinner;
+  private @Nullable ImageView mImageView;
   private @Nullable GifDecoder mGifDecoder;
   private boolean mAutoPlayEnabled;
   private boolean mIsPlaying;
@@ -71,79 +73,100 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
     mImageView = view.findViewById(R.id.image);
 
     final SwitchCompat switchBackground = view.findViewById(R.id.switch_background);
-    switchBackground.setOnCheckedChangeListener(
-        new CompoundButton.OnCheckedChangeListener() {
-          @Override
-          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mImageView.setBackground(isChecked ? new CheckerBoardDrawable(getResources()) : null);
-          }
-        });
+    if (switchBackground != null) {
+      switchBackground.setOnCheckedChangeListener(
+          new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+              if (mImageView != null) {
+                mImageView.setBackground(
+                    isChecked ? new CheckerBoardDrawable(getResources()) : null);
+              }
+            }
+          });
+    }
     final SwitchCompat switchAutoPlay = view.findViewById(R.id.switch_autoplay);
-    switchAutoPlay.setOnCheckedChangeListener(
-        new CompoundButton.OnCheckedChangeListener() {
-          @Override
-          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mAutoPlayEnabled = isChecked;
-            refreshAnimation();
-          }
-        });
-    mAutoPlayEnabled = switchAutoPlay.isEnabled();
+    if (switchAutoPlay != null) {
+      switchAutoPlay.setOnCheckedChangeListener(
+          new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+              mAutoPlayEnabled = isChecked;
+              refreshAnimation();
+            }
+          });
+      mAutoPlayEnabled = switchAutoPlay.isEnabled();
+    }
 
     final SwitchCompat switchAspect = view.findViewById(R.id.switch_aspect_ratio);
-    switchAspect.setOnCheckedChangeListener(
-        new CompoundButton.OnCheckedChangeListener() {
-          @Override
-          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            ViewGroup.LayoutParams layoutParams = mImageView.getLayoutParams();
-            layoutParams.height = layoutParams.width * (isChecked ? 2 : 1);
-            mImageView.setLayoutParams(layoutParams);
-          }
-        });
+    if (switchAspect != null) {
+      switchAspect.setOnCheckedChangeListener(
+          new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+              if (mImageView != null) {
+                ViewGroup.LayoutParams layoutParams = mImageView.getLayoutParams();
+                layoutParams.height = layoutParams.width * (isChecked ? 2 : 1);
+                mImageView.setLayoutParams(layoutParams);
+              }
+            }
+          });
+    }
 
     mSpinner = (Spinner) view.findViewById(R.id.spinner);
-    mSpinner.setAdapter(new SimpleUriListAdapter());
-    mSpinner.setOnItemSelectedListener(
-        new AdapterView.OnItemSelectedListener() {
-          @Override
-          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            refreshAnimation();
-          }
+    if (mSpinner != null) {
+      mSpinner.setAdapter(new SimpleUriListAdapter());
+      mSpinner.setOnItemSelectedListener(
+          new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+              refreshAnimation();
+            }
 
-          @Override
-          public void onNothingSelected(AdapterView<?> parent) {}
-        });
-    mSpinner.setSelection(0);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+          });
+      mSpinner.setSelection(0);
+    }
 
     final Spinner decoderSpinner = view.findViewById(R.id.spinner_select_decoder);
-    decoderSpinner.setOnItemSelectedListener(
-        new AdapterView.OnItemSelectedListener() {
-          @Override
-          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            switch (position) {
-              case 0:
-                mGifDecoder = null;
-                break;
-              case 1:
-                mGifDecoder = new GifDecoder();
-                break;
-              default:
-                throw new IllegalArgumentException("Unknown decoder selected");
+    if (decoderSpinner != null) {
+      decoderSpinner.setOnItemSelectedListener(
+          new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+              switch (position) {
+                case 0:
+                  mGifDecoder = null;
+                  break;
+                case 1:
+                  mGifDecoder = new GifDecoder();
+                  break;
+                default:
+                  throw new IllegalArgumentException("Unknown decoder selected");
+              }
+              refreshAnimation();
             }
-            refreshAnimation();
-          }
 
-          @Override
-          public void onNothingSelected(AdapterView<?> parent) {}
-        });
-    decoderSpinner.setSelection(0);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+          });
+      decoderSpinner.setSelection(0);
+    }
   }
 
   private void refreshAnimation() {
+    if (mSpinner == null) {
+      return;
+    }
     final Entry spinnerEntry = mSpinnerEntries[mSpinner.getSelectedItemPosition()];
     setAnimationUri(spinnerEntry.uri);
   }
 
   private void setAnimationUri(Uri uri) {
+    if (mImageView == null) {
+      return;
+    }
 
     final ImageDecodeOptionsBuilder optionsBuilder =
         ImageDecodeOptions.newBuilder().setMaxDimensionPx(4000);
@@ -156,14 +179,15 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
     final ImageOptions imageOptionsPaused =
         imageOptionsAutoPlay.extend().autoPlay(false).overlay(getPlayOverlayDrawable()).build();
     if (!mAutoPlayEnabled) {
+      final ImageView imageView = mImageView;
       mImageView.setOnClickListener(
           new View.OnClickListener() {
             @Override
             public void onClick(View v) {
               if (mIsPlaying) {
-                VitoView.show(uri, imageOptionsPaused, CALLER_CONTEXT, mImageView);
+                VitoView.show(uri, imageOptionsPaused, CALLER_CONTEXT, imageView);
               } else {
-                VitoView.show(uri, imageOptionsAutoPlay, CALLER_CONTEXT, mImageView);
+                VitoView.show(uri, imageOptionsAutoPlay, CALLER_CONTEXT, imageView);
               }
               mIsPlaying = !mIsPlaying;
             }
@@ -208,7 +232,9 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
                   android.R.layout.simple_spinner_dropdown_item, parent, false);
 
       final TextView textView = (TextView) view.findViewById(android.R.id.text1);
-      textView.setText(mSpinnerEntries[position].descriptionId);
+      if (textView != null) {
+        textView.setText(mSpinnerEntries[position].descriptionId);
+      }
 
       return view;
     }

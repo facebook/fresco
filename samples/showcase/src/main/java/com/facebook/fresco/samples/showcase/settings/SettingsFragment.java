@@ -8,6 +8,7 @@
 package com.facebook.fresco.samples.showcase.settings;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -17,8 +18,11 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceManager;
@@ -45,9 +49,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   public static final String KEY_URI_OVERRIDE_HISTORY = "uri_override_previous";
 
-  private UriOverrideDialog mSetUriOverrideDialog;
+  private @Nullable UriOverrideDialog mSetUriOverrideDialog;
 
-  private ImageUriProvider mImageUriProvider;
+  private @Nullable ImageUriProvider mImageUriProvider;
 
   @Override
   public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -62,7 +66,11 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
   @Override
   public boolean onPreferenceTreeClick(Preference preference) {
-    switch (preference.getKey()) {
+    final String key = preference.getKey();
+    if (key == null) {
+      return super.onPreferenceTreeClick(preference);
+    }
+    switch (key) {
       case KEY_CLEAR_DISK_CACHE:
         onClearDiskCachePreferenceClicked();
         return true;
@@ -78,7 +86,13 @@ public class SettingsFragment extends PreferenceFragmentCompat
   public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
     mImageUriProvider = ShowcaseApplication.Companion.getImageUriProvider();
     addPreferencesFromResource(R.xml.preferences);
-    getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+    androidx.preference.PreferenceManager prefManager = getPreferenceManager();
+    if (prefManager != null) {
+      SharedPreferences sharedPreferences = prefManager.getSharedPreferences();
+      if (sharedPreferences != null) {
+        sharedPreferences.registerOnSharedPreferenceChangeListener(this);
+      }
+    }
     populateUriOverride();
     populateVersionAndDeviceDetails();
   }
@@ -92,12 +106,19 @@ public class SettingsFragment extends PreferenceFragmentCompat
     if (mSetUriOverrideDialog == null) {
       mSetUriOverrideDialog = new UriOverrideDialog();
     }
-    mSetUriOverrideDialog.show(getFragmentManager(), "uri_override");
+    FragmentManager fm = getParentFragmentManager();
+    mSetUriOverrideDialog.show(fm, "uri_override");
   }
 
   private void populateUriOverride() {
+    if (mImageUriProvider == null) {
+      return;
+    }
     final String uri = mImageUriProvider.getUriOverride();
     final Preference preferenceUriOverride = findPreference(KEY_URI_OVERRIDE);
+    if (preferenceUriOverride == null) {
+      return;
+    }
     if (uri == null || uri.isEmpty()) {
       preferenceUriOverride.setSummary(R.string.preference_uri_override_summary_none);
     } else {
@@ -113,7 +134,9 @@ public class SettingsFragment extends PreferenceFragmentCompat
             R.string.preference_details_android_version_summary,
             String.valueOf(Build.VERSION.SDK_INT),
             Build.VERSION.RELEASE);
-    preferenceAndroidVersion.setSummary(androidVersion);
+    if (preferenceAndroidVersion != null) {
+      preferenceAndroidVersion.setSummary(androidVersion);
+    }
 
     final Preference preferenceCpuArchitecture = findPreference(KEY_DETAILS_CPU_ARCHITECTURE);
     final String cpuArch = System.getProperty("os.arch");
@@ -123,59 +146,81 @@ public class SettingsFragment extends PreferenceFragmentCompat
             R.string.preference_details_cpu_architecture_summary_after_21,
             cpuArch,
             Arrays.toString(Build.SUPPORTED_ABIS));
-    preferenceCpuArchitecture.setSummary(cpuDetails);
+    if (preferenceCpuArchitecture != null) {
+      preferenceCpuArchitecture.setSummary(cpuDetails);
+    }
 
     final Preference preferenceDeviceName = findPreference(KEY_DETAILS_DEVICE_NAME);
     final String deviceName =
         getString(
             R.string.preference_details_device_name_summary, Build.MANUFACTURER, Build.DEVICE);
-    preferenceDeviceName.setSummary(deviceName);
+    if (preferenceDeviceName != null) {
+      preferenceDeviceName.setSummary(deviceName);
+    }
   }
 
   private void showToastText(String text) {
-    Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+    Context context = getContext();
+    if (context != null) {
+      Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+    }
   }
 
   /** Dialog asking for a new URI override */
   public static class UriOverrideDialog extends DialogFragment
       implements DialogInterface.OnClickListener {
 
-    private ImageUriProvider mImageUriProvider;
-    private EditText mEditText;
-    private SharedPreferences mSharedPreferences;
+    private @Nullable ImageUriProvider mImageUriProvider;
+    private @Nullable EditText mEditText;
+    private @Nullable SharedPreferences mSharedPreferences;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
       mImageUriProvider = ShowcaseApplication.Companion.getImageUriProvider();
-      mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+      Context context = getContext();
+      if (context != null) {
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+      }
+
+      FragmentActivity activity = getActivity();
+      if (activity == null) {
+        return new AlertDialog.Builder(requireContext()).create();
+      }
 
       final View view =
-          getActivity().getLayoutInflater().inflate(R.layout.dialog_fragment_uri_override, null);
+          activity.getLayoutInflater().inflate(R.layout.dialog_fragment_uri_override, null);
 
       // setup edit text
       mEditText = view.findViewById(R.id.dialog_uri_override_edittext);
-      final String previousUri = mImageUriProvider.getUriOverride();
-      if (!TextUtils.isEmpty(previousUri)) {
-        mEditText.setText(mImageUriProvider.getUriOverride());
+      if (mImageUriProvider != null) {
+        final String previousUri = mImageUriProvider.getUriOverride();
+        if (!TextUtils.isEmpty(previousUri) && mEditText != null) {
+          mEditText.setText(mImageUriProvider.getUriOverride());
+        }
       }
 
       // setup history text view
       final TextView historyTextView = view.findViewById(R.id.dialog_uri_override_history_textview);
-      final String historyUri = mSharedPreferences.getString(KEY_URI_OVERRIDE_HISTORY, null);
-      if (!TextUtils.isEmpty(historyUri)) {
+      final String historyUri =
+          mSharedPreferences != null
+              ? mSharedPreferences.getString(KEY_URI_OVERRIDE_HISTORY, null)
+              : null;
+      if (!TextUtils.isEmpty(historyUri) && historyTextView != null) {
         historyTextView.setText(
             getString(R.string.preference_uri_override_dialog_history, historyUri));
         historyTextView.setOnClickListener(
             new View.OnClickListener() {
               @Override
               public void onClick(View view) {
-                mEditText.setText(historyUri);
+                if (mEditText != null) {
+                  mEditText.setText(historyUri);
+                }
               }
             });
         historyTextView.setVisibility(View.VISIBLE);
       }
 
-      final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+      final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
       builder
           .setMessage(R.string.preference_uri_override_dialog_message)
           .setView(view)
@@ -187,27 +232,33 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
     @Override
     public void onClick(DialogInterface dialog, int which) {
+      if (mImageUriProvider == null || mEditText == null) {
+        return;
+      }
       final String oldUri = mImageUriProvider.getUriOverride();
       final String newUri = mEditText.getText().toString();
       switch (which) {
         case DialogInterface.BUTTON_POSITIVE:
           try {
-            if (oldUri != null) {
+            if (oldUri != null && mSharedPreferences != null) {
               mSharedPreferences.edit().putString(KEY_URI_OVERRIDE_HISTORY, oldUri).apply();
             }
             mImageUriProvider.setUriOverride(newUri);
           } catch (IllegalArgumentException e) {
-            Toast.makeText(
-                    getContext(),
-                    getString(
-                        R.string.preference_uri_override_dialog_edittext_error_bad_uri,
-                        e.getMessage()),
-                    Toast.LENGTH_SHORT)
-                .show();
+            Context context = getContext();
+            if (context != null) {
+              Toast.makeText(
+                      context,
+                      getString(
+                          R.string.preference_uri_override_dialog_edittext_error_bad_uri,
+                          e.getMessage()),
+                      Toast.LENGTH_SHORT)
+                  .show();
+            }
           }
           break;
         case DialogInterface.BUTTON_NEGATIVE:
-          if (oldUri != null) {
+          if (oldUri != null && mSharedPreferences != null) {
             mSharedPreferences.edit().putString(KEY_URI_OVERRIDE_HISTORY, oldUri).apply();
           }
           mImageUriProvider.setUriOverride(null);
