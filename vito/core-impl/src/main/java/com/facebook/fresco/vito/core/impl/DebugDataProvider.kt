@@ -43,7 +43,7 @@ val imageDimensionsProvider =
       }
     }
 
-private fun KFrescoVitoDrawable.extractOriginExtras(): Map<String, Any>? =
+internal fun KFrescoVitoDrawable.extractOriginExtras(): Map<String, Any>? =
     dataSource?.extras
         ?:
         // We did not receive data source extras, so the image did not come from the image

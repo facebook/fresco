@@ -40,6 +40,28 @@ open class DefaultDebugOverlayFactory2(
     setImageRequestData(overlay, drawable.imageRequest)
     setImageOriginData(overlay, extras)
     setImageSourceExtra(overlay, extras)
+
+    // Log image sizing data to logcat for programmatic capture
+    val abstractDrawable = drawable as? FrescoDrawable2
+    if (abstractDrawable != null) {
+      val viewport = abstractDrawable.viewportDimensions
+      val bounds = abstractDrawable.bounds
+      val targetWidth =
+          if (viewport != null && viewport.width() > 0) viewport.width() else bounds.width()
+      val targetHeight =
+          if (viewport != null && viewport.height() > 0) viewport.height() else bounds.height()
+      val originExtras = extras?.datasourceExtras ?: extras?.shortcutExtras
+      val origin = originExtras?.get("origin")?.toString()
+      DebugLogcatReporter.maybeReport(
+          imageId = drawable.imageId,
+          uri = drawable.imageRequest?.finalImageRequest?.sourceUri?.toString(),
+          imgW = abstractDrawable.actualImageWidthPx,
+          imgH = abstractDrawable.actualImageHeightPx,
+          drawW = targetWidth,
+          drawH = targetHeight,
+          origin = origin,
+      )
+    }
   }
 
   private fun setBasicData(overlay: DebugOverlayDrawable, drawable: FrescoDrawableInterface) {
