@@ -13,11 +13,13 @@ import com.android.volley.Response;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * A Volley request that will return the raw content as a byte array and does not use Volley's
  * cache.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class RawRequest extends Request<byte[]> {
 
   private final Listener<byte[]> mListener;

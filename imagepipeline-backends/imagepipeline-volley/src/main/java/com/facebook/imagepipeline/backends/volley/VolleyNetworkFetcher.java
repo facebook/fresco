@@ -19,6 +19,7 @@ import com.facebook.imagepipeline.producers.BaseProducerContextCallbacks;
 import com.facebook.imagepipeline.producers.Consumer;
 import com.facebook.imagepipeline.producers.FetchState;
 import com.facebook.imagepipeline.producers.ProducerContext;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,6 +33,7 @@ import java.util.Map;
  * <p>Volley does not allow access to a {@link InputStream}. Therefore, responses will be passed
  * along as complete byte arrays, which will not allow for progressive JPEG streaming.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class VolleyNetworkFetcher
     extends BaseNetworkFetcher<VolleyNetworkFetcher.VolleyNetworkFetchState> {
 

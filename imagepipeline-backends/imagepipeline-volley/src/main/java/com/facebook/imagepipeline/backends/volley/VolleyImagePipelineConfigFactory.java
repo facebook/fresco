@@ -10,11 +10,13 @@ package com.facebook.imagepipeline.backends.volley;
 import android.content.Context;
 import com.android.volley.RequestQueue;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
+import com.facebook.infer.annotation.Nullsafe;
 
 /**
  * Factory for getting a {@link com.facebook.imagepipeline.core.ImagePipelineConfig} that uses
  * {@link VolleyNetworkFetcher}.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class VolleyImagePipelineConfigFactory {
 
   public static ImagePipelineConfig.Builder newBuilder(Context context, RequestQueue requestQueue) {
