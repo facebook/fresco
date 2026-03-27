@@ -13,12 +13,14 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
 /** CloseableImage that contains one Bitmap. */
 @ThreadSafe
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BaseCloseableStaticBitmap extends BaseCloseableImage implements CloseableStaticBitmap {
 
   private static boolean sUseSimpleCloseableStaticBitmap = false;
@@ -74,6 +76,7 @@ public class BaseCloseableStaticBitmap extends BaseCloseableImage implements Clo
     }
   }
 
+  @Nullable
   private synchronized CloseableReference<Bitmap> detachBitmapReference() {
     CloseableReference<Bitmap> reference = mBitmapReference;
     mBitmapReference = null;
@@ -98,7 +101,7 @@ public class BaseCloseableStaticBitmap extends BaseCloseableImage implements Clo
   @Override
   public synchronized CloseableReference<Bitmap> convertToBitmapReference() {
     Preconditions.checkNotNull(mBitmapReference, "Cannot convert a closed static bitmap");
-    return detachBitmapReference();
+    return Preconditions.checkNotNull(detachBitmapReference());
   }
 
   /**
@@ -127,6 +130,7 @@ public class BaseCloseableStaticBitmap extends BaseCloseableImage implements Clo
    * @return the underlying bitmap
    */
   @Override
+  @Nullable
   public Bitmap getUnderlyingBitmap() {
     return mBitmap;
   }

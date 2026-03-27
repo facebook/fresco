@@ -12,10 +12,12 @@ import android.media.ExifInterface;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public interface CloseableStaticBitmap extends CloseableBitmap {
 
+  @Nullable
   CloseableReference<Bitmap> cloneUnderlyingBitmapReference();
 
   int getExifOrientation();

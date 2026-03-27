@@ -364,7 +364,12 @@ open class FrescoController2Impl(
       if (config.enablePrepareToDrawOnFetch()) {
         val img = closeableImageRef.get()
         if (img is CloseableBitmap) {
-          img.underlyingBitmap.prepareToDraw()
+          val bitmap = img.underlyingBitmap
+          if (bitmap != null) {
+            bitmap.prepareToDraw()
+          } else {
+            FLog.w(TAG, "underlyingBitmap is null during prepareToDraw, image may be closed")
+          }
         }
       }
       hierarcher.buildActualImageDrawable(

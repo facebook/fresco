@@ -238,7 +238,10 @@ class PostprocessorProducer(
 
     fun postprocessInternal(sourceImage: CloseableImage): CloseableReference<CloseableImage>? {
       val staticBitmap = sourceImage as CloseableStaticBitmap
-      val sourceBitmap = staticBitmap.getUnderlyingBitmap()
+      val sourceBitmap =
+          checkNotNull(staticBitmap.getUnderlyingBitmap()) {
+            "Underlying bitmap is null (image may be closed)"
+          }
       val bitmapRef = mPostprocessor.process(sourceBitmap, mBitmapFactory)
       val rotationAngle = staticBitmap.getRotationAngle()
       val exifOrientation = staticBitmap.getExifOrientation()

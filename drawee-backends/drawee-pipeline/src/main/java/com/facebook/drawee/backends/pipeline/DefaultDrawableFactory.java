@@ -8,6 +8,7 @@
 package com.facebook.drawee.backends.pipeline;
 
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.ExifInterface;
@@ -55,8 +56,11 @@ public class DefaultDrawableFactory implements DrawableFactory {
       }
       if (closeableImage instanceof CloseableStaticBitmap) {
         CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage;
-        Drawable bitmapDrawable =
-            new BitmapDrawable(mResources, closeableStaticBitmap.getUnderlyingBitmap());
+        Bitmap bitmap = closeableStaticBitmap.getUnderlyingBitmap();
+        if (bitmap == null) {
+          return null;
+        }
+        Drawable bitmapDrawable = new BitmapDrawable(mResources, bitmap);
         if (!hasTransformableRotationAngle(closeableStaticBitmap)
             && !hasTransformableExifOrientation(closeableStaticBitmap)) {
           // Return the bitmap drawable directly as there's nothing to transform in it

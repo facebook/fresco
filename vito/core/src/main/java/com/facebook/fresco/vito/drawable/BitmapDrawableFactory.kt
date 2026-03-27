@@ -55,7 +55,8 @@ class BitmapDrawableFactory : ImageOptionsDrawableFactory {
       resources: Resources,
       closeableStaticBitmap: CloseableStaticBitmap,
       imageOptions: ImageOptions,
-  ): Drawable {
+  ): Drawable? {
+    val bitmap = closeableStaticBitmap.underlyingBitmap ?: return null
     val roundingOptions = imageOptions.roundingOptions
     val borderOptions = imageOptions.borderOptions
     val isBitmapRounded = true == closeableStaticBitmap.extras["is_rounded"]
@@ -64,16 +65,16 @@ class BitmapDrawableFactory : ImageOptionsDrawableFactory {
           if (borderOptions != null && borderOptions.width > 0) {
             CircularBorderBitmapDrawable(
                 resources,
-                closeableStaticBitmap.underlyingBitmap,
+                bitmap,
                 borderOptions,
             )
           } else {
-            BitmapDrawable(resources, closeableStaticBitmap.underlyingBitmap)
+            BitmapDrawable(resources, bitmap)
           }
         } else {
           RoundingUtils.roundedDrawable(
               resources,
-              closeableStaticBitmap.underlyingBitmap,
+              bitmap,
               borderOptions,
               roundingOptions,
           )

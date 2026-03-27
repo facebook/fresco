@@ -10,6 +10,7 @@ package com.facebook.drawee.view;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -23,6 +24,8 @@ import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Initializer;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -34,6 +37,7 @@ import javax.annotation.Nullable;
  * <p>This class has been deprecated. Please use VitoView instead.
  */
 @Deprecated
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SimpleDraweeView extends GenericDraweeView {
 
   @Nullable
@@ -51,7 +55,7 @@ public class SimpleDraweeView extends GenericDraweeView {
     sDraweecontrollerbuildersupplier = null;
   }
 
-  private AbstractDraweeControllerBuilder mControllerBuilder;
+  @Nullable private AbstractDraweeControllerBuilder mControllerBuilder;
 
   public SimpleDraweeView(Context context, GenericDraweeHierarchy hierarchy) {
     super(context, hierarchy);
@@ -79,14 +83,18 @@ public class SimpleDraweeView extends GenericDraweeView {
     init(context, attrs);
   }
 
+  @Initializer
   private void init(Context context, @Nullable AttributeSet attrs) {
     try {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.beginSection("SimpleDraweeView#init");
       }
       if (isInEditMode()) {
-        getTopLevelDrawable().setVisible(true, false);
-        getTopLevelDrawable().invalidateSelf();
+        Drawable topLevelDrawable = getTopLevelDrawable();
+        if (topLevelDrawable != null) {
+          topLevelDrawable.setVisible(true, false);
+          topLevelDrawable.invalidateSelf();
+        }
       } else {
         Preconditions.checkNotNull(
             sDraweecontrollerbuildersupplier, "SimpleDraweeView was not initialized!");
@@ -122,7 +130,7 @@ public class SimpleDraweeView extends GenericDraweeView {
   }
 
   public AbstractDraweeControllerBuilder getControllerBuilder() {
-    return mControllerBuilder;
+    return Preconditions.checkNotNull(mControllerBuilder);
   }
 
   /**
@@ -130,8 +138,9 @@ public class SimpleDraweeView extends GenericDraweeView {
    *
    * @param request Image Request
    */
-  public void setImageRequest(ImageRequest request) {
-    AbstractDraweeControllerBuilder controllerBuilder = mControllerBuilder;
+  public void setImageRequest(@Nullable ImageRequest request) {
+    AbstractDraweeControllerBuilder controllerBuilder =
+        Preconditions.checkNotNull(mControllerBuilder);
     DraweeController controller =
         controllerBuilder.setImageRequest(request).setOldController(getController()).build();
     setController(controller);
@@ -163,9 +172,9 @@ public class SimpleDraweeView extends GenericDraweeView {
    * @param uri uri of the image
    * @param callerContext caller context
    */
-  public void setImageURI(Uri uri, @Nullable Object callerContext) {
+  public void setImageURI(@Nullable Uri uri, @Nullable Object callerContext) {
     DraweeController controller =
-        mControllerBuilder
+        Preconditions.checkNotNull(mControllerBuilder)
             .setCallerContext(callerContext)
             .setUri(uri)
             .setOldController(getController())

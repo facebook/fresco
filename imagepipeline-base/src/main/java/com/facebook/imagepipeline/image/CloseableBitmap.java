@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.image;
 
 import android.graphics.Bitmap;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /** {@link CloseableImage} that wraps a bitmap. */
 @Nullsafe(Nullsafe.Mode.LOCAL)
@@ -19,7 +20,8 @@ public interface CloseableBitmap extends CloseableImage {
    * sophisticated than that. For example, animated bitmap may have many frames and this method will
    * only return the first one.
    *
-   * @return the underlying bitmap
+   * @return the underlying bitmap, or null if the image has been closed
    */
+  @Nullable
   Bitmap getUnderlyingBitmap();
 }

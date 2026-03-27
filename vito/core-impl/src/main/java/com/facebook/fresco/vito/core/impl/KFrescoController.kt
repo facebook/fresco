@@ -70,11 +70,16 @@ class KFrescoController(
               ?.let { createDrawableModel(it, imageOptions) }
               ?: when (closeableImage) {
                 is CloseableBitmap -> {
-                  if (config.enablePrepareToDrawOnFetch()) {
-                    closeableImage.underlyingBitmap.prepareToDraw()
+                  val bitmap = closeableImage.underlyingBitmap
+                  if (bitmap != null) {
+                    if (config.enablePrepareToDrawOnFetch()) {
+                      bitmap.prepareToDraw()
+                    }
+                    val isRounded = closeableImage.getExtras()["is_rounded"] == true
+                    BitmapImageDataModel(bitmap, isRounded)
+                  } else {
+                    null
                   }
-                  val isRounded = closeableImage.getExtras()["is_rounded"] == true
-                  BitmapImageDataModel(closeableImage.underlyingBitmap, isRounded)
                   // TODO(T105148151): handle rotation for closeable static bitmap, handle other
                   // types
                 }

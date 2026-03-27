@@ -8,6 +8,7 @@
 package com.facebook.drawee.backends.pipeline;
 
 import android.content.Context;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.common.logging.FLog;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.imagepipeline.core.ImagePipeline;
@@ -15,6 +16,7 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineFactory;
 import com.facebook.imagepipeline.core.NativeCodeSetup;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.soloader.nativeloader.NativeLoader;
 import com.facebook.soloader.nativeloader.SystemDelegate;
 import java.lang.reflect.InvocationTargetException;
@@ -26,6 +28,7 @@ import javax.annotation.Nullable;
  * <p>You must initialize this class before use. The simplest way is to just do {#code
  * Fresco.initialize(Context)}.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class Fresco {
 
   private static final Class<?> TAG = Fresco.class;
@@ -128,12 +131,12 @@ public class Fresco {
 
   /** Gets the supplier of Fresco Drawee controller builders. */
   public static PipelineDraweeControllerBuilderSupplier getDraweeControllerBuilderSupplier() {
-    return sDraweeControllerBuilderSupplier;
+    return Preconditions.checkNotNull(sDraweeControllerBuilderSupplier);
   }
 
   /** Returns a new instance of Fresco Drawee controller builder. */
   public static PipelineDraweeControllerBuilder newDraweeControllerBuilder() {
-    return sDraweeControllerBuilderSupplier.get();
+    return Preconditions.checkNotNull(sDraweeControllerBuilderSupplier).get();
   }
 
   public static ImagePipelineFactory getImagePipelineFactory() {

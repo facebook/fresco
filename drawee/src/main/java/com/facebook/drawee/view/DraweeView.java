@@ -20,6 +20,8 @@ import com.facebook.common.internal.Objects;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Initializer;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -40,6 +42,7 @@ import javax.annotation.Nullable;
  * <p>This class has been deprecated. Please use VitoView instead.
  */
 @Deprecated
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
 
   private final AspectRatioMeasure.Spec mMeasureSpec = new AspectRatioMeasure.Spec();
@@ -78,16 +81,17 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
   }
 
   /** This method is idempotent so it only has effect the first time it's called */
+  @Initializer
   private void init(Context context) {
     try {
       if (FrescoSystrace.isTracing()) {
         FrescoSystrace.beginSection("DraweeView#init");
       }
+      mDraweeHolder = mDraweeHolder != null ? mDraweeHolder : DraweeHolder.create(null, context);
       if (mInitialised) {
         return;
       }
       mInitialised = true;
-      mDraweeHolder = DraweeHolder.create(null, context);
       ColorStateList imageTintList = getImageTintList();
       if (imageTintList == null) {
         return;
@@ -240,7 +244,7 @@ public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
    */
   @Override
   @Deprecated
-  public void setImageBitmap(Bitmap bm) {
+  public void setImageBitmap(@Nullable Bitmap bm) {
     init(getContext());
     mDraweeHolder.resetActualImage();
     super.setImageBitmap(bm);

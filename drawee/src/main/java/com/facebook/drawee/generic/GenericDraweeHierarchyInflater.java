@@ -15,10 +15,12 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.View;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.drawee.R;
 import com.facebook.drawee.drawable.AutoRotateDrawable;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
+import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.infer.annotation.ReturnsOwnership;
 import javax.annotation.Nullable;
 
@@ -59,6 +61,7 @@ import javax.annotation.Nullable;
  * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_roundingBorderColor
  * @attr ref com.facebook.R.styleable#GenericDraweeHierarchy_roundingBorderPadding
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class GenericDraweeHierarchyInflater {
 
   /** Inflates a new hierarchy from XML. */
@@ -250,7 +253,7 @@ public class GenericDraweeHierarchyInflater {
     if (builder.getRoundingParams() == null) {
       builder.setRoundingParams(new RoundingParams());
     }
-    return builder.getRoundingParams();
+    return Preconditions.checkNotNull(builder.getRoundingParams());
   }
 
   @Nullable
