@@ -39,6 +39,7 @@ open class DefaultDebugOverlayFactory2(
     setBasicData(overlay, drawable)
     setImageRequestData(overlay, drawable.imageRequest)
     setImageOriginData(overlay, extras)
+    setImageFormatData(overlay, extras)
     setImageSourceExtra(overlay, extras)
 
     // Log image sizing data to logcat for programmatic capture
@@ -152,6 +153,16 @@ open class DefaultDebugOverlayFactory2(
           "$origin | $originSubcategory",
           DebugOverlayImageOriginColor.getImageOriginColor(origin),
       )
+    }
+  }
+
+  private fun setImageFormatData(overlay: DebugOverlayDrawable, extras: Extras?) {
+    val format =
+        extras?.imageExtras?.get("image_format")?.toString()
+            ?: extras?.shortcutExtras?.get("image_format")?.toString()
+            ?: extras?.datasourceExtras?.get("image_format")?.toString()
+    if (!format.isNullOrEmpty()) {
+      overlay.addDebugData("format", format)
     }
   }
 

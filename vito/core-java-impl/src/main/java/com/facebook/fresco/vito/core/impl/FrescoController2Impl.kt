@@ -201,7 +201,6 @@ open class FrescoController2Impl(
         // Immediately display the actual image.
         setActualImage(drawable, imageRequest, bitmapRef, true, null)
         drawable.setFetchSubmitted(true)
-        debugOverlayFactory.update(drawable, extras)
         true
       } finally {
         CloseableReference.closeSafely(bitmapRef)
@@ -246,7 +245,6 @@ open class FrescoController2Impl(
         // Immediately display the actual image.
         setActualImage(drawable, imageRequest, cachedImage, true, null, isIntermediateImage)
         drawable.setFetchSubmitted(true)
-        debugOverlayFactory.update(drawable, extras)
         if (!isIntermediateImage) {
           return true
         } else {
