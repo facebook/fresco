@@ -11,10 +11,12 @@ import static org.mockito.ArgumentMatchers.*;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.SharedReference;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.Closeable;
 import org.mockito.*;
 
 /** Utilities for testing {@link CloseableReference}. */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class CloseableReferences {
   private static class CloseableReferenceMatcher<T extends Closeable>
       implements ArgumentMatcher<CloseableReference<T>> {

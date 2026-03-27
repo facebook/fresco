@@ -7,10 +7,12 @@
 
 package com.facebook.imagepipeline.memory;
 
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.HashMap;
 import java.util.Map;
 
 /** Helper class to get pool stats */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PoolStats<V> {
   public BasePool<V> pool;
 
