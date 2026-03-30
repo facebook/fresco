@@ -21,6 +21,7 @@ import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -39,6 +40,7 @@ import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NetworkFetchProducerTest {
 
   @Mock public ByteArrayPool mByteArrayPool;

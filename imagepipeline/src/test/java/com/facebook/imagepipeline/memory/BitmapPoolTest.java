@@ -17,6 +17,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import com.facebook.imagepipeline.testing.MockBitmapFactory;
 import com.facebook.imageutils.BitmapUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +31,7 @@ import org.robolectric.RobolectricTestRunner;
 /** Basic tests for BitmapPool */
 @RunWith(RobolectricTestRunner.class)
 @org.robolectric.annotation.Config(manifest = org.robolectric.annotation.Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BitmapPoolTest {
 
   @Mock(answer = Answers.CALLS_REAL_METHODS)

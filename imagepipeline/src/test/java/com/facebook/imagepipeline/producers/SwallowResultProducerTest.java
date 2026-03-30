@@ -12,6 +12,7 @@ import static org.mockito.Mockito.*;
 
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.CloseableImage;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -31,6 +32,7 @@ import org.robolectric.annotation.*;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class SwallowResultProducerTest {
   @Mock public Producer<CloseableReference<CloseableImage>> mInputProducer;
   @Mock public Consumer<Void> mConsumer;

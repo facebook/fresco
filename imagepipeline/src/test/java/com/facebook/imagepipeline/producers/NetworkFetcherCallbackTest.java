@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.producers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.facebook.imagepipeline.network.NetworkResponseData;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,6 +21,7 @@ import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class NetworkFetcherCallbackTest {
 
   @Test

@@ -20,6 +20,7 @@ import com.facebook.common.executors.CallerThreadExecutor;
 import com.facebook.imagepipeline.common.Priority;
 import com.facebook.imagepipeline.producers.PriorityStarvingThrottlingProducer.Item;
 import com.facebook.imagepipeline.producers.PriorityStarvingThrottlingProducer.PriorityComparator;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +34,7 @@ import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PriorityStarvingThrottlingProducerTest {
   private static final String PRODUCER_NAME = PriorityStarvingThrottlingProducer.PRODUCER_NAME;
   private static final int MAX_SIMULTANEOUS_REQUESTS = 2;

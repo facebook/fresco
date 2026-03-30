@@ -25,6 +25,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.imageutils.ImageMetaData;
 import com.facebook.imageutils.JfifUtil;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.InputStream;
 import javax.annotation.Nullable;
 import org.junit.After;
@@ -42,6 +43,7 @@ import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class AddImageTransformMetaDataProducerTest {
   @Mock public Producer<EncodedImage> mInputProducer;
   @Mock public Consumer<EncodedImage> mConsumer;

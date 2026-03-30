@@ -25,6 +25,7 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -48,6 +49,7 @@ import org.robolectric.annotation.*;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class EncodedMemoryCacheProducerTest {
   private static final String PRODUCER_NAME = EncodedMemoryCacheProducer.PRODUCER_NAME;
   @Mock public MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;

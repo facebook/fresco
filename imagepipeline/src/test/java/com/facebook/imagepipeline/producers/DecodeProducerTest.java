@@ -37,6 +37,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -54,6 +55,7 @@ import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DecodeProducerTest {
 
   private static final ImageDecodeOptions IMAGE_DECODE_OPTIONS =

@@ -25,6 +25,7 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
@@ -45,6 +46,7 @@ import org.robolectric.annotation.Config;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class MultiplexProducerTest {
 
   /** An extra flag to check we maintain other flags than just whether this is the last result */

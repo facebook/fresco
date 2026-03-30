@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import com.facebook.common.executors.CallerThreadExecutor;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import org.junit.*;
 import org.junit.runner.*;
@@ -22,6 +23,7 @@ import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ThrottlingProducerTest {
   private static final String PRODUCER_NAME = ThrottlingProducer.PRODUCER_NAME;
   private static final int MAX_SIMULTANEOUS_REQUESTS = 2;

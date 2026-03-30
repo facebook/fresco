@@ -44,6 +44,7 @@ import com.facebook.imagepipeline.producers.Producer;
 import com.facebook.imagepipeline.producers.ProducerContext;
 import com.facebook.imagepipeline.producers.ThreadHandoffProducerQueue;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +59,7 @@ import org.robolectric.RobolectricTestRunner;
 
 /** Tests for ImagePipeline */
 @RunWith(RobolectricTestRunner.class)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ImagePipelineTest {
 
   @Mock public ImageRequest mImageRequest;

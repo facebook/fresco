@@ -20,6 +20,7 @@ import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;
 import com.facebook.imagepipeline.request.RepeatedPostprocessor;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import org.junit.*;
 import org.junit.runner.*;
@@ -36,6 +37,7 @@ import org.robolectric.annotation.*;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class PostprocessedBitmapMemoryCacheProducerTest {
   private static final String PRODUCER_NAME = PostprocessedBitmapMemoryCacheProducer.PRODUCER_NAME;
   @Mock public MemoryCache<CacheKey, CloseableImage> mMemoryCache;

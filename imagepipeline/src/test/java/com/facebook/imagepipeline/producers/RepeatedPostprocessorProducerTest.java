@@ -27,6 +27,7 @@ import com.facebook.imagepipeline.request.RepeatedPostprocessor;
 import com.facebook.imagepipeline.request.RepeatedPostprocessorRunner;
 import com.facebook.imagepipeline.testing.FakeClock;
 import com.facebook.imagepipeline.testing.TestExecutorService;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +42,7 @@ import org.robolectric.annotation.*;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class RepeatedPostprocessorProducerTest {
 
   private static final String PRODUCER_NAME = PostprocessorProducer.NAME;

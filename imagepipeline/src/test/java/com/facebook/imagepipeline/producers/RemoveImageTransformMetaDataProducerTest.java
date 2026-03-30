@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.EncodedImage;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,7 @@ import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class RemoveImageTransformMetaDataProducerTest {
   @Mock public Producer mInputProducer;
   @Mock public Consumer<CloseableReference<PooledByteBuffer>> mConsumer;

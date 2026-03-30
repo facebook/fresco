@@ -28,6 +28,7 @@ import com.facebook.imagepipeline.core.DiskCachesStore;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +51,7 @@ import org.robolectric.annotation.*;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class DiskCacheReadProducerTest {
   private static final String PRODUCER_NAME = DiskCacheReadProducer.PRODUCER_NAME;
 

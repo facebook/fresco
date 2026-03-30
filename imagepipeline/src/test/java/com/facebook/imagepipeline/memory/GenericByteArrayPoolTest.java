@@ -13,6 +13,7 @@ import static org.mockito.Mockito.mock;
 
 import android.util.SparseIntArray;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
+import com.facebook.infer.annotation.Nullsafe;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,6 +21,7 @@ import org.robolectric.RobolectricTestRunner;
 
 /** Basic tests for GenericByteArrayPool */
 @RunWith(RobolectricTestRunner.class)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class GenericByteArrayPoolTest {
   private GenericByteArrayPool mPool;
 

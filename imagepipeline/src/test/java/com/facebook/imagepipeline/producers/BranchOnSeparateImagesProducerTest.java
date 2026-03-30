@@ -23,6 +23,7 @@ import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +37,7 @@ import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BranchOnSeparateImagesProducerTest {
   private static final int WIDTH = 10;
   private static final int HEIGHT = 20;

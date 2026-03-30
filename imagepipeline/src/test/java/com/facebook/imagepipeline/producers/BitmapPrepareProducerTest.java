@@ -19,6 +19,7 @@ import android.graphics.Bitmap;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.CloseableStaticBitmap;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,6 +33,7 @@ import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BitmapPrepareProducerTest {
 
   public static final int MIN_BITMAP_SIZE_BYTES = 1000;

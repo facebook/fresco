@@ -20,6 +20,7 @@ import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Map;
 import javax.annotation.Nullable;
 import org.junit.*;
@@ -39,6 +40,7 @@ import org.robolectric.annotation.*;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class BitmapMemoryCacheGetProducerTest {
   private static final String PRODUCER_NAME = BitmapMemoryCacheGetProducer.PRODUCER_NAME;
   @Mock public MemoryCache<CacheKey, CloseableImage> mMemoryCache;

@@ -17,6 +17,7 @@ import static org.mockito.Mockito.when;
 import com.facebook.imagepipeline.common.ResizeOptions;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
+import com.facebook.infer.annotation.Nullsafe;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import javax.annotation.Nullable;
@@ -32,6 +33,7 @@ import org.robolectric.annotation.Config;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ThumbnailBranchProducerTest {
 
   private static final int[] THUMBNAIL_WIDTHS = {100, 400, 800};

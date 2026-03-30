@@ -14,6 +14,7 @@ import android.util.SparseIntArray;
 import com.facebook.common.memory.MemoryTrimType;
 import com.facebook.common.memory.MemoryTrimmableRegistry;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.infer.annotation.Nullsafe;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ import org.robolectric.RobolectricTestRunner;
 
 /** Tests for {@link FlexByteArrayPool} */
 @RunWith(RobolectricTestRunner.class)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class FlexByteArrayPoolTest {
 
   private static final int MIN_BUFFER_SIZE = 4;

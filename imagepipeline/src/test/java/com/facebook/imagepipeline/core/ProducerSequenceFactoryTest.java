@@ -39,6 +39,7 @@ import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.Postprocessor;
 import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
+import com.facebook.infer.annotation.Nullsafe;
 import java.util.Collections;
 import org.junit.After;
 import org.junit.Before;
@@ -55,6 +56,7 @@ import org.robolectric.annotation.Config;
 /** Tests {@link ProducerSequenceFactory}. */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ProducerSequenceFactoryTest {
 
   @Mock public ImageRequest mImageRequest;
