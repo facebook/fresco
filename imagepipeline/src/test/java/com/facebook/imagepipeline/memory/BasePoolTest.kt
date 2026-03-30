@@ -29,7 +29,7 @@ class BasePoolTest {
   @Before
   fun setup() {
     mPool = TestPool()
-    mStats = PoolStats<ByteArray>(mPool)
+    mStats = PoolStats<ByteArray>(mPool!!)
   }
 
   // Test out the alloc method
@@ -177,7 +177,7 @@ class BasePoolTest {
   @Throws(Exception::class)
   fun testRelease_BucketLengths() {
     mPool = TestPool(makeBucketSizeArray(2, 2))
-    mStats!!.setPool(mPool)
+    mStats!!.setPool(mPool!!)
 
     val b0 = mPool!!.get(2)
     mPool!!.get(2)
@@ -251,7 +251,7 @@ class BasePoolTest {
   @Throws(Exception::class)
   fun testGetRelease_NonBucketSizes() {
     mPool = TestPool(makeBucketSizeArray(2, 1, 4, 1, 6, 1))
-    mStats!!.setPool(mPool)
+    mStats!!.setPool(mPool!!)
 
     mPool!!.get(2)
     val b1 = mPool!!.get(7)
@@ -310,7 +310,7 @@ class BasePoolTest {
   @Throws(Exception::class)
   fun testTrimToSize() {
     mPool = TestPool(makeBucketSizeArray(2, 2, 4, 2, 6, 2))
-    mStats!!.setPool(mPool)
+    mStats!!.setPool(mPool!!)
 
     // allocate and release multiple buffers
     var b1: ByteArray?
