@@ -40,7 +40,8 @@ public abstract class BaseCloseableImage implements CloseableImage {
               HasExtraData.KEY_COLOR_SPACE,
               HasExtraData.KEY_SF_VARIATION,
               HasExtraData.KEY_SF_QUERY,
-              HasExtraData.KEY_SF_AIQ));
+              HasExtraData.KEY_SF_AIQ,
+              HasExtraData.KEY_LAST_SCAN_NUMBER));
 
   private @Nullable ImageInfo mCacheImageInfo;
 

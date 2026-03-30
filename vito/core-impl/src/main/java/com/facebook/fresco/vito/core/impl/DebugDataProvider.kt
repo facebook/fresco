@@ -28,6 +28,23 @@ import com.facebook.imageutils.BitmapUtil
 // KFrescoVitoDrawable-specific providers
 // ============================================================================
 
+/** Provides the current progressive JPEG scan number from CloseableImage extras. */
+val scanNumberProvider =
+    StringDebugDataProvider(
+        "S",
+        "Scan Number",
+        "The current progressive JPEG scan number",
+    ) { drawable, _ ->
+      if (drawable is KFrescoVitoDrawable) {
+        val scanNumber =
+            drawable.dataSource?.extras?.get("last_scan_num") as? Int
+                ?: drawable.obtainExtras().imageExtras?.get("last_scan_num") as? Int
+        if (scanNumber != null && scanNumber > 0) "S:$scanNumber" else ""
+      } else {
+        ""
+      }
+    }
+
 /** Provides image dimensions for KFrescoVitoDrawable. */
 val imageDimensionsProvider =
     StringDebugDataProvider("I", "Image dimensions", "The dimensions of the decoded image") {
