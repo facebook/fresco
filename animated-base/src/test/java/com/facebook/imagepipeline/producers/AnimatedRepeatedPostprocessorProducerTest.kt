@@ -7,7 +7,6 @@
 
 package com.facebook.imagepipeline.producers
 
-import com.facebook.common.internal.ImmutableMap
 import com.facebook.common.references.CloseableReference
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 import com.facebook.imagepipeline.common.Priority
@@ -45,7 +44,6 @@ class AnimatedRepeatedPostprocessorProducerTest {
 
   companion object {
     private const val POSTPROCESSOR_NAME = "postprocessor_name"
-    private val extraMap = ImmutableMap.of(PostprocessorProducer.POSTPROCESSOR, POSTPROCESSOR_NAME)
   }
 
   @Mock lateinit var platformBitmapFactory: PlatformBitmapFactory
