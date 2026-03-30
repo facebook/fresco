@@ -332,8 +332,8 @@ class DecodeProducer(
         val config: Bitmap.Config? = image.underlyingBitmap?.config
         producerContext.putExtra(HasExtraData.KEY_BITMAP_CONFIG, config.toString())
       }
-      image?.putExtras(producerContext.getExtras())
       producerContext.putExtra(HasExtraData.KEY_LAST_SCAN_NUMBER, lastScheduledScanNumber)
+      image?.putExtras(producerContext.getExtras())
     }
 
     private fun getExtraMap(

@@ -14,7 +14,9 @@ import com.facebook.common.internal.Supplier
 import com.facebook.fresco.vito.core.impl.debug.DebugDataProvider
 import com.facebook.fresco.vito.core.impl.debug.DebugLogcatReporter
 import com.facebook.fresco.vito.core.impl.debug.DebugOverlayDrawable
+import com.facebook.fresco.vito.core.impl.debug.DebugOverlayImageOriginColor
 import com.facebook.fresco.vito.core.impl.debug.ImageFitRatioConfig
+import com.facebook.fresco.vito.core.impl.debug.LightweightDebugOverlayDrawable
 import com.facebook.fresco.vito.core.impl.debug.StringAndColorDebugDataProvider
 import com.facebook.fresco.vito.core.impl.debug.StringDebugDataProvider
 import com.facebook.fresco.vito.core.impl.debug.drawableDimensionsProvider
@@ -24,6 +26,7 @@ import com.facebook.fresco.vito.renderer.DrawableImageDataModel
 
 class DebugOverlayHandler(
     private val isEnabled: Supplier<Boolean>,
+    private val useLightweight: Boolean = false,
     private val debugDataProviders: List<DebugDataProvider> = buildList {
       add(imageIDProvider)
       add(drawableDimensionsProvider)
@@ -35,13 +38,24 @@ class DebugOverlayHandler(
       add(hdrGainmapProvider)
     },
 ) {
-  constructor(isEnabled: Boolean) : this(Supplier { isEnabled }) {}
+  constructor(
+      isEnabled: Supplier<Boolean>,
+      debugDataProviders: List<DebugDataProvider>,
+  ) : this(isEnabled, false, debugDataProviders) {}
 
   fun update(drawable: KFrescoVitoDrawable) {
     if (!isEnabled.get()) {
       return
     }
 
+    if (useLightweight) {
+      updateLightweight(drawable)
+    } else {
+      updateFull(drawable)
+    }
+  }
+
+  private fun updateFull(drawable: KFrescoVitoDrawable) {
     val debugOverlayDrawable = extractDebugOverlayDrawable(drawable)
     drawable.onBoundsChangedCallback = { update(drawable) }
     debugOverlayDrawable.reset()
@@ -82,6 +96,31 @@ class DebugOverlayHandler(
     }
   }
 
+  private fun updateLightweight(drawable: KFrescoVitoDrawable) {
+    val overlayDrawable = extractLightweightOverlayDrawable(drawable)
+
+    val textParts = mutableListOf<String>()
+    var originColor: Int = DebugOverlayImageOriginColor.getImageOriginColor("unknown")
+    var originColorSet = false
+
+    debugDataProviders.forEach {
+      when (it) {
+        is StringDebugDataProvider -> textParts.add(it.extractData(drawable))
+        is StringAndColorDebugDataProvider -> {
+          val (data, color) = it.extractDataAndColor(drawable)
+          textParts.add(data)
+          if (!originColorSet) {
+            originColor = color
+            originColorSet = true
+          }
+        }
+      }
+    }
+
+    overlayDrawable.setDebugText(textParts.filter { it.isNotEmpty() }.joinToString(" | "))
+    overlayDrawable.setOriginColor(originColor)
+  }
+
   private fun extractDebugOverlayDrawable(drawable: KFrescoVitoDrawable): DebugOverlayDrawable {
     val model = drawable.debugOverlayImageLayer?.getDataModel()
     if (
@@ -95,5 +134,24 @@ class DebugOverlayHandler(
       return debugOverlayDrawable
     }
     return model.drawable as DebugOverlayDrawable
+  }
+
+  private fun extractLightweightOverlayDrawable(
+      drawable: KFrescoVitoDrawable
+  ): LightweightDebugOverlayDrawable {
+    val model = drawable.debugOverlayImageLayer?.getDataModel()
+    if (
+        model == null ||
+            model !is DrawableImageDataModel ||
+            model.drawable !is LightweightDebugOverlayDrawable
+    ) {
+      val overlayDrawable = LightweightDebugOverlayDrawable()
+      drawable.debugOverlayImageLayer =
+          drawable.createLayer().apply {
+            configure(dataModel = DrawableImageDataModel(overlayDrawable))
+          }
+      return overlayDrawable
+    }
+    return model.drawable as LightweightDebugOverlayDrawable
   }
 }
