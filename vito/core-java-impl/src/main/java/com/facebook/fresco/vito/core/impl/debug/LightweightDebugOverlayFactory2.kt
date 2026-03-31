@@ -155,9 +155,6 @@ class LightweightDebugOverlayFactory2(
       val imageDimensionsText =
           extractText(actualImageDimensionsWithPrefixProvider, drawable, extras)
       if (imageDimensionsText.isNotEmpty()) {
-        val bounds = drawable.bounds
-        val imageWidth = drawable.actualImageWidthPx
-        val imageHeight = drawable.actualImageHeightPx
         parts.add(imageDimensionsText)
       }
     }
