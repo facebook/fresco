@@ -34,7 +34,8 @@ public class BetterImageSpanMarginTest {
   private final Paint.FontMetricsInt mFontMetrics = new Paint.FontMetricsInt();
   private final String mDescription;
   private @BetterImageSpan.BetterImageSpanAlignment final int mAlignment;
-  private final Rect mMargin;
+  private final int[] mMarginValues;
+  private Rect mMargin;
   private final int mDrawableHeight;
   private final int mDrawableWidth = 100;
   private final int mFontAscent;
@@ -54,12 +55,7 @@ public class BetterImageSpanMarginTest {
           {
             "Center - small drawable - margin left",
             BetterImageSpan.ALIGN_CENTER,
-            new Rect(
-                10, // margin left
-                0, // margin top
-                0, // margin right
-                0 // margin bottom
-                ),
+            new int[] {10, 0, 0, 0}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -73,12 +69,7 @@ public class BetterImageSpanMarginTest {
           {
             "Center - small drawable - margin right",
             BetterImageSpan.ALIGN_CENTER,
-            new Rect(
-                0, // margin left
-                0, // margin top
-                10, // margin right
-                0 // margin bottom
-                ),
+            new int[] {0, 0, 10, 0}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -92,12 +83,7 @@ public class BetterImageSpanMarginTest {
           {
             "Center - small drawable - margin left and right",
             BetterImageSpan.ALIGN_CENTER,
-            new Rect(
-                5, // margin left
-                0, // margin top
-                5, // margin right
-                0 // margin bottom
-                ),
+            new int[] {5, 0, 5, 0}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -111,12 +97,7 @@ public class BetterImageSpanMarginTest {
           {
             "Baseline - small drawable - margin left",
             BetterImageSpan.ALIGN_BASELINE,
-            new Rect(
-                10, // margin left
-                0, // margin top
-                0, // margin right
-                0 // margin bottom
-                ),
+            new int[] {10, 0, 0, 0}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -130,12 +111,7 @@ public class BetterImageSpanMarginTest {
           {
             "Baseline - small drawable - margin right",
             BetterImageSpan.ALIGN_BASELINE,
-            new Rect(
-                0, // margin left
-                0, // margin top
-                10, // margin right
-                0 // margin bottom
-                ),
+            new int[] {0, 0, 10, 0}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -149,12 +125,7 @@ public class BetterImageSpanMarginTest {
           {
             "Baseline - small drawable - margin left and right",
             BetterImageSpan.ALIGN_BASELINE,
-            new Rect(
-                5, // margin left
-                0, // margin top
-                5, // margin right
-                0 // margin bottom
-                ),
+            new int[] {5, 0, 5, 0}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -168,12 +139,7 @@ public class BetterImageSpanMarginTest {
           {
             "Bottom - small drawable - margin left",
             BetterImageSpan.ALIGN_BOTTOM,
-            new Rect(
-                10, // margin left
-                0, // margin top
-                0, // margin right
-                0 // margin bottom
-                ),
+            new int[] {10, 0, 0, 0}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -187,12 +153,7 @@ public class BetterImageSpanMarginTest {
           {
             "Bottom - small drawable - margin right",
             BetterImageSpan.ALIGN_BOTTOM,
-            new Rect(
-                0, // margin left
-                0, // margin top
-                10, // margin right
-                0 // margin bottom
-                ),
+            new int[] {0, 0, 10, 0}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -206,12 +167,7 @@ public class BetterImageSpanMarginTest {
           {
             "Bottom - small drawable - margin left and right",
             BetterImageSpan.ALIGN_BOTTOM,
-            new Rect(
-                5, // margin left
-                0, // margin top
-                5, // margin right
-                0 // margin bottom
-                ),
+            new int[] {5, 0, 5, 0}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -226,12 +182,7 @@ public class BetterImageSpanMarginTest {
           {
             "Center - large drawable - margin left",
             BetterImageSpan.ALIGN_CENTER,
-            new Rect(
-                10, // margin left
-                0, // margin top
-                0, // margin right
-                0 // margin bottom
-                ),
+            new int[] {10, 0, 0, 0}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -245,12 +196,7 @@ public class BetterImageSpanMarginTest {
           {
             "Center - large drawable - margin right",
             BetterImageSpan.ALIGN_CENTER,
-            new Rect(
-                0, // margin left
-                0, // margin top
-                10, // margin right
-                0 // margin bottom
-                ),
+            new int[] {0, 0, 10, 0}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -264,12 +210,7 @@ public class BetterImageSpanMarginTest {
           {
             "Center - large drawable - margin left and right",
             BetterImageSpan.ALIGN_CENTER,
-            new Rect(
-                5, // margin left
-                0, // margin top
-                5, // margin right
-                0 // margin bottom
-                ),
+            new int[] {5, 0, 5, 0}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -283,12 +224,7 @@ public class BetterImageSpanMarginTest {
           {
             "Baseline - large drawable - margin left",
             BetterImageSpan.ALIGN_BASELINE,
-            new Rect(
-                10, // margin left
-                0, // margin top
-                0, // margin right
-                0 // margin bottom
-                ),
+            new int[] {10, 0, 0, 0}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -302,12 +238,7 @@ public class BetterImageSpanMarginTest {
           {
             "Baseline - large drawable - margin right",
             BetterImageSpan.ALIGN_BASELINE,
-            new Rect(
-                0, // margin left
-                0, // margin top
-                10, // margin right
-                0 // margin bottom
-                ),
+            new int[] {0, 0, 10, 0}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -321,12 +252,7 @@ public class BetterImageSpanMarginTest {
           {
             "Baseline - large drawable - margin left and right",
             BetterImageSpan.ALIGN_BASELINE,
-            new Rect(
-                5, // margin left
-                0, // margin top
-                5, // margin right
-                0 // margin bottom
-                ),
+            new int[] {5, 0, 5, 0}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -340,12 +266,7 @@ public class BetterImageSpanMarginTest {
           {
             "Bottom - large drawable - margin left",
             BetterImageSpan.ALIGN_BOTTOM,
-            new Rect(
-                10, // margin left
-                0, // margin top
-                0, // margin right
-                0 // margin bottom
-                ),
+            new int[] {10, 0, 0, 0}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -359,12 +280,7 @@ public class BetterImageSpanMarginTest {
           {
             "Bottom - large drawable - margin right",
             BetterImageSpan.ALIGN_BOTTOM,
-            new Rect(
-                0, // margin left
-                0, // margin top
-                10, // margin right
-                0 // margin bottom
-                ),
+            new int[] {0, 0, 10, 0}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -378,12 +294,7 @@ public class BetterImageSpanMarginTest {
           {
             "Bottom - large drawable - margin left and right",
             BetterImageSpan.ALIGN_BOTTOM,
-            new Rect(
-                5, // margin left
-                0, // margin top
-                5, // margin right
-                0 // margin bottom
-                ),
+            new int[] {5, 0, 5, 0}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -398,12 +309,7 @@ public class BetterImageSpanMarginTest {
           {
             "Center - small drawable - margin top",
             BetterImageSpan.ALIGN_CENTER,
-            new Rect(
-                0, // margin left
-                10, // margin top
-                0, // margin right
-                0 // margin bottom
-                ),
+            new int[] {0, 10, 0, 0}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -417,12 +323,7 @@ public class BetterImageSpanMarginTest {
           {
             "Center - small drawable - margin bottom",
             BetterImageSpan.ALIGN_CENTER,
-            new Rect(
-                0, // margin left
-                0, // margin top
-                0, // margin right
-                10 // margin bottom
-                ),
+            new int[] {0, 0, 0, 10}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -436,12 +337,7 @@ public class BetterImageSpanMarginTest {
           {
             "Center - small drawable - margin top and bottom",
             BetterImageSpan.ALIGN_CENTER,
-            new Rect(
-                0, // margin left
-                5, // margin top
-                0, // margin right
-                5 // margin bottom
-                ),
+            new int[] {0, 5, 0, 5}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -455,12 +351,7 @@ public class BetterImageSpanMarginTest {
           {
             "Baseline - small drawable - margin top",
             BetterImageSpan.ALIGN_BASELINE,
-            new Rect(
-                0, // margin left
-                10, // margin top
-                0, // margin right
-                0 // margin bottom
-                ),
+            new int[] {0, 10, 0, 0}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -474,12 +365,7 @@ public class BetterImageSpanMarginTest {
           {
             "Baseline - small drawable - margin bottom",
             BetterImageSpan.ALIGN_BASELINE,
-            new Rect(
-                0, // margin left
-                0, // margin top
-                0, // margin right
-                10 // margin bottom
-                ),
+            new int[] {0, 0, 0, 10}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -493,12 +379,7 @@ public class BetterImageSpanMarginTest {
           {
             "Baseline - small drawable - margin top and bottom",
             BetterImageSpan.ALIGN_BASELINE,
-            new Rect(
-                0, // margin left
-                5, // margin top
-                0, // margin right
-                5 // margin bottom
-                ),
+            new int[] {0, 5, 0, 5}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -512,12 +393,7 @@ public class BetterImageSpanMarginTest {
           {
             "Bottom - small drawable - margin top",
             BetterImageSpan.ALIGN_BOTTOM,
-            new Rect(
-                0, // margin left
-                10, // margin top
-                0, // margin right
-                0 // margin bottom
-                ),
+            new int[] {0, 10, 0, 0}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -531,12 +407,7 @@ public class BetterImageSpanMarginTest {
           {
             "Bottom - small drawable - margin bottom",
             BetterImageSpan.ALIGN_BOTTOM,
-            new Rect(
-                0, // margin left
-                0, // margin top
-                0, // margin right
-                10 // margin bottom
-                ),
+            new int[] {0, 0, 0, 10}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -550,12 +421,7 @@ public class BetterImageSpanMarginTest {
           {
             "Bottom - small drawable - margin top and bottom",
             BetterImageSpan.ALIGN_BOTTOM,
-            new Rect(
-                0, // margin left
-                5, // margin top
-                0, // margin right
-                5 // margin bottom
-                ),
+            new int[] {0, 5, 0, 5}, // margin left, top, right, bottom
             10, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -570,12 +436,7 @@ public class BetterImageSpanMarginTest {
           {
             "Center - large drawable - margin top",
             BetterImageSpan.ALIGN_CENTER,
-            new Rect(
-                0, // margin left
-                10, // margin top
-                0, // margin right
-                0 // margin bottom
-                ),
+            new int[] {0, 10, 0, 0}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -589,12 +450,7 @@ public class BetterImageSpanMarginTest {
           {
             "Center - large drawable - margin bottom",
             BetterImageSpan.ALIGN_CENTER,
-            new Rect(
-                0, // margin left
-                0, // margin top
-                0, // margin right
-                10 // margin bottom
-                ),
+            new int[] {0, 0, 0, 10}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -608,12 +464,7 @@ public class BetterImageSpanMarginTest {
           {
             "Center - large drawable - margin top and bottom",
             BetterImageSpan.ALIGN_CENTER,
-            new Rect(
-                0, // margin left
-                5, // margin top
-                0, // margin right
-                5 // margin bottom
-                ),
+            new int[] {0, 5, 0, 5}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -627,12 +478,7 @@ public class BetterImageSpanMarginTest {
           {
             "Baseline - large drawable - margin top",
             BetterImageSpan.ALIGN_BASELINE,
-            new Rect(
-                0, // margin left
-                10, // margin top
-                0, // margin right
-                0 // margin bottom
-                ),
+            new int[] {0, 10, 0, 0}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -646,12 +492,7 @@ public class BetterImageSpanMarginTest {
           {
             "Baseline - large drawable - margin bottom",
             BetterImageSpan.ALIGN_BASELINE,
-            new Rect(
-                0, // margin left
-                0, // margin top
-                0, // margin right
-                10 // margin bottom
-                ),
+            new int[] {0, 0, 0, 10}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -665,12 +506,7 @@ public class BetterImageSpanMarginTest {
           {
             "Baseline - large drawable - margin top and bottom",
             BetterImageSpan.ALIGN_BASELINE,
-            new Rect(
-                0, // margin left
-                5, // margin top
-                0, // margin right
-                5 // margin bottom
-                ),
+            new int[] {0, 5, 0, 5}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -684,12 +520,7 @@ public class BetterImageSpanMarginTest {
           {
             "Bottom - large drawable - margin top",
             BetterImageSpan.ALIGN_BOTTOM,
-            new Rect(
-                0, // margin left
-                10, // margin top
-                0, // margin right
-                0 // margin bottom
-                ),
+            new int[] {0, 10, 0, 0}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -703,12 +534,7 @@ public class BetterImageSpanMarginTest {
           {
             "Bottom - large drawable - margin bottom",
             BetterImageSpan.ALIGN_BOTTOM,
-            new Rect(
-                0, // margin left
-                0, // margin top
-                0, // margin right
-                10 // margin bottom
-                ),
+            new int[] {0, 0, 0, 10}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -722,12 +548,7 @@ public class BetterImageSpanMarginTest {
           {
             "Bottom - large drawable - margin top and bottom",
             BetterImageSpan.ALIGN_BOTTOM,
-            new Rect(
-                0, // margin left
-                5, // margin top
-                0, // margin right
-                5 // margin bottom
-                ),
+            new int[] {0, 5, 0, 5}, // margin left, top, right, bottom
             50, // drawableHeight
             -20, // fontAscent
             10, // fontDescent
@@ -744,7 +565,7 @@ public class BetterImageSpanMarginTest {
   public BetterImageSpanMarginTest(
       String description,
       int alignment,
-      Rect margin,
+      int[] marginValues,
       int drawableHeight,
       int fontAscent,
       int fontDescent,
@@ -756,7 +577,7 @@ public class BetterImageSpanMarginTest {
       int expectedBottom) {
     mDescription = description;
     mAlignment = alignment;
-    mMargin = margin;
+    mMarginValues = marginValues;
     mDrawableHeight = drawableHeight;
     mFontAscent = fontAscent;
     mFontDescent = fontDescent;
@@ -776,6 +597,7 @@ public class BetterImageSpanMarginTest {
     mFontMetrics.descent = mFontDescent;
     mFontMetrics.top = mFontTop;
     mFontMetrics.bottom = mFontBottom;
+    mMargin = new Rect(mMarginValues[0], mMarginValues[1], mMarginValues[2], mMarginValues[3]);
     when(mDrawable.getBounds()).thenReturn(mBounds);
   }
 
