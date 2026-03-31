@@ -10,7 +10,9 @@ package com.facebook.fresco.vito.tools.liveeditor
 import android.content.Context
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.drawable.Drawable
 import android.graphics.drawable.ShapeDrawable
+import android.view.View
 import com.facebook.fresco.vito.core.FrescoController2
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImagePipeline
@@ -71,7 +73,39 @@ class ImageSelector(
     if (size <= 0) {
       return null
     }
-    currentIndex = (currentIndex + increment).mod(size)
+    val sortedTrackerIndices = buildSortedTrackerIndices(size)
+    val sortedPos = sortedTrackerIndices.indexOf(currentIndex)
+    val nextSortedPos =
+        if (sortedPos >= 0) {
+          (sortedPos + increment).mod(sortedTrackerIndices.size)
+        } else {
+          if (increment > 0) 0 else sortedTrackerIndices.size - 1
+        }
+    currentIndex = sortedTrackerIndices[nextSortedPos]
     return currentIndex
+  }
+
+  private fun buildSortedTrackerIndices(count: Int): List<Int> {
+    val indices = (0 until count).toList()
+    if (indices.size <= 1) return indices
+    val loc = IntArray(2)
+    val positions = indices.map { idx ->
+      val d = tracker.getDrawableOrNull(idx)
+      val view = (d as? Drawable)?.callback as? View
+      if (view != null) {
+        view.getLocationOnScreen(loc)
+        loc[0] to loc[1]
+      } else {
+        Int.MAX_VALUE to Int.MAX_VALUE
+      }
+    }
+    return indices.sortedWith(
+        Comparator { i, j ->
+          val (ax, ay) = positions[i]
+          val (bx, by) = positions[j]
+          val yDiff = ay - by
+          if (yDiff != 0) yDiff else ax - bx
+        }
+    )
   }
 }
