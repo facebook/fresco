@@ -12,6 +12,8 @@
 #include <android/bitmap.h>
 #include <jni.h>
 
+#include "rounding_filter.h"
+
 typedef struct {
   uint8_t r, g, b, a;
 } pixel_t;
@@ -38,8 +40,8 @@ static inline int max(const int a, const int b) {
 }
 
 static void safe_throw_exception(JNIEnv* env, const char* msg) {
-  if (!(*env)->ExceptionCheck(env)) {
-    (*env)->ThrowNew(env, runtime_exception_class, msg);
+  if (!env->ExceptionCheck()) {
+    env->ThrowNew(runtime_exception_class, msg);
   }
 }
 
@@ -423,7 +425,7 @@ toCircleFast(JNIEnv* env, pixel_t* pixelPtr, const int w, const int h) {
   }
 }
 
-enum Corner { TOP_LEFT, TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT };
+enum class Corner { TOP_LEFT, TOP_RIGHT, BOTTOM_RIGHT, BOTTOM_LEFT };
 
 static void addRoundCorner(
     JNIEnv* env,
@@ -431,23 +433,23 @@ static void addRoundCorner(
     const int w,
     const int h,
     const int radius,
-    const enum Corner corner) {
+    const Corner corner) {
   int centerX = 0, centerY = 0;
 
   switch (corner) {
-    case TOP_LEFT:
+    case Corner::TOP_LEFT:
       centerX = radius;
       centerY = radius;
       break;
-    case TOP_RIGHT:
+    case Corner::TOP_RIGHT:
       centerX = w - radius - 1;
       centerY = radius;
       break;
-    case BOTTOM_RIGHT:
+    case Corner::BOTTOM_RIGHT:
       centerX = w - radius - 1;
       centerY = h - radius - 1;
       break;
-    case BOTTOM_LEFT:
+    case Corner::BOTTOM_LEFT:
       centerX = radius;
       centerY = h - radius - 1;
   }
@@ -502,19 +504,19 @@ static void addRoundCorner(
     const size_t rightBytesY = sizeof(pixel_t) * (w - cXpY);
 
     switch (corner) {
-      case TOP_LEFT:
+      case Corner::TOP_LEFT:
         memset(pixelPtr + offB, TRANSPARENT_PIXEL_COLOR, leftBytesX);
         memset(pixelPtr + offD, TRANSPARENT_PIXEL_COLOR, leftBytesY);
         break;
-      case TOP_RIGHT:
+      case Corner::TOP_RIGHT:
         memset(pixelPtr + offB + cXpX, TRANSPARENT_PIXEL_COLOR, rightBytesX);
         memset(pixelPtr + offD + cXpY, TRANSPARENT_PIXEL_COLOR, rightBytesY);
         break;
-      case BOTTOM_RIGHT:
+      case Corner::BOTTOM_RIGHT:
         memset(pixelPtr + offA + cXpX, TRANSPARENT_PIXEL_COLOR, rightBytesX);
         memset(pixelPtr + offC + cXpY, TRANSPARENT_PIXEL_COLOR, rightBytesY);
         break;
-      case BOTTOM_LEFT:
+      case Corner::BOTTOM_LEFT:
         memset(pixelPtr + offA, TRANSPARENT_PIXEL_COLOR, leftBytesX);
         memset(pixelPtr + offC, TRANSPARENT_PIXEL_COLOR, leftBytesY);
     }
@@ -749,10 +751,11 @@ static void toCircleWithOptionalBorder(
     return;
   }
 
-  pixel_t* pixelPtr = NULL;
+  pixel_t* pixelPtr = nullptr;
 
   // Locking pixels such that they will not get moved around during processing
-  rc = AndroidBitmap_lockPixels(env, bitmap, (void*)&pixelPtr);
+  rc = AndroidBitmap_lockPixels(
+      env, bitmap, reinterpret_cast<void**>(&pixelPtr));
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
     safe_throw_exception(
         env,
@@ -814,20 +817,21 @@ static void addRoundedCorners(
     return;
   }
 
-  pixel_t* pixelPtr = NULL;
+  pixel_t* pixelPtr = nullptr;
 
   // Locking pixels such that they will not get moved around during processing
-  rc = AndroidBitmap_lockPixels(env, bitmap, (void*)&pixelPtr);
+  rc = AndroidBitmap_lockPixels(
+      env, bitmap, reinterpret_cast<void**>(&pixelPtr));
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
     safe_throw_exception(
         env, "Rounding#addRoundedCorners: Failed to lock Bitmap pixels");
     return;
   }
 
-  addRoundCorner(env, pixelPtr, w, h, radiusTopLeft, TOP_LEFT);
-  addRoundCorner(env, pixelPtr, w, h, radiusTopRight, TOP_RIGHT);
-  addRoundCorner(env, pixelPtr, w, h, radiusBottomRight, BOTTOM_RIGHT);
-  addRoundCorner(env, pixelPtr, w, h, radiusBottomLeft, BOTTOM_LEFT);
+  addRoundCorner(env, pixelPtr, w, h, radiusTopLeft, Corner::TOP_LEFT);
+  addRoundCorner(env, pixelPtr, w, h, radiusTopRight, Corner::TOP_RIGHT);
+  addRoundCorner(env, pixelPtr, w, h, radiusBottomRight, Corner::BOTTOM_RIGHT);
+  addRoundCorner(env, pixelPtr, w, h, radiusBottomLeft, Corner::BOTTOM_LEFT);
 
   // Unlocking the pixels
   rc = AndroidBitmap_unlockPixels(env, bitmap);
@@ -887,10 +891,11 @@ static void toCircleFastWithOptionalBorder(
     return;
   }
 
-  pixel_t* pixelPtr = NULL;
+  pixel_t* pixelPtr = nullptr;
 
   // Locking pixels such that they will not get moved around during processing
-  rc = AndroidBitmap_lockPixels(env, bitmap, (void*)&pixelPtr);
+  rc = AndroidBitmap_lockPixels(
+      env, bitmap, reinterpret_cast<void**>(&pixelPtr));
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
     safe_throw_exception(
         env,
@@ -989,21 +994,20 @@ static JNINativeMethod rounding_native_methods[] = {
 };
 
 jint registerRoundingFilterMethods(JNIEnv* env) {
-  jclass runtime_exception =
-      (*env)->FindClass(env, "java/lang/RuntimeException");
+  jclass runtime_exception = env->FindClass("java/lang/RuntimeException");
   if (!runtime_exception) {
     return JNI_ERR;
   }
-  runtime_exception_class = (*env)->NewGlobalRef(env, runtime_exception);
+  runtime_exception_class =
+      static_cast<jclass>(env->NewGlobalRef(runtime_exception));
 
-  jclass rounding_filter_class = (*env)->FindClass(
-      env, "com/facebook/imagepipeline/nativecode/NativeRoundingFilter");
+  jclass rounding_filter_class = env->FindClass(
+      "com/facebook/imagepipeline/nativecode/NativeRoundingFilter");
   if (!rounding_filter_class) {
     return JNI_ERR;
   }
 
-  int rc = (*env)->RegisterNatives(
-      env,
+  int rc = env->RegisterNatives(
       rounding_filter_class,
       rounding_native_methods,
       ARRAY_SIZE(rounding_native_methods));

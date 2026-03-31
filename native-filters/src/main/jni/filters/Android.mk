@@ -8,10 +8,10 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 LOCAL_MODULE := filters
 LOCAL_SRC_FILES := \
-	blur_filter.c \
-	rounding_filter.c
+	blur_filter.cpp \
+	rounding_filter.cpp
 
-LOCAL_CFLAGS += -Wall -Wextra -Werror -std=c11
+LOCAL_CFLAGS += -Wall -Wextra -Werror -std=c++17
 LOCAL_CFLAGS += -fvisibility=hidden
 LOCAL_LDLIBS := -ljnigraphics
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)

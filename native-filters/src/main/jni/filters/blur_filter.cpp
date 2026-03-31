@@ -12,6 +12,8 @@
 #include <android/bitmap.h>
 #include <jni.h>
 
+#include "blur_filter.h"
+
 typedef struct {
   uint8_t b, g, r, a;
 } pixel_t;
@@ -35,8 +37,8 @@ static inline int bound(int x, int l, int h) {
 }
 
 static void safe_throw_exception(JNIEnv* env, const char* msg) {
-  if (!(*env)->ExceptionCheck(env)) {
-    (*env)->ThrowNew(env, runtime_exception_class, msg);
+  if (!env->ExceptionCheck()) {
+    env->ThrowNew(runtime_exception_class, msg);
   }
 }
 
@@ -202,7 +204,7 @@ static void BlurFilter_iterativeBoxBlur(
     return;
   }
 
-  pixel_t* pixelPtr = NULL;
+  pixel_t* pixelPtr = nullptr;
 
   const int w = bitmapInfo.width;
   const int h = bitmapInfo.height;
@@ -214,7 +216,8 @@ static void BlurFilter_iterativeBoxBlur(
   }
 
   // locking pixels such that they will not get moved around during processing
-  rc = AndroidBitmap_lockPixels(env, bitmap, (void*)&pixelPtr);
+  rc = AndroidBitmap_lockPixels(
+      env, bitmap, reinterpret_cast<void**>(&pixelPtr));
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
     safe_throw_exception(
         env, "BlurFilter_iterativeBoxBlur: Failed to lock Bitmap pixels");
@@ -226,7 +229,8 @@ static void BlurFilter_iterativeBoxBlur(
   const int diameter = radius + 1 + radius;
 
   // pre-compute division table: speed-up by factor 5(!)
-  uint8_t* div = (uint8_t*)malloc(256 * diameter * sizeof(uint8_t));
+  uint8_t* div =
+      static_cast<uint8_t*>(malloc(256 * diameter * sizeof(uint8_t)));
   if (!div) {
     AndroidBitmap_unlockPixels(env, bitmap);
     safe_throw_exception(
@@ -248,7 +252,8 @@ static void BlurFilter_iterativeBoxBlur(
   }
 
   // temporary array for the output of the currently blurred row OR column
-  pixel_t* tempRowOrColumn = (pixel_t*)malloc(max(w, h) * sizeof(pixel_t));
+  pixel_t* tempRowOrColumn =
+      static_cast<pixel_t*>(malloc(max(w, h) * sizeof(pixel_t)));
   if (!tempRowOrColumn) {
     free(div);
     AndroidBitmap_unlockPixels(env, bitmap);
@@ -297,21 +302,20 @@ static JNINativeMethod blur_filter_native_methods[] = {
 };
 
 jint registerBlurFilterMethods(JNIEnv* env) {
-  jclass runtime_exception =
-      (*env)->FindClass(env, "java/lang/RuntimeException");
+  jclass runtime_exception = env->FindClass("java/lang/RuntimeException");
   if (!runtime_exception) {
     return JNI_ERR;
   }
-  runtime_exception_class = (*env)->NewGlobalRef(env, runtime_exception);
+  runtime_exception_class =
+      static_cast<jclass>(env->NewGlobalRef(runtime_exception));
 
-  jclass blur_filter_class = (*env)->FindClass(
-      env, "com/facebook/imagepipeline/nativecode/NativeBlurFilter");
+  jclass blur_filter_class =
+      env->FindClass("com/facebook/imagepipeline/nativecode/NativeBlurFilter");
   if (!blur_filter_class) {
     return JNI_ERR;
   }
 
-  int rc = (*env)->RegisterNatives(
-      env,
+  int rc = env->RegisterNatives(
       blur_filter_class,
       blur_filter_native_methods,
       ARRAY_SIZE(blur_filter_native_methods));
