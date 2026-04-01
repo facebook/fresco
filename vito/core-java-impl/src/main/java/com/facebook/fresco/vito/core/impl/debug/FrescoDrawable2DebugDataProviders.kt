@@ -140,10 +140,10 @@ val imageFormatProvider: StringDebugDataProvider =
 
       // Image format is stored under "image_format" key (HasExtraData.KEY_IMAGE_FORMAT)
       // primarily in imageExtras, with fallbacks to shortcutExtras and datasourceExtras
-      extras.imageExtras?.get("image_format")?.toString()
-          ?: extras.shortcutExtras?.get("image_format")?.toString()
-          ?: extras.datasourceExtras?.get("image_format")?.toString()
-          ?: ""
+      (extras.imageExtras?.get("image_format")?.toString()
+              ?: extras.shortcutExtras?.get("image_format")?.toString()
+              ?: extras.datasourceExtras?.get("image_format")?.toString())
+          .orEmpty()
     }
 
 /** Provides truncated image URI from Extras. */
