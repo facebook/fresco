@@ -19,7 +19,6 @@ import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.core.impl.FrescoDrawable2
 import com.facebook.imageutils.BitmapUtil
-import java.util.Locale
 
 open class DefaultDebugOverlayFactory2(
     var showExtendedInformation: Boolean = true,
@@ -184,7 +183,6 @@ open class DefaultDebugOverlayFactory2(
 
   companion object {
     @JvmStatic
-    protected fun formatDimensions(width: Int, height: Int): String =
-        String.format(Locale.US, "%dx%d", width, height)
+    protected fun formatDimensions(width: Int, height: Int): String = "${width}x${height}"
   }
 }
