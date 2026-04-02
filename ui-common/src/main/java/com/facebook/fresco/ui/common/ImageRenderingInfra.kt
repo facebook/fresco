@@ -9,7 +9,6 @@ package com.facebook.fresco.ui.common
 
 enum class ImageRenderingInfra {
   VITO_V2,
-  VITO_V1,
   DRAWEE,
   OTHER,
 }
