@@ -49,6 +49,7 @@ class ImagePerfData(
     val errorStacktraceStringOnFailure: String?,
     val errorCodeOnFailure: Int?,
     val densityDpiOnSuccess: Int?,
+    val fallbackImageSetTimeMs: Long = UNSET,
 ) {
 
   val instanceId: Int = controllerId.hashCode()

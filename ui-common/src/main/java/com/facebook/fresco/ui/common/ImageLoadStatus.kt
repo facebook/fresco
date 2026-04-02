@@ -12,6 +12,7 @@ enum class ImageLoadStatus(val value: Int) {
   REQUESTED(0),
   INTERMEDIATE_AVAILABLE(2),
   SUCCESS(3),
+  FALLBACK_RENDERED(4),
   ERROR(5),
   EMPTY_EVENT(7),
   RELEASED(8);
@@ -25,6 +26,7 @@ enum class ImageLoadStatus(val value: Int) {
       REQUESTED -> "requested"
       SUCCESS -> "success"
       INTERMEDIATE_AVAILABLE -> "intermediate_available"
+      FALLBACK_RENDERED -> "fallback_rendered"
       ERROR -> "error"
       RELEASED -> "released"
       else -> "unknown"

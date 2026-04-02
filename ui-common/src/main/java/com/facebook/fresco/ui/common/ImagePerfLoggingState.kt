@@ -34,6 +34,8 @@ open class ImagePerfLoggingState(val infra: ImageRenderingInfra) {
 
   var densityDpiOnSuccess: Int? = null
 
+  var fallbackImageSetTimeMs: Long = -1
+
   internal fun resetLoggingState() {
     intermediateImageSetTimes.clear()
     newIntermediateImageSetPointAvailable = false
@@ -56,5 +58,7 @@ open class ImagePerfLoggingState(val infra: ImageRenderingInfra) {
     errorCodeOnFailure = null
 
     densityDpiOnSuccess = null
+
+    fallbackImageSetTimeMs = -1
   }
 }

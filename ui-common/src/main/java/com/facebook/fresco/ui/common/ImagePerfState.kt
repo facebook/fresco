@@ -79,6 +79,7 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
     newIntermediateImageSetPointAvailable = false
     emptyEventTimestampNs = null
     releasedEventTimestampNs = null
+    fallbackImageSetTimeMs = ImagePerfData.UNSET
   }
 
   fun setControllerId(controllerId: String?) {
@@ -145,6 +146,10 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
     this.errorThrowable = errorThrowable
   }
 
+  fun setControllerFallbackImageSetTimeMs(controllerFallbackImageSetTimeMs: Long) {
+    this.fallbackImageSetTimeMs = controllerFallbackImageSetTimeMs
+  }
+
   fun setVisible(visible: Boolean) {
     visibilityState = if (visible) VisibilityState.VISIBLE else VisibilityState.INVISIBLE
   }
@@ -189,6 +194,7 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
           errorStacktraceStringOnFailure,
           errorCodeOnFailure,
           densityDpiOnSuccess,
+          fallbackImageSetTimeMs,
       )
 
   fun setExtraData(extraData: Extras?) {
