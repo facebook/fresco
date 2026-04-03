@@ -58,8 +58,7 @@ class StringAndColorDebugDataProvider(
 // ============================================================================
 
 /** Formats width and height as a dimension string (e.g., "1920x1080"). */
-fun formatDimensions(width: Int, height: Int): String =
-    String.format(Locale.US, "%dx%d", width, height)
+fun formatDimensions(width: Int, height: Int): String = "${width}x${height}"
 
 /** Abbreviates the origin string for compact display. */
 fun abbreviateOrigin(origin: String): String =
