@@ -262,25 +262,25 @@ struct GifImageNativeContext {
   std::shared_ptr<GifWrapper> spGifWrapper;
 
   /** Cached width of the image */
-  int pixelWidth;
+  int pixelWidth = 0;
 
   /** Cached height of the image */
-  int pixelHeight;
+  int pixelHeight = 0;
 
   /** Cached number of the frames in the image */
-  int numFrames;
+  int numFrames = 0;
 
   /** Cached loop count for the image. 0 means infinite. */
-  int loopCount;
+  int loopCount = 0;
 
   /** Duration of all the animation (the sum of all the frames duration) */
-  int durationMs;
+  int durationMs = 0;
 
   /** Array of each frame's duration (size of array is numFrames) */
   std::vector<jint> frameDurationsMs;
 
   /** Reference counter. Instance is deleted when it goes from 1 to 0 */
-  size_t refCount;
+  size_t refCount = 0;
 
 #if EXTRA_LOGGING
   ~GifImageNativeContext() {
@@ -298,31 +298,31 @@ struct GifFrameNativeContext {
   std::shared_ptr<GifWrapper> spGifWrapper;
 
   /** Frame number for the image. Starts at 0. */
-  int frameNum;
+  int frameNum = 0;
 
   /** X offset for the frame relative to the image canvas */
-  int xOffset;
+  int xOffset = 0;
 
   /** Y offset for the frame relative to the image canvas */
-  int yOffset;
+  int yOffset = 0;
 
   /** Display duration for the frame in ms */
-  int durationMs;
+  int durationMs = 0;
 
   /** Width of this frame */
-  int width;
+  int width = 0;
 
   /** Height of this frame */
-  int height;
+  int height = 0;
 
   /** How the GIF is disposed. See DISPOSAL_* constants in gif_lib.h */
-  int disposalMode;
+  int disposalMode = 0;
 
   /** Palette index of the transparency color, or -1 for none */
-  int transparentIndex;
+  int transparentIndex = 0;
 
   /** Reference counter. Instance is deleted when it goes from 1 to 0 */
-  size_t refCount;
+  size_t refCount = 0;
 
 #if EXTRA_LOGGING
   ~GifFrameNativeContext() {
@@ -543,7 +543,7 @@ int readSingleFrame(
  */
 int decodeExtension(GifFileType* pGifFile) {
   GifByteType* pExtData;
-  int extFunction;
+  int extFunction = 0;
 
   if (DGifGetExtension(pGifFile, &extFunction, &pExtData) == GIF_ERROR) {
     return GIF_ERROR;
