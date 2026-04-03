@@ -7,7 +7,7 @@
 
 package com.facebook.drawee.view;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 import android.graphics.Canvas;
@@ -58,7 +58,7 @@ public class MultiDraweeHolderTest {
     when(mHolder2.onTouchEvent(event)).thenReturn(true);
     when(mHolder3.onTouchEvent(event)).thenReturn(true);
     boolean ret = mMultiHolder.onTouchEvent(event);
-    assertEquals(true, ret);
+    assertThat(ret).isEqualTo(true);
     verify(mHolder1).onTouchEvent(event);
     verify(mHolder2).onTouchEvent(event);
     verify(mHolder3, never()).onTouchEvent(event);
@@ -71,7 +71,7 @@ public class MultiDraweeHolderTest {
     when(mHolder2.onTouchEvent(event)).thenReturn(false);
     when(mHolder3.onTouchEvent(event)).thenReturn(false);
     boolean ret = mMultiHolder.onTouchEvent(event);
-    assertEquals(false, ret);
+    assertThat(ret).isEqualTo(false);
     verify(mHolder1).onTouchEvent(event);
     verify(mHolder2).onTouchEvent(event);
     verify(mHolder3).onTouchEvent(event);
@@ -79,9 +79,9 @@ public class MultiDraweeHolderTest {
 
   @Test
   public void testClear_Detached() {
-    assertEquals(3, mMultiHolder.mHolders.size());
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(3);
     mMultiHolder.clear();
-    assertTrue(mMultiHolder.mHolders.isEmpty());
+    assertThat(mMultiHolder.mHolders.isEmpty()).isTrue();
   }
 
   @Test
@@ -89,9 +89,9 @@ public class MultiDraweeHolderTest {
     mMultiHolder.onAttach();
     reset(mHolder1, mHolder2, mHolder3);
 
-    assertEquals(3, mMultiHolder.mHolders.size());
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(3);
     mMultiHolder.clear();
-    assertTrue(mMultiHolder.mHolders.isEmpty());
+    assertThat(mMultiHolder.mHolders.isEmpty()).isTrue();
 
     verify(mHolder1).onDetach();
     verify(mHolder2).onDetach();
@@ -103,19 +103,19 @@ public class MultiDraweeHolderTest {
     mMultiHolder.clear();
     reset(mHolder1, mHolder2, mHolder3);
 
-    assertEquals(0, mMultiHolder.mHolders.size());
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(0);
     mMultiHolder.add(mHolder1);
-    assertEquals(1, mMultiHolder.mHolders.size());
-    assertEquals(mHolder1, mMultiHolder.mHolders.get(0));
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(1);
+    assertThat(mMultiHolder.mHolders.get(0)).isEqualTo(mHolder1);
     mMultiHolder.add(1, mHolder3);
-    assertEquals(2, mMultiHolder.mHolders.size());
-    assertEquals(mHolder1, mMultiHolder.mHolders.get(0));
-    assertEquals(mHolder3, mMultiHolder.mHolders.get(1));
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(2);
+    assertThat(mMultiHolder.mHolders.get(0)).isEqualTo(mHolder1);
+    assertThat(mMultiHolder.mHolders.get(1)).isEqualTo(mHolder3);
     mMultiHolder.add(1, mHolder2);
-    assertEquals(3, mMultiHolder.mHolders.size());
-    assertEquals(mHolder1, mMultiHolder.mHolders.get(0));
-    assertEquals(mHolder2, mMultiHolder.mHolders.get(1));
-    assertEquals(mHolder3, mMultiHolder.mHolders.get(2));
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(3);
+    assertThat(mMultiHolder.mHolders.get(0)).isEqualTo(mHolder1);
+    assertThat(mMultiHolder.mHolders.get(1)).isEqualTo(mHolder2);
+    assertThat(mMultiHolder.mHolders.get(2)).isEqualTo(mHolder3);
 
     verify(mHolder1, never()).onAttach();
     verify(mHolder2, never()).onAttach();
@@ -128,17 +128,17 @@ public class MultiDraweeHolderTest {
     mMultiHolder.onAttach();
     reset(mHolder1, mHolder2, mHolder3);
 
-    assertEquals(0, mMultiHolder.mHolders.size());
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(0);
     mMultiHolder.add(mHolder1);
-    assertEquals(mHolder1, mMultiHolder.mHolders.get(0));
+    assertThat(mMultiHolder.mHolders.get(0)).isEqualTo(mHolder1);
     mMultiHolder.add(1, mHolder3);
-    assertEquals(mHolder1, mMultiHolder.mHolders.get(0));
-    assertEquals(mHolder3, mMultiHolder.mHolders.get(1));
+    assertThat(mMultiHolder.mHolders.get(0)).isEqualTo(mHolder1);
+    assertThat(mMultiHolder.mHolders.get(1)).isEqualTo(mHolder3);
     mMultiHolder.add(1, mHolder2);
-    assertEquals(3, mMultiHolder.mHolders.size());
-    assertEquals(mHolder1, mMultiHolder.mHolders.get(0));
-    assertEquals(mHolder2, mMultiHolder.mHolders.get(1));
-    assertEquals(mHolder3, mMultiHolder.mHolders.get(2));
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(3);
+    assertThat(mMultiHolder.mHolders.get(0)).isEqualTo(mHolder1);
+    assertThat(mMultiHolder.mHolders.get(1)).isEqualTo(mHolder2);
+    assertThat(mMultiHolder.mHolders.get(2)).isEqualTo(mHolder3);
 
     verify(mHolder1).onAttach();
     verify(mHolder2).onAttach();
@@ -147,19 +147,19 @@ public class MultiDraweeHolderTest {
 
   @Test
   public void testRemove_Detached() {
-    assertEquals(3, mMultiHolder.mHolders.size());
-    assertEquals(mHolder1, mMultiHolder.mHolders.get(0));
-    assertEquals(mHolder2, mMultiHolder.mHolders.get(1));
-    assertEquals(mHolder3, mMultiHolder.mHolders.get(2));
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(3);
+    assertThat(mMultiHolder.mHolders.get(0)).isEqualTo(mHolder1);
+    assertThat(mMultiHolder.mHolders.get(1)).isEqualTo(mHolder2);
+    assertThat(mMultiHolder.mHolders.get(2)).isEqualTo(mHolder3);
     mMultiHolder.remove(1);
-    assertEquals(2, mMultiHolder.mHolders.size());
-    assertEquals(mHolder1, mMultiHolder.mHolders.get(0));
-    assertEquals(mHolder3, mMultiHolder.mHolders.get(1));
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(2);
+    assertThat(mMultiHolder.mHolders.get(0)).isEqualTo(mHolder1);
+    assertThat(mMultiHolder.mHolders.get(1)).isEqualTo(mHolder3);
     mMultiHolder.remove(1);
-    assertEquals(1, mMultiHolder.mHolders.size());
-    assertEquals(mHolder1, mMultiHolder.mHolders.get(0));
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(1);
+    assertThat(mMultiHolder.mHolders.get(0)).isEqualTo(mHolder1);
     mMultiHolder.remove(0);
-    assertEquals(0, mMultiHolder.mHolders.size());
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(0);
   }
 
   @Test
@@ -167,19 +167,19 @@ public class MultiDraweeHolderTest {
     mMultiHolder.onAttach();
     reset(mHolder1, mHolder2, mHolder3);
 
-    assertEquals(3, mMultiHolder.mHolders.size());
-    assertEquals(mHolder1, mMultiHolder.mHolders.get(0));
-    assertEquals(mHolder2, mMultiHolder.mHolders.get(1));
-    assertEquals(mHolder3, mMultiHolder.mHolders.get(2));
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(3);
+    assertThat(mMultiHolder.mHolders.get(0)).isEqualTo(mHolder1);
+    assertThat(mMultiHolder.mHolders.get(1)).isEqualTo(mHolder2);
+    assertThat(mMultiHolder.mHolders.get(2)).isEqualTo(mHolder3);
     mMultiHolder.remove(1);
-    assertEquals(2, mMultiHolder.mHolders.size());
-    assertEquals(mHolder1, mMultiHolder.mHolders.get(0));
-    assertEquals(mHolder3, mMultiHolder.mHolders.get(1));
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(2);
+    assertThat(mMultiHolder.mHolders.get(0)).isEqualTo(mHolder1);
+    assertThat(mMultiHolder.mHolders.get(1)).isEqualTo(mHolder3);
     mMultiHolder.remove(1);
-    assertEquals(1, mMultiHolder.mHolders.size());
-    assertEquals(mHolder1, mMultiHolder.mHolders.get(0));
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(1);
+    assertThat(mMultiHolder.mHolders.get(0)).isEqualTo(mHolder1);
     mMultiHolder.remove(0);
-    assertEquals(0, mMultiHolder.mHolders.size());
+    assertThat(mMultiHolder.mHolders.size()).isEqualTo(0);
 
     verify(mHolder1).onDetach();
     verify(mHolder2).onDetach();
@@ -188,9 +188,9 @@ public class MultiDraweeHolderTest {
 
   @Test
   public void testGet() {
-    assertEquals(mHolder1, mMultiHolder.get(0));
-    assertEquals(mHolder2, mMultiHolder.get(1));
-    assertEquals(mHolder3, mMultiHolder.get(2));
+    assertThat(mMultiHolder.get(0)).isEqualTo(mHolder1);
+    assertThat(mMultiHolder.get(1)).isEqualTo(mHolder2);
+    assertThat(mMultiHolder.get(2)).isEqualTo(mHolder3);
   }
 
   @Test
@@ -215,7 +215,7 @@ public class MultiDraweeHolderTest {
     Drawable drawable1 = mock(Drawable.class);
     Drawable drawable2 = mock(Drawable.class);
     when(mHolder1.getTopLevelDrawable()).thenReturn(drawable1);
-    assertTrue(mMultiHolder.verifyDrawable(drawable1));
-    assertFalse(mMultiHolder.verifyDrawable(drawable2));
+    assertThat(mMultiHolder.verifyDrawable(drawable1)).isTrue();
+    assertThat(mMultiHolder.verifyDrawable(drawable2)).isFalse();
   }
 }
