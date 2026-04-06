@@ -252,9 +252,7 @@ class DiskStorageCacheTest {
 
     // The cache size should be the size of the second + third files
     val cacheSize = this@DiskStorageCacheTest.cache!!.getSize()
-    assertThat(cacheSize)
-        .`as`(String.format(Locale.US, "Expected cache size of %d but is %d", 205, cacheSize))
-        .isEqualTo(205L)
+    assertThat(cacheSize).`as`("Expected cache size of 205 but is $cacheSize").isEqualTo(205L)
 
     // Write another non-cache, non-lru file in the cache directory
     val unexpected3 = File(cacheDirectory, "unexpected3")
