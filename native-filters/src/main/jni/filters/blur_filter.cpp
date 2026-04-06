@@ -9,6 +9,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <memory>
+#include <new>
+
 #include <android/bitmap.h>
 #include <jni.h>
 
@@ -229,8 +232,7 @@ static void BlurFilter_iterativeBoxBlur(
   const int diameter = radius + 1 + radius;
 
   // pre-compute division table: speed-up by factor 5(!)
-  uint8_t* div =
-      static_cast<uint8_t*>(malloc(256 * diameter * sizeof(uint8_t)));
+  std::unique_ptr<uint8_t[]> div(new (std::nothrow) uint8_t[256 * diameter]);
   if (!div) {
     AndroidBitmap_unlockPixels(env, bitmap);
     safe_throw_exception(
@@ -241,7 +243,7 @@ static void BlurFilter_iterativeBoxBlur(
   // the following lines will fill-up at least the first `255 * diameter`
   // entries with the mapping `div[x] = (x + r) / d` (i.e. division of x by d
   // rounded to the nearest number).
-  uint8_t* ptr = div;
+  uint8_t* ptr = div.get();
   for (int r = 0; r <= radius; r++) {
     *(ptr++) = 0;
   }
@@ -252,10 +254,9 @@ static void BlurFilter_iterativeBoxBlur(
   }
 
   // temporary array for the output of the currently blurred row OR column
-  pixel_t* tempRowOrColumn =
-      static_cast<pixel_t*>(malloc(max(w, h) * sizeof(pixel_t)));
+  std::unique_ptr<pixel_t[]> tempRowOrColumn(new (std::nothrow)
+                                                 pixel_t[max(w, h)]);
   if (!tempRowOrColumn) {
-    free(div);
     AndroidBitmap_unlockPixels(env, bitmap);
     safe_throw_exception(
         env,
@@ -266,15 +267,17 @@ static void BlurFilter_iterativeBoxBlur(
   for (int i = 0; i < iterations; i++) {
     // blur rows one-by-one
     for (int row = 0; row < h; row++) {
-      internalHorizontalBlur(pixelPtr, tempRowOrColumn, w, row, diameter, div);
+      internalHorizontalBlur(
+          pixelPtr, tempRowOrColumn.get(), w, row, diameter, div.get());
 
       // copy output row pixels back to bitmap
-      memcpy(pixelPtr + w * row, tempRowOrColumn, w * sizeof(pixel_t));
+      memcpy(pixelPtr + w * row, tempRowOrColumn.get(), w * sizeof(pixel_t));
     }
 
     // blur columns one-by-one
     for (int col = 0; col < w; col++) {
-      internalVerticalBlur(pixelPtr, tempRowOrColumn, w, h, col, diameter, div);
+      internalVerticalBlur(
+          pixelPtr, tempRowOrColumn.get(), w, h, col, diameter, div.get());
 
       // copy output column pixels back to bitmap
       pixel_t* ptr = pixelPtr + col;
@@ -284,9 +287,6 @@ static void BlurFilter_iterativeBoxBlur(
       }
     }
   }
-
-  free(tempRowOrColumn);
-  free(div);
 
   rc = AndroidBitmap_unlockPixels(env, bitmap);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {

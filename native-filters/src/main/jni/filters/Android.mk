@@ -11,7 +11,8 @@ LOCAL_SRC_FILES := \
 	blur_filter.cpp \
 	rounding_filter.cpp
 
-LOCAL_CFLAGS += -Wall -Wextra -Werror -std=c++17
+LOCAL_CFLAGS += -Wall -Wextra -Werror
+LOCAL_CPPFLAGS += -std=c++17
 LOCAL_CFLAGS += -fvisibility=hidden
 LOCAL_LDLIBS := -ljnigraphics
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
