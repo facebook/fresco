@@ -61,7 +61,9 @@ public class DeltaQueue<T> {
    * @return the next item in the queue
    */
   public T next() {
-    // NULLSAFE_FIXME[Nullable Dereference]
+    if (head == null) {
+      throw new IllegalStateException("cannot get next element from an empty queue");
+    }
     return head.value;
   }
 
@@ -71,7 +73,9 @@ public class DeltaQueue<T> {
    * @return the delay until the next item
    */
   public long delay() {
-    // NULLSAFE_FIXME[Nullable Dereference]
+    if (head == null) {
+      throw new IllegalStateException("cannot get delay from an empty queue");
+    }
     return head.delay;
   }
 
@@ -133,14 +137,14 @@ public class DeltaQueue<T> {
    * @return the next element off the queue.
    */
   public T pop() {
-    // NULLSAFE_FIXME[Nullable Dereference]
+    if (head == null) {
+      throw new IllegalStateException("cannot pop from an empty queue");
+    }
     if (head.delay > 0) {
       throw new IllegalStateException("cannot pop the head element when it has a non-zero delay");
     }
 
-    // NULLSAFE_FIXME[Nullable Dereference]
     T popped = head.value;
-    // NULLSAFE_FIXME[Nullable Dereference]
     head = head.next;
     size--;
     return popped;
