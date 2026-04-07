@@ -69,7 +69,7 @@ class BufferedDiskCacheTest {
   @Before
   fun setUp() {
     mockedStagingArea = org.mockito.Mockito.mockStatic(StagingArea::class.java)
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     closeableReference = CloseableReference.of(pooledByteBuffer)
     encodedImage = EncodedImage(closeableReference)
     val keys = ArrayList<CacheKey>()
