@@ -63,7 +63,7 @@ class AbstractAdaptiveCountingMemoryCacheTest {
   @Before
   fun setUp() {
     mockedSystemClock = mockStatic(SystemClock::class.java)
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     mockedSystemClock.`when`<Long> { SystemClock.uptimeMillis() }.thenReturn(0L)
     valueDescriptor =
         object : ValueDescriptor<Int> {
