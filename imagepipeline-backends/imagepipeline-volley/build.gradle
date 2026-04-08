@@ -11,6 +11,8 @@ import com.facebook.fresco.buildsrc.GradleDeps
 apply plugin: 'com.android.library'
 
 dependencies {
+  compileOnly Deps.inferAnnotation
+
   implementation Deps.volley
 
   implementation project(':fbcore')
