@@ -463,14 +463,14 @@ int readSingleFrame(
   if (pSavedImage->ImageDesc.Width < 0 || pSavedImage->ImageDesc.Height < 0 ||
       pSavedImage->ImageDesc.Width > maxDimension ||
       pSavedImage->ImageDesc.Height > maxDimension) {
-    return GIF_ERROR;
+    goto error_cleanup;
   }
 
   // Check for image size overflow.
   if (pSavedImage->ImageDesc.Height != 0 &&
       pSavedImage->ImageDesc.Width >
           (INT_MAX / pSavedImage->ImageDesc.Height)) {
-    return GIF_ERROR;
+    goto error_cleanup;
   }
 
   if (decodeFramePixels) {
@@ -492,13 +492,13 @@ int readSingleFrame(
           GifPixelType* pLine = pRasterBits + j * pSavedImage->ImageDesc.Width;
           int lineLength = pSavedImage->ImageDesc.Width;
           if (DGifGetLine(pGifFile, pLine, lineLength) == GIF_ERROR) {
-            return GIF_ERROR;
+            goto error_cleanup;
           }
         }
       }
     } else {
       if (DGifGetLine(pGifFile, pRasterBits, imageSize) == GIF_ERROR) {
-        return GIF_ERROR;
+        goto error_cleanup;
       }
     }
   } else {
@@ -506,21 +506,13 @@ int readSingleFrame(
     int codeSize;
     GifByteType* pCodeBlock;
     if (DGifGetCode(pGifFile, &codeSize, &pCodeBlock) == GIF_ERROR) {
-      return GIF_ERROR;
+      goto error_cleanup;
     }
     while (pCodeBlock != NULL) {
       if (DGifGetCodeNext(pGifFile, &pCodeBlock) == GIF_ERROR) {
-        return GIF_ERROR;
+        goto error_cleanup;
       }
     }
-  }
-
-  if (pGifFile->ExtensionBlocks) {
-    pSavedImage->ExtensionBlocks = pGifFile->ExtensionBlocks;
-    pSavedImage->ExtensionBlockCount = pGifFile->ExtensionBlockCount;
-
-    pGifFile->ExtensionBlocks = nullptr;
-    pGifFile->ExtensionBlockCount = 0;
   }
 
   if (addToSavedImages) {
@@ -529,10 +521,34 @@ int readSingleFrame(
     // reset the value after calling DGifGetImageDesc. Now, as the result of
     // decoding is known to be successful, we can increment the value to
     // represent correct number of images.
+    if (pGifFile->ExtensionBlocks) {
+      pSavedImage->ExtensionBlocks = pGifFile->ExtensionBlocks;
+      pSavedImage->ExtensionBlockCount = pGifFile->ExtensionBlockCount;
+      pGifFile->ExtensionBlocks = nullptr;
+      pGifFile->ExtensionBlockCount = 0;
+    }
     pGifFile->ImageCount = imageCount + 1;
+  } else {
+    // DGifGetImageDesc allocated a ColorMap copy in the temporary SavedImage
+    // slot at SavedImages[imageCount]. Since we won't increment ImageCount,
+    // DGifCloseFile won't free this ColorMap. Clean it up now.
+    if (pSavedImage->ImageDesc.ColorMap) {
+      GifFreeMapObject(pSavedImage->ImageDesc.ColorMap);
+      pSavedImage->ImageDesc.ColorMap = NULL;
+    }
   }
 
   return GIF_OK;
+
+error_cleanup:
+  // DGifGetImageDesc allocated a ColorMap copy in the temporary SavedImage
+  // slot. Since we're not incrementing ImageCount, DGifCloseFile won't free
+  // this ColorMap. Clean it up to prevent a leak.
+  if (pSavedImage->ImageDesc.ColorMap) {
+    GifFreeMapObject(pSavedImage->ImageDesc.ColorMap);
+    pSavedImage->ImageDesc.ColorMap = NULL;
+  }
+  return GIF_ERROR;
 }
 
 /**
