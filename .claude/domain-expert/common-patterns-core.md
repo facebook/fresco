@@ -1,8 +1,9 @@
+<!-- analysis-metadata: { "date": "2026-03-25", "time_window": "30d", "max_diffs": 50, "diffs_analyzed": 7 } -->
 # Fresco Core Library - Core Patterns
 
 **Team**: MF Client - QoE
 **Oncall**: fresco
-**Last Updated**: 2026-03-16
+**Last Updated**: 2026-03-25
 
 ---
 

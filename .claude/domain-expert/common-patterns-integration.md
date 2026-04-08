@@ -1,8 +1,9 @@
+<!-- analysis-metadata: { "date": "2026-03-25", "time_window": "30d", "max_diffs": 50, "diffs_analyzed": 7 } -->
 # Fresco Core Library - API & Safety Patterns
 
 **Team**: MF Client - QoE
 **Oncall**: fresco
-**Last Updated**: 2026-03-16
+**Last Updated**: 2026-03-25
 
 ---
 
@@ -175,3 +176,41 @@ class ImageDrawable {
 - [ ] **Loops**: Is the correct variable used inside the loop?
 - [ ] **Native Bounds**: Are external sizes validated?
 - [ ] **Callbacks**: Is the lifecycle documented and cleanup possible?
+- [ ] **Producer Dependencies**: Does this producer import a consumer-layer type? If so, inline the primitive instead.
+
+---
+
+## 6. Producer Dependency Direction
+
+### The Problem
+Producers in `imagepipeline/producers/` must not import or depend on higher-level concepts and product logic such as feed options or vito options. The producer layer is a lower-level abstraction and must remain decoupled from higher-level UI configuration objects.
+
+### Why It Causes Problems
+- Introduces a dependency inversion that violates the layered architecture
+- Creates circular or unexpected dependency graphs that break Buck2 builds or cause subtle runtime behavior
+- Makes the producer layer non-reusable across different consumer contexts and features (feed, vito, etc.)
+
+### How to Think About It
+When a producer needs cross-cutting information that originates from a consumer layer, do **not** pass the consumer-layer object directly. Instead:
+1. Inline the primitive value (Boolean, Int, String) into `ImageRequest`, `CallerContext`, or the request extras map
+2. Let the consumer layer extract and pack the relevant primitive before constructing the request
+
+```kotlin
+// ❌ Wrong: Producer imports a consumer-layer type
+class DiskCacheReadProducer {
+    fun produce(context: ProducerContext, vitoOptions: VitoImageOptions) { // BAD
+        if (vitoOptions.someFlag) { ... }
+    }
+}
+
+// ✅ Correct: Primitive passed through ImageRequest/extras
+class DiskCacheReadProducer {
+    fun produce(context: ProducerContext) {
+        val someFlag = context.imageRequest.extras["some_flag"] as? Boolean ?: false
+        if (someFlag) { ... }
+    }
+}
+```
+
+### Real Bug Examples
+- D97578134: Producer incorrectly depending on consumer-layer options, fixed by inlining primitive into ImageRequest extras

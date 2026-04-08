@@ -1,8 +1,9 @@
+<!-- analysis-metadata: { "date": "2026-03-25", "time_window": "30d", "max_diffs": 50, "diffs_analyzed": 7 } -->
 # Fresco Core Library - Domain Knowledge
 
 **Team**: MF Client - QoE
 **Oncall**: fresco
-**Last Updated**: 2026-03-16
+**Last Updated**: 2026-03-25
 
 ---
 
@@ -48,6 +49,10 @@ Based on recent diff history, these files change often and need careful review:
 - `KFrescoController.kt` - Main controller logic
 - `BasePool.kt` - Memory pool management
 - `BufferFrameLoader.kt` - Animation frame loading
+- `webp.cpp` - Native WebP decode entry point
+- `webp_bitmapfactory.cpp` - WebP bitmap factory native code
+- `DiskCacheReadProducer.java` - Disk cache read stage in producer chain
+- `BitmapMemoryCacheProducer.java` - Bitmap memory cache producer
 
 ---
 
