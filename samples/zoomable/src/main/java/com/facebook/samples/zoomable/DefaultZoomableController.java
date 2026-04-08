@@ -208,11 +208,6 @@ public class DefaultZoomableController
     return mImageBounds;
   }
 
-  /** Gets the transformed image bounds, in view-absolute coordinates */
-  private RectF getTransformedImageBounds() {
-    return mTransformedImageBounds;
-  }
-
   /** Sets the view bounds. */
   @Override
   public void setViewBounds(RectF viewBounds) {
