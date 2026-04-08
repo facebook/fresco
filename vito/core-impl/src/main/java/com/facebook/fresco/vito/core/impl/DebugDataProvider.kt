@@ -187,7 +187,12 @@ fun createWastedMemoryProvider(
           val targetHeight =
               if (viewport != null && viewport.height() > 0) viewport.height()
               else drawable.bounds.height()
-          val bytesPerPixel = BitmapUtil.getPixelSizeForBitmapConfig(model.bitmap.config)
+          val bytesPerPixel =
+              try {
+                BitmapUtil.getPixelSizeForBitmapConfig(model.bitmap.config)
+              } catch (_: UnsupportedOperationException) {
+                BitmapUtil.ARGB_8888_BYTES_PER_PIXEL
+              }
           computeWastedMemoryAndColor(
               model.width,
               model.height,
