@@ -27,7 +27,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.ArgumentCaptor
 import org.mockito.ArgumentMatchers
-import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Captor
 import org.mockito.Mock
 import org.mockito.MockitoAnnotations
@@ -266,7 +265,7 @@ class BitmapAnimationBackendTest {
 
   @Test
   fun testDrawCachedBitmap() {
-    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+    whenever(bitmapFrameCache.getCachedFrame(any<Int>())).thenReturn(bitmapReference)
 
     bitmapAnimationBackend.drawFrame(parentDrawable, canvas, 1)
     verify(frameListener).onDrawFrameStart(bitmapAnimationBackend, 1)
@@ -278,9 +277,9 @@ class BitmapAnimationBackendTest {
 
   @Test
   fun testDrawReusedBitmap() {
-    whenever(bitmapFrameCache.getBitmapToReuseForFrame(anyInt(), anyInt(), anyInt()))
+    whenever(bitmapFrameCache.getBitmapToReuseForFrame(any<Int>(), any<Int>(), any<Int>()))
         .thenReturn(bitmapReference)
-    whenever(bitmapFrameRenderer.renderFrame(anyInt(), any<Bitmap>())).thenReturn(true)
+    whenever(bitmapFrameRenderer.renderFrame(any<Int>(), any<Bitmap>())).thenReturn(true)
 
     bitmapAnimationBackend.drawFrame(parentDrawable, canvas, 1)
 
@@ -296,9 +295,9 @@ class BitmapAnimationBackendTest {
 
   @Test
   fun testDrawNewBitmap() {
-    whenever(platformBitmapFactory.createBitmap(anyInt(), anyInt(), any<Bitmap.Config>()))
+    whenever(platformBitmapFactory.createBitmap(any<Int>(), any<Int>(), any<Bitmap.Config>()))
         .thenReturn(bitmapReference)
-    whenever(bitmapFrameRenderer.renderFrame(anyInt(), any<Bitmap>())).thenReturn(true)
+    whenever(bitmapFrameRenderer.renderFrame(any<Int>(), any<Bitmap>())).thenReturn(true)
 
     bitmapAnimationBackend.drawFrame(parentDrawable, canvas, 2)
 
@@ -320,9 +319,9 @@ class BitmapAnimationBackendTest {
     whenever(bounds.width()).thenReturn(width)
     whenever(bounds.height()).thenReturn(height)
 
-    whenever(platformBitmapFactory.createBitmap(anyInt(), anyInt(), any<Bitmap.Config>()))
+    whenever(platformBitmapFactory.createBitmap(any<Int>(), any<Int>(), any<Bitmap.Config>()))
         .thenReturn(bitmapReference)
-    whenever(bitmapFrameRenderer.renderFrame(anyInt(), any<Bitmap>())).thenReturn(true)
+    whenever(bitmapFrameRenderer.renderFrame(any<Int>(), any<Bitmap>())).thenReturn(true)
     whenever(bitmapFrameRenderer.intrinsicWidth)
         .thenReturn(AnimationBackend.INTRINSIC_DIMENSION_UNSET)
     whenever(bitmapFrameRenderer.intrinsicHeight)
@@ -345,8 +344,8 @@ class BitmapAnimationBackendTest {
 
   @Test
   fun testDrawFallbackBitmapWhenCreateBitmapNotWorking() {
-    whenever(bitmapFrameCache.getFallbackFrame(anyInt())).thenReturn(bitmapReference)
-    whenever(bitmapFrameRenderer.renderFrame(anyInt(), any<Bitmap>())).thenReturn(true)
+    whenever(bitmapFrameCache.getFallbackFrame(any<Int>())).thenReturn(bitmapReference)
+    whenever(bitmapFrameRenderer.renderFrame(any<Int>(), any<Bitmap>())).thenReturn(true)
 
     bitmapAnimationBackend.drawFrame(parentDrawable, canvas, 3)
 
@@ -363,13 +362,13 @@ class BitmapAnimationBackendTest {
 
   @Test
   fun testDrawFallbackBitmapWhenRenderFrameNotWorking() {
-    whenever(bitmapFrameCache.getFallbackFrame(anyInt())).thenReturn(bitmapReference)
+    whenever(bitmapFrameCache.getFallbackFrame(any<Int>())).thenReturn(bitmapReference)
 
     // Return a different bitmap for PlatformBitmapFactory
     val temporaryBitmap = CloseableReference.of(bitmap, bitmapResourceReleaser)
-    whenever(platformBitmapFactory.createBitmap(anyInt(), anyInt(), any<Bitmap.Config>()))
+    whenever(platformBitmapFactory.createBitmap(any<Int>(), any<Int>(), any<Bitmap.Config>()))
         .thenReturn(temporaryBitmap)
-    whenever(bitmapFrameRenderer.renderFrame(anyInt(), any<Bitmap>())).thenReturn(false)
+    whenever(bitmapFrameRenderer.renderFrame(any<Int>(), any<Bitmap>())).thenReturn(false)
 
     bitmapAnimationBackend.drawFrame(parentDrawable, canvas, 3)
 
@@ -429,7 +428,7 @@ class BitmapAnimationBackendTest {
       @BitmapAnimationBackend.FrameType frameType: Int,
   ) {
     // Verify cache callback
-    verify(bitmapFrameCache, never()).onFrameRendered(anyInt(), any(), eq(frameType))
+    verify(bitmapFrameCache, never()).onFrameRendered(any<Int>(), any(), eq(frameType))
 
     // Verify frame listener
     verify(frameListener).onFrameDrawn(bitmapAnimationBackend, frameNumber, frameType)
@@ -560,7 +559,7 @@ class BitmapAnimationBackendTest {
     val backend = createBackendWithRounding(circularRounding)
     backend.setFrameListener(frameListener)
 
-    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+    whenever(bitmapFrameCache.getCachedFrame(any<Int>())).thenReturn(bitmapReference)
 
     val result = backend.drawFrame(parentDrawable, canvas, 1)
 
@@ -575,7 +574,7 @@ class BitmapAnimationBackendTest {
     val backend = createBackendWithRounding(rectangularRounding)
     backend.setFrameListener(frameListener)
 
-    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+    whenever(bitmapFrameCache.getCachedFrame(any<Int>())).thenReturn(bitmapReference)
 
     val result = backend.drawFrame(parentDrawable, canvas, 1)
 
@@ -660,7 +659,7 @@ class BitmapAnimationBackendTest {
     val testBounds = Rect(0, 0, 100, 100)
     backend.setBounds(testBounds)
 
-    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+    whenever(bitmapFrameCache.getCachedFrame(any<Int>())).thenReturn(bitmapReference)
 
     val result = backend.drawFrame(parentDrawable, canvas, 1)
 
@@ -679,7 +678,7 @@ class BitmapAnimationBackendTest {
     val testBounds = Rect(0, 0, 200, 150)
     backend.setBounds(testBounds)
 
-    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+    whenever(bitmapFrameCache.getCachedFrame(any<Int>())).thenReturn(bitmapReference)
 
     val result = backend.drawFrame(parentDrawable, canvas, 1)
 
@@ -802,7 +801,7 @@ class BitmapAnimationBackendTest {
   @Test
   fun testDrawFrameWithThumbnailFallback() {
     setupAnimationInformation(frameCount = 3)
-    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+    whenever(bitmapFrameCache.getCachedFrame(any<Int>())).thenReturn(bitmapReference)
 
     val backend = createThumbnailBackend("https://example.com/thumb.jpg", 2)
     backend.setFrameListener(frameListener)
@@ -1023,7 +1022,7 @@ class BitmapAnimationBackendTest {
     val backend = createThumbnailBackend("https://example.com/thumb.jpg", 2)
     backend.setFrameListener(frameListener)
 
-    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+    whenever(bitmapFrameCache.getCachedFrame(any<Int>())).thenReturn(bitmapReference)
 
     // Draw frames for first loop
     backend.drawFrame(parentDrawable, canvas, 0)
@@ -1036,7 +1035,7 @@ class BitmapAnimationBackendTest {
     backend.drawFrame(parentDrawable, canvas, 2) // This should complete the animation
 
     // Verify frames were drawn
-    verify(frameListener, times(6)).onDrawFrameStart(eq(backend), anyInt())
+    verify(frameListener, times(6)).onDrawFrameStart(eq(backend), any<Int>())
   }
 
   /** Tests that infinite animations don't trigger animation completion */
@@ -1050,13 +1049,13 @@ class BitmapAnimationBackendTest {
         )
     backend.setFrameListener(frameListener)
 
-    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+    whenever(bitmapFrameCache.getCachedFrame(any<Int>())).thenReturn(bitmapReference)
 
     for (i in 0..10) {
       backend.drawFrame(parentDrawable, canvas, i % 3)
     }
 
-    verify(frameListener, org.mockito.kotlin.times(11)).onDrawFrameStart(eq(backend), anyInt())
+    verify(frameListener, org.mockito.kotlin.times(11)).onDrawFrameStart(eq(backend), any<Int>())
   }
 
   /** Tests preloadAnimation with old render implementation */
@@ -1097,7 +1096,7 @@ class BitmapAnimationBackendTest {
 
     whenever(canvas.width).thenReturn(100)
     whenever(canvas.height).thenReturn(200)
-    whenever(bitmapFramePreparationStrategy.getBitmapFrame(anyInt(), anyInt(), anyInt()))
+    whenever(bitmapFramePreparationStrategy.getBitmapFrame(any<Int>(), any<Int>(), any<Int>()))
         .thenReturn(bitmapReference)
 
     val result = newBackend.drawFrame(parentDrawable, canvas, 1)
@@ -1114,7 +1113,7 @@ class BitmapAnimationBackendTest {
 
     whenever(canvas.width).thenReturn(100)
     whenever(canvas.height).thenReturn(200)
-    whenever(bitmapFramePreparationStrategy.getBitmapFrame(anyInt(), anyInt(), anyInt()))
+    whenever(bitmapFramePreparationStrategy.getBitmapFrame(any<Int>(), any<Int>(), any<Int>()))
         .thenReturn(null)
 
     val result = newBackend.drawFrame(parentDrawable, canvas, 1)
@@ -1171,7 +1170,7 @@ class BitmapAnimationBackendTest {
     bitmapAnimationBackend.setAlpha(alpha)
 
     // Verify alpha is applied when drawing
-    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+    whenever(bitmapFrameCache.getCachedFrame(any<Int>())).thenReturn(bitmapReference)
     bitmapAnimationBackend.drawFrame(parentDrawable, canvas, 1)
 
     // Verify the frame as drawn
@@ -1183,7 +1182,7 @@ class BitmapAnimationBackendTest {
   fun testSetColorFilterNull() {
     bitmapAnimationBackend.setColorFilter(null)
 
-    whenever(bitmapFrameCache.getCachedFrame(anyInt())).thenReturn(bitmapReference)
+    whenever(bitmapFrameCache.getCachedFrame(any<Int>())).thenReturn(bitmapReference)
     bitmapAnimationBackend.drawFrame(parentDrawable, canvas, 1)
 
     verify(canvas).drawBitmap(eq(bitmap), eq(0f), eq(0f), any<Paint>())
