@@ -14,68 +14,76 @@ import android.os.Bundle
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
 
-/** Minimal activity that verifies the pipeline initialized correctly. */
+/** Activity with image loading screen. Navigation drawer added in the next diff. */
 class MainActivity : Activity() {
+
+  private lateinit var contentContainer: FrameLayout
+  private lateinit var titleView: TextView
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(buildRootLayout())
+    setContentView(buildMainContent())
+    showScreen(ViewType.IG_IMAGE_VIEW)
   }
 
-  private fun buildRootLayout(): View {
+  private fun buildMainContent(): View {
     val root =
         LinearLayout(this).apply {
           orientation = LinearLayout.VERTICAL
+          layoutParams =
+              FrameLayout.LayoutParams(
+                  FrameLayout.LayoutParams.MATCH_PARENT,
+                  FrameLayout.LayoutParams.MATCH_PARENT,
+              )
           setBackgroundColor(Color.WHITE)
         }
 
-    // App title
-    root.addView(
-        TextView(this).apply {
-          text = "IG Image Loader Sample"
-          textSize = 20f
-          setTypeface(null, Typeface.BOLD)
-          setTextColor(TEXT_PRIMARY)
-          setPadding(dp(16), dp(16), dp(16), dp(16))
-        },
-    )
-
+    root.addView(buildToolbar())
     root.addView(divider())
 
-    // Active pipeline route
-    root.addView(
-        TextView(this).apply {
-          text = (application as SampleApplication).describeRoute()
-          textSize = 14f
-          setTextColor(ACCENT_COLOR)
-          setPadding(dp(16), dp(12), dp(16), dp(12))
-        },
-    )
-
-    root.addView(divider())
-
-    // Placeholder — image loading UI added in upcoming diffs
-    root.addView(
-        TextView(this).apply {
-          text = "Pipeline initialized successfully.\nImage loading screens coming next."
-          textSize = 16f
-          setTextColor(TEXT_SECONDARY)
-          gravity = Gravity.CENTER
-          setPadding(dp(32), dp(64), dp(32), dp(32))
-          layoutParams =
-              LinearLayout.LayoutParams(
-                  LinearLayout.LayoutParams.MATCH_PARENT,
-                  0,
-                  1f,
-              )
-        },
-    )
+    contentContainer =
+        FrameLayout(this).apply {
+          layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f)
+        }
+    root.addView(contentContainer)
 
     return root
   }
+
+  private fun buildToolbar(): View {
+    val toolbar =
+        LinearLayout(this).apply {
+          orientation = LinearLayout.HORIZONTAL
+          setPadding(dp(4), dp(8), dp(16), dp(8))
+          gravity = Gravity.CENTER_VERTICAL
+        }
+
+    titleView =
+        TextView(this).apply {
+          text = "IG Image Loader Sample"
+          textSize = 18f
+          setTypeface(null, Typeface.BOLD)
+          setTextColor(TEXT_PRIMARY)
+          setPadding(dp(12), dp(8), dp(12), dp(8))
+        }
+    toolbar.addView(titleView)
+
+    return toolbar
+  }
+
+  private fun showScreen(viewType: ViewType) {
+    titleView.text = viewType.label
+    contentContainer.removeAllViews()
+
+    val screen = ViewTypeScreen(this, viewType)
+    contentContainer.addView(screen.buildView())
+  }
+
+  // ── UI helpers ─────────────────────────────────────────────────────────────────
 
   private fun dp(value: Int): Int =
       TypedValue.applyDimension(
@@ -94,7 +102,5 @@ class MainActivity : Activity() {
   companion object {
     private const val DIVIDER_COLOR = 0xFFE0E0E0.toInt()
     private const val TEXT_PRIMARY = 0xFF1A1A1A.toInt()
-    private const val TEXT_SECONDARY = 0xFF666666.toInt()
-    private const val ACCENT_COLOR = 0xFF0095F6.toInt()
   }
 }
