@@ -72,7 +72,7 @@ class AnimatedSingleUsePostprocessorProducerTest {
 
   @Before
   fun setUp() {
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     testExecutorService = TestExecutorService(FakeClock())
     postprocessorProducer =
         PostprocessorProducer(inputProducer, platformBitmapFactory, testExecutorService)
