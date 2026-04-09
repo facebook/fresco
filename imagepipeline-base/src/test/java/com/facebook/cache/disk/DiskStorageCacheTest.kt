@@ -43,6 +43,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.InOrder
 import org.mockito.MockedStatic
 import org.mockito.Mockito
+import org.mockito.kotlin.times
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
@@ -759,7 +760,7 @@ class DiskStorageCacheTest {
     val numberItems = resourceIds.size
     val cacheEventCaptor = ArgumentCaptor.forClass<CacheEvent?, CacheEvent?>(CacheEvent::class.java)
     cacheEventListenerInOrder!!
-        .verify<CacheEventListener?>(cacheEventListener, Mockito.times(numberItems))
+        .verify<CacheEventListener?>(cacheEventListener, times(numberItems))
         .onEviction(cacheEventCaptor.capture())
 
     val found = BooleanArray(numberItems)
