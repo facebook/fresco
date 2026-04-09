@@ -12,6 +12,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito
+import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 
 /** Test for [DefaultEntryEvictionComparatorSupplierTest] */
@@ -37,8 +38,8 @@ class DefaultEntryEvictionComparatorSupplierTest {
     private const val RANDOM_SEED: Long = 42
 
     private fun createEntry(time: Long): DiskStorage.Entry {
-      val entry = Mockito.mock(DiskStorage.Entry::class.java)
-      Mockito.`when`(entry.timestamp).thenReturn(time)
+      val entry = Mockito.mock<DiskStorage.Entry>()
+      whenever(entry.timestamp).thenReturn(time)
       return entry
     }
   }
