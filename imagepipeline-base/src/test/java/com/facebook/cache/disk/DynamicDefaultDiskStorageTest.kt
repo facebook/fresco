@@ -34,7 +34,7 @@ class DynamicDefaultDiskStorageTest {
     context = RuntimeEnvironment.application.applicationContext
     version = 1
     baseDirectoryName = "base"
-    cacheErrorLogger = Mockito.mock(CacheErrorLogger::class.java)
+    cacheErrorLogger = Mockito.mock<CacheErrorLogger>()
   }
 
   private fun createStorage(useFilesDirInsteadOfCacheDir: Boolean): DynamicDefaultDiskStorage {
