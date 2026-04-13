@@ -628,6 +628,9 @@ static void drawBorder(
   const float radius = min(w, h) / 2.0;
   // const float borderSize = radius * 0.038;
   const float borderSize = min(borderWidth, radius - 1);
+  if (borderSize <= 0) {
+    return;
+  }
   const float innerRadius = radius - borderSize;
   // increase radius to avoid outer border on the sides
 
