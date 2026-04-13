@@ -171,8 +171,7 @@ object FrescoVitoImage2Spec {
               logWithHighSamplingRate ?: false,
               viewportRect,
               callerContext,
-              null,
-              fetchStrategy,
+              fetchStrategy = fetchStrategy,
           )
 
   @JvmStatic
