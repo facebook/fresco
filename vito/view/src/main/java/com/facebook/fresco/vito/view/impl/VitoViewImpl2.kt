@@ -123,7 +123,6 @@ object VitoViewImpl2 {
               callerContext = callerContext,
               contextChain = null,
               listener = imageListener,
-              perfDataListener = null,
               onFadeListener = onFadeListener,
               viewportDimensions = Rect(0, 0, target.width, target.height),
               vitoImageRequestListener = imageRequestListener,
