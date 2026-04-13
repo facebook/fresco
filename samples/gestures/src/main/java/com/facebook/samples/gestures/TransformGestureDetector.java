@@ -37,6 +37,7 @@ public class TransformGestureDetector implements MultiPointerGestureDetector.Lis
 
   @Nullable private Listener mListener = null;
 
+  @SuppressWarnings("this-escape")
   public TransformGestureDetector(MultiPointerGestureDetector multiPointerGestureDetector) {
     mDetector = multiPointerGestureDetector;
     mDetector.setListener(this);

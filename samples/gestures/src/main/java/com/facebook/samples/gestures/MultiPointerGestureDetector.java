@@ -46,6 +46,7 @@ public class MultiPointerGestureDetector {
 
   @Nullable private Listener mListener = null;
 
+  @SuppressWarnings("this-escape")
   public MultiPointerGestureDetector() {
     reset();
   }
