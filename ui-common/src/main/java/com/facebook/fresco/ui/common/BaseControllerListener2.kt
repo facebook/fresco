@@ -11,7 +11,7 @@ import com.facebook.fresco.ui.common.ControllerListener2.Extras
 
 open class BaseControllerListener2<INFO> : ControllerListener2<INFO> {
 
-  override fun onSubmit(id: String, callerContext: Any?, extras: Extras?): Unit = Unit
+  override fun onSubmit(id: String, callerContext: Any?, extraData: Extras?): Unit = Unit
 
   override fun onFinalImageSet(id: String, imageInfo: INFO?, extraData: Extras?): Unit = Unit
 
@@ -19,9 +19,9 @@ open class BaseControllerListener2<INFO> : ControllerListener2<INFO> {
 
   override fun onIntermediateImageFailed(id: String): Unit = Unit
 
-  override fun onFailure(id: String, throwable: Throwable?, extras: Extras?): Unit = Unit
+  override fun onFailure(id: String, throwable: Throwable?, extraData: Extras?): Unit = Unit
 
-  override fun onRelease(id: String, extras: Extras?): Unit = Unit
+  override fun onRelease(id: String, extraData: Extras?): Unit = Unit
 
   override fun onEmptyEvent(callerContext: Any?): Unit = Unit
 

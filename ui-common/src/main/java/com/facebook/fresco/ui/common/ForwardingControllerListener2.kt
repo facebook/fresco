@@ -49,20 +49,20 @@ open class ForwardingControllerListener2<I> : BaseControllerListener2<I>() {
     }
   }
 
-  override fun onSubmit(id: String, callerContext: Any?, extras: Extras?) {
-    forEachListener("onSubmit") { it.onSubmit(id, callerContext, extras) }
+  override fun onSubmit(id: String, callerContext: Any?, extraData: Extras?) {
+    forEachListener("onSubmit") { it.onSubmit(id, callerContext, extraData) }
   }
 
   override fun onFinalImageSet(id: String, imageInfo: I?, extraData: Extras?) {
     forEachListener("onFinalImageSet") { it.onFinalImageSet(id, imageInfo, extraData) }
   }
 
-  override fun onFailure(id: String, throwable: Throwable?, extras: Extras?) {
-    forEachListener("onFailure") { it.onFailure(id, throwable, extras) }
+  override fun onFailure(id: String, throwable: Throwable?, extraData: Extras?) {
+    forEachListener("onFailure") { it.onFailure(id, throwable, extraData) }
   }
 
-  override fun onRelease(id: String, extras: Extras?) {
-    forEachListener("onRelease") { it.onRelease(id, extras) }
+  override fun onRelease(id: String, extraData: Extras?) {
+    forEachListener("onRelease") { it.onRelease(id, extraData) }
   }
 
   override fun onIntermediateImageSet(id: String, imageInfo: I?) {
