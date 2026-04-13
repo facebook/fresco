@@ -58,7 +58,7 @@ public final class SizeUtil {
   }
 
   /**
-   * Utility method which set the size based on the parent and configurations
+   * Utility method which sets the size based on the parent and configurations
    *
    * @param parentView The parent View
    * @param vitoView The View to resize
@@ -79,7 +79,7 @@ public final class SizeUtil {
   }
 
   /**
-   * Invoke one into the Activity to get info about the Display size
+   * Invoke once in the Activity to get info about the Display size
    *
    * @param activity The Activity
    */
