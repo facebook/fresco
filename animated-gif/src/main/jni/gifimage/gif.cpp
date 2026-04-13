@@ -1174,8 +1174,8 @@ getGifFrameNativeContext(JNIEnv* pEnv, jobject thiz) {
       nullptr, releaser);
   pEnv->MonitorEnter(thiz);
   GifFrameNativeContext* pNativeContext =
-      (GifFrameNativeContext*)pEnv->GetLongField(
-          thiz, sGifFrameFieldNativeContext);
+      reinterpret_cast<GifFrameNativeContext*>(
+          pEnv->GetLongField(thiz, sGifFrameFieldNativeContext));
   if (pNativeContext != nullptr) {
     pNativeContext->refCount++;
     ret.reset(pNativeContext);
@@ -1228,8 +1228,8 @@ jint GifImage_nativeIsAnimated(JNIEnv* pEnv, jobject thiz) {
 void GifImage_nativeDispose(JNIEnv* pEnv, jobject thiz) {
   pEnv->MonitorEnter(thiz);
   GifImageNativeContext* pNativeContext =
-      (GifImageNativeContext*)pEnv->GetLongField(
-          thiz, sGifImageFieldNativeContext);
+      reinterpret_cast<GifImageNativeContext*>(
+          pEnv->GetLongField(thiz, sGifImageFieldNativeContext));
   if (pNativeContext != nullptr) {
     pEnv->SetLongField(thiz, sGifImageFieldNativeContext, 0);
     GifImageNativeContext_releaseRef(pEnv, thiz, pNativeContext);
@@ -1601,8 +1601,8 @@ jint GifFrame_nativeGetDisposalMode(JNIEnv* pEnv, jobject thiz) {
 void GifFrame_nativeDispose(JNIEnv* pEnv, jobject thiz) {
   pEnv->MonitorEnter(thiz);
   GifFrameNativeContext* pNativeContext =
-      (GifFrameNativeContext*)pEnv->GetLongField(
-          thiz, sGifFrameFieldNativeContext);
+      reinterpret_cast<GifFrameNativeContext*>(
+          pEnv->GetLongField(thiz, sGifFrameFieldNativeContext));
   if (pNativeContext) {
     pEnv->SetLongField(thiz, sGifFrameFieldNativeContext, 0);
     GifFrameNativeContext_releaseRef(pEnv, thiz, pNativeContext);
