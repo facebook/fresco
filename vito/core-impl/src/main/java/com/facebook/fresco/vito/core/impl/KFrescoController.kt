@@ -267,7 +267,7 @@ class KFrescoController(
       imageRequest: VitoImageRequest,
       imageId: Long,
   ) {
-    val extras = drawable.obtainExtras(null, null)
+    val extras = drawable.obtainExtras()
     drawable.actualImageLayer.setActualImageDrawable(imageRequest.imageOptions, actualImageDrawable)
     drawable.listenerManager.onFinalImageSet(
         imageId,
@@ -354,7 +354,7 @@ class KFrescoController(
               imageRequest,
               ImageOrigin.MEMORY_BITMAP_SHORTCUT,
               imageInfo,
-              obtainExtras(null, imageReference),
+              obtainExtras(image = imageReference),
               actualImageDrawable,
           )
         }

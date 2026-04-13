@@ -52,7 +52,7 @@ fun ImageOptions.createActualImageCanvasTransformation(): CanvasTransformation =
     actualImageScaleType.getCanvasTransformation(actualImageFocusPoint)
 
 fun ImageOptions.createProgressCanvasTransformation(): CanvasTransformation? =
-    progressScaleType?.getCanvasTransformation(null)
+    progressScaleType?.getCanvasTransformation()
 
 fun ImageOptions.createErrorCanvasTransformation(): CanvasTransformation? =
     errorScaleType?.getCanvasTransformation(errorFocusPoint)
