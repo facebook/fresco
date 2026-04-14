@@ -9,7 +9,7 @@ package com.facebook.imagepipeline.image;
 
 import android.graphics.Bitmap;
 import android.media.ExifInterface;
-import com.facebook.common.internal.Preconditions;
+import androidx.core.util.Preconditions;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imageutils.BitmapUtil;

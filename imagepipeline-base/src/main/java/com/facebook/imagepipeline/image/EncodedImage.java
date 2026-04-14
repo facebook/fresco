@@ -10,7 +10,7 @@ package com.facebook.imagepipeline.image;
 import android.graphics.ColorSpace;
 import android.media.ExifInterface;
 import androidx.annotation.VisibleForTesting;
-import com.facebook.common.internal.Preconditions;
+import androidx.core.util.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.memory.PooledByteBufferInputStream;
