@@ -339,7 +339,7 @@ static int directByteBufferReadFun(
     GifFileType* gifFileType,
     GifByteType* bytes,
     int size) {
-  DataWrapper* pData = (DataWrapper*)gifFileType->UserData;
+  DataWrapper* pData = static_cast<DataWrapper*>(gifFileType->UserData);
   if (size > 0) {
     return pData->read(bytes, size);
   }
@@ -620,7 +620,7 @@ void parseApplicationExtensions(
     if (extensionBlock->ByteCount == APPLICATION_EXT_NETSCAPE_LEN &&
         strncmp(
             APPLICATION_EXT_NETSCAPE,
-            (const char*)extensionBlock->Bytes,
+            reinterpret_cast<const char*>(extensionBlock->Bytes),
             APPLICATION_EXT_NETSCAPE_LEN) == 0) {
       // The data sub-block has been added as the following extension block
       ExtensionBlock* subBlock = NULL;
@@ -744,7 +744,10 @@ jobject createFromDataWrapper(
 
   int gifError = 0;
   auto spGifFileIn = std::unique_ptr<GifFileType, decltype(&DGifCloseFile2)>{
-      DGifOpen((void*)spDataWrapper.get(), &directByteBufferReadFun, &gifError),
+      DGifOpen(
+          static_cast<void*>(spDataWrapper.get()),
+          &directByteBufferReadFun,
+          &gifError),
       DGifCloseFile2};
 
   if (spGifFileIn == nullptr) {
@@ -876,8 +879,8 @@ getGifImageNativeContext(JNIEnv* pEnv, jobject thiz) {
       nullptr, releaser);
   pEnv->MonitorEnter(thiz);
   GifImageNativeContext* pNativeContext =
-      (GifImageNativeContext*)pEnv->GetLongField(
-          thiz, sGifImageFieldNativeContext);
+      reinterpret_cast<GifImageNativeContext*>(
+          pEnv->GetLongField(thiz, sGifImageFieldNativeContext));
   if (pNativeContext != nullptr) {
     pNativeContext->refCount++;
     ret.reset(pNativeContext);
@@ -903,7 +906,8 @@ jobject GifImage_nativeCreateFromDirectByteBuffer(
     jobject byteBuffer,
     jint maxDimension,
     jboolean forceStatic) {
-  jbyte* bbufInput = (jbyte*)pEnv->GetDirectBufferAddress(byteBuffer);
+  jbyte* bbufInput =
+      static_cast<jbyte*>(pEnv->GetDirectBufferAddress(byteBuffer));
   if (!bbufInput) {
     throwIllegalArgumentException(pEnv, "ByteBuffer must be direct");
     return 0;
@@ -936,7 +940,7 @@ jobject GifImage_nativeCreateFromNativeMemory(
     jint sizeInBytes,
     jint maxDimension,
     jboolean forceStatic) {
-  jbyte* const pointer = (jbyte*)nativePtr;
+  jbyte* const pointer = reinterpret_cast<jbyte*>(nativePtr);
 
   if (sizeInBytes < 0) {
     throwIllegalArgumentException(pEnv, "Size must be non-negative");
@@ -1339,7 +1343,11 @@ static void blitNormal(
 
   for (; copyHeight > 0; copyHeight--) {
     blitLine(
-        (PixelType32*)pDest, pSrcRasterBits, cmap, transparentIndex, copyWidth);
+        reinterpret_cast<PixelType32*>(pDest),
+        pSrcRasterBits,
+        cmap,
+        transparentIndex,
+        copyWidth);
     pSrcRasterBits += pFrame->ImageDesc.Width;
     pDest += destStride;
   }
