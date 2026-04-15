@@ -181,7 +181,12 @@ class GifWrapper {
       std::shared_ptr<DataWrapper>& pData)
       : m_spGifFile(std::move(pGifFile)),
         m_spData(pData),
-        m_rasterBits(m_spGifFile->SWidth * m_spGifFile->SHeight) {}
+        // Cast operands to size_t before multiplying to avoid signed int
+        // overflow (T260663777). Caller validates dimensions and product fits
+        // in INT_MAX before constructing this.
+        m_rasterBits(
+            static_cast<size_t>(m_spGifFile->SWidth) *
+            static_cast<size_t>(m_spGifFile->SHeight)) {}
 
   virtual ~GifWrapper() {
     // FBLOGD("Deleting GifWrapper");
@@ -757,9 +762,18 @@ jobject createFromDataWrapper(
 
   int width = spGifFileIn->SWidth;
   int height = spGifFileIn->SHeight;
-  size_t wxh = width * height;
-  if (wxh < 1 || wxh > SIZE_MAX || width > maxDimension ||
+  // Validate dimensions before any multiplication to avoid signed int overflow
+  // (UB) that previously caused std::bad_alloc crashes in GifWrapper's
+  // m_rasterBits allocation (T260663777, T260663745).
+  if (width < 1 || height < 1 || width > maxDimension ||
       height > maxDimension) {
+    throwIllegalStateException(pEnv, "Invalid dimensions");
+    return nullptr;
+  }
+  // Multiply in size_t to avoid int overflow. Both operands are now
+  // guaranteed positive and bounded by maxDimension.
+  size_t wxh = static_cast<size_t>(width) * static_cast<size_t>(height);
+  if (wxh > static_cast<size_t>(INT_MAX)) {
     throwIllegalStateException(pEnv, "Invalid dimensions");
     return nullptr;
   }
