@@ -42,6 +42,10 @@ class EfficientRawBitmapDecoder(
       sampleSize: Int,
       colorSpace: ColorSpace?,
   ): Bitmap? {
+    // Input validation
+    if (!DecodeValidationUtils.validateInput(data, offset, length)) return null
+    if (!DecodeValidationUtils.isValidImageHeader(data, offset, length)) return null
+
     val retryOnFail = bitmapConfig != Bitmap.Config.ARGB_8888
     return try {
       decodeInternal(data, offset, length, bitmapConfig, sampleSize, colorSpace)

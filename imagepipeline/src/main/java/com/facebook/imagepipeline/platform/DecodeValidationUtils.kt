@@ -53,4 +53,30 @@ object DecodeValidationUtils {
     }
     return true
   }
+
+  /**
+   * Validates that input data is non-null and has valid bounds. Returns true if valid, false if the
+   * data should be rejected.
+   */
+  fun validateInput(data: ByteArray?, offset: Int, length: Int): Boolean {
+    return data != null && length > 0 && data.size >= offset + length
+  }
+
+  /**
+   * Validates that the given byte array contains a valid JPEG header (SOI marker 0xFF 0xD8) when
+   * the data appears to be JPEG. Returns true if the data is valid (either valid JPEG, too short to
+   * check, or a known non-JPEG format like PNG/WebP/GIF).
+   */
+  fun isValidImageHeader(data: ByteArray, offset: Int, length: Int): Boolean {
+    if (length < 2) return true
+    val firstByte = data[offset].toInt() and 0xFF
+    val secondByte = data[offset + 1].toInt() and 0xFF
+    // Valid JPEG SOI marker
+    if (firstByte == 0xFF && secondByte == 0xD8) return true
+    // Known non-JPEG formats (PNG, WebP/RIFF, GIF) — valid data, just not JPEG
+    if (firstByte == 0x89 && secondByte == 0x50) return true // PNG
+    if (firstByte == 0x52 && secondByte == 0x49) return true // WebP (RIFF)
+    if (firstByte == 0x47 && secondByte == 0x49) return true // GIF
+    return false
+  }
 }
