@@ -30,7 +30,14 @@ object PlatformDecoderFactory {
       useDecodeBufferHelper: Boolean = false,
       platformDecoderOptions: PlatformDecoderOptions,
   ): PlatformDecoder =
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      if (platformDecoderOptions.useEfficientDecoder) {
+        val rawDecoder =
+            EfficientRawBitmapDecoder(
+                createPool(poolFactory, useDecodeBufferHelper),
+                platformDecoderOptions,
+            )
+        EfficientPlatformDecoder(rawDecoder, platformDecoderOptions)
+      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         OreoDecoder(
             poolFactory.bitmapPool,
             createPool(poolFactory, useDecodeBufferHelper),
