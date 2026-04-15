@@ -40,7 +40,7 @@ class FixedNumberBitmapFramePreparationStrategyTest {
 
   @Before
   fun setup() {
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     bitmapFramePreparationStrategy =
         FixedNumberBitmapFramePreparationStrategy(NUMBER_OF_FRAMES_TO_PREPARE)
     whenever(animationBackend.frameCount).thenReturn(FRAME_COUNT)

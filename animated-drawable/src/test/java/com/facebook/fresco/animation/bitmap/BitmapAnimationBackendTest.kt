@@ -63,7 +63,7 @@ class BitmapAnimationBackendTest {
 
   @Before
   fun setup() {
-    MockitoAnnotations.initMocks(this)
+    MockitoAnnotations.openMocks(this).close()
     bitmapReference = CloseableReference.of(bitmap, bitmapResourceReleaser)
     bitmapAnimationBackend =
         BitmapAnimationBackend(
