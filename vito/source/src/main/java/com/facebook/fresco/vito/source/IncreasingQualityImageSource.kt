@@ -12,7 +12,6 @@ data class IncreasingQualityImageSource(
     val lowResSource: ImageSource,
     val highResSource: ImageSource,
     val extras: Map<String, Any>? = null,
-    val markSuccessOnLowRes: Boolean = false,
 ) : ImageSource {
 
   fun getExtra(key: String): Any? = extras?.get(key)
@@ -31,15 +30,13 @@ data class IncreasingQualityImageSource(
 
     return lowResSource == otherImageSource.lowResSource &&
         highResSource == otherImageSource.highResSource &&
-        extras == otherImageSource.extras &&
-        markSuccessOnLowRes == otherImageSource.markSuccessOnLowRes
+        extras == otherImageSource.extras
   }
 
   override fun hashCode(): Int {
     var result = lowResSource.hashCode()
     result = 31 * result + highResSource.hashCode()
     result = 31 * result + (extras?.hashCode() ?: 0)
-    result = 31 * result + markSuccessOnLowRes.hashCode()
     return result
   }
 

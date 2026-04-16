@@ -133,8 +133,6 @@ object ImageSourceProvider {
    * @param lowResImageSource the low resolution image source to be used
    * @param highResImageSource the high resolution image source to be used
    * @param extras optional extra metadata to be used for logging
-   * @param markSuccessOnLowRes if true, the high sample rate QPL marker will mark success when the
-   *   low resolution image is rendered instead of waiting for the high resolution image
    * @return the ImageSource to be passed to the UI component
    */
   @JvmStatic
@@ -142,14 +140,7 @@ object ImageSourceProvider {
       lowResImageSource: ImageSource,
       highResImageSource: ImageSource,
       extras: Map<String, Any>? = null,
-      markSuccessOnLowRes: Boolean = false,
-  ): ImageSource =
-      IncreasingQualityImageSource(
-          lowResImageSource,
-          highResImageSource,
-          extras,
-          markSuccessOnLowRes,
-      )
+  ): ImageSource = IncreasingQualityImageSource(lowResImageSource, highResImageSource, extras)
 
   /**
    * Create a multi image source for a low- and high resolution image. Both requests will be sent
