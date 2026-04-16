@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core.impl.debug
 
 import android.graphics.Color
 import com.facebook.common.internal.Supplier
+import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
 import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
@@ -78,7 +79,7 @@ open class DefaultDebugOverlayFactory2(
       }
       if (originExtras != null) {
         origin = originExtras["origin"].toString()
-        originSubcategory = originExtras["origin_sub"].toString()
+        originSubcategory = originExtras[HasExtraData.KEY_ORIGIN_SUBCATEGORY].toString()
       }
     }
     if (showExtendedInformation) {
@@ -87,7 +88,7 @@ open class DefaultDebugOverlayFactory2(
           origin,
           DebugOverlayImageOriginColor.getImageOriginColor(origin),
       )
-      overlay.addDebugData("origin_sub", originSubcategory, Color.GRAY)
+      overlay.addDebugData(HasExtraData.KEY_ORIGIN_SUBCATEGORY, originSubcategory, Color.GRAY)
     } else {
       overlay.addDebugData(
           "o",

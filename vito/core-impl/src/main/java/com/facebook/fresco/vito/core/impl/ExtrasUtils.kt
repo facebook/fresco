@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core.impl
 
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
+import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.fresco.middleware.MiddlewareUtils
 import com.facebook.fresco.ui.common.ControllerListener2
 import com.facebook.imagepipeline.image.CloseableImage
@@ -16,7 +17,7 @@ import com.facebook.imagepipeline.image.CloseableImage
 private val COMPONENT_EXTRAS: Map<String, Any> = mapOf("component_tag" to "vito2")
 
 private val SHORTCUT_EXTRAS: Map<String, Any> =
-    mapOf("origin" to "memory_bitmap", "origin_sub" to "shortcut")
+    mapOf("origin" to "memory_bitmap", HasExtraData.KEY_ORIGIN_SUBCATEGORY to "shortcut")
 
 fun KFrescoVitoDrawable.obtainExtras(
     dataSource: DataSource<CloseableReference<CloseableImage>>? = null,

@@ -31,6 +31,7 @@ import com.facebook.drawee.gestures.GestureDetector;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.interfaces.DraweeHierarchy;
 import com.facebook.drawee.interfaces.SettableDraweeHierarchy;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.fresco.middleware.MiddlewareUtils;
 import com.facebook.fresco.ui.common.ControllerListener2;
 import com.facebook.fresco.ui.common.ControllerListener2.Extras;
@@ -61,8 +62,7 @@ public abstract class AbstractDraweeController<T, INFO>
       ImmutableMap.<String, Object>of("component_tag", "drawee");
   private static final Map<String, Object> SHORTCUT_EXTRAS =
       ImmutableMap.<String, Object>of(
-          "origin", "memory_bitmap",
-          "origin_sub", "shortcut");
+          "origin", "memory_bitmap", HasExtraData.KEY_ORIGIN_SUBCATEGORY, "shortcut");
 
   /**
    * This class is used to allow an optimization of not creating a ForwardingControllerListener when

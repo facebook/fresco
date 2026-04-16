@@ -12,6 +12,7 @@ package com.facebook.fresco.vito.core.impl.debug
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.graphics.drawable.Drawable
+import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.fresco.ui.common.ControllerListener2.Extras
 import com.facebook.fresco.ui.common.VitoUtils
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
@@ -306,7 +307,8 @@ val imageOriginSubcategoryWithExtrasProvider: StringAndColorDebugDataProvider =
     ) { drawable, extras ->
       val originExtras =
           getOriginExtras(extras) ?: (drawable.extras as? Extras)?.let { getOriginExtras(it) }
-      val originSubcategory = originExtras?.get("origin_sub")?.toString() ?: "unknown"
+      val originSubcategory =
+          originExtras?.get(HasExtraData.KEY_ORIGIN_SUBCATEGORY)?.toString() ?: "unknown"
       originSubcategory to Color.GRAY
     }
 

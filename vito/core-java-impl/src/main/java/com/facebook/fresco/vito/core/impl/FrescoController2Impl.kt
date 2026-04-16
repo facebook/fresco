@@ -561,7 +561,12 @@ open class FrescoController2Impl(
   companion object {
     private val COMPONENT_EXTRAS = ImmutableMap.of<String, Any>("component_tag", "vito2")
     private val SHORTCUT_EXTRAS =
-        ImmutableMap.of<String, Any>("origin", "memory_bitmap", "origin_sub", "shortcut")
+        ImmutableMap.of<String, Any>(
+            "origin",
+            "memory_bitmap",
+            HasExtraData.KEY_ORIGIN_SUBCATEGORY,
+            "shortcut",
+        )
     private const val TAG = "FrescoController2Impl"
     private const val EMPTY_IMAGE_ID = Long.MAX_VALUE
 
