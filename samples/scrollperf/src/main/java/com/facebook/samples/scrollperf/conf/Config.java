@@ -44,8 +44,8 @@ public class Config {
   public final boolean downsampling;
 
   public final boolean overrideSize;
-  public final int overridenWidth;
-  public final int overridenHeight;
+  public final int overriddenWidth;
+  public final int overriddenHeight;
 
   public final int fadeDurationMs;
 
@@ -96,10 +96,10 @@ public class Config {
                     sharedPreferences.getString(Const.FORCED_ROTATION_ANGLE_KEY, "0"))))
         .setDownsampling(sharedPreferences.getBoolean(Const.DOWNSAMPLING_KEY, false))
         .setOverrideSize(sharedPreferences.getBoolean(Const.OVERRIDE_SIZE_KEY, false))
-        .setOverridenWidth(
-            sharedPreferences.getInt(Const.OVERRIDEN_WIDTH_KEY, SizeUtil.DISPLAY_WIDTH / 2))
-        .setOverridenHeight(
-            sharedPreferences.getInt(Const.OVERRIDEN_HEIGHT_KEY, SizeUtil.DISPLAY_HEIGHT / 2))
+        .setOverriddenWidth(
+            sharedPreferences.getInt(Const.OVERRIDDEN_WIDTH_KEY, SizeUtil.DISPLAY_WIDTH / 2))
+        .setOverriddenHeight(
+            sharedPreferences.getInt(Const.OVERRIDDEN_HEIGHT_KEY, SizeUtil.DISPLAY_HEIGHT / 2))
         .setFadeDurationMs(
             Integer.parseInt(
                 // NULLSAFE_FIXME[Parameter Not Nullable]
@@ -139,8 +139,8 @@ public class Config {
     this.forcedRotationAngle = builder.mForcedRotationAngle;
     this.downsampling = builder.mDownsampling;
     this.overrideSize = builder.mOverrideSize;
-    this.overridenWidth = builder.mOverridenWidth;
-    this.overridenHeight = builder.mOverridenHeight;
+    this.overriddenWidth = builder.mOverriddenWidth;
+    this.overriddenHeight = builder.mOverriddenHeight;
     this.fadeDurationMs = builder.mFadeDurationMs;
     this.drawBorder = builder.mDrawBorder;
     this.decodeCancellation = builder.mDecodeCancellation;
@@ -171,8 +171,8 @@ public class Config {
     private int mForcedRotationAngle;
     private boolean mDownsampling;
     private boolean mOverrideSize;
-    private int mOverridenWidth;
-    private int mOverridenHeight;
+    private int mOverriddenWidth;
+    private int mOverriddenHeight;
     private int mFadeDurationMs;
     private boolean mDecodeCancellation;
     private boolean mWebpSupportEnabled;
@@ -263,13 +263,13 @@ public class Config {
       return this;
     }
 
-    public Builder setOverridenWidth(int overridenWidth) {
-      this.mOverridenWidth = overridenWidth;
+    public Builder setOverriddenWidth(int overriddenWidth) {
+      this.mOverriddenWidth = overriddenWidth;
       return this;
     }
 
-    public Builder setOverridenHeight(int overridenHeight) {
-      this.mOverridenHeight = overridenHeight;
+    public Builder setOverriddenHeight(int overriddenHeight) {
+      this.mOverriddenHeight = overriddenHeight;
       return this;
     }
 

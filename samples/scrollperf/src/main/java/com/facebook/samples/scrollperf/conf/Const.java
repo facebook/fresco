@@ -45,8 +45,8 @@ public final class Const {
   public static final String FORCED_ROTATION_ANGLE_KEY = "rotation_angle";
   public static final String DOWNSAMPLING_KEY = "downsampling";
   public static final String OVERRIDE_SIZE_KEY = "auto_size_override";
-  public static final String OVERRIDEN_WIDTH_KEY = "width_size_key";
-  public static final String OVERRIDEN_HEIGHT_KEY = "height_size_key";
+  public static final String OVERRIDDEN_WIDTH_KEY = "width_size_key";
+  public static final String OVERRIDDEN_HEIGHT_KEY = "height_size_key";
   public static final String FADE_DURATION_KEY = "fade_duration";
   public static final String DRAW_BORDER_KEY = "draw_border";
   public static final String GRID_SPAN_COUNT_KEY = "grid_span_count_key";

@@ -84,10 +84,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
     // NULLSAFE_FIXME[Parameter Not Nullable]
     updateNumberOfDecodingThreadSummary(findPreference(Const.DECODING_THREAD_KEY));
     // Set sizes
-    SizePreferences widthPreferences = (SizePreferences) findPreference(Const.OVERRIDEN_WIDTH_KEY);
+    SizePreferences widthPreferences = (SizePreferences) findPreference(Const.OVERRIDDEN_WIDTH_KEY);
     Preconditions.checkNotNull(widthPreferences).setSeekBarMaxValue(SizeUtil.DISPLAY_WIDTH);
     SizePreferences heightPreferences =
-        (SizePreferences) findPreference(Const.OVERRIDEN_HEIGHT_KEY);
+        (SizePreferences) findPreference(Const.OVERRIDDEN_HEIGHT_KEY);
     Preconditions.checkNotNull(heightPreferences).setSeekBarMaxValue(SizeUtil.DISPLAY_HEIGHT);
     // NULLSAFE_FIXME[Parameter Not Nullable]
     updateFadeDurationSummary(findPreference(Const.FADE_DURATION_KEY));

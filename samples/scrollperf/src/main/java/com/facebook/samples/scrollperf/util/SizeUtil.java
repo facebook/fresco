@@ -68,7 +68,7 @@ public final class SizeUtil {
       @Nullable final View parentView, final View vitoView, final Config config) {
     if (parentView != null) {
       if (config.overrideSize) {
-        SizeUtil.updateViewLayoutParams(vitoView, config.overridenWidth, config.overridenHeight);
+        SizeUtil.updateViewLayoutParams(vitoView, config.overriddenWidth, config.overriddenHeight);
       } else {
         int size =
             SizeUtil.calcDesiredSize(
