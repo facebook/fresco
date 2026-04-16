@@ -50,8 +50,8 @@ class BufferFrameLoader(
 
   private val frameSequence = CircularList(animationInformation.frameCount)
   private var lastRenderedFrameNumber: Int = -1
-  private var compressionFrameMap: Map<Int, Int> = emptyMap()
-  private var renderableFrameIndexes: Set<Int> = emptySet()
+  @Volatile private var compressionFrameMap: Map<Int, Int> = emptyMap()
+  @Volatile private var renderableFrameIndexes: Set<Int> = emptySet()
 
   init {
     compressToFps(animationInformation.fps())
