@@ -198,11 +198,17 @@ class BufferedDiskCache(
                 imageCacheStatsTracker.onStagingAreaMiss(key)
                 result =
                     try {
-                      val buffer = readFromDiskCache(key) ?: return@Callable null
-                      val ref = CloseableReference.of(buffer)
+                      val diskResult = readFromDiskCache(key) ?: return@Callable null
+                      val ref = CloseableReference.of(diskResult.buffer)
                       try {
                         val image = EncodedImage(ref)
                         maybeRestoreMetadata(key, image)
+                        if (diskResult.originSubcategory != null) {
+                          image.putExtra(
+                              HasExtraData.KEY_ORIGIN_SUBCATEGORY,
+                              diskResult.originSubcategory,
+                          )
+                        }
                         image
                       } finally {
                         CloseableReference.closeSafely(ref)
@@ -341,9 +347,15 @@ class BufferedDiskCache(
     return Task.forResult(pinnedImage)
   }
 
+  /** Result of a disk cache read, carrying both the buffer and optional metadata. */
+  private class DiskCacheReadResult(
+      val buffer: PooledByteBuffer,
+      val originSubcategory: String? = null,
+  )
+
   /** Performs disk cache read. In case of any exception null is returned. */
   @Throws(IOException::class)
-  private fun readFromDiskCache(key: CacheKey): PooledByteBuffer? {
+  private fun readFromDiskCache(key: CacheKey): DiskCacheReadResult? {
     return try {
       FLog.v(TAG, "Disk cache read for %s", key.uriString)
       val diskCacheResource = fileCache.getResource(key)
@@ -355,6 +367,7 @@ class BufferedDiskCache(
         FLog.v(TAG, "Found entry in disk cache for %s", key.uriString)
         imageCacheStatsTracker.onDiskCacheHit(key)
       }
+      val originSub = diskCacheResource.getExtra(HasExtraData.KEY_ORIGIN_SUBCATEGORY)
       val `is` = diskCacheResource.openStream()
       val byteBuffer =
           try {
@@ -363,7 +376,7 @@ class BufferedDiskCache(
             `is`.close()
           }
       FLog.v(TAG, "Successful read from disk cache for %s", key.uriString)
-      byteBuffer
+      DiskCacheReadResult(byteBuffer, originSub)
     } catch (ioe: IOException) {
       // TODO: 3697790 log failures
       // TODO: 5258772 - uncomment line below

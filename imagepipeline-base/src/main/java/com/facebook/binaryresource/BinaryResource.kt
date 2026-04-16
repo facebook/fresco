@@ -55,4 +55,7 @@ interface BinaryResource {
    * @throws IOException if an I/O error occurs in the process of reading the size of this source
    */
   fun size(): Long
+
+  /** Optional metadata associated with this resource. Returns null if key is not present. */
+  fun getExtra(key: String): String? = null
 }

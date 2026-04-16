@@ -137,6 +137,11 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
                 getExtraMap(listener, producerContext, true, cachedReference.getSize()));
             listener.onUltimateProducerReached(producerContext, PRODUCER_NAME, true);
             producerContext.putOriginExtra("disk");
+            // Allow disk cache layer to override origin subcategory (e.g., symlink-based hits)
+            String diskOriginSub = cachedReference.getExtra(HasExtraData.KEY_ORIGIN_SUBCATEGORY);
+            if (diskOriginSub != null) {
+              producerContext.putExtra(HasExtraData.KEY_ORIGIN_SUBCATEGORY, diskOriginSub);
+            }
             producerContext.putExtra(HasExtraData.KEY_ENCODED_SIZE, cachedReference.getSize());
             producerContext.putExtra(HasExtraData.KEY_ENCODED_WIDTH, cachedReference.getWidth());
             producerContext.putExtra(HasExtraData.KEY_ENCODED_HEIGHT, cachedReference.getHeight());
