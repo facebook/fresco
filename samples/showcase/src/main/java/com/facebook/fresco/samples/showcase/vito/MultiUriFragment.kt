@@ -14,7 +14,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment
-import com.facebook.fresco.samples.showcase.databinding.FragmentVitoMultiUriBinding
+import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.vito.ktx.ImageSourceExtensions.asImageSource
 import com.facebook.fresco.vito.source.ImageSourceProvider
@@ -26,32 +26,20 @@ import com.facebook.fresco.vito.view.VitoView
  */
 class MultiUriFragment : BaseShowcaseFragment() {
 
-  private var _binding: FragmentVitoMultiUriBinding? = null
-  private val binding
-    get() = _binding!!
-
-  private val imageView: ImageView
-    get() = binding.imageView
-
-  private val btnFirstAvailable: Button
-    get() = binding.btnFirstAvailable
-
-  private val btnIncreasingQuality
-    get() = binding.btnIncreasingQuality
-
-  private val btnBoth
-    get() = binding.btnBoth
-
   override fun onCreateView(
       inflater: LayoutInflater,
       container: ViewGroup?,
       savedInstanceState: Bundle?,
   ): View {
-    _binding = FragmentVitoMultiUriBinding.inflate(inflater, container, false)
-    return binding.root
+    return inflater.inflate(R.layout.fragment_vito_multi_uri, container, false)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    val imageView = view.findViewById<ImageView>(R.id.image_view)
+    val btnFirstAvailable = view.findViewById<Button>(R.id.btn_first_available)
+    val btnIncreasingQuality = view.findViewById<Button>(R.id.btn_increasing_quality)
+    val btnBoth = view.findViewById<Button>(R.id.btn_both)
+
     btnFirstAvailable.setOnClickListener {
       val requests =
           sampleUris().createSampleUriSet().map(ImageSourceProvider::forUri).toTypedArray()
@@ -82,10 +70,5 @@ class MultiUriFragment : BaseShowcaseFragment() {
           imageView,
       )
     }
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    _binding = null
   }
 }

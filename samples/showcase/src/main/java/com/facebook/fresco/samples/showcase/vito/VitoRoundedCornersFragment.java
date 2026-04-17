@@ -186,9 +186,7 @@ public class VitoRoundedCornersFragment extends BaseShowcaseFragment {
             .getTheme()
             .obtainStyledAttributes(
                 R.style.AppTheme,
-                new int[] {
-                  androidx.appcompat.R.attr.colorPrimary, android.R.attr.windowBackground
-                });
+                new int[] {android.R.attr.colorPrimary, android.R.attr.windowBackground});
     try {
       mColorPrimary = attrs.getColor(0, Color.BLACK);
     } finally {

@@ -11,10 +11,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.Spinner
+import android.widget.Switch
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment
 import com.facebook.fresco.samples.showcase.R
 import com.facebook.fresco.samples.showcase.common.SpinnerUtils.setupWithList
-import com.facebook.fresco.samples.showcase.databinding.FragmentVitoImageOptionsConfigBinding
 import com.facebook.fresco.samples.showcase.misc.DebugImageListener
 import com.facebook.fresco.vito.litho.FrescoVitoImage2
 import com.facebook.fresco.vito.litho.FrescoVitoTapToRetryImage
@@ -24,61 +26,6 @@ import com.facebook.litho.LithoView
 
 /** Experimental Fresco Vito fragment that allows to configure ImageOptions via a simple UI. */
 class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
-
-  private var _binding: FragmentVitoImageOptionsConfigBinding? = null
-  private val binding
-    get() = _binding!!
-
-  private val container
-    get() = binding.container
-
-  private val spinnerRounding
-    get() = binding.spinnerRounding
-
-  private val spinnerBorder
-    get() = binding.spinnerBorder
-
-  private val spinnerScaleType
-    get() = binding.spinnerScaleType
-
-  private val spinnerImageSource
-    get() = binding.spinnerImageSource
-
-  private val spinnerImageFormat
-    get() = binding.spinnerImageFormat
-
-  private val spinnerColorFilter
-    get() = binding.spinnerColorFilter
-
-  private val spinnerPlaceholder
-    get() = binding.spinnerPlaceholder
-
-  private val spinnerError
-    get() = binding.spinnerError
-
-  private val spinnerOverlay
-    get() = binding.spinnerOverlay
-
-  private val spinnerFading
-    get() = binding.spinnerFading
-
-  private val spinnerProgress
-    get() = binding.spinnerProgress
-
-  private val spinnerPostprocessor
-    get() = binding.spinnerPostprocessor
-
-  private val spinnerRotation
-    get() = binding.spinnerRotation
-
-  private val spinnerResize
-    get() = binding.spinnerResize
-
-  private val spinnerCustomDrawableFactory
-    get() = binding.spinnerCustomDrawableFactory
-
-  private val switchAutoPlayAnimations
-    get() = binding.switchAutoPlayAnimations
 
   private val imageListener = DebugImageListener()
   private val imageOptionsBuilder = ImageOptions.create().placeholderApplyRoundingOptions(true)
@@ -93,14 +40,32 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
       container: ViewGroup?,
       savedInstanceState: Bundle?,
   ): View {
-    _binding = FragmentVitoImageOptionsConfigBinding.inflate(inflater, container, false)
-    return binding.root
+    return inflater.inflate(R.layout.fragment_vito_image_options_config, container, false)
   }
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     componentContext = ComponentContext(requireContext())
 
-    lithoView = LithoView.create(componentContext, createImage(imageOptionsBuilder.build()))
+    val container = view.findViewById<FrameLayout>(R.id.container)
+    val spinnerRounding = view.findViewById<Spinner>(R.id.spinner_rounding)
+    val spinnerBorder = view.findViewById<Spinner>(R.id.spinner_border)
+    val spinnerScaleType = view.findViewById<Spinner>(R.id.spinner_scale_type)
+    val spinnerImageSource = view.findViewById<Spinner>(R.id.spinner_image_source)
+    val spinnerImageFormat = view.findViewById<Spinner>(R.id.spinner_image_format)
+    val spinnerColorFilter = view.findViewById<Spinner>(R.id.spinner_color_filter)
+    val spinnerPlaceholder = view.findViewById<Spinner>(R.id.spinner_placeholder)
+    val spinnerError = view.findViewById<Spinner>(R.id.spinner_error)
+    val spinnerOverlay = view.findViewById<Spinner>(R.id.spinner_overlay)
+    val spinnerFading = view.findViewById<Spinner>(R.id.spinner_fading)
+    val spinnerProgress = view.findViewById<Spinner>(R.id.spinner_progress)
+    val spinnerPostprocessor = view.findViewById<Spinner>(R.id.spinner_postprocessor)
+    val spinnerRotation = view.findViewById<Spinner>(R.id.spinner_rotation)
+    val spinnerResize = view.findViewById<Spinner>(R.id.spinner_resize)
+    val spinnerCustomDrawableFactory =
+        view.findViewById<Spinner>(R.id.spinner_custom_drawable_factory)
+    val switchAutoPlayAnimations = view.findViewById<Switch>(R.id.switch_auto_play_animations)
+
+    lithoView = LithoView.create(componentContext!!, createImage(imageOptionsBuilder.build()))
     container.addView(lithoView)
 
     container.setOnClickListener { refresh() }
@@ -172,9 +137,4 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
             .imageListener(imageListener)
             .build()
       }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    _binding = null
-  }
 }

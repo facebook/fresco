@@ -11,6 +11,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -19,23 +20,20 @@ import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.preference.PreferenceManager
-import com.facebook.fresco.samples.showcase.databinding.ActivityMainBinding
 import com.facebook.fresco.samples.showcase.permissions.StoragePermissionHelper
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var binding: ActivityMainBinding
-  private val toolbar: Toolbar by lazy { binding.appBarMain.toolbar }
-  private val drawerLayout: DrawerLayout by lazy { binding.drawerLayout }
-  private val navView: NavigationView by lazy { binding.navView }
-  private val contentMain by lazy { binding.appBarMain.contentMain.root }
+  private val toolbar: Toolbar by lazy { findViewById(R.id.toolbar) }
+  private val drawerLayout: DrawerLayout by lazy { findViewById(R.id.drawer_layout) }
+  private val navView: NavigationView by lazy { findViewById(R.id.nav_view) }
+  private val contentMain: View by lazy { findViewById(R.id.content_main) }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    binding = ActivityMainBinding.inflate(layoutInflater)
-    setContentView(binding.root)
+    setContentView(R.layout.activity_main)
     setSupportActionBar(toolbar)
 
     val toggle =
@@ -102,7 +100,7 @@ class MainActivity : AppCompatActivity() {
     val styles =
         obtainStyledAttributes(
             R.style.AppTheme_Toolbar,
-            intArrayOf(androidx.appcompat.R.attr.colorControlNormal),
+            intArrayOf(android.R.attr.colorControlNormal),
         )
     try {
       val tintColor = styles.getColor(0, Color.BLACK)

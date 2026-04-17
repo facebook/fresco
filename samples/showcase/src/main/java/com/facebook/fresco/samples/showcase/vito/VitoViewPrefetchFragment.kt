@@ -11,10 +11,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.fresco.samples.showcase.BaseShowcaseFragment
 import com.facebook.fresco.samples.showcase.R
-import com.facebook.fresco.samples.showcase.databinding.FragmentVitoViewPrefetchBinding
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
@@ -23,28 +23,6 @@ import com.facebook.fresco.vito.source.ImageSourceProvider
 import com.facebook.fresco.vito.view.VitoView
 
 class VitoViewPrefetchFragment : BaseShowcaseFragment() {
-
-  private var _binding: FragmentVitoViewPrefetchBinding? = null
-  private val binding
-    get() = _binding!!
-
-  private val buttonPrefetchBitmap
-    get() = binding.buttonPrefetchBitmap
-
-  private val buttonPrefetchEncoded
-    get() = binding.buttonPrefetchEncoded
-
-  private val buttonPrefetchDisk
-    get() = binding.buttonPrefetchDisk
-
-  private val buttonToggleImages
-    get() = binding.buttonToggleImages
-
-  private val buttonClearCache
-    get() = binding.buttonClearCache
-
-  private val buttonClearCacheSingleItem
-    get() = binding.buttonClearCacheSingleItem
 
   private val imageOptions =
       ImageOptions.create()
@@ -59,8 +37,7 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
       container: ViewGroup?,
       savedInstanceState: Bundle?,
   ): View {
-    _binding = FragmentVitoViewPrefetchBinding.inflate(inflater, container, false)
-    return binding.root
+    return inflater.inflate(R.layout.fragment_vito_view_prefetch, container, false)
   }
 
   override fun onViewCreated(container: View, savedInstanceState: Bundle?) {
@@ -68,6 +45,14 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
     val view = container.findViewById<View>(R.id.view)
 
     val prefetcher = FrescoVitoProvider.getPrefetcher()
+
+    val buttonPrefetchBitmap = container.findViewById<Button>(R.id.button_prefetch_bitmap)
+    val buttonPrefetchEncoded = container.findViewById<Button>(R.id.button_prefetch_encoded)
+    val buttonPrefetchDisk = container.findViewById<Button>(R.id.button_prefetch_disk)
+    val buttonToggleImages = container.findViewById<Button>(R.id.button_toggle_images)
+    val buttonClearCache = container.findViewById<Button>(R.id.button_clear_cache)
+    val buttonClearCacheSingleItem =
+        container.findViewById<Button>(R.id.button_clear_cache_single_item)
 
     buttonPrefetchBitmap.setOnClickListener {
       prefetcher.prefetchToBitmapCache(uri, imageOptions, "prefetch_bitmap", "sample")
@@ -98,10 +83,5 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
                   .createImageRequest(resources, ImageSourceProvider.forUri(uri), imageOptions)
           )
     }
-  }
-
-  override fun onDestroyView() {
-    super.onDestroyView()
-    _binding = null
   }
 }
