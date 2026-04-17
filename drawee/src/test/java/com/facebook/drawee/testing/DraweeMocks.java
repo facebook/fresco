@@ -110,10 +110,10 @@ public class DraweeMocks {
     AbstractDraweeController abstractController = (AbstractDraweeController) controller;
     doAnswer(
             new Answer() {
+              @Nullable
               @Override
               public Object answer(InvocationOnMock invocation) throws Throwable {
                 forwardingListener.addListener((ControllerListener) invocation.getArguments()[0]);
-                // NULLSAFE_FIXME[Return Not Nullable]
                 return null;
               }
             })
