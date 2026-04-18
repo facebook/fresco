@@ -93,6 +93,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   private int mOriginColor = TEXT_COLOR;
   private int mOverlayColor = Color.TRANSPARENT;
 
+  @SuppressWarnings("this-escape")
   public DebugControllerOverlayDrawable() {
     reset();
   }
@@ -251,7 +252,7 @@ public class DebugControllerOverlayDrawable extends Drawable implements ImageLoa
   public void setAlpha(int alpha) {}
 
   @Override
-  public void setColorFilter(ColorFilter cf) {}
+  public void setColorFilter(@Nullable ColorFilter cf) {}
 
   @Override
   public int getOpacity() {
