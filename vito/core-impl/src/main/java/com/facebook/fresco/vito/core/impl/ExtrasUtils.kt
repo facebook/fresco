@@ -22,6 +22,7 @@ private val SHORTCUT_EXTRAS: Map<String, Any> =
 fun KFrescoVitoDrawable.obtainExtras(
     dataSource: DataSource<CloseableReference<CloseableImage>>? = null,
     image: CloseableReference<CloseableImage>? = null,
+    imageExtras: Map<String, Any>? = null,
 ): ControllerListener2.Extras =
     MiddlewareUtils.obtainExtras(
         COMPONENT_EXTRAS,
@@ -31,7 +32,7 @@ fun KFrescoVitoDrawable.obtainExtras(
         viewportDimensions,
         imageRequest?.imageOptions?.actualImageScaleType,
         imageRequest?.imageOptions?.actualImageFocusPoint,
-        image?.get()?.extras,
+        imageExtras ?: image?.get()?.extras,
         callerContext,
         imageRequest?.logWithHighSamplingRate ?: false,
         imageRequest?.finalImageRequest?.sourceUri,

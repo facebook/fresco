@@ -104,6 +104,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun experimentalOptimizeAlphaHandling(): Boolean = false
 
+  override fun enableRetriggerListenersIfImageAlreadySet(): Boolean = false
+
   open class DefaultPrefetchConfig : PrefetchConfig {
     override fun prefetchInOnPrepare(): Boolean = true
 

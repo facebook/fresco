@@ -136,14 +136,27 @@ class KFrescoController(
         return false
       }
 
+      if (config.enableRetriggerListenersIfImageAlreadySet()) {
+        drawable.retriggerListenersIfImageAlreadySet = true
+      }
+
       val forceReload = drawable.forceReloadIfImageAlreadySet
       val retriggerListeners = drawable.retriggerListenersIfImageAlreadySet
 
       // Check if we already fetched that image
       if (!forceReload && isAlreadyLoadingImage(imageRequest, drawable)) {
         ImageReleaseScheduler.cancelAllReleasing(drawable)
-        if (retriggerListeners) {
-          // TODO: retrigger listeners
+        if (retriggerListeners && drawable.hasImage()) {
+          val closeableImage =
+              (drawable.closeable as? CloseableReference<*>)?.get() as? CloseableImage
+          drawable.listenerManager.onFinalImageSet(
+              drawable.imageId,
+              imageRequest,
+              ImageOrigin.MEMORY_BITMAP_SHORTCUT,
+              closeableImage?.imageInfo,
+              drawable.obtainExtras(imageExtras = closeableImage?.extras),
+              drawable.actualImageDrawable,
+          )
         }
         return true
       }
@@ -157,7 +170,6 @@ class KFrescoController(
       val imageId: Long = VitoUtils.generateIdentifier()
       drawable.apply {
         reset()
-        // Restore flags captured before reset
         forceReloadIfImageAlreadySet = forceReload
         retriggerListenersIfImageAlreadySet = retriggerListeners
 

@@ -99,4 +99,6 @@ interface FrescoVitoConfig {
   fun enablePrepareToDrawOnFetch(): Boolean
 
   fun experimentalOptimizeAlphaHandling(): Boolean
+
+  fun enableRetriggerListenersIfImageAlreadySet(): Boolean
 }
