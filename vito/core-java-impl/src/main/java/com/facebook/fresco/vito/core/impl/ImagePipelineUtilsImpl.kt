@@ -66,8 +66,26 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
     imageOptions.resizeOptions?.let { resizeOptions = it }
     imageOptions.downsampleOverride?.let { downsampleOverride = it }
     imageOptions.rotationOptions?.let { rotationOptions = it }
-    imageDecodeOptionsProvider.create(imageRequestBuilder, imageOptions)?.let {
-      imageDecodeOptions = it
+    val decodeOptions = imageDecodeOptionsProvider.create(imageRequestBuilder, imageOptions)
+    if (decodeOptions != null) {
+      imageDecodeOptions =
+          if (imageOptions.intermediateImageBitmapTransformation != null) {
+            ImageDecodeOptions.newBuilder()
+                .setFrom(decodeOptions)
+                .setIntermediateImageBitmapTransformation(
+                    imageOptions.intermediateImageBitmapTransformation
+                )
+                .build()
+          } else {
+            decodeOptions
+          }
+    } else if (imageOptions.intermediateImageBitmapTransformation != null) {
+      imageDecodeOptions =
+          ImageDecodeOptions.newBuilder()
+              .setIntermediateImageBitmapTransformation(
+                  imageOptions.intermediateImageBitmapTransformation
+              )
+              .build()
     }
     isLocalThumbnailPreviewsEnabled = imageOptions.areLocalThumbnailPreviewsEnabled()
     loadThumbnailOnly = imageOptions.loadThumbnailOnly

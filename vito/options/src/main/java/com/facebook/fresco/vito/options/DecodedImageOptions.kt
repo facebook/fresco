@@ -15,12 +15,15 @@ import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.common.RotationOptions
 import com.facebook.imagepipeline.core.DownsampleMode
 import com.facebook.imagepipeline.request.Postprocessor
+import com.facebook.imagepipeline.transformation.BitmapTransformation
 
 open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builder) {
   val resizeOptions: ResizeOptions? = builder.resizeOptions
   val downsampleOverride: DownsampleMode? = builder.downsampleOverride
   val rotationOptions: RotationOptions? = builder.rotationOptions
   val postprocessor: Postprocessor? = builder.postprocessor
+  val intermediateImageBitmapTransformation: BitmapTransformation? =
+      builder.intermediateImageBitmapTransformation
   val imageDecodeOptions: ImageDecodeOptions? = builder.imageDecodeOptions
   val roundingOptions: RoundingOptions? = builder.roundingOptions
   val animatedOptions: AnimatedOptions? = builder.animatedOptions
@@ -49,6 +52,10 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
             !Objects.equal(downsampleOverride, other.downsampleOverride) ||
             !Objects.equal(rotationOptions, other.rotationOptions) ||
             !Objects.equal(postprocessor, other.postprocessor) ||
+            !Objects.equal(
+                intermediateImageBitmapTransformation,
+                other.intermediateImageBitmapTransformation,
+            ) ||
             !Objects.equal(imageDecodeOptions, other.imageDecodeOptions) ||
             !Objects.equal(roundingOptions, other.roundingOptions) ||
             !Objects.equal(animatedOptions, other.animatedOptions) ||
@@ -71,6 +78,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     result = 31 * result + (downsampleOverride?.hashCode() ?: 0)
     result = 31 * result + (rotationOptions?.hashCode() ?: 0)
     result = 31 * result + (postprocessor?.hashCode() ?: 0)
+    result = 31 * result + (intermediateImageBitmapTransformation?.hashCode() ?: 0)
     result = 31 * result + (imageDecodeOptions?.hashCode() ?: 0)
     result = 31 * result + (roundingOptions?.hashCode() ?: 0)
     result = 31 * result + (animatedOptions?.hashCode() ?: 0)
@@ -93,6 +101,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
           .add("downsampleOverride", downsampleOverride)
           .add("rotationOptions", rotationOptions)
           .add("postprocessor", postprocessor)
+          .add("intermediateImageBitmapTransformation", intermediateImageBitmapTransformation)
           .add("imageDecodeOptions", imageDecodeOptions)
           .add("roundingOptions", roundingOptions)
           .add("animatedOptions", animatedOptions)
@@ -110,6 +119,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     internal var downsampleOverride: DownsampleMode? = null
     internal var rotationOptions: RotationOptions? = null
     internal var postprocessor: Postprocessor? = null
+    internal var intermediateImageBitmapTransformation: BitmapTransformation? = null
     internal var imageDecodeOptions: ImageDecodeOptions? = null
     internal var roundingOptions: RoundingOptions? = null
     internal var animatedOptions: AnimatedOptions? = null
@@ -129,6 +139,8 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
       downsampleOverride = decodedImageOptions.downsampleOverride
       rotationOptions = decodedImageOptions.rotationOptions
       postprocessor = decodedImageOptions.postprocessor
+      intermediateImageBitmapTransformation =
+          decodedImageOptions.intermediateImageBitmapTransformation
       imageDecodeOptions = decodedImageOptions.imageDecodeOptions
       roundingOptions = decodedImageOptions.roundingOptions
       animatedOptions = decodedImageOptions.animatedOptions
@@ -162,6 +174,10 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
 
     fun postprocess(postprocessor: Postprocessor?): T = modify {
       this.postprocessor = postprocessor
+    }
+
+    fun intermediateTransformation(transformation: BitmapTransformation?): T = modify {
+      this.intermediateImageBitmapTransformation = transformation
     }
 
     fun imageDecodeOptions(imageDecodeOptions: ImageDecodeOptions?): T = modify {

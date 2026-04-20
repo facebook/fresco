@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.common
 
 import com.facebook.imagepipeline.decoder.ImageDecoder
+import com.facebook.imagepipeline.transformation.BitmapTransformation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -19,10 +20,12 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class ImageDecodeOptionsTest {
   private lateinit var imageDecoder: ImageDecoder
+  private lateinit var intermediateTransformation: BitmapTransformation
 
   @Before
   fun setup() {
     imageDecoder = mock<ImageDecoder>()
+    intermediateTransformation = mock<BitmapTransformation>()
   }
 
   @Test
@@ -57,6 +60,59 @@ class ImageDecodeOptionsTest {
     assertThat(newOptions).isNotEqualTo(originalOptions)
   }
 
+  @Test
+  fun testBuilderRoundTrip_intermediateImageBitmapTransformation() {
+    val options =
+        ImageDecodeOptions.newBuilder()
+            .setIntermediateImageBitmapTransformation(intermediateTransformation)
+            .build()
+
+    assertThat(options.intermediateImageBitmapTransformation).isSameAs(intermediateTransformation)
+  }
+
+  @Test
+  fun testSetFrom_preservesIntermediateImageBitmapTransformation() {
+    val originalOptions =
+        ImageDecodeOptions.newBuilder()
+            .setIntermediateImageBitmapTransformation(intermediateTransformation)
+            .build()
+
+    val newOptions = ImageDecodeOptions.newBuilder().setFrom(originalOptions).build()
+
+    assertThat(newOptions.intermediateImageBitmapTransformation)
+        .isSameAs(intermediateTransformation)
+    assertThat(newOptions).isEqualTo(originalOptions)
+  }
+
+  @Test
+  fun testEquality_sameIntermediateTransformation() {
+    val options1 =
+        ImageDecodeOptions.newBuilder()
+            .setIntermediateImageBitmapTransformation(intermediateTransformation)
+            .build()
+    val options2 =
+        ImageDecodeOptions.newBuilder()
+            .setIntermediateImageBitmapTransformation(intermediateTransformation)
+            .build()
+
+    assertThat(options1).isEqualTo(options2)
+  }
+
+  @Test
+  fun testInequality_differentIntermediateTransformation() {
+    val otherTransformation = mock<BitmapTransformation>()
+    val options1 =
+        ImageDecodeOptions.newBuilder()
+            .setIntermediateImageBitmapTransformation(intermediateTransformation)
+            .build()
+    val options2 =
+        ImageDecodeOptions.newBuilder()
+            .setIntermediateImageBitmapTransformation(otherTransformation)
+            .build()
+
+    assertThat(options1).isNotEqualTo(options2)
+  }
+
   private fun createSampleDecodeOptions(): ImageDecodeOptions {
     return ImageDecodeOptions.newBuilder()
         .setCustomImageDecoder(imageDecoder)
@@ -65,6 +121,7 @@ class ImageDecodeOptionsTest {
         .setForceStaticImage(true)
         .setMinDecodeIntervalMs(MIN_DECODE_INTERVAL_MS)
         .setUseLastFrameForPreview(true)
+        .setIntermediateImageBitmapTransformation(intermediateTransformation)
         .build()
   }
 

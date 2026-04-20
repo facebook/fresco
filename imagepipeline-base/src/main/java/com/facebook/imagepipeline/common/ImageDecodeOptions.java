@@ -69,6 +69,12 @@ public class ImageDecodeOptions {
   public final @Nullable BitmapTransformation bitmapTransformation;
 
   /**
+   * Bitmap transformation applied only to intermediate progressive JPEG results (not the final
+   * image). Useful for applying blur effects to progressive preview scans.
+   */
+  public final @Nullable BitmapTransformation intermediateImageBitmapTransformation;
+
+  /**
    * Allow explicit color management, must be one of the named color space in ColorSpace.Named. This
    * flag might affect performance, if null, then SRGB color space is assumed if the SDK version >=
    * 26.
@@ -89,6 +95,7 @@ public class ImageDecodeOptions {
     this.animatedBitmapConfig = b.getAnimatedBitmapConfig();
     this.customImageDecoder = b.getCustomImageDecoder();
     this.bitmapTransformation = b.getBitmapTransformation();
+    this.intermediateImageBitmapTransformation = b.getIntermediateImageBitmapTransformation();
     this.colorSpace = b.getColorSpace();
     this.excludeBitmapConfigFromComparison = b.getExcludeBitmapConfigFromComparison();
   }
@@ -130,6 +137,8 @@ public class ImageDecodeOptions {
       return false;
     if (customImageDecoder != that.customImageDecoder) return false;
     if (bitmapTransformation != that.bitmapTransformation) return false;
+    if (intermediateImageBitmapTransformation != that.intermediateImageBitmapTransformation)
+      return false;
     if (colorSpace != that.colorSpace) return false;
     return true;
   }
@@ -148,6 +157,11 @@ public class ImageDecodeOptions {
       result = 31 * result + (animatedBitmapConfig != null ? animatedBitmapConfig.ordinal() : 0);
     result = 31 * result + (customImageDecoder != null ? customImageDecoder.hashCode() : 0);
     result = 31 * result + (bitmapTransformation != null ? bitmapTransformation.hashCode() : 0);
+    result =
+        31 * result
+            + (intermediateImageBitmapTransformation != null
+                ? intermediateImageBitmapTransformation.hashCode()
+                : 0);
     result = 31 * result + (colorSpace != null ? colorSpace.hashCode() : 0);
     return result;
   }
@@ -170,6 +184,7 @@ public class ImageDecodeOptions {
         .add("animatedBitmapConfigName", animatedBitmapConfig.name())
         .add("customImageDecoder", customImageDecoder)
         .add("bitmapTransformation", bitmapTransformation)
+        .add("intermediateImageBitmapTransformation", intermediateImageBitmapTransformation)
         .add("colorSpace", colorSpace);
   }
 }

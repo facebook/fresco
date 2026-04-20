@@ -31,6 +31,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
   private Bitmap.Config mAnimatedBitmapConfig = Bitmap.Config.ARGB_8888;
   private @Nullable ImageDecoder mCustomImageDecoder;
   private @Nullable BitmapTransformation mBitmapTransformation;
+  private @Nullable BitmapTransformation mIntermediateImageBitmapTransformation;
   private @Nullable ColorSpace mColorSpace;
   private boolean mExcludeBitmapConfigFromComparison;
 
@@ -53,6 +54,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
     mAnimatedBitmapConfig = options.animatedBitmapConfig;
     mCustomImageDecoder = options.customImageDecoder;
     mBitmapTransformation = options.bitmapTransformation;
+    mIntermediateImageBitmapTransformation = options.intermediateImageBitmapTransformation;
     mColorSpace = options.colorSpace;
     return getThis();
   }
@@ -283,6 +285,24 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
   @Nullable
   public BitmapTransformation getBitmapTransformation() {
     return mBitmapTransformation;
+  }
+
+  /**
+   * Set a custom in-place bitmap transformation applied only to intermediate progressive JPEG
+   * results (not the final image). Useful for applying blur effects to progressive preview scans.
+   *
+   * @param bitmapTransformation the transformation to apply to intermediate results
+   * @return the builder
+   */
+  public T setIntermediateImageBitmapTransformation(
+      @Nullable BitmapTransformation bitmapTransformation) {
+    mIntermediateImageBitmapTransformation = bitmapTransformation;
+    return getThis();
+  }
+
+  @Nullable
+  public BitmapTransformation getIntermediateImageBitmapTransformation() {
+    return mIntermediateImageBitmapTransformation;
   }
 
   /**

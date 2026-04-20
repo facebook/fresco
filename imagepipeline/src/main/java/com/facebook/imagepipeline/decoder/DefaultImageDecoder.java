@@ -221,6 +221,12 @@ public class DefaultImageDecoder implements ImageDecoder {
           TransformationUtils.maybeApplyTransformation(
               options.bitmapTransformation, bitmapReference);
 
+      // Apply intermediate-only transformation (e.g., blur for progressive preview)
+      if (!qualityInfo.isOfFullQuality()) {
+        TransformationUtils.maybeApplyTransformation(
+            options.intermediateImageBitmapTransformation, bitmapReference);
+      }
+
       Preconditions.checkNotNull(bitmapReference);
       CloseableStaticBitmap closeableStaticBitmap =
           CloseableStaticBitmap.of(
