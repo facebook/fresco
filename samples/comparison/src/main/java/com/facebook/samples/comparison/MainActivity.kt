@@ -13,6 +13,7 @@ import android.content.res.Configuration
 import android.database.Cursor
 import android.graphics.Point
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Debug
 import android.os.Handler
@@ -135,8 +136,14 @@ class MainActivity : AppCompatActivity() {
         }
     )
     mSourceSelect!!.setSelection(mCurrentSourceAdapterIndex)
+    val storagePermission =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+          Manifest.permission.READ_EXTERNAL_STORAGE
+        }
     mHasStoragePermissions =
-        (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) ==
+        (ContextCompat.checkSelfPermission(this, storagePermission) ==
             PackageManager.PERMISSION_GRANTED)
   }
 
@@ -191,9 +198,15 @@ class MainActivity : AppCompatActivity() {
       return
     }
 
+    val storagePermission =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+          Manifest.permission.READ_EXTERNAL_STORAGE
+        }
     ActivityCompat.requestPermissions(
         this,
-        arrayOf<String>(Manifest.permission.READ_EXTERNAL_STORAGE),
+        arrayOf<String>(storagePermission),
         PERMISSION_REQUEST_CODE,
     )
   }
@@ -204,8 +217,14 @@ class MainActivity : AppCompatActivity() {
       grantResults: IntArray,
   ) {
     super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    val storagePermission =
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+          Manifest.permission.READ_MEDIA_IMAGES
+        } else {
+          Manifest.permission.READ_EXTERNAL_STORAGE
+        }
     for (i in permissions.indices) {
-      if (permissions[i] == Manifest.permission.READ_EXTERNAL_STORAGE) {
+      if (permissions[i] == storagePermission) {
         mHasStoragePermissions = grantResults[i] == PackageManager.PERMISSION_GRANTED
         if (mHasStoragePermissions && mRequestedLocalSource) {
           mRequestedLocalSource = false

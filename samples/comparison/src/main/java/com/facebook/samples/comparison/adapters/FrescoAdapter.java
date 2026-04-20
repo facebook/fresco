@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.drawable.ScalingUtils;
+import com.facebook.fresco.vito.init.FrescoVito;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.samples.comparison.holders.FrescoHolder;
@@ -25,6 +26,7 @@ public class FrescoAdapter extends ImageListAdapter {
       Context context, PerfListener perfListener, ImagePipelineConfig imagePipelineConfig) {
     super(context, perfListener);
     Fresco.initialize(context, imagePipelineConfig);
+    FrescoVito.initialize();
   }
 
   @Override
