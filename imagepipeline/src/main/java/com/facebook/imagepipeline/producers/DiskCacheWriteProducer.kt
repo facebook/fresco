@@ -9,12 +9,14 @@ package com.facebook.imagepipeline.producers
 
 import androidx.annotation.VisibleForTesting
 import com.facebook.common.internal.Supplier
+import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.imageformat.ImageFormat
 import com.facebook.imagepipeline.cache.CacheKeyFactory
 import com.facebook.imagepipeline.core.DiskCachesStore
 import com.facebook.imagepipeline.image.EncodedImage
 import com.facebook.imagepipeline.producers.DiskCacheDecision.DiskCacheDecisionNoDiskCacheChosenException
 import com.facebook.imagepipeline.producers.DiskCacheDecision.chooseDiskCacheForRequest
+import com.facebook.imagepipeline.producers.DiskCacheDecision.resolveDiskCacheId
 import com.facebook.imagepipeline.request.ImageRequest
 
 /**
@@ -124,6 +126,10 @@ class DiskCacheWriteProducer(
         )
         consumer.onNewResult(newResult, status)
         return
+      }
+      val diskCacheId = resolveDiskCacheId(imageRequest)
+      if (diskCacheId != null) {
+        producerContext.putExtra(HasExtraData.KEY_DISK_CACHE_ID, diskCacheId)
       }
       bufferedDiskCache.put(cacheKey, newResult)
       producerContext.producerListener.onProducerFinishWithSuccess(

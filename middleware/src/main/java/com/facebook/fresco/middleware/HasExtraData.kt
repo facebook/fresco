@@ -62,6 +62,8 @@ interface HasExtraData {
     const val KEY_SIZING_HINT = "sizing_hint"
     const val KEY_IMAGEOPTIONS = "imageoptions"
 
+    const val KEY_DISK_CACHE_ID = "disk_cache_id"
+
     /* HDR related image extra data */
     const val STORED_IMAGE_HAS_GAIN_MAP = "stored_image_has_gain_map"
     const val FETCHED_IMAGE_HAS_GAIN_MAP = "fetched_image_has_gain_map"

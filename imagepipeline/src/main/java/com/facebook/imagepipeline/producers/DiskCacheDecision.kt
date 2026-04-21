@@ -35,5 +35,15 @@ object DiskCacheDecision {
     return null
   }
 
+  @JvmStatic
+  fun resolveDiskCacheId(imageRequest: ImageRequest): String? {
+    return when (imageRequest.cacheChoice) {
+      CacheChoice.SMALL -> "small"
+      CacheChoice.DEFAULT -> "default"
+      CacheChoice.DYNAMIC -> imageRequest.diskCacheId
+      else -> null
+    }
+  }
+
   internal class DiskCacheDecisionNoDiskCacheChosenException(message: String?) : Exception(message)
 }

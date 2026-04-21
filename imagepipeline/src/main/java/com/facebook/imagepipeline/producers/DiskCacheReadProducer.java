@@ -11,6 +11,8 @@ import androidx.annotation.VisibleForTesting;
 import bolts.Continuation;
 import bolts.Task;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.disk.CacheDecisionReporter;
+import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.internal.Supplier;
 import com.facebook.fresco.middleware.HasExtraData;
@@ -96,10 +98,11 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
       maybeStartInputProducer(consumer, producerContext);
       return;
     }
+    final String diskCacheId = DiskCacheDecision.resolveDiskCacheId(imageRequest);
     final AtomicBoolean isCancelled = new AtomicBoolean(false);
     final Task<EncodedImage> diskLookupTask = preferredCache.get(cacheKey, isCancelled);
     final Continuation<EncodedImage, Void> continuation =
-        onFinishDiskReads(consumer, producerContext);
+        onFinishDiskReads(consumer, producerContext, cacheKey, diskCachesStore, diskCacheId);
     diskLookupTask.continueWith(continuation);
     subscribeTaskForRequestCancellation(isCancelled, producerContext);
   }
@@ -114,12 +117,25 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
   }
 
   private Continuation<EncodedImage, Void> onFinishDiskReads(
-      final Consumer<EncodedImage> consumer, final ProducerContext producerContext) {
+      final Consumer<EncodedImage> consumer,
+      final ProducerContext producerContext,
+      final CacheKey cacheKey,
+      final DiskCachesStore diskCachesStore,
+      @Nullable final String diskCacheId) {
     final ProducerListener2 listener = producerContext.getProducerListener();
     return new Continuation<EncodedImage, Void>() {
       @Nullable
       @Override
       public Void then(Task<EncodedImage> task) throws Exception {
+        // Resolve the actual cache ID: for wrapper caches (e.g., FallbackFileCache)
+        // this consumes the recorded read decision to get the underlying cache ID;
+        // for direct caches it falls back to the diskCacheId from CacheChoice.
+        String readDecision = maybeConsumeReadDecision(diskCachesStore, diskCacheId, cacheKey);
+        String resolvedCacheId = readDecision != null ? readDecision : diskCacheId;
+        if (resolvedCacheId != null) {
+          producerContext.putExtra(HasExtraData.KEY_DISK_CACHE_ID, resolvedCacheId);
+        }
+
         if (isTaskCancelled(task)) {
           listener.onProducerFinishWithCancellation(producerContext, PRODUCER_NAME, null);
           consumer.onCancellation();
@@ -165,6 +181,24 @@ public class DiskCacheReadProducer implements Producer<EncodedImage> {
         return null;
       }
     };
+  }
+
+  /**
+   * If the resolved disk cache is backed by a {@link CacheDecisionReporter} (e.g.,
+   * FallbackFileCache), atomically consumes and returns the stored read decision for the given
+   * cache key. Returns null for non-fallback caches or when no decision was recorded (cache miss).
+   */
+  @Nullable
+  private static String maybeConsumeReadDecision(
+      DiskCachesStore diskCachesStore, @Nullable String diskCacheId, CacheKey cacheKey) {
+    if (diskCacheId == null) {
+      return null;
+    }
+    FileCache fileCache = diskCachesStore.getDynamicFileCaches().get(diskCacheId);
+    if (fileCache instanceof CacheDecisionReporter) {
+      return ((CacheDecisionReporter) fileCache).consumeReadDecision(cacheKey);
+    }
+    return null;
   }
 
   private static boolean isTaskCancelled(Task<?> task) {
