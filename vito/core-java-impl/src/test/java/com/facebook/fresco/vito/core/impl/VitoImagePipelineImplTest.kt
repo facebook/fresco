@@ -9,6 +9,7 @@ package com.facebook.fresco.vito.core.impl
 
 import android.net.Uri
 import com.facebook.common.callercontext.ContextChain
+import com.facebook.common.references.CloseableReference
 import com.facebook.fresco.urimod.ClassicFetchStrategy
 import com.facebook.fresco.urimod.NoPrefetchInOnPrepareStrategy
 import com.facebook.fresco.urimod.SmartFetchStrategy
@@ -19,6 +20,7 @@ import com.facebook.fresco.vito.source.SingleImageSourceImpl
 import com.facebook.fresco.vito.source.SmartFetchOptIn
 import com.facebook.fresco.vito.source.SmartImageSource
 import com.facebook.imagepipeline.core.ImagePipeline
+import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.request.ImageRequest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -64,6 +66,30 @@ class VitoImagePipelineImplTest {
   }
 
   // --- Null request tests ---
+
+  @Test
+  fun getCachedImage_bitmapCacheShortcutDisabled_returnsNull() {
+    whenever(config.disableBitmapCacheShortcut()).thenReturn(true)
+
+    val result = vitoImagePipeline.getCachedImage(createRequest(SingleImageSourceImpl(testUri)))
+
+    assertThat(result).isNull()
+  }
+
+  @Test
+  fun getCachedImage_bitmapCacheShortcutEnabled_returnsPipelineCacheHit() {
+    whenever(config.disableBitmapCacheShortcut()).thenReturn(false)
+    val cachedImageReference = CloseableReference.of(mock<CloseableImage>())
+    whenever(imagePipeline.getCachedImage(anyOrNull())).thenReturn(cachedImageReference)
+
+    try {
+      val result = vitoImagePipeline.getCachedImage(createRequest(SingleImageSourceImpl(testUri)))
+
+      assertThat(result).isSameAs(cachedImageReference)
+    } finally {
+      CloseableReference.closeSafely(cachedImageReference)
+    }
+  }
 
   @Test
   fun determineFetchStrategy_nullRequest_dynamicSizeEnabled_returnsSmartDefault() {

@@ -101,4 +101,6 @@ interface FrescoVitoConfig {
   fun experimentalOptimizeAlphaHandling(): Boolean
 
   fun enableRetriggerListenersIfImageAlreadySet(): Boolean
+
+  fun disableBitmapCacheShortcut(): Boolean = false
 }
