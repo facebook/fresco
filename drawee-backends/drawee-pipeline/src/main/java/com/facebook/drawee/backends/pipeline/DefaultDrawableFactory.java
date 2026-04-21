@@ -57,19 +57,22 @@ public class DefaultDrawableFactory implements DrawableFactory {
       if (closeableImage instanceof CloseableStaticBitmap) {
         CloseableStaticBitmap closeableStaticBitmap = (CloseableStaticBitmap) closeableImage;
         Bitmap bitmap = closeableStaticBitmap.getUnderlyingBitmap();
-        if (bitmap == null) {
+        if (bitmap == null || bitmap.isRecycled()) {
           return null;
         }
-        Drawable bitmapDrawable = new BitmapDrawable(mResources, bitmap);
-        if (!hasTransformableRotationAngle(closeableStaticBitmap)
-            && !hasTransformableExifOrientation(closeableStaticBitmap)) {
-          // Return the bitmap drawable directly as there's nothing to transform in it
-          return bitmapDrawable;
-        } else {
-          return new OrientedDrawable(
-              bitmapDrawable,
-              closeableStaticBitmap.getRotationAngle(),
-              closeableStaticBitmap.getExifOrientation());
+        try {
+          Drawable bitmapDrawable = new BitmapDrawable(mResources, bitmap);
+          if (!hasTransformableRotationAngle(closeableStaticBitmap)
+              && !hasTransformableExifOrientation(closeableStaticBitmap)) {
+            return bitmapDrawable;
+          } else {
+            return new OrientedDrawable(
+                bitmapDrawable,
+                closeableStaticBitmap.getRotationAngle(),
+                closeableStaticBitmap.getExifOrientation());
+          }
+        } catch (IllegalStateException e) {
+          return null;
         }
       } else if (mAnimatedDrawableFactory != null
           && mAnimatedDrawableFactory.supportsImageType(closeableImage)) {
