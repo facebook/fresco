@@ -76,6 +76,14 @@ data class SampleToggle(
                 defaultValue = false,
             ),
             SampleToggle(
+                key = "use_ig_cache_in_fresco",
+                label = "IG Cache In Fresco",
+                description =
+                    "ON: IG pipeline uses IgFrescoBitmapCacheAdapter wrapping the owner-based decoded-image cache. OFF: Approach 2 disabled",
+                category = ToggleCategory.CACHE,
+                defaultValue = false,
+            ),
+            SampleToggle(
                 key = "enable_fresco_disk_cache",
                 label = "Fresco Disk Cache",
                 description =

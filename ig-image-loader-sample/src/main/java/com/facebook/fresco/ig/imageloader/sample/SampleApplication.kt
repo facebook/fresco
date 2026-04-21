@@ -23,13 +23,14 @@ import com.instagram.fresco.vitoutils.VitoExperimentHelper
 /**
  * Initializes the image pipeline with toggle-based MobileConfig-style overrides.
  *
- * The 7 toggles mirror production MC flags in `MC.ig4a_fresco_pipeline_with_igidv2`:
+ * The 8 toggles mirror production MC flags in `MC.ig4a_fresco_pipeline_with_igidv2`:
  * - **use_vito**: Vito rendering vs legacy IgImageView rendering
  * - **use_fresco_pipeline**: Fresco's ImagePipeline vs IG's IgVitoImagePipeline
  * - **use_fresco_in_cache_request**: CacheRequest routes to Fresco vs IG's IgImageInfra
  * - **use_fresco_network_pipeline**: Fresco uses IG's UnifiedImageNetworkLayerAdapter
  * - **use_fresco_progressive_rendering**: Progressive JPEG rendering via streaming
  * - **use_fresco_bitmap_memory_cache**: IG pipeline uses Fresco's LruCountingMemoryCache
+ * - **use_ig_cache_in_fresco**: IG pipeline uses the owner-based decoded-image cache path
  * - **enable_fresco_disk_cache**: IG pipeline uses SharedDiskCacheFactory
  *
  * All flags require app restart since they're baked into initialization.
@@ -48,6 +49,7 @@ class SampleApplication : Application() {
     val useFrescoPipeline = toggleStates["use_fresco_pipeline"] ?: true
     val useFrescoInCacheRequest = toggleStates["use_fresco_in_cache_request"] ?: true
     val useFrescoMemoryCache = toggleStates["use_fresco_bitmap_memory_cache"] ?: false
+    val useIgCacheInFresco = toggleStates["use_ig_cache_in_fresco"] ?: false
     val useFrescoDiskCache = toggleStates["enable_fresco_disk_cache"] ?: false
 
     // 1. Initialize session (real DeviceSession + UserSession)
@@ -64,7 +66,12 @@ class SampleApplication : Application() {
 
     // 5. Build real IgImageInfra (always — needed for both Fresco and IG paths)
     val session = SampleSessionFactory.createUserSession()
-    val memoryCache = SampleInfraFactory.createMemoryCache(this, useFrescoMemoryCache)
+    val memoryCache =
+        SampleInfraFactory.createMemoryCache(
+            this,
+            useFrescoMemoryCache,
+            useIgCacheInFresco,
+        )
     val diskCacheFactory = SampleInfraFactory.createDiskCacheFactory(this, useFrescoDiskCache)
     SampleInfraFactory.buildIgImageInfra(this, session, memoryCache, diskCacheFactory)
 
