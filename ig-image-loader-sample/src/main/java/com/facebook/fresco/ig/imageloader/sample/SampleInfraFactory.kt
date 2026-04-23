@@ -135,6 +135,8 @@ object SampleInfraFactory {
                 CacheType.JavaBitmap,
                 Configuration.DEFAULT_CONFIG,
                 null,
+                screenSizeMultiplier =
+                    IgImageInfraConstants.DEFAULT_MAX_PIXELS_IN_CACHE_SCREEN_MULTIPLIER,
             )
     Log.d(
         TAG,
