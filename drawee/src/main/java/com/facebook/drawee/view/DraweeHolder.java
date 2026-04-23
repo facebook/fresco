@@ -122,8 +122,10 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     if (!isControllerValid()) {
       return false;
     }
-    // NULLSAFE_FIXME[Nullable Dereference]
-    return mController.onTouchEvent(event);
+    if (mController != null) {
+      return mController.onTouchEvent(event);
+    }
+    return false;
   }
 
   /** Callback used to notify about top-level-drawable's visibility changes. */
@@ -177,8 +179,9 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     // Clear the old controller
     if (isControllerValid()) {
       mEventTracker.recordEvent(Event.ON_CLEAR_OLD_CONTROLLER);
-      // NULLSAFE_FIXME[Nullable Dereference]
-      mController.setHierarchy(null);
+      if (mController != null) {
+        mController.setHierarchy(null);
+      }
     }
     mController = draweeController;
     if (mController != null) {
@@ -215,8 +218,9 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     setVisibilityCallback(this);
 
     if (isControllerValid) {
-      // NULLSAFE_FIXME[Nullable Dereference]
-      mController.setHierarchy(hierarchy);
+      if (mController != null) {
+        mController.setHierarchy(hierarchy);
+      }
     }
   }
 
@@ -265,8 +269,9 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
     mEventTracker.recordEvent(Event.ON_DETACH_CONTROLLER);
     mIsControllerAttached = false;
     if (isControllerValid()) {
-      // NULLSAFE_FIXME[Nullable Dereference]
-      mController.onDetach();
+      if (mController != null) {
+        mController.onDetach();
+      }
     }
   }
 
