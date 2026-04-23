@@ -162,6 +162,141 @@ class VitoViewImpl2Test {
   }
 
   @Test
+  fun testOnViewDetachedFromWindow_allMutableStatePreserved() {
+    // Set up all mutable state via show()
+    val mockListener = mock<ImageListener>()
+    VitoViewImpl2.show(
+        mockImageRequest,
+        "testCallerContext",
+        mockListener,
+        null,
+        imageView,
+    )
+
+    // Capture pre-detach state
+    val originalRefetchRunnable = testDrawable.refetchRunnable
+    val originalImageRequest = testDrawable.imageRequest
+    val originalCallerContext = testDrawable.callerContext
+    val originalImageListener = testDrawable.imageListener
+    val originalExtras = testDrawable.extras
+
+    assertThat(originalRefetchRunnable).isNotNull()
+
+    // Simulate view detach (RecyclerView scrolls view off-screen)
+    attachListener.onViewDetachedFromWindow(imageView)
+
+    // All mutable state must survive detach
+    assertThat(testDrawable.refetchRunnable).isSameAs(originalRefetchRunnable)
+    assertThat(testDrawable.imageRequest).isSameAs(originalImageRequest)
+    assertThat(testDrawable.callerContext).isSameAs(originalCallerContext)
+    assertThat(testDrawable.imageListener).isSameAs(originalImageListener)
+    assertThat(testDrawable.extras).isSameAs(originalExtras)
+  }
+
+  @Test
+  fun testRelease_allMutableStateCleared() {
+    VitoViewImpl2.show(
+        mockImageRequest,
+        "testCallerContext",
+        null,
+        null,
+        imageView,
+    )
+
+    assertThat(testDrawable.refetchRunnable).isNotNull()
+
+    // release() is the correct permanent cleanup path
+    VitoViewImpl2.release(imageView)
+
+    // refetchRunnable must be null after release
+    assertThat(testDrawable.refetchRunnable).isNull()
+    // release() must call releaseImmediately on the controller
+    verify(mockController).releaseImmediately(any())
+  }
+
+  @Test
+  fun testMultipleDetachReattachCycles_refetchRunnablePreservedOnEveryCycle() {
+    VitoViewImpl2.show(
+        mockImageRequest,
+        null,
+        null,
+        null,
+        imageView,
+    )
+
+    val originalRefetchRunnable = testDrawable.refetchRunnable
+    assertThat(originalRefetchRunnable).isNotNull()
+
+    // Run 10 rapid detach/reattach cycles
+    for (cycle in 1..10) {
+      attachListener.onViewDetachedFromWindow(imageView)
+      assertThat(testDrawable.refetchRunnable)
+          .describedAs("refetchRunnable must survive detach on cycle %d", cycle)
+          .isNotNull()
+          .isSameAs(originalRefetchRunnable)
+
+      attachListener.onViewAttachedToWindow(imageView)
+      assertThat(testDrawable.refetchRunnable)
+          .describedAs("refetchRunnable must survive reattach on cycle %d", cycle)
+          .isNotNull()
+          .isSameAs(originalRefetchRunnable)
+    }
+  }
+
+  @Test
+  fun testMultipleDetachReattachCycles_controllerFetchCalledOnEveryReattach() {
+    VitoViewImpl2.show(
+        mockImageRequest,
+        null,
+        null,
+        null,
+        imageView,
+    )
+
+    val cycles = 5
+    for (cycle in 1..cycles) {
+      attachListener.onViewDetachedFromWindow(imageView)
+      attachListener.onViewAttachedToWindow(imageView)
+    }
+
+    // controller.fetch() is called once per reattach via maybeFetchImage -> refetchRunnable.run()
+    // Plus the initial fetch from show() when the view is attached
+    verify(mockController, org.mockito.kotlin.atLeast(cycles))
+        .fetch(
+            drawable = any(),
+            imageRequest = any(),
+            callerContext = anyOrNull(),
+            contextChain = anyOrNull(),
+            listener = anyOrNull(),
+            perfDataListener = anyOrNull(),
+            onFadeListener = anyOrNull(),
+            viewportDimensions = anyOrNull(),
+            vitoImageRequestListener = anyOrNull(),
+        )
+  }
+
+  @Test
+  fun testMultipleDetachReattachCycles_attachListenerNotDuplicated() {
+    // Call show() multiple times (as RecyclerView does when rebinding)
+    val showCount = 5
+    for (i in 1..showCount) {
+      VitoViewImpl2.show(
+          mockImageRequest,
+          null,
+          null,
+          null,
+          imageView,
+      )
+    }
+
+    // Detach once — imagePerfListener.onImageUnmount should be called exactly once,
+    // not showCount times (which would happen if listeners accumulated)
+    attachListener.onViewDetachedFromWindow(imageView)
+
+    verify(testDrawable.imagePerfListener, org.mockito.kotlin.times(1)).onImageUnmount(any())
+  }
+
+  @Test
   fun testRelease_afterDetachAndReattach_refetchRunnableNull() {
     VitoViewImpl2.show(
         mockImageRequest,
