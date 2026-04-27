@@ -18,6 +18,10 @@
 #include "webp/decode.h"
 #include "webp/demux.h"
 
+// Defined in webp_bitmapfactory.cpp — wrapper that dispatches to sandboxed or
+// native WebPDecode based on ABProp.
+extern VP8StatusCode webpDecode(const uint8_t*, size_t, WebPDecoderConfig*);
+
 #ifdef __ANGLIRU__
 #include <angliru/Angliru.h>
 #else
@@ -693,7 +697,7 @@ void WebPFrame_nativeRenderFrame(
   config.output.u.RGBA.stride = bitmapInfo.stride;
   config.output.u.RGBA.size = bitmapInfo.stride * bitmapInfo.height;
 
-  ret = WebPDecode(pPayload, payloadSize, &config);
+  ret = webpDecode(pPayload, payloadSize, &config);
   AndroidBitmap_unlockPixels(pEnv, bitmap);
   if (ret != VP8_STATUS_OK) {
     spNativeContext.reset();

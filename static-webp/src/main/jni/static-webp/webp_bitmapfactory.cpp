@@ -15,11 +15,16 @@
 #include "webp/decode.h"
 #include "webp/demux.h"
 
+#include <cstdlib>
 #include <memory>
 #include <vector>
 
 #include <sys/types.h>
 #include <unistd.h>
+
+#if defined(WHATSAPP_SANDBOX_WEBP) && defined(RLBOX_WASM2C_AVAILABLE)
+#include "sandboxed_webp_decode.h"
+#endif
 
 #define RETURN_NULL_IF_EXCEPTION(env) \
   if (env->ExceptionOccurred()) {     \
@@ -37,6 +42,43 @@
   RETURN_IF_ERROR
 
 jclass jRuntimeExceptionWebp_class;
+
+#if defined(WHATSAPP_SANDBOX_WEBP) && defined(RLBOX_WASM2C_AVAILABLE)
+static JavaVM* g_jvm = nullptr;
+static jclass g_sandboxClass = nullptr;
+static jfieldID g_enabledField = nullptr;
+
+static bool isWebPSandboxEnabled() {
+  if (!g_jvm || !g_sandboxClass || !g_enabledField) {
+    return false;
+  }
+  JNIEnv* env = nullptr;
+  if (g_jvm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) !=
+          JNI_OK ||
+      !env) {
+    return false;
+  }
+  return env->GetStaticBooleanField(g_sandboxClass, g_enabledField);
+}
+#endif
+
+// Wrapper around WebPDecode that dispatches to sandboxed or native decode.
+// Called from both webp_bitmapfactory.cpp (static decode) and webp.cpp
+// (animated frame decode).
+VP8StatusCode
+webpDecode(const uint8_t* data, size_t size, WebPDecoderConfig* config) {
+#if defined(WHATSAPP_SANDBOX_WEBP) && defined(RLBOX_WASM2C_AVAILABLE)
+  if (isWebPSandboxEnabled()) {
+    VP8StatusCode result =
+        whatsapp::security::sandboxedWebPDecode(data, size, config);
+    if (result != VP8_STATUS_OK) {
+      LOGW("sandboxed WebP decode failed: status=%d", static_cast<int>(result));
+    }
+    return result;
+  }
+#endif
+  return WebPDecode(data, size, config);
+}
 
 namespace {
 
@@ -173,11 +215,16 @@ jobject doDecode(
   config.output.u.RGBA.size = image_width * image_height * 4;
   config.output.is_external_memory = 1;
 
-  WebPDecode(encoded_image, encoded_image_length, &config);
+  VP8StatusCode decodeStatus =
+      webpDecode(encoded_image, encoded_image_length, &config);
 
   rc = AndroidBitmap_unlockPixels(env, bitmap);
   if (rc != ANDROID_BITMAP_RESULT_SUCCESS) {
     env->ThrowNew(jRuntimeExceptionWebp_class, "Decode error unlocking pixels");
+    return {};
+  }
+
+  if (decodeStatus != VP8_STATUS_OK) {
     return {};
   }
 
@@ -289,6 +336,7 @@ int registerNatives(JNIEnv* env) {
           sizeof(methods) / sizeof(methods[0]))) {
     return JNI_FALSE;
   }
+
   return JNI_TRUE;
 }
 
@@ -306,6 +354,27 @@ JNI_OnLoad(JavaVM* vm, void* reserved) {
   if (vm->GetEnv(reinterpret_cast<void**>(&env), JNI_VERSION_1_6) != JNI_OK) {
     return -1;
   }
+
+#if defined(WHATSAPP_SANDBOX_WEBP) && defined(RLBOX_WASM2C_AVAILABLE)
+  g_jvm = vm;
+  {
+    jclass cls =
+        env->FindClass("com/facebook/webpsupport/WebpBitmapFactoryImpl");
+    if (cls != nullptr) {
+      g_sandboxClass = (jclass)env->NewGlobalRef(cls);
+      g_enabledField =
+          env->GetStaticFieldID(g_sandboxClass, "sWebPSandboxEnabled", "Z");
+      if (g_enabledField == nullptr) {
+        LOGW("WebP sandbox: failed to resolve sWebPSandboxEnabled field");
+        env->DeleteGlobalRef(g_sandboxClass);
+        g_sandboxClass = nullptr;
+      }
+    }
+    if (env->ExceptionCheck()) {
+      env->ExceptionClear();
+    }
+  }
+#endif
 
   // find java classes
   CREATE_AS_GLOBAL(jRuntimeExceptionWebp_class, "java/lang/RuntimeException");

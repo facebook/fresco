@@ -33,6 +33,15 @@ public class WebpBitmapFactoryImpl implements WebpBitmapFactory {
 
   private static final int IN_TEMP_BUFFER_SIZE = 8 * 1024;
 
+  // Pulled by native code via JNI to check if sandboxed WebP decode is enabled.
+  // Set from Java (LibwebpSandboxInit) — no native setter needed.
+  @DoNotStrip private static volatile boolean sWebPSandboxEnabled = false;
+
+  @DoNotStrip
+  public static void setWebPSandboxEnabled(boolean enabled) {
+    sWebPSandboxEnabled = enabled;
+  }
+
   private static WebpErrorLogger mWebpErrorLogger;
 
   private static BitmapCreator mBitmapCreator;
