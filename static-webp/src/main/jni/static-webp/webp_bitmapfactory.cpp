@@ -77,7 +77,7 @@ webpDecode(const uint8_t* data, size_t size, WebPDecoderConfig* config) {
     return result;
   }
 #endif
-  return WebPDecode(data, size, config);
+  return static_cast<VP8StatusCode>(WebPDecode(data, size, config));
 }
 
 namespace {
