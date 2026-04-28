@@ -28,6 +28,7 @@ import com.facebook.litho.ComponentContext
 import com.facebook.litho.EventHandler
 import com.facebook.litho.LongClickEvent
 import com.facebook.litho.StateValue
+import com.facebook.litho.Style
 import com.facebook.litho.TouchEvent
 import com.facebook.litho.annotations.LayoutSpec
 import com.facebook.litho.annotations.OnCreateInitialState
@@ -39,7 +40,9 @@ import com.facebook.litho.annotations.Prop
 import com.facebook.litho.annotations.PropDefault
 import com.facebook.litho.annotations.ResType
 import com.facebook.litho.annotations.State
-import com.facebook.litho.widget.Image
+import com.facebook.litho.flexbox.aspectRatio
+import com.facebook.litho.view.onClick
+import com.facebook.litho.widget.PrimitiveImage
 
 @LayoutSpec
 object FrescoVitoTapToRetryImageSpec {
@@ -91,12 +94,13 @@ object FrescoVitoTapToRetryImageSpec {
       val scaledRetryDrawable =
           if (retryImageScaleType == null || retryImage == null) retryImage
           else ScaleTypeDrawable(retryImage, retryImageScaleType)
-      return Image.create(c)
-          .drawable(scaledRetryDrawable)
-          .scaleType(ImageView.ScaleType.FIT_XY)
-          .clickHandler(FrescoVitoTapToRetryImage.onRetryClickEvent(c))
-          .aspectRatio(imageAspectRatio)
-          .build()
+      return PrimitiveImage(
+          drawable = scaledRetryDrawable,
+          scaleType = ImageView.ScaleType.FIT_XY,
+          style =
+              Style.onClick { FrescoVitoTapToRetryImage.onTapToRetry(c) }
+                  .aspectRatio(imageAspectRatio),
+      )
     }
     val internalListener: ImageListener =
         object : BaseImageListener() {
