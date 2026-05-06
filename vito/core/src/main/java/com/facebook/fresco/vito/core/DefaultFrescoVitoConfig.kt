@@ -106,6 +106,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun enableRetriggerListenersIfImageAlreadySet(): Boolean = false
 
+  override fun fixOnBindRetriggerListenersClobber(): Boolean = false
+
   override fun disableBitmapCacheShortcut(): Boolean = false
 
   override fun useOfferBackOnRelease(): Boolean = false
