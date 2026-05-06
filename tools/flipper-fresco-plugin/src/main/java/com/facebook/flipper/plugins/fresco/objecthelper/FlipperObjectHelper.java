@@ -30,11 +30,6 @@ import javax.annotation.Nullable;
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public abstract class FlipperObjectHelper {
 
-  public FlipperObject keyValuePair(String key, @Nullable String value) {
-    // NULLSAFE_FIXME[Parameter Not Nullable]
-    return new FlipperObject.Builder().put(key, value).build();
-  }
-
   @Nullable
   public FlipperObject toFlipperObject(@Nullable Map<String, String> stringMap) {
     if (stringMap == null) {
