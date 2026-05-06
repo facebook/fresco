@@ -145,6 +145,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
         && (nowMs = getSystemUptime()) - fetchState.getLastIntermediateResultTimeMs()
             >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
       fetchState.setLastIntermediateResultTimeMs(nowMs);
+      fetchState.getContext().putOriginExtra("network");
       fetchState
           .getListener()
           .onProducerEvent(

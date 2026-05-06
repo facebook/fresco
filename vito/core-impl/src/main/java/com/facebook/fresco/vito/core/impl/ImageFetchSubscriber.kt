@@ -61,7 +61,7 @@ class ImageFetchSubscriber(
       drawable.listenerManager.onFinalImageSet(
           imageId,
           request,
-          ImageOrigin.UNKNOWN,
+          originFromExtras(dataSource),
           imageInfo,
           drawable.obtainExtras(dataSource, result),
           drawable.actualImageDrawable,
@@ -118,5 +118,16 @@ class ImageFetchSubscriber(
       dataSource: DataSource<CloseableReference<CloseableImage>>?
   ): Boolean {
     return dataSource == null || dataSource.isFinished || dataSource.hasMultipleResults()
+  }
+
+  private fun originFromExtras(dataSource: DataSource<CloseableReference<CloseableImage>>): Int {
+    return when (dataSource.extras?.get("origin") as? String) {
+      "network" -> ImageOrigin.NETWORK
+      "disk" -> ImageOrigin.DISK
+      "memory_encoded" -> ImageOrigin.MEMORY_ENCODED
+      "memory_bitmap" -> ImageOrigin.MEMORY_BITMAP
+      "local" -> ImageOrigin.LOCAL
+      else -> ImageOrigin.UNKNOWN
+    }
   }
 }
