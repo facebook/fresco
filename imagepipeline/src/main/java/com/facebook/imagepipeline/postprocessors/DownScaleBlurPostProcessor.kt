@@ -11,6 +11,8 @@ import android.graphics.Bitmap
 import com.facebook.cache.common.CacheKey
 import com.facebook.cache.common.SimpleCacheKey
 import com.facebook.common.internal.Preconditions
+import com.facebook.common.references.CloseableReference
+import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
 import com.facebook.imagepipeline.filter.IterativeBoxBlurFilter
 import com.facebook.imagepipeline.filter.RenderScriptBlurFilter
 import com.facebook.imagepipeline.request.BasePostprocessor
@@ -74,6 +76,35 @@ constructor(
     )
   }
 
+  /**
+   * Creates a destination bitmap at the target dimensions and processes the blur.
+   *
+   * This override ensures the output bitmap size matches targetWidth × targetHeight, regardless of
+   * the source bitmap dimensions. Without this override, the pipeline creates a destination bitmap
+   * at the source dimensions, causing the blurred content to only occupy a portion of the bitmap.
+   */
+  override fun process(
+      sourceBitmap: Bitmap,
+      bitmapFactory: PlatformBitmapFactory,
+  ): CloseableReference<Bitmap> {
+    // Create destination bitmap at TARGET dimensions (not source dimensions)
+    val destBitmapRef =
+        bitmapFactory.createBitmapInternal(
+            targetWidth,
+            targetHeight,
+            sourceBitmap.config ?: Bitmap.Config.ARGB_8888,
+        )
+
+    try {
+      // Call the blur processing logic
+      process(destBitmapRef.get(), sourceBitmap)
+      return CloseableReference.cloneOrNull(destBitmapRef)
+          ?: throw IllegalStateException("Failed to clone destination bitmap reference")
+    } finally {
+      CloseableReference.closeSafely(destBitmapRef)
+    }
+  }
+
   override fun process(destBitmap: Bitmap, sourceBitmap: Bitmap) {
     // Calculate downscaled dimensions
     val downscaledWidth = (sourceBitmap.width * scaleFactor).toInt().coerceAtLeast(1)
@@ -100,10 +131,14 @@ constructor(
       // smoother, less pixelated images during the upscaling process
       paint.isFilterBitmap = true
 
+      // Draw to fill the ENTIRE destination bitmap
+      // This works correctly whether destBitmap is created by our override (targetWidth ×
+      // targetHeight)
+      // or by the base class (source dimensions)
       canvas.drawBitmap(
           downscaled,
           null,
-          android.graphics.Rect(0, 0, targetWidth, targetHeight),
+          android.graphics.Rect(0, 0, destBitmap.width, destBitmap.height),
           paint,
       )
     } finally {
