@@ -11,7 +11,6 @@ import android.app.Application
 import android.util.Log
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.facebook.fresco.vito.init.FrescoVito
-import com.facebook.quicklog.NoOpQuickPerformanceLogger
 import com.facebook.quicklog.QuickPerformanceLoggerProvider
 import com.instagram.common.api.base.Downloader
 import com.instagram.common.cache.image.IgImageInfraProvider
@@ -56,7 +55,7 @@ class SampleApplication : Application() {
     SampleSessionFactory.initialize(this)
 
     // 2. Initialize QPL (no-op logger — prevents NPEs)
-    QuickPerformanceLoggerProvider.setQuickPerformanceLogger(NoOpQuickPerformanceLogger())
+    QuickPerformanceLoggerProvider.maybeSetNoOpQplInstance()
 
     // 3. Set custom Downloader for IG's network path (HttpURLConnection-based)
     Downloader.setInstance(SampleDownloader())
