@@ -50,6 +50,7 @@ public class ForwardingDrawable extends Drawable
    *
    * @param drawable drawable that this forwarding drawable will forward to
    */
+  @SuppressWarnings("this-escape")
   public ForwardingDrawable(@Nullable Drawable drawable) {
     mCurrentDelegate = drawable;
     DrawableUtils.setCallbacks(mCurrentDelegate, this, this);

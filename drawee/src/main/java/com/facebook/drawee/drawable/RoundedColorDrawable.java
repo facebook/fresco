@@ -45,6 +45,7 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
    *
    * @param color of the drawable
    */
+  @SuppressWarnings("this-escape")
   public RoundedColorDrawable(int color) {
     setColor(color);
   }
@@ -66,6 +67,7 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
    *     top-right, bottom-right, bottom-left.
    * @param color of the drawable
    */
+  @SuppressWarnings("this-escape")
   public RoundedColorDrawable(float[] radii, int color) {
     this(color);
     setRadii(radii);
@@ -77,6 +79,7 @@ public class RoundedColorDrawable extends Drawable implements Rounded {
    * @param radius of the corners in pixels
    * @param color of the drawable
    */
+  @SuppressWarnings("this-escape")
   public RoundedColorDrawable(float radius, int color) {
     this(color);
     setRadius(radius);

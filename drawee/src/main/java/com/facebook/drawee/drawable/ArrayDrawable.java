@@ -53,6 +53,7 @@ public class ArrayDrawable extends Drawable
    *
    * @param layers the layers that this drawable displays
    */
+  @SuppressWarnings("this-escape")
   public ArrayDrawable(Drawable[] layers) {
     Preconditions.checkNotNull(layers, "Layers cannot be null");
     mLayers = layers;

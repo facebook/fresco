@@ -152,7 +152,7 @@ class ScaleTypeDrawable : ForwardingDrawable {
   private fun configureBoundsIfUnderlyingChanged() {
     var scaleTypeChanged = false
     if (mScaleType is StatefulScaleType) {
-      val state = (mScaleType as StatefulScaleType).state
+      val state: Any? = (mScaleType as StatefulScaleType).state
       scaleTypeChanged = (state == null || state != mScaleTypeState)
       mScaleTypeState = state
     }
