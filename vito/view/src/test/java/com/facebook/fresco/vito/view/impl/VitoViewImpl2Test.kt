@@ -319,6 +319,164 @@ class VitoViewImpl2Test {
     assertThat(testDrawable.refetchRunnable).isNull()
   }
 
+  // === Gap 2: Edge-case lifecycle orderings ===
+
+  @Test
+  fun testDoubleDetach_refetchRunnablePreservedAfterBothDetaches() {
+    VitoViewImpl2.show(
+        mockImageRequest,
+        null,
+        null,
+        null,
+        imageView,
+    )
+
+    assertThat(testDrawable.refetchRunnable).isNotNull()
+    val originalRunnable = testDrawable.refetchRunnable
+
+    // First detach (e.g., RecyclerView rapid scroll detaches view)
+    attachListener.onViewDetachedFromWindow(imageView)
+    assertThat(testDrawable.refetchRunnable)
+        .describedAs("refetchRunnable must survive first detach")
+        .isNotNull()
+        .isSameAs(originalRunnable)
+
+    // Second detach (e.g., Android dispatches a second detach event during rapid recycling)
+    attachListener.onViewDetachedFromWindow(imageView)
+    assertThat(testDrawable.refetchRunnable)
+        .describedAs("refetchRunnable must survive second detach — detach must be idempotent")
+        .isNotNull()
+        .isSameAs(originalRunnable)
+  }
+
+  @Test
+  fun testReleaseBeforeDetach_staleDetachIsNoOp() {
+    VitoViewImpl2.show(
+        mockImageRequest,
+        "testCallerContext",
+        null,
+        null,
+        imageView,
+    )
+
+    assertThat(testDrawable.refetchRunnable).isNotNull()
+
+    // release() clears state permanently (ViewHolder removed from adapter)
+    VitoViewImpl2.release(imageView)
+    assertThat(testDrawable.refetchRunnable).isNull()
+    assertThat(testDrawable.callerContext).isNull()
+
+    // A stale detach event arrives after release — Android can dispatch this during
+    // ViewGroup.removeView if the view was attached when release() was called.
+    // Must be a no-op: no crash, no state change.
+    attachListener.onViewDetachedFromWindow(imageView)
+
+    // State remains cleared — detach after release does not alter anything
+    assertThat(testDrawable.refetchRunnable).isNull()
+    assertThat(testDrawable.callerContext).isNull()
+  }
+
+  // === show() recovery tests (NEIGHBOURHOOD) ===
+
+  @Test
+  fun testShowAfterRelease_restoresRefetchRunnable() {
+    VitoViewImpl2.show(
+        mockImageRequest,
+        "originalContext",
+        null,
+        null,
+        imageView,
+    )
+
+    assertThat(testDrawable.refetchRunnable).isNotNull()
+
+    // Release destroys everything
+    VitoViewImpl2.release(imageView)
+    assertThat(testDrawable.refetchRunnable).isNull()
+
+    // show() after release must restore fetch capability
+    val newImageRequest = mock<VitoImageRequest>()
+    VitoViewImpl2.show(
+        newImageRequest,
+        "newContext",
+        null,
+        null,
+        imageView,
+    )
+
+    assertThat(testDrawable.refetchRunnable)
+        .describedAs("show() after release must set a fresh refetchRunnable")
+        .isNotNull()
+  }
+
+  @Test
+  fun testShowAfterDetach_updatesRefetchRunnableToNewRequest() {
+    VitoViewImpl2.show(
+        mockImageRequest,
+        null,
+        null,
+        null,
+        imageView,
+    )
+
+    val originalRunnable = testDrawable.refetchRunnable
+    assertThat(originalRunnable).isNotNull()
+
+    // Detach — state preserved
+    attachListener.onViewDetachedFromWindow(imageView)
+    assertThat(testDrawable.refetchRunnable).isSameAs(originalRunnable)
+
+    // show() with a new request while detached (RecyclerView rebind)
+    val newImageRequest = mock<VitoImageRequest>()
+    VitoViewImpl2.show(
+        newImageRequest,
+        null,
+        null,
+        null,
+        imageView,
+    )
+
+    // refetchRunnable must be updated to reference the new request, not the stale one
+    assertThat(testDrawable.refetchRunnable)
+        .describedAs("show() after detach must update refetchRunnable to new request")
+        .isNotNull()
+        .isNotSameAs(originalRunnable)
+  }
+
+  // === Detach contract: releaseNextFrame vs release() (NEIGHBOURHOOD) ===
+
+  @Test
+  fun testDetachCallsReleaseNextFrame_notReleaseImmediately() {
+    VitoViewImpl2.show(
+        mockImageRequest,
+        null,
+        null,
+        null,
+        imageView,
+    )
+
+    assertThat(testDrawable.refetchRunnable).isNotNull()
+    val originalRunnable = testDrawable.refetchRunnable
+
+    // When useReleaseInViewDetached is true (default), detach calls
+    // controller.releaseNextFrame — NOT releaseImmediately.
+    // The key contract: detach does NOT call VitoViewImpl2.release(),
+    // so refetchRunnable must survive.
+    attachListener.onViewDetachedFromWindow(imageView)
+
+    // Verify the detach path calls releaseNextFrame (soft release)
+    verify(mockController).releaseNextFrame(any())
+
+    // refetchRunnable must survive the soft release path
+    assertThat(testDrawable.refetchRunnable)
+        .describedAs(
+            "refetchRunnable must survive detach — " +
+                "only VitoViewImpl2.release() should clear it"
+        )
+        .isNotNull()
+        .isSameAs(originalRunnable)
+  }
+
   /** Concrete test double that implements both Drawable and FrescoDrawableInterface */
   class TestFrescoDrawableImpl : Drawable(), FrescoDrawableInterface {
     override val imageId: Long = 0
