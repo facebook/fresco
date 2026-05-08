@@ -202,20 +202,5 @@ open class KAnimatedDrawable2(private var animationBackend: AnimationBackend) :
     }
   }
 
-  interface DrawListener {
-    fun onDraw(
-        animatedDrawable: KAnimatedDrawable2,
-        frameScheduler: FrameScheduler,
-        frameNumberToDraw: Int,
-        frameDrawn: Boolean,
-        isAnimationRunning: Boolean,
-        animationStartTimeMs: Long,
-        animationTimeMs: Long,
-        lastFrameAnimationTimeMs: Long,
-        actualRenderTimeStartMs: Long,
-        actualRenderTimeEndMs: Long,
-        startRenderTimeForNextFrameMs: Long,
-        scheduledRenderTimeForNextFrameMs: Long,
-    )
-  }
+  interface DrawListener {}
 }
