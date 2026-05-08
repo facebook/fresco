@@ -62,6 +62,29 @@ constructor(
 
     /** @return new ResizeOptions, if the width and height values are valid, and null otherwise */
     @JvmStatic
+    fun forDimensions(width: Int, height: Int, maxBitmapDimension: Float): ResizeOptions? =
+        if (width <= 0 || height <= 0) {
+          null
+        } else {
+          ResizeOptions(width, height, maxBitmapDimension)
+        }
+
+    /** @return new ResizeOptions, if the width and height values are valid, and null otherwise */
+    @JvmStatic
+    fun forDimensions(
+        width: Int,
+        height: Int,
+        maxBitmapDimension: Float,
+        roundUpFraction: Float,
+    ): ResizeOptions? =
+        if (width <= 0 || height <= 0) {
+          null
+        } else {
+          ResizeOptions(width, height, maxBitmapDimension, roundUpFraction)
+        }
+
+    /** @return new ResizeOptions, if the width and height values are valid, and null otherwise */
+    @JvmStatic
     fun forSquareSize(size: Int): ResizeOptions? =
         if (size <= 0) {
           null
