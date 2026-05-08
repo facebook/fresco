@@ -29,13 +29,6 @@ interface AnimationListener {
   fun onAnimationStop(drawable: Drawable)
 
   /**
-   * Called when the animation is reset for the given drawable.
-   *
-   * @param drawable the affected drawable
-   */
-  fun onAnimationReset(drawable: Drawable)
-
-  /**
    * Called when the animation is repeated for the given drawable. Animations have a loop count, and
    * frame count, so this is called when the frame count is 0 and the loop count is increased.
    *

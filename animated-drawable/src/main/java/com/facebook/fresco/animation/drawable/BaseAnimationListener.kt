@@ -20,8 +20,6 @@ open class BaseAnimationListener : AnimationListener {
 
   override fun onAnimationStop(drawable: Drawable) = Unit
 
-  override fun onAnimationReset(drawable: Drawable) = Unit
-
   override fun onAnimationRepeat(drawable: Drawable) = Unit
 
   override fun onAnimationFrame(drawable: Drawable, frameNumber: Int) = Unit
