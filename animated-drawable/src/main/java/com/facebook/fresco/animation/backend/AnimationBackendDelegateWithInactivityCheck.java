@@ -109,26 +109,6 @@ public class AnimationBackendDelegateWithInactivityCheck<T extends AnimationBack
     return result;
   }
 
-  public void setInactivityListener(@Nullable InactivityListener inactivityListener) {
-    mInactivityListener = inactivityListener;
-  }
-
-  public long getInactivityCheckPollingTimeMs() {
-    return mInactivityCheckPollingTimeMs;
-  }
-
-  public void setInactivityCheckPollingTimeMs(long inactivityCheckPollingTimeMs) {
-    mInactivityCheckPollingTimeMs = inactivityCheckPollingTimeMs;
-  }
-
-  public long getInactivityThresholdMs() {
-    return mInactivityThresholdMs;
-  }
-
-  public void setInactivityThresholdMs(long inactivityThresholdMs) {
-    mInactivityThresholdMs = inactivityThresholdMs;
-  }
-
   private boolean isInactive() {
     return mMonotonicClock.now() - mLastDrawnTimeMs > mInactivityThresholdMs;
   }
