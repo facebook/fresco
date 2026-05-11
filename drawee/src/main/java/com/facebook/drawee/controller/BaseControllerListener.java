@@ -16,6 +16,7 @@ public class BaseControllerListener<INFO> implements ControllerListener<INFO> {
   private static final ControllerListener<Object> NO_OP_LISTENER =
       new BaseControllerListener<Object>();
 
+  @SuppressWarnings("unchecked")
   public static <INFO> ControllerListener<INFO> getNoOpListener() {
     // Listener only receives <INFO>, it never produces one.
     // That means if it can accept Object, it can very well accept <INFO>.

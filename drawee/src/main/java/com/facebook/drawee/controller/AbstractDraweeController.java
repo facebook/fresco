@@ -121,6 +121,7 @@ public abstract class AbstractDraweeController<T, INFO>
 
   protected @Nullable Drawable mDrawable;
 
+  @SuppressWarnings("this-escape")
   public AbstractDraweeController(
       DeferredReleaser deferredReleaser,
       Executor uiThreadImmediateExecutor,
@@ -145,6 +146,7 @@ public abstract class AbstractDraweeController<T, INFO>
     mLogWithHighSamplingRate = false;
   }
 
+  @SuppressWarnings("rawtypes")
   private synchronized void init(String id, Object callerContext) {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("AbstractDraweeController#init");
@@ -292,6 +294,7 @@ public abstract class AbstractDraweeController<T, INFO>
   }
 
   /** Adds controller listener. */
+  @SuppressWarnings("unchecked")
   public void addControllerListener(ControllerListener<? super INFO> controllerListener) {
     Preconditions.checkNotNull(controllerListener, "Controller listener cannot be null");
     if (mControllerListener instanceof InternalForwardingListener) {
@@ -317,6 +320,7 @@ public abstract class AbstractDraweeController<T, INFO>
   }
 
   /** Removes controller listener. */
+  @SuppressWarnings("unchecked")
   public void removeControllerListener(ControllerListener<? super INFO> controllerListener) {
     Preconditions.checkNotNull(controllerListener, "Controller listener cannot be null");
     if (mControllerListener instanceof InternalForwardingListener) {

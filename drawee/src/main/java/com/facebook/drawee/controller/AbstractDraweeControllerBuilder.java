@@ -53,8 +53,14 @@ public abstract class AbstractDraweeControllerBuilder<
 
   // components
   private final Context mContext;
-  @Nullable private final Set<ControllerListener> mBoundControllerListeners;
-  @Nullable private final Set<ControllerListener2> mBoundControllerListeners2;
+
+  @SuppressWarnings("rawtypes")
+  @Nullable
+  private final Set<ControllerListener> mBoundControllerListeners;
+
+  @SuppressWarnings("rawtypes")
+  @Nullable
+  private final Set<ControllerListener2> mBoundControllerListeners2;
 
   // builder parameters
   private @Nullable Object mCallerContext;
@@ -75,6 +81,7 @@ public abstract class AbstractDraweeControllerBuilder<
 
   private static final AtomicLong sIdCounter = new AtomicLong();
 
+  @SuppressWarnings("rawtypes")
   protected AbstractDraweeControllerBuilder(
       Context context,
       Set<ControllerListener> boundControllerListeners,
@@ -299,6 +306,7 @@ public abstract class AbstractDraweeControllerBuilder<
   }
 
   /** Builds the specified controller. */
+  @SuppressWarnings("rawtypes")
   @Override
   public AbstractDraweeController build() {
     validate();
@@ -326,6 +334,7 @@ public abstract class AbstractDraweeControllerBuilder<
   }
 
   /** Builds a regular controller. */
+  @SuppressWarnings("rawtypes")
   protected AbstractDraweeController buildController() {
     if (FrescoSystrace.isTracing()) {
       FrescoSystrace.beginSection("AbstractDraweeControllerBuilder#buildController");
@@ -432,6 +441,7 @@ public abstract class AbstractDraweeControllerBuilder<
   }
 
   /** Attaches listeners (if specified) to the given controller. */
+  @SuppressWarnings({"rawtypes", "unchecked"})
   protected void maybeAttachListeners(AbstractDraweeController controller) {
     if (mBoundControllerListeners != null) {
       for (ControllerListener<? super INFO> listener : mBoundControllerListeners) {
@@ -452,6 +462,7 @@ public abstract class AbstractDraweeControllerBuilder<
   }
 
   /** Installs a retry manager (if specified) to the given controller. */
+  @SuppressWarnings("rawtypes")
   protected void maybeBuildAndSetRetryManager(AbstractDraweeController controller) {
     if (!mTapToRetryEnabled) {
       return;
@@ -461,6 +472,7 @@ public abstract class AbstractDraweeControllerBuilder<
   }
 
   /** Installs a gesture detector to the given controller. */
+  @SuppressWarnings("rawtypes")
   protected void maybeBuildAndSetGestureDetector(AbstractDraweeController controller) {
     GestureDetector gestureDetector = controller.getGestureDetector();
     if (gestureDetector == null) {
@@ -475,6 +487,7 @@ public abstract class AbstractDraweeControllerBuilder<
   }
 
   /** Concrete builder classes should override this method to return a new controller. */
+  @SuppressWarnings("rawtypes")
   @ReturnsOwnership
   protected abstract AbstractDraweeController obtainController();
 
@@ -496,6 +509,7 @@ public abstract class AbstractDraweeControllerBuilder<
       final Object callerContext,
       final CacheLevel cacheLevel);
 
+  @SuppressWarnings("unchecked")
   protected final BUILDER getThis() {
     return (BUILDER) this;
   }

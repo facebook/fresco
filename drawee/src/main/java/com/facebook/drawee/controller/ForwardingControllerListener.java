@@ -162,6 +162,7 @@ public class ForwardingControllerListener<INFO>
     }
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public void onImageDrawn(String id, INFO imageInfo, DimensionsInfo dimensionsInfo) {
     final int numberOfListeners = mListeners.size();
