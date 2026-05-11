@@ -70,6 +70,10 @@ constructor(private var _animationBackend: AnimationBackend? = null) :
 
   // Animation statistics
   private var _droppedFrames = 0
+  private var _consecutiveDroppedFrames = 0
+
+  /** Maximum consecutive frame drops before the circuit breaker stops the animation. */
+  var maxConsecutiveDroppedFrames: Int = DEFAULT_MAX_CONSECUTIVE_DROPPED_FRAMES
 
   // Listeners
   @Volatile private var animationListener = NO_OP_LISTENER
@@ -112,6 +116,7 @@ constructor(private var _animationBackend: AnimationBackend? = null) :
       return
     }
     _isRunning = true
+    _consecutiveDroppedFrames = 0
 
     val now = now()
     startTimeMs = now - pausedStartTimeMsDifference
@@ -195,11 +200,24 @@ constructor(private var _animationBackend: AnimationBackend? = null) :
       // that the animation might be repeated
       animationListener.onAnimationFrame(this, frameNumberToDraw)
       lastDrawnFrameNumber = frameNumberToDraw
+      _consecutiveDroppedFrames = 0
     }
 
     // Log potential dropped frames
     if (!frameDrawn) {
       onFrameDropped()
+      _consecutiveDroppedFrames++
+      // Circuit breaker: stop scheduling after too many consecutive failures to prevent
+      // infinite render loops on corrupt/disposed animated images
+      if (
+          maxConsecutiveDroppedFrames > 0 &&
+              _consecutiveDroppedFrames >= maxConsecutiveDroppedFrames
+      ) {
+        _isRunning = false
+        unscheduleSelf(invalidateRunnable)
+        animationListener.onAnimationStop(this)
+        return
+      }
     }
 
     var targetRenderTimeForNextFrameMs = FrameScheduler.NO_NEXT_TARGET_RENDER_TIME.toLong()
@@ -466,6 +484,7 @@ constructor(private var _animationBackend: AnimationBackend? = null) :
 
     private const val DEFAULT_FRAME_SCHEDULING_DELAY_MS = 8
     private const val DEFAULT_FRAME_SCHEDULING_OFFSET_MS = 0
+    private const val DEFAULT_MAX_CONSECUTIVE_DROPPED_FRAMES = 30
 
     private fun createSchedulerForBackendAndDelayMethod(
         animationBackend: AnimationBackend?
