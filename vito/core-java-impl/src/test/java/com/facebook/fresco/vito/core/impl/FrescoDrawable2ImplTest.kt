@@ -92,6 +92,39 @@ class FrescoDrawable2ImplTest {
     assertThat(latch.await(3, TimeUnit.SECONDS)).isTrue()
   }
 
+  @Test
+  fun testRetriggerListenersField_doesNotClobberForceReload() {
+    frescoDrawable.forceReloadIfImageAlreadySet = true
+    frescoDrawable.retriggerListenersIfImageAlreadySet = true
+
+    assertThat(frescoDrawable.forceReloadIfImageAlreadySet).isTrue()
+    assertThat(frescoDrawable.retriggerListenersIfImageAlreadySet).isTrue()
+  }
+
+  @Test
+  fun testRetriggerListenersField_independentFromForceReload() {
+    frescoDrawable.forceReloadIfImageAlreadySet = true
+    frescoDrawable.retriggerListenersIfImageAlreadySet = false
+
+    assertThat(frescoDrawable.forceReloadIfImageAlreadySet).isTrue()
+    assertThat(frescoDrawable.retriggerListenersIfImageAlreadySet).isFalse()
+
+    frescoDrawable.retriggerListenersIfImageAlreadySet = true
+
+    assertThat(frescoDrawable.forceReloadIfImageAlreadySet).isTrue()
+    assertThat(frescoDrawable.retriggerListenersIfImageAlreadySet).isTrue()
+  }
+
+  @Test
+  fun testReset_clearsRetriggerListenersAndForceReload() {
+    frescoDrawable.forceReloadIfImageAlreadySet = true
+    frescoDrawable.retriggerListenersIfImageAlreadySet = true
+    frescoDrawable.reset()
+
+    assertThat(frescoDrawable.forceReloadIfImageAlreadySet).isFalse()
+    assertThat(frescoDrawable.retriggerListenersIfImageAlreadySet).isFalse()
+  }
+
   internal class DummyCloseableImage : BaseCloseableImage() {
     private var closed = false
 
