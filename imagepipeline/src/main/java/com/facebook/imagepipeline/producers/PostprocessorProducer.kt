@@ -110,11 +110,11 @@ class PostprocessorProducer(
       updateSourceImageRef(newResult, status)
     }
 
-    protected override fun onFailureImpl(t: Throwable) {
+    override fun onFailureImpl(t: Throwable) {
       maybeNotifyOnFailure(t)
     }
 
-    protected override fun onCancellationImpl() {
+    override fun onCancellationImpl() {
       maybeNotifyOnCancellation()
     }
 
@@ -364,13 +364,13 @@ class PostprocessorProducer(
       updateInternal()
     }
 
-    protected override fun onFailureImpl(throwable: Throwable) {
+    override fun onFailureImpl(throwable: Throwable) {
       if (close()) {
         consumer.onFailure(throwable)
       }
     }
 
-    protected override fun onCancellationImpl() {
+    override fun onCancellationImpl() {
       if (close()) {
         consumer.onCancellation()
       }

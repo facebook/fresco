@@ -104,7 +104,7 @@ class BucketsBitmapPool(
     return !value.isRecycled && value.isMutable
   }
 
-  protected override fun getValue(bucket: Bucket<Bitmap>): Bitmap? {
+  override fun getValue(bucket: Bucket<Bitmap>): Bitmap? {
     val result = super.getValue(bucket)
     result?.eraseColor(Color.TRANSPARENT)
     return result
