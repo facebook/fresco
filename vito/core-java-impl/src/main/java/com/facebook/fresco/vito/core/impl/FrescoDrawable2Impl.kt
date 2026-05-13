@@ -100,8 +100,10 @@ class FrescoDrawable2Impl(
               "LocalAssetFetchProducer",
               "LocalContentUriFetchProducer",
               "LocalContentUriThumbnailFetchProducer",
+              "LocalExifThumbnailProducer",
               "LocalFileFetchProducer",
               "LocalResourceFetchProducer",
+              "LocalThumbnailBitmapSdk29Producer",
               "VideoThumbnailProducer",
               "QualifiedResourceFetchProducer" -> ImageOrigin.LOCAL
 

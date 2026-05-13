@@ -15,8 +15,10 @@ import com.facebook.imagepipeline.producers.EncodedMemoryCacheProducer;
 import com.facebook.imagepipeline.producers.LocalAssetFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriFetchProducer;
 import com.facebook.imagepipeline.producers.LocalContentUriThumbnailFetchProducer;
+import com.facebook.imagepipeline.producers.LocalExifThumbnailProducer;
 import com.facebook.imagepipeline.producers.LocalFileFetchProducer;
 import com.facebook.imagepipeline.producers.LocalResourceFetchProducer;
+import com.facebook.imagepipeline.producers.LocalThumbnailBitmapSdk29Producer;
 import com.facebook.imagepipeline.producers.LocalVideoThumbnailProducer;
 import com.facebook.imagepipeline.producers.NetworkFetchProducer;
 import com.facebook.imagepipeline.producers.PartialDiskCacheProducer;
@@ -69,8 +71,10 @@ public class ImageOriginUtils {
       case LocalAssetFetchProducer.PRODUCER_NAME:
       case LocalContentUriFetchProducer.PRODUCER_NAME:
       case LocalContentUriThumbnailFetchProducer.PRODUCER_NAME:
+      case LocalExifThumbnailProducer.PRODUCER_NAME:
       case LocalFileFetchProducer.PRODUCER_NAME:
       case LocalResourceFetchProducer.PRODUCER_NAME:
+      case LocalThumbnailBitmapSdk29Producer.PRODUCER_NAME:
       case LocalVideoThumbnailProducer.PRODUCER_NAME:
       case QualifiedResourceFetchProducer.PRODUCER_NAME:
         return ImageOrigin.LOCAL;
