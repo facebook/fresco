@@ -13,13 +13,13 @@ object Deps {
 
   const val inferAnnotation = "com.facebook.infer.annotation:infer-annotation:0.18.0"
 
-  const val okhttp3 = "com.squareup.okhttp3:okhttp:4.11.0"
+  const val okhttp3 = "com.squareup.okhttp3:okhttp:3.14.9"
 
-  const val volley = "com.android.volley:volley:1.2.2"
+  const val volley = "com.android.volley:volley:1.2.1"
 
   object AndroidX {
-    const val androidxAnnotation = "androidx.annotation:annotation:1.7.0"
-    const val core = "androidx.core:core:1.15.0"
+    const val androidxAnnotation = "androidx.annotation:annotation:1.6.0"
+    const val core = "androidx.core:core:1.13.1"
     const val exifInterface = "androidx.exifinterface:exifinterface:1.3.7"
     const val legacySupportCoreUtils = "androidx.legacy:legacy-support-core-utils:1.0.0"
   }
@@ -64,7 +64,7 @@ object Deps {
     }
 
     object Stetho {
-      private const val version = "1.6.1"
+      private const val version = "1.6.0"
       const val stetho = "com.facebook.stetho:stetho:$version"
       const val okhttp3 = "com.facebook.stetho:stetho-okhttp3:$version"
     }

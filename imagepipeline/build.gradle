@@ -36,6 +36,7 @@ dependencies {
 
     testImplementation Deps.AndroidX.legacySupportCoreUtils
     testImplementation Deps.jsr305
+    testImplementation Deps.inferAnnotation
     testImplementation project(':imagepipeline-test')
     testImplementation project(':imagepipeline-base-test')
     testImplementation project(':native-imagetranscoder')

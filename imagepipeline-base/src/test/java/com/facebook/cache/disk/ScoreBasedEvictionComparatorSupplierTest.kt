@@ -14,7 +14,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner
 
@@ -36,7 +36,7 @@ class ScoreBasedEvictionComparatorSupplierTest {
 
     entries = mutableListOf()
     for (i in 0 until 100) {
-      val entry = Mockito.mock<DiskStorage.Entry>()
+      val entry = mock<DiskStorage.Entry>()
       whenever(entry.timestamp).thenReturn(random.nextLong())
       whenever(entry.size).thenReturn(random.nextLong())
       entries.add(entry)

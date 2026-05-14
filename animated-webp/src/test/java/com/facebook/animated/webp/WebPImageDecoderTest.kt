@@ -33,11 +33,11 @@ import org.mockito.ArgumentMatchers
 import org.mockito.MockedConstruction
 import org.mockito.MockedStatic
 import org.mockito.Mockito
+import org.mockito.Mockito.verifyNoInteractions
 import org.mockito.kotlin.eq
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.times
 import org.mockito.kotlin.verify
-import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.verifyNoMoreInteractions
 import org.mockito.kotlin.whenever
 import org.robolectric.RobolectricTestRunner

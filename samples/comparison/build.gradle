@@ -46,6 +46,7 @@ dependencies {
     implementation project(':vito:core')
     implementation project(':vito:options')
     implementation project(':vito:source')
+    implementation project(':vito:init')
     implementation project(':vito:view')
 }
 

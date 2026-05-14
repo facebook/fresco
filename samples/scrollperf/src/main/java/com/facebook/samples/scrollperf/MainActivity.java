@@ -11,7 +11,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import com.facebook.common.preconditions.Preconditions;
+import com.facebook.common.internal.Preconditions;
 import com.facebook.infer.annotation.Nullsafe;
 import com.facebook.samples.scrollperf.fragments.MainFragment;
 import com.facebook.samples.scrollperf.fragments.SettingsFragment;

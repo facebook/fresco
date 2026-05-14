@@ -16,7 +16,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito
+import org.mockito.kotlin.mock
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.RuntimeEnvironment
 
@@ -34,7 +34,7 @@ class DynamicDefaultDiskStorageTest {
     context = RuntimeEnvironment.application.applicationContext
     version = 1
     baseDirectoryName = "base"
-    cacheErrorLogger = Mockito.mock<CacheErrorLogger>()
+    cacheErrorLogger = mock<CacheErrorLogger>()
   }
 
   private fun createStorage(useFilesDirInsteadOfCacheDir: Boolean): DynamicDefaultDiskStorage {

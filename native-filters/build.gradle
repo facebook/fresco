@@ -37,6 +37,7 @@ dependencies {
     testImplementation Deps.AndroidX.legacySupportCoreUtils
     testImplementation Deps.jsr305
     testImplementation TestDeps.junit
+    testImplementation TestDeps.assertjCore
     testImplementation TestDeps.festAssertCore
     testImplementation TestDeps.mockitoCore
     testImplementation(TestDeps.robolectric) {
