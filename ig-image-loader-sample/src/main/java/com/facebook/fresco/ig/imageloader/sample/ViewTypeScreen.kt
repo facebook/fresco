@@ -31,6 +31,7 @@ import com.instagram.common.analytics.intf.ConstAnalyticsModule
 import com.instagram.common.typedurl.SimpleImageUrl
 import com.instagram.common.ui.widget.imageview.CircularImageView
 import com.instagram.common.ui.widget.imageview.IgImageView
+import com.instagram.common.ui.widget.imageview.ImageRenderRequest
 import com.instagram.common.ui.widget.imageview.RoundedCornerImageView
 import com.instagram.common.ui.widget.imageview.listeners.LoadedImageInfo
 import com.instagram.common.ui.widget.imageview.listeners.OnLoadListener
@@ -382,9 +383,32 @@ class ViewTypeScreen(
     }
 
     when {
-      lowFidelity -> imageView.setUrl(imageUrl, module, false, true, selectedImageType)
-      selectedSampleSize > 1 -> imageView.setUrl(imageUrl, module, selectedSampleSize)
-      else -> imageView.setUrl(imageUrl, module, selectedImageType)
+      lowFidelity ->
+          imageView.setUrl(
+              ImageRenderRequest(
+                  imageUrl = imageUrl,
+                  analyticsModule = module,
+                  clearCachedItem = false,
+                  requestLowFidelityDecoding = true,
+                  imageType = selectedImageType,
+              )
+          )
+      selectedSampleSize > 1 ->
+          imageView.setUrl(
+              ImageRenderRequest(
+                  imageUrl = imageUrl,
+                  analyticsModule = module,
+                  maxSampleSize = selectedSampleSize,
+              )
+          )
+      else ->
+          imageView.setUrl(
+              ImageRenderRequest(
+                  imageUrl = imageUrl,
+                  analyticsModule = module,
+                  imageType = selectedImageType,
+              )
+          )
     }
   }
 
