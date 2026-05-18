@@ -10,7 +10,6 @@ package com.facebook.imagepipeline.cache;
 import android.graphics.Bitmap;
 import android.os.SystemClock;
 import androidx.annotation.VisibleForTesting;
-import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Predicate;
 import com.facebook.common.internal.Supplier;
@@ -738,13 +737,6 @@ public abstract class AbstractAdaptiveCountingMemoryCache<K, V>
   public synchronized int getEvictionQueueSizeInBytes() {
     return mLeastFrequentlyUsedExclusiveEntries.getSizeInBytes()
         + mMostFrequentlyUsedExclusiveEntries.getSizeInBytes();
-  }
-
-  public String reportData() {
-    return Objects.toStringHelper("CountingMemoryCache")
-        .add("cached_entries_count:", mCachedEntries.getCount())
-        .add("exclusive_entries_count", getEvictionQueueCount())
-        .toString();
   }
 
   /**
