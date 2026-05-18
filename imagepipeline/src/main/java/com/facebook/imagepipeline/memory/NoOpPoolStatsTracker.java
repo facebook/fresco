@@ -31,12 +31,6 @@ public class NoOpPoolStatsTracker implements PoolStatsTracker {
   public void onValueReuse(int bucketedSize) {}
 
   @Override
-  public void onSoftCapReached() {}
-
-  @Override
-  public void onHardCapReached() {}
-
-  @Override
   public void onAlloc(int size) {}
 
   @Override

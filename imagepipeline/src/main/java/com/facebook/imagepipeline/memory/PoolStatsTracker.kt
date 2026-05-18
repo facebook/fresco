@@ -14,10 +14,6 @@ interface PoolStatsTracker {
 
   fun onValueReuse(bucketedSize: Int)
 
-  fun onSoftCapReached()
-
-  fun onHardCapReached()
-
   fun onAlloc(size: Int)
 
   fun onFree(sizeInBytes: Int)
