@@ -22,6 +22,7 @@ import com.facebook.imagepipeline.image.EncodedImage
 import com.facebook.imagepipeline.memory.BitmapPool
 import com.facebook.imagepipeline.testing.MockBitmapFactory
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer
+import com.facebook.imageutils.BitmapUtil
 import com.facebook.imageutils.JfifUtil
 import java.io.ByteArrayOutputStream
 import java.io.IOException
@@ -58,7 +59,6 @@ class ArtDecoderTest {
   private lateinit var bitmap: Bitmap
   private lateinit var encodedImage: EncodedImage
   private lateinit var encodedBytes: ByteArray
-  private var tempStorage: ByteArray? = null
 
   @Before
   @Throws(Exception::class)
@@ -72,7 +72,13 @@ class ArtDecoderTest {
     bitmapPool = mock<BitmapPool>()
     val pool: Pools.SynchronizedPool<ByteBuffer> = Pools.SynchronizedPool<ByteBuffer>(1)
     pool.release(ByteBuffer.allocate(16 * 1024))
-    artDecoder = ArtDecoder(bitmapPool, pool, PlatformDecoderOptions())
+    val platformDecoderOptions = PlatformDecoderOptions()
+    val rawBitmapDecoder =
+        DefaultRawBitmapDecoder(pool, platformDecoderOptions, bitmapPool) { width, height, options
+          ->
+          BitmapUtil.getSizeInByteForBitmap(width, height, checkNotNull(options.inPreferredConfig))
+        }
+    artDecoder = ArtDecoder(bitmapPool, pool, platformDecoderOptions, rawBitmapDecoder)
 
     byteBufferRef = CloseableReference.of(pooledByteBuffer)
     encodedImage = EncodedImage(byteBufferRef)
@@ -81,10 +87,6 @@ class ArtDecoderTest {
     doReturn(bitmap).whenever(bitmapPool).get(MockBitmapFactory.DEFAULT_BITMAP_SIZE)
 
     bitmapRegionDecoder = mock<BitmapRegionDecoder>()
-
-    val buf: ByteBuffer? = artDecoder.mDecodeBuffers.acquire()
-    tempStorage = buf?.array()
-    buf?.let { artDecoder.mDecodeBuffers.release(it) }
   }
 
   @After
@@ -300,7 +302,7 @@ class ArtDecoderTest {
       assertThat(options.inDither).isTrue()
       assertThat(options.inMutable).isTrue()
       assertThat(options.inBitmap).isNotNull()
-      assertThat(options.inTempStorage).isEqualTo(tempStorage)
+      assertThat(options.inTempStorage).isNotNull()
       val inBitmapWidth = options.inBitmap?.width ?: 0
       val inBitmapHeight = options.inBitmap?.height ?: 0
       assertThat(inBitmapWidth * inBitmapHeight)

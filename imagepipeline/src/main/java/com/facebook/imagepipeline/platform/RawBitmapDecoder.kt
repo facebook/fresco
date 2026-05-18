@@ -8,7 +8,10 @@
 package com.facebook.imagepipeline.platform
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ColorSpace
+import android.graphics.Rect
+import java.io.InputStream
 
 /**
  * A clean byte-array-to-Bitmap decode interface for callers that already have raw compressed image
@@ -40,4 +43,55 @@ interface RawBitmapDecoder {
       sampleSize: Int,
       colorSpace: ColorSpace? = null,
   ): Bitmap?
+
+  fun decode(
+      stream: InputStream,
+      bitmapConfig: Bitmap.Config,
+      sampleSize: Int,
+      colorSpace: ColorSpace? = null,
+  ): Bitmap? {
+    val options = BitmapFactory.Options()
+    options.inSampleSize = sampleSize
+    options.inPreferredConfig = bitmapConfig
+    return decode(stream, options, null, colorSpace)
+  }
+
+  fun decode(
+      inputStream: InputStream,
+      options: BitmapFactory.Options,
+      regionToDecode: Rect?,
+      colorSpace: ColorSpace?,
+  ): Bitmap? {
+    return decode(
+        inputStream,
+        options.inPreferredConfig ?: Bitmap.Config.ARGB_8888,
+        options.inSampleSize,
+        colorSpace,
+    )
+  }
+
+  fun decode(
+      decodeStream: InputStream,
+      prePassStream: InputStream?,
+      sampleSize: Int,
+      bitmapConfig: Bitmap.Config,
+      regionToDecode: Rect?,
+      colorSpace: ColorSpace?,
+  ): Bitmap? {
+    return decode(decodeStream, bitmapConfig, sampleSize, colorSpace)
+  }
+
+  fun decodeJpeg(
+      jpegStream: InputStream,
+      prePassStream: InputStream?,
+      sampleSize: Int,
+      bitmapConfig: Bitmap.Config,
+      regionToDecode: Rect?,
+      colorSpace: ColorSpace?,
+      encodedImageSize: Int,
+      length: Int,
+      isJpegComplete: Boolean,
+  ): Bitmap? {
+    return decode(jpegStream, bitmapConfig, sampleSize, colorSpace)
+  }
 }

@@ -7,11 +7,13 @@
 
 package com.facebook.imagepipeline.platform
 
+import android.graphics.Bitmap
 import android.os.Build
 import androidx.core.util.Pools
 import androidx.core.util.Pools.SynchronizedPool
 import com.facebook.common.memory.DecodeBufferHelper
 import com.facebook.imagepipeline.memory.PoolFactory
+import com.facebook.imageutils.BitmapUtil
 import java.nio.ByteBuffer
 
 object PlatformDecoderFactory {
@@ -38,16 +40,38 @@ object PlatformDecoderFactory {
             )
         EfficientPlatformDecoder(rawDecoder, platformDecoderOptions)
       } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val pool = createPool(poolFactory, useDecodeBufferHelper)
+        val rawDecoder =
+            DefaultRawBitmapDecoder(
+                pool,
+                platformDecoderOptions,
+                bitmapPool = poolFactory.bitmapPool,
+                bitmapSizeCalculator = { w, h, opts ->
+                  BitmapUtil.getSizeInByteForBitmap(w, h, opts.outConfig ?: Bitmap.Config.ARGB_8888)
+                },
+            )
         OreoDecoder(
             poolFactory.bitmapPool,
-            createPool(poolFactory, useDecodeBufferHelper),
+            pool,
             platformDecoderOptions,
+            rawDecoder,
         )
       } else {
+        val pool = createPool(poolFactory, useDecodeBufferHelper)
+        val rawDecoder =
+            DefaultRawBitmapDecoder(
+                pool,
+                platformDecoderOptions,
+                bitmapPool = poolFactory.bitmapPool,
+                bitmapSizeCalculator = { w, h, opts ->
+                  BitmapUtil.getSizeInByteForBitmap(w, h, opts.inPreferredConfig)
+                },
+            )
         ArtDecoder(
             poolFactory.bitmapPool,
-            createPool(poolFactory, useDecodeBufferHelper),
+            pool,
             platformDecoderOptions,
+            rawDecoder,
         )
       }
 
