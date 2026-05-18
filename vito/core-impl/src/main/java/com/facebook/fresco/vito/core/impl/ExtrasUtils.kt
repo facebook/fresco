@@ -32,7 +32,15 @@ fun KFrescoVitoDrawable.obtainExtras(
         viewportDimensions,
         imageRequest?.imageOptions?.actualImageScaleType,
         imageRequest?.imageOptions?.actualImageFocusPoint,
-        imageExtras ?: image?.get()?.extras,
+        imageExtras
+            ?: try {
+              image?.get()?.extras
+            } catch (_: IllegalStateException) {
+              // The CloseableReference may have been closed concurrently (e.g. during
+              // KFrescoVitoDrawable.reset()), in which case get() throws. Returning null
+              // extras is safe since the image is being released anyway.
+              null
+            },
         callerContext,
         imageRequest?.logWithHighSamplingRate ?: false,
         imageRequest?.finalImageRequest?.sourceUri,
