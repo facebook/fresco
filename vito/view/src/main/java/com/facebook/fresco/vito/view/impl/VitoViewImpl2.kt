@@ -23,6 +23,7 @@ import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.source.ImageSource
+import java.lang.ref.WeakReference
 
 /** Vito View implementation */
 object VitoViewImpl2 {
@@ -32,6 +33,18 @@ object VitoViewImpl2 {
   @JvmField var useReleaseDelayedInViewDetached: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
   @JvmField var useOnLayoutChange: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
   @JvmField var doNotFetchImmediately: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
+
+  /**
+   * When ON, the [refetchRunnable] installed by [show] holds the target [View] via a
+   * [WeakReference] instead of capturing it strongly. This prevents a memory leak when the drawable
+   * is kept alive by a queued delayed-release [android.os.Message] in the main looper while the
+   * owning Activity is being destroyed: the refetchRunnable would otherwise pin the entire view
+   * tree (and any fragment associated to it via `View.mKeyedTags`) until the message is processed.
+   *
+   * Default OFF preserves the strong-capture behavior. Hosts that observe the leak (e.g. IG4A)
+   * should wire this to a gated [Supplier].
+   */
+  @JvmField var useWeakReferenceForRefetchTarget: Supplier<Boolean> = Suppliers.BOOLEAN_FALSE
 
   private val onAttachStateChangeListenerCallback: OnAttachStateChangeListener =
       object : OnAttachStateChangeListener {
@@ -115,19 +128,42 @@ object VitoViewImpl2 {
     if (oldImageRequest != null && oldImageRequest != imageRequest) {
       FrescoVitoProvider.getController().releaseImmediately(frescoDrawable)
     }
-    frescoDrawable.refetchRunnable = Runnable {
-      FrescoVitoProvider.getController()
-          .fetch(
-              drawable = frescoDrawable,
-              imageRequest = imageRequest,
-              callerContext = callerContext,
-              contextChain = null,
-              listener = imageListener,
-              onFadeListener = onFadeListener,
-              viewportDimensions = Rect(0, 0, target.width, target.height),
-              vitoImageRequestListener = imageRequestListener,
-          )
-    }
+    frescoDrawable.refetchRunnable =
+        if (useWeakReferenceForRefetchTarget.get()) {
+          // Capture the target via WeakReference so a queued delayed-release Message that pins
+          // this Runnable does not pin the entire view tree (and any fragment associated to the
+          // root view via View.mKeyedTags). If the view has already been collected, the fetch is
+          // a no-op since there is nothing to render to.
+          val targetWeakRef = WeakReference(target)
+          Runnable {
+            val t = targetWeakRef.get() ?: return@Runnable
+            FrescoVitoProvider.getController()
+                .fetch(
+                    drawable = frescoDrawable,
+                    imageRequest = imageRequest,
+                    callerContext = callerContext,
+                    contextChain = null,
+                    listener = imageListener,
+                    onFadeListener = onFadeListener,
+                    viewportDimensions = Rect(0, 0, t.width, t.height),
+                    vitoImageRequestListener = imageRequestListener,
+                )
+          }
+        } else {
+          Runnable {
+            FrescoVitoProvider.getController()
+                .fetch(
+                    drawable = frescoDrawable,
+                    imageRequest = imageRequest,
+                    callerContext = callerContext,
+                    contextChain = null,
+                    listener = imageListener,
+                    onFadeListener = onFadeListener,
+                    viewportDimensions = Rect(0, 0, target.width, target.height),
+                    vitoImageRequestListener = imageRequestListener,
+                )
+          }
+        }
     if (useSimpleFetchLogic.get()) {
       frescoDrawable.imagePerfListener.onImageMount(frescoDrawable)
       maybeFetchImage(frescoDrawable)
