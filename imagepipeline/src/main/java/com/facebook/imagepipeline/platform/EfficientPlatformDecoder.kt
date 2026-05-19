@@ -10,29 +10,21 @@ package com.facebook.imagepipeline.platform
 import android.graphics.Bitmap
 import android.graphics.ColorSpace
 import android.graphics.Rect
-import com.facebook.common.internal.Preconditions
 import com.facebook.common.references.CloseableReference
 import com.facebook.common.references.ResourceReleaser
 import com.facebook.imagepipeline.image.EncodedImage
 import com.facebook.imageutils.JfifUtil
+import java.io.InputStream
 import javax.annotation.concurrent.ThreadSafe
 
-/**
- * Efficient platform decoder that eliminates BitmapPool overhead. Uses GC-managed bitmaps via
- * [NoOpResourceReleaser] instead of pooled allocation, and skips the redundant inJustDecodeBounds
- * pre-pass that [DefaultDecoder] performs.
- *
- * Delegates byte-array decoding to [RawBitmapDecoder] for the actual decode.
- */
+/** Pool-free platform decoder using GC-managed bitmaps. Delegates to [RawBitmapDecoder]. */
 @ThreadSafe
 class EfficientPlatformDecoder(
     private val rawBitmapDecoder: RawBitmapDecoder,
     private val platformDecoderOptions: PlatformDecoderOptions,
 ) : PlatformDecoder {
 
-  // Note: regionToDecode is accepted for interface compliance but is not supported.
-
-  // region PlatformDecoder
+  // regionToDecode is not supported; parameter exists for interface compliance.
 
   override fun decodeFromEncodedImage(
       encodedImage: EncodedImage,
@@ -55,7 +47,6 @@ class EfficientPlatformDecoder(
           null,
       )
 
-  // Adapted from DefaultDecoder. Now delegates decode to RawBitmapDecoder.
   override fun decodeFromEncodedImageWithColorSpace(
       encodedImage: EncodedImage,
       bitmapConfig: Bitmap.Config,
@@ -63,17 +54,14 @@ class EfficientPlatformDecoder(
       colorSpace: ColorSpace?,
   ): CloseableReference<Bitmap>? {
     if (!DecodeValidationUtils.validateDimensions(encodedImage, platformDecoderOptions)) return null
+    val sampleSize = encodedImage.sampleSize
     val bytes: ByteArray
     synchronized(encodedImage) { bytes = extractBytes(encodedImage) }
-    val sampleSize = encodedImage.sampleSize
     val bitmap =
-        rawBitmapDecoder.decode(bytes, 0, bytes.size, bitmapConfig, sampleSize, colorSpace)
-            ?: return null
+        decodeWithRetry(bytes, 0, bytes.size, bitmapConfig, sampleSize, colorSpace) ?: return null
     return CloseableReference.of(bitmap, NoOpResourceReleaser)
   }
 
-  // Adapted from DefaultDecoder. Now delegates decode to RawBitmapDecoder.
-  // JPEG partial data handling (EOI tail append for incomplete JPEGs) preserved.
   override fun decodeJPEGFromEncodedImageWithColorSpace(
       encodedImage: EncodedImage,
       bitmapConfig: Bitmap.Config,
@@ -82,38 +70,84 @@ class EfficientPlatformDecoder(
       colorSpace: ColorSpace?,
   ): CloseableReference<Bitmap>? {
     if (!DecodeValidationUtils.validateDimensions(encodedImage, platformDecoderOptions)) return null
-    val effectiveLength: Int
+    val sampleSize = encodedImage.sampleSize
     val isJpegComplete: Boolean
-    val rawBytes: ByteArray
+    val effectiveLength: Int
+    val encodedImageSize: Int
     synchronized(encodedImage) {
       isJpegComplete = encodedImage.isCompleteAt(length)
-      effectiveLength = minOf(encodedImage.size, length)
-      rawBytes = extractBytes(encodedImage)
+      encodedImageSize = encodedImage.size
+      effectiveLength = minOf(encodedImageSize, length)
     }
+    if (effectiveLength <= 0) return null
+
+    // Single allocation: pre-size for EOI if incomplete, exact size if complete.
+    // Read directly from PooledByteBuffer — no intermediate rawBytes array.
     val bytes: ByteArray
     val bytesLength: Int
     if (!isJpegComplete) {
       bytes = ByteArray(effectiveLength + EOI_TAIL.size)
-      System.arraycopy(rawBytes, 0, bytes, 0, effectiveLength)
-      System.arraycopy(EOI_TAIL, 0, bytes, effectiveLength, EOI_TAIL.size)
       bytesLength = bytes.size
     } else {
-      bytes = rawBytes
+      bytes = ByteArray(effectiveLength)
       bytesLength = effectiveLength
     }
-    val sampleSize = encodedImage.sampleSize
+
+    synchronized(encodedImage) {
+      val ref = encodedImage.getByteBufferRef()
+      if (ref != null) {
+        try {
+          ref.get().read(0, bytes, 0, effectiveLength)
+        } finally {
+          ref.close()
+        }
+      } else {
+        val inputStream: InputStream = encodedImage.inputStream ?: return null
+        var offset = 0
+        while (offset < effectiveLength) {
+          val bytesRead = inputStream.read(bytes, offset, effectiveLength - offset)
+          if (bytesRead <= 0) break
+          offset += bytesRead
+        }
+      }
+    }
+
+    if (!isJpegComplete) {
+      System.arraycopy(EOI_TAIL, 0, bytes, effectiveLength, EOI_TAIL.size)
+    }
+
     val bitmap =
-        rawBitmapDecoder.decode(bytes, 0, bytesLength, bitmapConfig, sampleSize, colorSpace)
-            ?: return null
+        decodeWithRetry(bytes, 0, bytesLength, bitmapConfig, sampleSize, colorSpace) ?: return null
     return CloseableReference.of(bitmap, NoOpResourceReleaser)
   }
 
-  // endregion
+  private fun decodeWithRetry(
+      bytes: ByteArray,
+      offset: Int,
+      length: Int,
+      bitmapConfig: Bitmap.Config,
+      sampleSize: Int,
+      colorSpace: ColorSpace?,
+  ): Bitmap? {
+    val retryOnFail = bitmapConfig != Bitmap.Config.ARGB_8888
+    return try {
+      rawBitmapDecoder.decode(bytes, offset, length, bitmapConfig, sampleSize, colorSpace)
+    } catch (re: RuntimeException) {
+      if (retryOnFail) {
+        rawBitmapDecoder.decode(
+            bytes,
+            offset,
+            length,
+            Bitmap.Config.ARGB_8888,
+            sampleSize,
+            colorSpace,
+        )
+      } else {
+        throw re
+      }
+    }
+  }
 
-  /**
-   * Extracts all bytes from the [encodedImage]'s underlying buffer or input stream. Must be called
-   * within a synchronized(encodedImage) block.
-   */
   private fun extractBytes(encodedImage: EncodedImage): ByteArray {
     val ref = encodedImage.getByteBufferRef()
     return if (ref != null) {
@@ -124,19 +158,17 @@ class EfficientPlatformDecoder(
         ref.close()
       }
     } else {
-      Preconditions.checkNotNull(encodedImage.inputStream).readBytes()
+      encodedImage.inputStream?.readBytes() ?: ByteArray(0)
     }
   }
 
-  // Bitmap lifecycle is GC-managed.
   private object NoOpResourceReleaser : ResourceReleaser<Bitmap> {
     override fun release(value: Bitmap) {
-      // NoOp — bitmap lifecycle is GC-managed
+      // NoOp
     }
   }
 
   companion object {
-    // JPEG end-of-image marker bytes for partial JPEG handling.
     private val EOI_TAIL =
         byteArrayOf(JfifUtil.MARKER_FIRST_BYTE.toByte(), JfifUtil.MARKER_EOI.toByte())
   }
