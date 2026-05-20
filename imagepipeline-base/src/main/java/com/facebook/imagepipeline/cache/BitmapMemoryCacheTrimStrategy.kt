@@ -24,10 +24,7 @@ class BitmapMemoryCacheTrimStrategy : CacheTrimStrategy {
       when (trimType) {
         MemoryTrimType.OnCloseToDalvikHeapLimit ->
             MemoryTrimType.OnCloseToDalvikHeapLimit.suggestedTrimRatio
-        MemoryTrimType.OnAppBackgrounded,
-        MemoryTrimType.OnSystemMemoryCriticallyLowWhileAppInForeground,
-        MemoryTrimType.OnSystemLowMemoryWhileAppInForeground,
-        MemoryTrimType.OnSystemLowMemoryWhileAppInBackgroundLowSeverity -> 1.0
+        in FULL_TRIM_TYPES -> 1.0
         else -> {
           FLog.wtf(TAG, "unknown trim type: %s", trimType)
           0.0
@@ -36,5 +33,17 @@ class BitmapMemoryCacheTrimStrategy : CacheTrimStrategy {
 
   companion object {
     private const val TAG = "BitmapMemoryCacheTrimStrategy"
+
+    private val FULL_TRIM_TYPES =
+        setOf(
+            MemoryTrimType.OnAppBackgrounded,
+            MemoryTrimType.OnSystemMemoryCriticallyLowWhileAppInForeground,
+            MemoryTrimType.OnSystemLowMemoryWhileAppInForeground,
+            MemoryTrimType.OnSystemLowMemoryWhileAppInBackgroundLowSeverity,
+        )
+
+    @JvmField
+    val SUPPORTED_TRIM_TYPES: Set<MemoryTrimType> =
+        FULL_TRIM_TYPES + MemoryTrimType.OnCloseToDalvikHeapLimit
   }
 }
