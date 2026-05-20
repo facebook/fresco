@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.core;
 import android.content.Context;
 import android.os.Build;
 import com.facebook.cache.common.CacheKey;
+import com.facebook.cache.disk.FileCache;
 import com.facebook.common.internal.AndroidPredicates;
 import com.facebook.common.internal.Objects;
 import com.facebook.common.internal.Preconditions;
@@ -291,6 +292,14 @@ public class ImagePipelineFactory {
 
   public Supplier<DiskCachesStore> getDiskCachesStoreSupplier() {
     return mDiskCachesStoreSupplier;
+  }
+
+  public FileCache getMainFileCache() {
+    return mDiskCachesStoreSupplier.get().getMainFileCache();
+  }
+
+  public FileCache getSmallImageFileCache() {
+    return mDiskCachesStoreSupplier.get().getSmallImageFileCache();
   }
 
   public ImagePipeline getImagePipeline() {
