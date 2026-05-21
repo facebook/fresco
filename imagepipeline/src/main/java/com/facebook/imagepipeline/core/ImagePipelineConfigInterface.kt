@@ -66,6 +66,11 @@ interface ImagePipelineConfigInterface {
   val bitmapMemoryCacheEntryStateObserver: EntryStateObserver<CacheKey>?
   val bitmapCacheOverride: MemoryCache<CacheKey, CloseableImage>?
 
+  // Non-bitmap memory cache (used when experiments.useSeparateNonBitmapImageCache is on). Sizes
+  // the separate cache that holds CloseableAnimatedImage and any other non-CloseableBitmap value.
+  // Falls back to [bitmapMemoryCacheParamsSupplier] when null.
+  val nonBitmapImageMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>?
+
   // Network configuration
   val networkFetcher: NetworkFetcher<*>
   val isResizeAndRotateEnabledForNetwork: Boolean

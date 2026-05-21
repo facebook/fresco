@@ -85,6 +85,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val throwCacheMissExceptionOnCacheMiss: Boolean
   val usePostProcessedCacheKey: Boolean
   val usePostprocessorDuringDecodedPrefetch: Boolean
+  val useSeparateNonBitmapImageCache: Boolean
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -154,6 +155,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var usePostProcessedCacheKey = false
 
     @JvmField var usePostprocessorDuringDecodedPrefetch = false
+
+    @JvmField var useSeparateNonBitmapImageCache = false
 
     private fun asBuilder(block: () -> Unit): Builder {
       block()
@@ -399,6 +402,15 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
           this.usePostprocessorDuringDecodedPrefetch = usePostprocessorDuringDecodedPrefetch
         }
 
+    /**
+     * If true, non-`CloseableBitmap` images (e.g. `CloseableAnimatedImage`, XML/SVG decodes) are
+     * stored in a separate memory cache from static bitmaps. A/B test gate for splitting the shared
+     * bitmap memory cache.
+     */
+    fun setUseSeparateNonBitmapImageCache(useSeparateNonBitmapImageCache: Boolean) = asBuilder {
+      this.useSeparateNonBitmapImageCache = useSeparateNonBitmapImageCache
+    }
+
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
 
@@ -544,6 +556,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     throwCacheMissExceptionOnCacheMiss = builder.throwCacheMissExceptionOnCacheMiss
     usePostProcessedCacheKey = builder.usePostProcessedCacheKey
     usePostprocessorDuringDecodedPrefetch = builder.usePostprocessorDuringDecodedPrefetch
+    useSeparateNonBitmapImageCache = builder.useSeparateNonBitmapImageCache
   }
 
   companion object {

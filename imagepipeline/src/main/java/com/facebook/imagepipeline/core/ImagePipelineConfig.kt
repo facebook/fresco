@@ -116,6 +116,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   override val encodedMemoryCacheOverride: MemoryCache<CacheKey, PooledByteBuffer>?
   override val executorServiceForAnimatedImages: SerialExecutorService?
   override val bitmapMemoryCacheFactory: BitmapMemoryCacheFactory
+  override val nonBitmapImageMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>?
   override val dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>?
   override val decodedOriginalImageAnalyzers: Set<DecodeProducer.DecodedOriginalImageAnalyzer>
   override val isAppStarting: (() -> Boolean)? = null
@@ -182,6 +183,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     bitmapCacheOverride = builder.bitmapMemoryCache
     bitmapMemoryCacheFactory =
         builder.bitmapMemoryCacheFactory ?: CountingLruBitmapMemoryCacheFactory()
+    nonBitmapImageMemoryCacheParamsSupplier = builder.nonBitmapImageMemoryCacheParamsSupplier
     encodedMemoryCacheOverride = builder.encodedMemoryCache
     executorServiceForAnimatedImages = builder.serialExecutorServiceForAnimatedImages
     dynamicDiskCacheConfigMap = builder.dynamicDiskCacheConfigMap
@@ -321,6 +323,9 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
       private set
 
     var bitmapMemoryCacheFactory: BitmapMemoryCacheFactory? = null
+      private set
+
+    var nonBitmapImageMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>? = null
       private set
 
     var dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>? = null
@@ -507,6 +512,17 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         apply {
           this.bitmapMemoryCacheFactory = bitmapMemoryCacheFactory
         }
+
+    /**
+     * Sets the [MemoryCacheParams] supplier used to size the separate animated/non-bitmap memory
+     * cache when [ImagePipelineExperiments.useSeparateNonBitmapImageCache] is enabled. When unset,
+     * the animated cache reuses [bitmapMemoryCacheParamsSupplier].
+     */
+    fun setNonBitmapImageMemoryCacheParamsSupplier(
+        nonBitmapImageMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>?
+    ): Builder = apply {
+      this.nonBitmapImageMemoryCacheParamsSupplier = nonBitmapImageMemoryCacheParamsSupplier
+    }
 
     fun setDynamicDiskCacheConfigMap(
         dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>
