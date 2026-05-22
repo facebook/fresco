@@ -488,10 +488,12 @@ public abstract class AbstractDraweeController<T, INFO>
       FLog.v(TAG, "controller %x %s: onClick", System.identityHashCode(this), mId);
     }
     if (shouldRetryOnTap()) {
-      // NULLSAFE_FIXME[Nullable Dereference]
-      mRetryManager.notifyTapToRetry();
-      // NULLSAFE_FIXME[Nullable Dereference]
-      mSettableDraweeHierarchy.reset();
+      if (mRetryManager != null) {
+        mRetryManager.notifyTapToRetry();
+      }
+      if (mSettableDraweeHierarchy != null) {
+        mSettableDraweeHierarchy.reset();
+      }
       submitRequest();
       return true;
     }
@@ -525,8 +527,9 @@ public abstract class AbstractDraweeController<T, INFO>
       return;
     }
     mEventTracker.recordEvent(Event.ON_DATASOURCE_SUBMIT);
-    // NULLSAFE_FIXME[Nullable Dereference]
-    mSettableDraweeHierarchy.setProgress(0, true);
+    if (mSettableDraweeHierarchy != null) {
+      mSettableDraweeHierarchy.setProgress(0, true);
+    }
     mIsRequestSubmitted = true;
     mHasFetchFailed = false;
     mDataSource = getDataSource();
@@ -702,8 +705,7 @@ public abstract class AbstractDraweeController<T, INFO>
       dataSource.close();
       return;
     }
-    if (!isFinished) {
-      // NULLSAFE_FIXME[Nullable Dereference]
+    if (!isFinished && mSettableDraweeHierarchy != null) {
       mSettableDraweeHierarchy.setProgress(progress, false);
     }
   }
