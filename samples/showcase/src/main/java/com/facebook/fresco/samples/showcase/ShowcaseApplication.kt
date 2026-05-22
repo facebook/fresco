@@ -140,7 +140,6 @@ class ShowcaseApplication : Application() {
             .enableDumpapp {
               Stetho.DefaultDumperPluginsBuilder(context).provide(FrescoStethoPlugin()).finish()
             }
-            .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(context))
             .build()
     )
 
