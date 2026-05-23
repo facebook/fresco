@@ -9,6 +9,7 @@ package com.facebook.cache.common;
 
 import android.net.Uri;
 import com.facebook.infer.annotation.Nullsafe;
+import javax.annotation.Nullable;
 
 /**
  * Strongly typed cache key to be used instead of {@link Object}.
@@ -22,8 +23,7 @@ public interface CacheKey {
   String toString();
 
   /** This method must be implemented, otherwise the cache keys will be be compared by reference. */
-  // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
-  boolean equals(Object o);
+  boolean equals(@Nullable Object o);
 
   /** This method must be implemented with accordance to the {@link #equals} method. */
   int hashCode();
