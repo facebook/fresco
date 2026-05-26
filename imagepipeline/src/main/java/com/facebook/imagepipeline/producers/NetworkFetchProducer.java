@@ -143,7 +143,7 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
     final long nowMs;
     if (shouldPropagateIntermediateResults(fetchState, fetchState.getContext())
         && (nowMs = getSystemUptime()) - fetchState.getLastIntermediateResultTimeMs()
-            >= TIME_BETWEEN_PARTIAL_RESULTS_MS) {
+            >= getTimeBetweenPartialResultsMs(fetchState)) {
       fetchState.setLastIntermediateResultTimeMs(nowMs);
       fetchState.getContext().putOriginExtra("network");
       fetchState
@@ -238,6 +238,15 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
       return null;
     }
     return mNetworkFetcher.getExtraMap(fetchState, byteSize);
+  }
+
+  private long getTimeBetweenPartialResultsMs(FetchState fetchState) {
+    ProgressiveJpegConfig pjpegConfig =
+        fetchState.getContext().getImagePipelineConfig().getProgressiveJpegConfig();
+    if (pjpegConfig != null) {
+      return pjpegConfig.getTimeBetweenPartialResultsMs(fetchState.getContext().getImageRequest());
+    }
+    return ProgressiveJpegConfig.DEFAULT_TIME_BETWEEN_PARTIAL_RESULTS_MS;
   }
 
   @VisibleForTesting

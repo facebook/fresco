@@ -13,6 +13,9 @@ import com.facebook.imagepipeline.request.ImageRequest;
 /** Progressive JPEG config. */
 public interface ProgressiveJpegConfig {
 
+  /** Default minimum time between partial results, in milliseconds. */
+  long DEFAULT_TIME_BETWEEN_PARTIAL_RESULTS_MS = 100;
+
   /** Shortcut for checking if we should attempt to decode progressively. */
   boolean decodeProgressively(ImageRequest imageRequest);
 
@@ -21,4 +24,12 @@ public interface ProgressiveJpegConfig {
 
   /** Gets the quality information for the given scan-number. */
   QualityInfo getQualityInfo(ImageRequest imageRequest, int scanNumber);
+
+  /**
+   * Gets the minimum time between two consecutive partial results being propagated upstream, in
+   * milliseconds.
+   */
+  default long getTimeBetweenPartialResultsMs(ImageRequest imageRequest) {
+    return DEFAULT_TIME_BETWEEN_PARTIAL_RESULTS_MS;
+  }
 }

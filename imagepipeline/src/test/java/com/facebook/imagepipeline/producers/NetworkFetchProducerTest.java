@@ -80,6 +80,8 @@ public class NetworkFetchProducerTest {
             mConfig);
     when(mConfig.getProgressiveJpegConfig()).thenReturn(mProgressiveJpegConfig);
     when(mProgressiveJpegConfig.decodeProgressively(mImageRequest)).thenReturn(true);
+    when(mProgressiveJpegConfig.getTimeBetweenPartialResultsMs(mImageRequest))
+        .thenReturn(NetworkFetchProducer.TIME_BETWEEN_PARTIAL_RESULTS_MS);
     mFetchState = new FetchState(mConsumer, mProducerContext);
     when(mImageRequest.getSourceUri()).thenReturn(Uri.parse("http://www.facebook.com"));
     mCommonByteArray = new byte[10];
