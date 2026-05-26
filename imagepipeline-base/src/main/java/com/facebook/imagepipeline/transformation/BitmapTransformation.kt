@@ -8,6 +8,7 @@
 package com.facebook.imagepipeline.transformation
 
 import android.graphics.Bitmap
+import com.facebook.imagepipeline.image.QualityInfo
 
 /**
  * In-place bitmap transformation. This interface is similar to Postprocessors, however, it only
@@ -26,6 +27,20 @@ interface BitmapTransformation {
    * @param bitmap the bitmap to transform
    */
   fun transform(bitmap: Bitmap)
+
+  /**
+   * Perform an in-place bitmap transformation with quality context. Override this to vary the
+   * transformation based on progressive scan number or quality level (e.g., graduated blur).
+   *
+   * The default implementation delegates to [transform] ignoring quality info.
+   *
+   * @param bitmap the bitmap to transform
+   * @param qualityInfo quality/scan info. For progressive JPEGs, [QualityInfo.getQuality] returns
+   *   the scan number when used with a [com.facebook.imagepipeline.decoder.ProgressiveJpegConfig].
+   */
+  fun transform(bitmap: Bitmap, qualityInfo: QualityInfo) {
+    transform(bitmap)
+  }
 
   /**
    * Specify whether the transformation modifies alpha support (transparent images).

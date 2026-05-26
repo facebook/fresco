@@ -336,7 +336,12 @@ public class ImagePipelineFactory {
         if (mConfig.getImageDecoderConfig() == null) {
           Map<ImageFormat, ImageDecoder> allDecoders = new HashMap<>();
           addAnimatedDecoders(allDecoders);
-          mImageDecoder = new DefaultImageDecoder(xmlDecoder, getPlatformDecoder(), allDecoders);
+          mImageDecoder =
+              new DefaultImageDecoder(
+                  xmlDecoder,
+                  getPlatformDecoder(),
+                  allDecoders,
+                  mConfig.getDefaultIntermediateImageBitmapTransformation());
         } else {
           Map<ImageFormat, ImageDecoder> allDecoders = new HashMap<>();
           addAnimatedDecoders(allDecoders);
@@ -344,7 +349,12 @@ public class ImagePipelineFactory {
             allDecoders.putAll(mConfig.getImageDecoderConfig().getCustomImageDecoders());
           }
 
-          mImageDecoder = new DefaultImageDecoder(xmlDecoder, getPlatformDecoder(), allDecoders);
+          mImageDecoder =
+              new DefaultImageDecoder(
+                  xmlDecoder,
+                  getPlatformDecoder(),
+                  allDecoders,
+                  mConfig.getDefaultIntermediateImageBitmapTransformation());
           // Add custom image formats if needed
           ImageFormatChecker.getInstance()
               .setCustomImageFormatCheckers(

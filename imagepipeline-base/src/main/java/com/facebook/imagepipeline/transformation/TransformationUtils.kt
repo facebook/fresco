@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.transformation
 
 import android.graphics.Bitmap
 import com.facebook.common.references.CloseableReference
+import com.facebook.imagepipeline.image.QualityInfo
 
 object TransformationUtils {
   @JvmStatic
@@ -16,7 +17,15 @@ object TransformationUtils {
       transformation: BitmapTransformation?,
       bitmapReference: CloseableReference<Bitmap>?,
   ): Boolean {
+    return maybeApplyTransformation(transformation, bitmapReference, null)
+  }
 
+  @JvmStatic
+  fun maybeApplyTransformation(
+      transformation: BitmapTransformation?,
+      bitmapReference: CloseableReference<Bitmap>?,
+      qualityInfo: QualityInfo?,
+  ): Boolean {
     if (transformation == null || bitmapReference == null) {
       return false
     }
@@ -24,7 +33,11 @@ object TransformationUtils {
     if (transformation.modifiesTransparency()) {
       bitmap.setHasAlpha(true)
     }
-    transformation.transform(bitmap)
+    if (qualityInfo != null) {
+      transformation.transform(bitmap, qualityInfo)
+    } else {
+      transformation.transform(bitmap)
+    }
     return true
   }
 }

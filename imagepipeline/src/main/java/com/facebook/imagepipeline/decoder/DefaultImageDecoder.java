@@ -24,6 +24,7 @@ import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
 import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.platform.PlatformDecoder;
+import com.facebook.imagepipeline.transformation.BitmapTransformation;
 import com.facebook.imagepipeline.transformation.CircularTransformation;
 import com.facebook.imagepipeline.transformation.TransformationUtils;
 import com.facebook.infer.annotation.Nullsafe;
@@ -51,6 +52,7 @@ public class DefaultImageDecoder implements ImageDecoder {
   private final @Nullable ImageDecoder mXmlDecoder;
   private final PlatformDecoder mPlatformDecoder;
   private final Supplier<Boolean> mEnableEncodedImageColorSpaceUsage;
+  private final @Nullable BitmapTransformation mDefaultIntermediateTransformation;
 
   private final ImageDecoder mDefaultDecoder =
       new ImageDecoder() {
@@ -100,11 +102,34 @@ public class DefaultImageDecoder implements ImageDecoder {
       @Nullable final ImageDecoder xmlDecoder,
       final PlatformDecoder platformDecoder,
       @Nullable Map<ImageFormat, ImageDecoder> customDecoders,
+      @Nullable final BitmapTransformation defaultIntermediateTransformation) {
+    this(
+        xmlDecoder,
+        platformDecoder,
+        customDecoders,
+        Suppliers.BOOLEAN_FALSE,
+        defaultIntermediateTransformation);
+  }
+
+  public DefaultImageDecoder(
+      @Nullable final ImageDecoder xmlDecoder,
+      final PlatformDecoder platformDecoder,
+      @Nullable Map<ImageFormat, ImageDecoder> customDecoders,
       final Supplier<Boolean> enableEncodedImageColorSpaceUsage) {
+    this(xmlDecoder, platformDecoder, customDecoders, enableEncodedImageColorSpaceUsage, null);
+  }
+
+  public DefaultImageDecoder(
+      @Nullable final ImageDecoder xmlDecoder,
+      final PlatformDecoder platformDecoder,
+      @Nullable Map<ImageFormat, ImageDecoder> customDecoders,
+      final Supplier<Boolean> enableEncodedImageColorSpaceUsage,
+      @Nullable final BitmapTransformation defaultIntermediateTransformation) {
     mXmlDecoder = xmlDecoder;
     mPlatformDecoder = platformDecoder;
     mCustomDecoders = customDecoders;
     mEnableEncodedImageColorSpaceUsage = enableEncodedImageColorSpaceUsage;
+    mDefaultIntermediateTransformation = defaultIntermediateTransformation;
   }
 
   /**
@@ -221,10 +246,15 @@ public class DefaultImageDecoder implements ImageDecoder {
           TransformationUtils.maybeApplyTransformation(
               options.bitmapTransformation, bitmapReference);
 
-      // Apply intermediate-only transformation (e.g., blur for progressive preview)
+      // Apply intermediate-only transformation (e.g., blur for progressive preview).
+      // Per-request transformation takes priority; fall back to pipeline-level default.
       if (!qualityInfo.isOfFullQuality()) {
+        BitmapTransformation intermediateTransformation =
+            options.intermediateImageBitmapTransformation != null
+                ? options.intermediateImageBitmapTransformation
+                : mDefaultIntermediateTransformation;
         TransformationUtils.maybeApplyTransformation(
-            options.intermediateImageBitmapTransformation, bitmapReference);
+            intermediateTransformation, bitmapReference, qualityInfo);
       }
 
       Preconditions.checkNotNull(bitmapReference);

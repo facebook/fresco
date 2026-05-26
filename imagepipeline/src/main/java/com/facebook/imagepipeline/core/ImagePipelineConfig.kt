@@ -60,6 +60,7 @@ import com.facebook.imagepipeline.systrace.FrescoSystrace.endSection
 import com.facebook.imagepipeline.systrace.FrescoSystrace.isTracing
 import com.facebook.imagepipeline.systrace.FrescoSystrace.traceSection
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory
+import com.facebook.imagepipeline.transformation.BitmapTransformation
 
 /**
  * Main configuration class for the image pipeline library.
@@ -101,6 +102,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   private val httpNetworkTimeout: Int
   override val platformBitmapFactory: PlatformBitmapFactory?
   override val poolFactory: PoolFactory
+  override val defaultIntermediateImageBitmapTransformation: BitmapTransformation?
   override val progressiveJpegConfig: ProgressiveJpegConfig
   override val requestListeners: Set<RequestListener>
   override val requestListener2s: Set<RequestListener2>
@@ -166,6 +168,8 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         }
     platformBitmapFactory = builder.platformBitmapFactory
     poolFactory = builder.poolFactory ?: PoolFactory(PoolConfig.newBuilder().build())
+    defaultIntermediateImageBitmapTransformation =
+        builder.defaultIntermediateImageBitmapTransformation
     progressiveJpegConfig = builder.progressiveJpegConfig ?: SimpleProgressiveJpegConfig()
     requestListeners = builder.requestListeners ?: emptySet()
     requestListener2s = builder.requestListener2s ?: emptySet()
@@ -270,6 +274,9 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
       private set
 
     var poolFactory: PoolFactory? = null
+      private set
+
+    var defaultIntermediateImageBitmapTransformation: BitmapTransformation? = null
       private set
 
     var progressiveJpegConfig: ProgressiveJpegConfig? = null
@@ -457,6 +464,10 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     fun setPoolFactory(poolFactory: PoolFactory?): Builder = apply {
       this.poolFactory = poolFactory
     }
+
+    fun setDefaultIntermediateImageBitmapTransformation(
+        transformation: BitmapTransformation?
+    ): Builder = apply { this.defaultIntermediateImageBitmapTransformation = transformation }
 
     fun setProgressiveJpegConfig(progressiveJpegConfig: ProgressiveJpegConfig?): Builder = apply {
       this.progressiveJpegConfig = progressiveJpegConfig

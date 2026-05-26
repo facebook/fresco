@@ -36,6 +36,7 @@ import com.facebook.imagepipeline.producers.CustomProducerSequenceFactory
 import com.facebook.imagepipeline.producers.DecodeProducer
 import com.facebook.imagepipeline.producers.NetworkFetcher
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory
+import com.facebook.imagepipeline.transformation.BitmapTransformation
 
 interface ImagePipelineConfigInterface {
 
@@ -85,6 +86,14 @@ interface ImagePipelineConfigInterface {
   val enableEncodedImageColorSpaceUsage: Supplier<Boolean>
   val progressiveJpegConfig: ProgressiveJpegConfig
   val platformBitmapFactory: PlatformBitmapFactory?
+
+  /**
+   * Default [BitmapTransformation] applied to intermediate progressive JPEG scans when the
+   * per-request [ImageDecodeOptions.intermediateImageBitmapTransformation] is not set. This enables
+   * pipeline-wide progressive blur without per-request wiring. Set to null to disable.
+   */
+  val defaultIntermediateImageBitmapTransformation: BitmapTransformation?
+    get() = null
 
   // Memory handling
   @get:MemoryChunkType val memoryChunkType: Int

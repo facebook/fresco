@@ -15,6 +15,7 @@ import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.imagepipeline.image.EncodedImage
 import com.facebook.imagepipeline.image.ImmutableQualityInfo
+import com.facebook.imagepipeline.image.QualityInfo
 import com.facebook.imagepipeline.platform.PlatformDecoder
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer
 import com.facebook.imagepipeline.transformation.BitmapTransformation
@@ -86,7 +87,7 @@ class DefaultImageDecoderTest {
     decoder.decodeJpeg(encodedImage, 256, quality, options, null)
 
     verify(regularTransformation).transform(any())
-    verify(intermediateTransformation).transform(any())
+    verify(intermediateTransformation).transform(any<Bitmap>(), any<QualityInfo>())
   }
 
   @Test
@@ -128,7 +129,7 @@ class DefaultImageDecoderTest {
 
     decoder.decodeJpeg(encodedImage, 256, quality, options, null)
 
-    verify(intermediateTransformation).transform(any())
+    verify(intermediateTransformation).transform(any<Bitmap>(), any<QualityInfo>())
   }
 
   @Test
@@ -178,7 +179,7 @@ class DefaultImageDecoderTest {
 
     inOrder(regularTransformation, intermediateTransformation) {
       verify(regularTransformation).transform(any<Bitmap>())
-      verify(intermediateTransformation).transform(any<Bitmap>())
+      verify(intermediateTransformation).transform(any<Bitmap>(), any<QualityInfo>())
     }
   }
 }
