@@ -90,9 +90,9 @@ abstract class FrescoDrawable2 :
     }
   }
 
-  override fun setVisible(visible: Boolean, restart: Boolean): Boolean {
-    visibilityCallback?.onVisibilityChange(visible)
-    return super.setVisible(visible, restart)
+  override fun setVisible(p0: Boolean, p1: Boolean): Boolean {
+    visibilityCallback?.onVisibilityChange(p0)
+    return super.setVisible(p0, p1)
   }
 
   override fun setVisibilityCallback(visibilityCallback: VisibilityCallback?) {

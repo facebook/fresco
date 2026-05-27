@@ -51,17 +51,17 @@ class ForwardingImageListener(private vararg val listeners: ImageListener?) : Im
     listeners.forEach { it?.onImageDrawn(id, imageInfo, dimensionsInfo) }
   }
 
-  override fun equals(o: Any?): Boolean {
+  override fun equals(other: Any?): Boolean {
     // If the object is compared with itself then return true
-    if (o === this) {
+    if (other === this) {
       return true
     }
 
     // Check if o is an instance of ForwardingImageListener or not
-    if (o !is ForwardingImageListener) {
+    if (other !is ForwardingImageListener) {
       return false
     }
-    val listeners = o.listeners
+    val listeners = other.listeners
     if (this.listeners.size != listeners.size) {
       return false
     }

@@ -256,37 +256,37 @@ class FrescoDrawable2Impl(
     deferredReleaser.cancelDeferredRelease(this)
   }
 
-  override fun onNewResult(dataSource: DataSource<CloseableReference<CloseableImage>>) {
+  override fun onNewResult(p0: DataSource<CloseableReference<CloseableImage>>) {
     val imageRequest = this.imageRequest
     val drawableDataSubscriber = this.drawableDataSubscriber
-    if (dataSource !== this.dataSource || imageRequest == null || drawableDataSubscriber == null) {
+    if (p0 !== this.dataSource || imageRequest == null || drawableDataSubscriber == null) {
       imagePerfListener.onIgnoreResult(this)
       return // We don't care
     }
 
-    drawableDataSubscriber.onNewResult(this, imageRequest, dataSource)
+    drawableDataSubscriber.onNewResult(this, imageRequest, p0)
   }
 
-  override fun onFailure(dataSource: DataSource<CloseableReference<CloseableImage>>) {
+  override fun onFailure(p0: DataSource<CloseableReference<CloseableImage>>) {
     val imageRequest = this.imageRequest
     val drawableDataSubscriber = this.drawableDataSubscriber
-    if (dataSource !== this.dataSource || imageRequest == null || drawableDataSubscriber == null) {
+    if (p0 !== this.dataSource || imageRequest == null || drawableDataSubscriber == null) {
       imagePerfListener.onIgnoreFailure(this)
       return // wrong image
     }
-    drawableDataSubscriber.onFailure(this, imageRequest, dataSource)
+    drawableDataSubscriber.onFailure(this, imageRequest, p0)
   }
 
-  override fun onCancellation(dataSource: DataSource<CloseableReference<CloseableImage>>): Unit =
+  override fun onCancellation(p0: DataSource<CloseableReference<CloseableImage>>): Unit =
       Unit // no-op
 
-  override fun onProgressUpdate(dataSource: DataSource<CloseableReference<CloseableImage>>) {
+  override fun onProgressUpdate(p0: DataSource<CloseableReference<CloseableImage>>) {
     val imageRequest = this.imageRequest
     val drawableDataSubscriber = this.drawableDataSubscriber
-    if (dataSource !== this.dataSource || imageRequest == null || drawableDataSubscriber == null) {
+    if (p0 !== this.dataSource || imageRequest == null || drawableDataSubscriber == null) {
       return // wrong image
     }
-    drawableDataSubscriber.onProgressUpdate(this, imageRequest, dataSource)
+    drawableDataSubscriber.onProgressUpdate(this, imageRequest, p0)
   }
 
   override val actualImageWidthPx: Int

@@ -15,15 +15,15 @@ import android.graphics.drawable.Drawable
 /** A Drawable that draws nothing on Canvas */
 object NopDrawable : Drawable() {
 
-  override fun draw(canvas: Canvas) {
+  override fun draw(p0: Canvas) {
     // nop
   }
 
-  override fun setAlpha(alpha: Int) {
+  override fun setAlpha(p0: Int) {
     // nop
   }
 
-  override fun setColorFilter(colorFilter: ColorFilter?) {
+  override fun setColorFilter(p0: ColorFilter?) {
     // nop
   }
 
