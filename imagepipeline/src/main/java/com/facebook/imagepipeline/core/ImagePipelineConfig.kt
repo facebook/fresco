@@ -40,6 +40,7 @@ import com.facebook.imagepipeline.cache.MemoryCache.CacheTrimStrategy
 import com.facebook.imagepipeline.cache.MemoryCacheParams
 import com.facebook.imagepipeline.cache.NativeMemoryCacheTrimStrategy
 import com.facebook.imagepipeline.cache.NoOpImageCacheStatsTracker
+import com.facebook.imagepipeline.cache.SimilarImageLookup
 import com.facebook.imagepipeline.debug.CloseableReferenceLeakTracker
 import com.facebook.imagepipeline.debug.NoOpCloseableReferenceLeakTracker
 import com.facebook.imagepipeline.decoder.ImageDecoder
@@ -115,6 +116,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   override val callerContextVerifier: CallerContextVerifier?
   override val closeableReferenceLeakTracker: CloseableReferenceLeakTracker
   override val bitmapCacheOverride: MemoryCache<CacheKey, CloseableImage>?
+  override val similarImageLookup: SimilarImageLookup?
   override val encodedMemoryCacheOverride: MemoryCache<CacheKey, PooledByteBuffer>?
   override val executorServiceForAnimatedImages: SerialExecutorService?
   override val bitmapMemoryCacheFactory: BitmapMemoryCacheFactory
@@ -185,6 +187,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     callerContextVerifier = builder.callerContextVerifier
     closeableReferenceLeakTracker = builder.closeableReferenceLeakTracker
     bitmapCacheOverride = builder.bitmapMemoryCache
+    similarImageLookup = builder.similarImageLookup
     bitmapMemoryCacheFactory =
         builder.bitmapMemoryCacheFactory ?: CountingLruBitmapMemoryCacheFactory()
     nonBitmapImageMemoryCacheParamsSupplier = builder.nonBitmapImageMemoryCacheParamsSupplier
@@ -321,6 +324,9 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
       private set
 
     var bitmapMemoryCache: MemoryCache<CacheKey, CloseableImage>? = null
+      private set
+
+    var similarImageLookup: SimilarImageLookup? = null
       private set
 
     var encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>? = null
@@ -533,6 +539,10 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         nonBitmapImageMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>?
     ): Builder = apply {
       this.nonBitmapImageMemoryCacheParamsSupplier = nonBitmapImageMemoryCacheParamsSupplier
+    }
+
+    fun setSimilarImageLookup(similarImageLookup: SimilarImageLookup?): Builder = apply {
+      this.similarImageLookup = similarImageLookup
     }
 
     fun setDynamicDiskCacheConfigMap(
