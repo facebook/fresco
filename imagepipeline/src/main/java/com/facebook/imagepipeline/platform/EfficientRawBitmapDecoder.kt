@@ -80,7 +80,7 @@ class EfficientRawBitmapDecoder(
               ImageDecoder.createSource(ByteBuffer.wrap(data, offset, length))
           ) { decoder, _, _ ->
             decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
-            decoder.isMutableRequired = true
+            decoder.isMutableRequired = !platformDecoderOptions.decodeImmutableBitmaps
             decoder.setTargetSampleSize(sampleSize)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && colorSpace != null) {
               decoder.setTargetColorSpace(colorSpace)
@@ -96,7 +96,9 @@ class EfficientRawBitmapDecoder(
     val options = BitmapFactory.Options()
     options.inSampleSize = sampleSize
     options.inPreferredConfig = bitmapConfig
-    options.inMutable = true
+    if (!platformDecoderOptions.decodeImmutableBitmaps) {
+      options.inMutable = true
+    }
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
       options.inPreferredColorSpace = colorSpace ?: ColorSpace.get(ColorSpace.Named.SRGB)
     }

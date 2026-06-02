@@ -15,6 +15,7 @@ class PlatformDecoderOptions(
     val errorReporter: DecoderErrorReporter? = null,
     val useEfficientDecoder: Boolean = false,
     val useBitmapFactoryDecoder: Boolean = false,
+    val decodeImmutableBitmaps: Boolean = false,
 ) {
   fun interface DecoderErrorReporter {
     fun reportError(category: String, message: String, cause: Throwable?)
