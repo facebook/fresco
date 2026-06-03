@@ -95,8 +95,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
     updateDrawBorderSummary(findPreference(Const.DRAW_BORDER_KEY));
     // NULLSAFE_FIXME[Parameter Not Nullable]
     updateDecodeCancellationSummary(findPreference(Const.DECODE_CANCELLATION_KEY));
-    // NULLSAFE_FIXME[Nullable Dereference]
-    findPreference(Const.WEBP_SUPPORT_KEY).setVisible(false);
+    Preference webpSupportPreference = findPreference(Const.WEBP_SUPPORT_KEY);
+    if (webpSupportPreference != null) {
+      webpSupportPreference.setVisible(false);
+    }
   }
 
   @Override
@@ -219,8 +221,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
             R.string.checked_infinite_data_source_summary,
             R.string.unchecked_infinite_data_source_summary);
     // We disableDistinct Uris if infinite is not enabled
-    // NULLSAFE_FIXME[Nullable Dereference]
-    findPreference(Const.DISTINCT_DATA_SOURCE_KEY).setEnabled(currentState);
+    Preference distinctDataSourcePreference = findPreference(Const.DISTINCT_DATA_SOURCE_KEY);
+    if (distinctDataSourcePreference != null) {
+      distinctDataSourcePreference.setEnabled(currentState);
+    }
   }
 
   private void updateDistinctDataSourceSummary(final Preference preference) {
@@ -243,18 +247,17 @@ public class SettingsFragment extends PreferenceFragmentCompat
     // We have to enable the Grid settings only if the selection is the related on
     final ListPreference gridPreference =
         (ListPreference) findPreference(Const.GRID_SPAN_COUNT_KEY);
-    // NULLSAFE_FIXME[Nullable Dereference]
+    if (listPreference == null || gridPreference == null) {
+      return;
+    }
     final String value = listPreference.getValue();
     final boolean gridGroupVisible = Const.GRID_RECYCLER_VIEW_LAYOUT_VALUE.equals(value);
     // We update summary
     if (gridGroupVisible) {
-      // NULLSAFE_FIXME[Nullable Dereference]
       final String spanCountValue = gridPreference.getValue();
-      // NULLSAFE_FIXME[Nullable Dereference]
       gridPreference.setSummary(
           getString(R.string.label_grid_recycler_span_count_summary, spanCountValue));
     }
-    // NULLSAFE_FIXME[Nullable Dereference]
     gridPreference.setVisible(gridGroupVisible);
   }
 
@@ -339,8 +342,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
             (CheckBoxPreference) preference,
             R.string.checked_auto_rotate_summary,
             R.string.unchecked_auto_rotate_summary);
-    // NULLSAFE_FIXME[Nullable Dereference]
-    findPreference(Const.FORCED_ROTATION_ANGLE_KEY).setEnabled(!currentState);
+    Preference forcedRotationAnglePreference = findPreference(Const.FORCED_ROTATION_ANGLE_KEY);
+    if (forcedRotationAnglePreference != null) {
+      forcedRotationAnglePreference.setEnabled(!currentState);
+    }
   }
 
   private void updateRotationAngleSummary(final Preference preference) {
@@ -389,8 +394,10 @@ public class SettingsFragment extends PreferenceFragmentCompat
             (CheckBoxPreference) preference,
             R.string.checked_auto_size_override,
             R.string.unchecked_auto_size_override);
-    // NULLSAFE_FIXME[Nullable Dereference]
-    findPreference(Const.FORCED_ROTATION_ANGLE_KEY).setEnabled(!currentState);
+    Preference forcedRotationAnglePreference = findPreference(Const.FORCED_ROTATION_ANGLE_KEY);
+    if (forcedRotationAnglePreference != null) {
+      forcedRotationAnglePreference.setEnabled(!currentState);
+    }
   }
 
   private void updateFadeDurationSummary(final Preference preference) {
