@@ -242,7 +242,11 @@ object VitoViewImpl2 {
           object : VisibilityCallback {
             override fun onVisibilityChange(visible: Boolean) {
               if (!visible) {
-                FrescoVitoProvider.getController().releaseNextFrame(frescoDrawable)
+                if (FrescoVitoProvider.getConfig().releaseImageOnVisibilityGoneImmediately()) {
+                  FrescoVitoProvider.getController().releaseImmediately(frescoDrawable)
+                } else {
+                  FrescoVitoProvider.getController().releaseNextFrame(frescoDrawable)
+                }
               } else {
                 maybeFetchImage(frescoDrawable)
               }

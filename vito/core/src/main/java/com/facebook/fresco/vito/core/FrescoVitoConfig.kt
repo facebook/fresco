@@ -122,4 +122,13 @@ interface FrescoVitoConfig {
    * `experiments.useSeparateNonBitmapImageCache`, offered-back entries land in that cache.
    */
   fun useOfferBackOnReleaseForNonBitmapImage(): Boolean = false
+
+  /**
+   * When on, an image is released immediately when its view becomes non-visible (e.g. scrolled off
+   * screen) instead of on the next frame. Releasing sooner drops the drawable's strong reference to
+   * the underlying bitmap earlier, making it eligible for GC while scrolling rather than only after
+   * the view detaches. Trade-off: an item that scrolls off and quickly back triggers a re-fetch
+   * (usually a memory-cache hit). Default off; gated behind an A/B flag.
+   */
+  fun releaseImageOnVisibilityGoneImmediately(): Boolean = false
 }
