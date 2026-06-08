@@ -46,15 +46,15 @@ class VitoImageRequest(
 
   override fun putExtras(extras: Extras) = extras.forEach { putExtra(it.key, it.value) }
 
-  override fun equals(obj: Any?): Boolean {
-    if (this === obj) {
+  override fun equals(other: Any?): Boolean {
+    if (this === other) {
       return true
     }
-    if (obj == null || javaClass != obj.javaClass) return false
-    val other = obj as VitoImageRequest
-    return resources === other.resources &&
-        Objects.equal(imageSource, other.imageSource) &&
-        Objects.equal(imageOptions, other.imageOptions)
+    if (other == null || javaClass != other.javaClass) return false
+    val that = other as VitoImageRequest
+    return resources === that.resources &&
+        Objects.equal(imageSource, that.imageSource) &&
+        Objects.equal(imageOptions, that.imageOptions)
   }
 
   fun equalsIfHasImage(other: VitoImageRequest?, hasImage: Boolean): Boolean {
