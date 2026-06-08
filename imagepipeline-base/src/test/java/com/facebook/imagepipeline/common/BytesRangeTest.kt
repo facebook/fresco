@@ -10,8 +10,8 @@ package com.facebook.imagepipeline.common
 import com.facebook.imagepipeline.common.BytesRange.Companion.from
 import com.facebook.imagepipeline.common.BytesRange.Companion.fromContentRangeHeader
 import com.facebook.imagepipeline.common.BytesRange.Companion.toMax
+import kotlin.test.fail
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.failBecauseExceptionWasNotThrown
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -78,7 +78,7 @@ class BytesRangeTest {
     private fun assertInvalidFromContentRangeHeader(header: String?) {
       try {
         fromContentRangeHeader(header)
-        failBecauseExceptionWasNotThrown(IllegalArgumentException::class.java)
+        fail("Expecting ${IllegalArgumentException::class.java} to be thrown")
       } catch (x: IllegalArgumentException) {
         // Expected
       }
