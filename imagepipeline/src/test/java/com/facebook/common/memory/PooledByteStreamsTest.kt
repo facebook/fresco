@@ -13,6 +13,7 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.Arrays
+import kotlin.test.fail
 import org.assertj.core.api.Assertions
 import org.junit.Before
 import org.junit.Test
@@ -68,7 +69,7 @@ class PooledByteStreamsTest {
             }
           },
       )
-      Assertions.fail("Expected IOException was not thrown")
+      fail("Expected IOException was not thrown")
     } catch (ioe: IOException) {
       // expected
     }
@@ -97,7 +98,7 @@ class PooledByteStreamsTest {
           },
           3,
       )
-      Assertions.fail("Expected IOException was not thrown")
+      fail("Expected IOException was not thrown")
     } catch (ioe: IOException) {
       // expected
     }

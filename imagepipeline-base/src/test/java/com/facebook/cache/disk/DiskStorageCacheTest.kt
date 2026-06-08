@@ -33,8 +33,8 @@ import java.io.RandomAccessFile
 import java.util.Locale
 import java.util.concurrent.CyclicBarrier
 import java.util.concurrent.TimeUnit
+import kotlin.test.fail
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.fail
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

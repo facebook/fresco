@@ -32,6 +32,7 @@ dependencies {
     testImplementation TestDeps.junit
     testImplementation TestDeps.assertjCore
     testImplementation TestDeps.festAssertCore
+    testImplementation TestDeps.kotlinTest
     testImplementation TestDeps.mockitoCore3
     testImplementation TestDeps.mockitoInline3
     testImplementation TestDeps.mockitoKotlin3

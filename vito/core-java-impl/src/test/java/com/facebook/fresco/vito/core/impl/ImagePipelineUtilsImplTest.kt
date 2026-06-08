@@ -17,8 +17,8 @@ import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.common.RotationOptions
 import com.facebook.imagepipeline.core.DownsampleMode
 import com.facebook.imagepipeline.testing.TestNativeLoader
+import kotlin.test.fail
 import org.assertj.core.api.Assertions
-import org.assertj.core.api.Assertions.fail
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
