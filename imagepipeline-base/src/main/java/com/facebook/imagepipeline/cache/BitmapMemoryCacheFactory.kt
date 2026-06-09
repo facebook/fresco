@@ -14,7 +14,7 @@ import com.facebook.imagepipeline.cache.CountingMemoryCache.EntryStateObserver
 import com.facebook.imagepipeline.cache.MemoryCache.CacheTrimStrategy
 import com.facebook.imagepipeline.image.CloseableImage
 
-fun interface BitmapMemoryCacheFactory {
+interface BitmapMemoryCacheFactory {
   fun create(
       bitmapMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>,
       memoryTrimmableRegistry: MemoryTrimmableRegistry,
@@ -23,4 +23,12 @@ fun interface BitmapMemoryCacheFactory {
       ignoreSizeMismatch: Boolean,
       observer: EntryStateObserver<CacheKey>?,
   ): CountingMemoryCache<CacheKey, CloseableImage>
+
+  /**
+   * True if the produced cache evicts WITHOUT relying on CloseableReference counts (i.e. safe to
+   * use when bitmaps are in REF_TYPE_NOOP mode). Counting caches that evict via client-reference
+   * exclusivity MUST return false (the default), because under NOOP their client count never
+   * reaches zero and they would never evict -> unbounded growth.
+   */
+  fun isGcSafe(): Boolean = false
 }

@@ -9,8 +9,17 @@ package com.facebook.fresco.ig.imageloader.sample
 
 import android.content.Context
 import android.util.Log
+import com.facebook.cache.common.CacheKey
+import com.facebook.common.internal.Supplier
+import com.facebook.common.memory.MemoryTrimmableRegistry
+import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory
+import com.facebook.imagepipeline.cache.CountingMemoryCache
+import com.facebook.imagepipeline.cache.CountingMemoryCache.EntryStateObserver
+import com.facebook.imagepipeline.cache.MemoryCache.CacheTrimStrategy
+import com.facebook.imagepipeline.cache.MemoryCacheParams
 import com.facebook.imagepipeline.core.ImagePipelineConfig
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig
+import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.quicklog.NoOpQuickPerformanceLogger
 import com.facebook.storage.supplier.igapps.IGAppsStorageDependencySupplier
 import com.instagram.common.api.base.httprequest.HttpRequestPolicy
@@ -199,7 +208,18 @@ object SampleInfraFactory {
 
     // Share memory cache between IG and Fresco pipelines (production pattern)
     if (memoryCache is IgFrescoBitmapCacheAdapter) {
-      builder.setBitmapMemoryCacheFactory { _, _, _, _, _, _ -> memoryCache.countingMemoryCache }
+      builder.setBitmapMemoryCacheFactory(
+          object : BitmapMemoryCacheFactory {
+            override fun create(
+                bitmapMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>,
+                memoryTrimmableRegistry: MemoryTrimmableRegistry,
+                trimStrategy: CacheTrimStrategy,
+                storeEntrySize: Boolean,
+                ignoreSizeMismatch: Boolean,
+                observer: EntryStateObserver<CacheKey>?,
+            ): CountingMemoryCache<CacheKey, CloseableImage> = memoryCache.countingMemoryCache
+          }
+      )
       Log.d(TAG, "Fresco config: sharing IgFrescoBitmapCacheAdapter with Fresco pipeline")
     }
 
