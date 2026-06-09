@@ -191,14 +191,10 @@ class KFrescoController(
         d.offerBackOnRelease = {
           val req = d.imageRequest
           val ref = d.closeable as? CloseableReference<*>
-          if (
-              req != null &&
-                  ref != null &&
-                  CloseableReference.isValid(ref) &&
-                  ref.get() is CloseableImage
-          ) {
+          val image = if (ref?.isValid() == true) ref.get() else null
+          if (req != null && image is CloseableImage) {
             val shouldOfferBack =
-                if (ref.get() is CloseableBitmap) useOfferBackBitmap else useOfferBackNonBitmap
+                if (image is CloseableBitmap) useOfferBackBitmap else useOfferBackNonBitmap
             if (shouldOfferBack) {
               @Suppress("UNCHECKED_CAST")
               vitoImagePipeline.returnImageToCache(req, ref as CloseableReference<CloseableImage>)

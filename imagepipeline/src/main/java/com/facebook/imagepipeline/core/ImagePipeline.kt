@@ -30,7 +30,6 @@ import com.facebook.imagepipeline.common.Priority
 import com.facebook.imagepipeline.datasource.CloseableProducerToDataSourceAdapter
 import com.facebook.imagepipeline.datasource.ProducerToDataSourceAdapter.Companion.create
 import com.facebook.imagepipeline.image.CloseableImage
-import com.facebook.imagepipeline.image.CloseableStaticBitmap
 import com.facebook.imagepipeline.listener.ForwardingRequestListener
 import com.facebook.imagepipeline.listener.ForwardingRequestListener2
 import com.facebook.imagepipeline.listener.RequestListener
@@ -1053,9 +1052,16 @@ class ImagePipeline(
 
   /**
    * Returns an image reference to the bitmap memory cache. Used by Vito on detach to give recently
-   * displayed images a second life in the cache, improving scroll-back hit rate. The image is only
-   * cached if it is still valid and of full quality, to avoid replacing better cached entries with
-   * intermediate or stale images.
+   * displayed images a second life in the cache, improving scroll-back hit rate.
+   *
+   * Accepts any [CloseableImage] (static bitmaps as well as non-bitmap images such as animated or
+   * XML/SVG decodes); the receiving cache decides where it lands — when a routing cache is enabled,
+   * non-bitmap images are routed to the dedicated non-bitmap cache. Callers (Vito) are responsible
+   * for only offering back the image types they intend via the typed offer-back flags. The image is
+   * only cached if it is still valid, non-stateful, and of full quality, to avoid replacing better
+   * cached entries with intermediate or stale images, and consistent with
+   * `BitmapMemoryCacheProducer`'s refusal to cache stateful images (whose per-view render state,
+   * e.g. current animation frame, must not be shared across views).
    */
   fun returnImageToCache(
       cacheKey: CacheKey,
@@ -1063,7 +1069,7 @@ class ImagePipeline(
   ) {
     if (!CloseableReference.isValid(imageReference)) return
     val image = imageReference.get() ?: return
-    if (image !is CloseableStaticBitmap) return
+    if (image.isStateful) return
     if (!image.qualityInfo.isOfFullQuality) return
     CloseableReference.closeSafely(bitmapMemoryCache.cache(cacheKey, imageReference))
   }
