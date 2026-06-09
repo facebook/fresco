@@ -67,7 +67,7 @@ object FrescoVitoTapToRetryImageSpec {
   @OnCreateLayout
   fun onCreateLayout(
       c: ComponentContext,
-      @Prop imageSource: ImageSource?,
+      @Prop(optional = true) imageSource: ImageSource?,
       @Prop(optional = true) fallbackImageSource: ImageSource?,
       @Prop(optional = true) callerContext: Any?,
       @Prop(optional = true, resType = ResType.FLOAT) imageAspectRatio: Float,
