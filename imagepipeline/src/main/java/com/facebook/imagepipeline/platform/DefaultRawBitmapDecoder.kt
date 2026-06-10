@@ -264,6 +264,8 @@ class DefaultRawBitmapDecoder(
     return decodedBitmap
   }
 
+  override fun handlesJpegEoiAppendNatively(): Boolean = true
+
   override fun decodeJpeg(
       jpegStream: InputStream,
       prePassStream: InputStream?,

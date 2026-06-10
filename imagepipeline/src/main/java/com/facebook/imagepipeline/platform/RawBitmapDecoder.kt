@@ -81,6 +81,14 @@ interface RawBitmapDecoder {
     return decode(decodeStream, bitmapConfig, sampleSize, colorSpace)
   }
 
+  /**
+   * Returns true when [decodeJpeg] handles incomplete JPEG EOI repair internally.
+   *
+   * Implementations that return false should be passed complete JPEG bytes, or callers must append
+   * an EOI marker before decode when [isJpegComplete] is false.
+   */
+  fun handlesJpegEoiAppendNatively(): Boolean = false
+
   fun decodeJpeg(
       jpegStream: InputStream,
       prePassStream: InputStream?,
