@@ -17,6 +17,7 @@ import com.facebook.common.internal.Preconditions;
 import com.facebook.common.internal.Supplier;
 import com.facebook.common.logging.FLog;
 import com.facebook.common.memory.PooledByteBuffer;
+import com.facebook.common.references.CloseableReference;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imageformat.ImageFormatChecker;
@@ -24,6 +25,7 @@ import com.facebook.imagepipeline.animated.factory.AnimatedFactory;
 import com.facebook.imagepipeline.animated.factory.AnimatedFactoryProvider;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory;
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactoryProvider;
+import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.CountingLruBitmapMemoryCacheFactory;
 import com.facebook.imagepipeline.cache.CountingMemoryCache;
 import com.facebook.imagepipeline.cache.EncodedCountingMemoryCacheFactory;
@@ -226,18 +228,39 @@ public class ImagePipelineFactory {
 
   public CountingMemoryCache<CacheKey, CloseableImage> getBitmapCountingMemoryCache() {
     if (mBitmapCountingMemoryCache == null) {
+      BitmapMemoryCacheFactory bitmapMemoryCacheFactory = mConfig.getBitmapMemoryCacheFactory();
+      if (isNoopWithNonGcSafeFactory(bitmapMemoryCacheFactory)) {
+        FLog.wtf(
+            TAG,
+            "Bitmap refs are REF_TYPE_NOOP but bitmap cache factory %s is not GC-safe; its "
+                + "counting cache will never evict under NOOP -> unbounded growth/OOM.",
+            bitmapMemoryCacheFactory.getClass().getName());
+      }
       mBitmapCountingMemoryCache =
-          mConfig
-              .getBitmapMemoryCacheFactory()
-              .create(
-                  mConfig.getBitmapMemoryCacheParamsSupplier(),
-                  mConfig.getMemoryTrimmableRegistry(),
-                  mConfig.getBitmapMemoryCacheTrimStrategy(),
-                  mConfig.getExperiments().getShouldStoreCacheEntrySize(),
-                  mConfig.getExperiments().getShouldIgnoreCacheSizeMismatch(),
-                  mConfig.getBitmapMemoryCacheEntryStateObserver());
+          bitmapMemoryCacheFactory.create(
+              mConfig.getBitmapMemoryCacheParamsSupplier(),
+              mConfig.getMemoryTrimmableRegistry(),
+              mConfig.getBitmapMemoryCacheTrimStrategy(),
+              mConfig.getExperiments().getShouldStoreCacheEntrySize(),
+              mConfig.getExperiments().getShouldIgnoreCacheSizeMismatch(),
+              mConfig.getBitmapMemoryCacheEntryStateObserver());
     }
     return mBitmapCountingMemoryCache;
+  }
+
+  /**
+   * Returns true when bitmap {@link CloseableReference}s are in {@link
+   * CloseableReference#REF_TYPE_NOOP} mode while the configured bitmap cache factory is NOT
+   * GC-safe.
+   *
+   * <p>This is a dangerous combination: a non-GC-safe (counting) cache evicts by waiting for the
+   * client reference count to drop to zero, but under NOOP refs that count never reaches zero, so
+   * the cache would never evict, leading to unbounded growth / OOM. Extracted as a package-private
+   * static helper so the predicate can be unit-tested directly.
+   */
+  static boolean isNoopWithNonGcSafeFactory(BitmapMemoryCacheFactory bitmapMemoryCacheFactory) {
+    return CloseableReference.getBitmapCloseableRefType() == CloseableReference.REF_TYPE_NOOP
+        && !bitmapMemoryCacheFactory.isGcSafe();
   }
 
   public InstrumentedMemoryCache<CacheKey, CloseableImage> getBitmapMemoryCache() {
