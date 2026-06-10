@@ -41,6 +41,22 @@ interface MemoryCache<K, V> : MemoryTrimmable, HasDebugData {
   fun cache(key: K, value: CloseableReference<V>): CloseableReference<V>?
 
   /**
+   * Caches a value that is being released by its last UI holder — i.e. Vito's "offer-back" on
+   * detach (see [com.facebook.imagepipeline.core.ImagePipeline.returnImageToCache]).
+   *
+   * Defaults to [cache]. GC-managed caches that hold values only weakly may override this to give
+   * the released value a bounded strong-reference "second life", so it survives GC long enough to
+   * be re-served on scroll-back without raising steady-state peak memory.
+   *
+   * Wrapping/delegating caches MUST forward this to their delegate(s) rather than inheriting the
+   * default — otherwise the override on the wrapped cache is never reached.
+   *
+   * @return a new reference to be used, or null if the caching failed
+   */
+  fun cacheOnRelease(key: K, value: CloseableReference<V>): CloseableReference<V>? =
+      cache(key, value)
+
+  /**
    * Gets the item with the given key, or null if there is no such item.
    *
    * @param key

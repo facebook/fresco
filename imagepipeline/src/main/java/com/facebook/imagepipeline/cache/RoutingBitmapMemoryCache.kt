@@ -51,6 +51,18 @@ class RoutingBitmapMemoryCache(
     }
   }
 
+  override fun cacheOnRelease(
+      key: CacheKey,
+      value: CloseableReference<CloseableImage>,
+  ): CloseableReference<CloseableImage>? {
+    val image = value.get() ?: return null
+    return if (image is CloseableBitmap) {
+      bitmapCache.cacheOnRelease(key, value)
+    } else {
+      nonBitmapCache.cacheOnRelease(key, value)
+    }
+  }
+
   override fun get(key: CacheKey): CloseableReference<CloseableImage>? =
       bitmapCache[key] ?: nonBitmapCache[key]
 

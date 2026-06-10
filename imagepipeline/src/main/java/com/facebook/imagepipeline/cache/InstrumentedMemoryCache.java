@@ -53,6 +53,12 @@ public class InstrumentedMemoryCache<K, V> implements MemoryCache<K, V> {
   }
 
   @Override
+  public @Nullable CloseableReference<V> cacheOnRelease(K key, CloseableReference<V> value) {
+    mTracker.onCachePut(key);
+    return mDelegate.cacheOnRelease(key, value);
+  }
+
+  @Override
   public int removeAll(Predicate<K> predicate) {
     return mDelegate.removeAll(predicate);
   }
