@@ -30,6 +30,17 @@ object ImageSourceProvider {
 
   var shortcutResUris: Boolean = false
 
+  /**
+   * When true, an empty (but non-null) [Uri] passed to [forUri] is treated as an empty image source
+   * (it maps to an empty image source) instead of building a fetchable request that fails
+   * downstream in the producer with "Unsupported uri scheme! Uri is: <>". The host app sets this
+   * from MobileConfig (android_fresco_vito_config.handle_empty_uri_earlier); defaults to false to
+   * preserve the legacy behavior. Note: the [forUri(String)] path is additionally short-circuited
+   * by [uriParser] when the same flag is on; this covers the [forUri(Uri)] path that bypasses
+   * parsing.
+   */
+  var treatEmptyUriAsImageSource: Boolean = false
+
   var uriCacheSize: Int = 0
 
   val uriCache: LruCache<String, Uri>? by
@@ -44,6 +55,7 @@ object ImageSourceProvider {
 
   private val emptyImageSource = EmptyImageSource("emptySource()")
   private val nullUriImageSource = EmptyImageSource("forUri(null)")
+  private val emptyUriImageSource = EmptyImageSource("forUri(empty)")
 
   /** @return an empty image source if no image URI is available to pass to the UI component */
   @JvmStatic fun emptySource(): ImageSource = emptyImageSource
@@ -59,6 +71,10 @@ object ImageSourceProvider {
   fun forUri(uri: Uri?, extras: Map<String, Any>? = null): ImageSource =
       if (uri == null) {
         nullUriImageSource
+      } else if (treatEmptyUriAsImageSource && uri.toString().isEmpty()) {
+        // Empty (non-null) Uri would otherwise build a fetchable request whose scheme matches no
+        // SourceUriType and throws "Unsupported uri scheme! Uri is: <>" in ProducerSequenceFactory.
+        emptyUriImageSource
       } else if (shortcutResUris && uri.scheme == "res") {
         val resId = uri.lastPathSegment?.toInt() ?: 0
         DrawableResImageSource(resId)
