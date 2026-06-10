@@ -10,6 +10,7 @@ package com.facebook.imagepipeline.memory
 import android.graphics.Bitmap
 import com.facebook.common.internal.Sets
 import com.facebook.common.memory.MemoryTrimType
+import com.facebook.common.references.CloseableReference
 import com.facebook.imageutils.BitmapUtil
 
 class DummyTrackingInUseBitmapPool : BitmapPool {
@@ -33,8 +34,10 @@ class DummyTrackingInUseBitmapPool : BitmapPool {
   }
 
   override fun release(value: Bitmap) {
-    checkNotNull(value)
     inUseValues.remove(value)
-    value.recycle()
+    if (!CloseableReference.shouldSkipBitmapRecycleForNoopRefs()) {
+      value.recycle()
+    }
+    // else: NOOP refs — the bitmap may still be referenced/drawn; let GC reclaim it.
   }
 }

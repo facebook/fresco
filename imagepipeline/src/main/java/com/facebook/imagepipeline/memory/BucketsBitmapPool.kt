@@ -11,6 +11,7 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import com.facebook.common.internal.Preconditions
 import com.facebook.common.memory.MemoryTrimmableRegistry
+import com.facebook.common.references.CloseableReference
 import com.facebook.imageutils.BitmapUtil
 import kotlin.math.ceil
 
@@ -58,7 +59,10 @@ class BucketsBitmapPool(
    * @param value the bitmap to free
    */
   override fun free(value: Bitmap) {
-    value.recycle()
+    if (!CloseableReference.shouldSkipBitmapRecycleForNoopRefs()) {
+      value.recycle()
+    }
+    // else: NOOP refs — the bitmap may still be referenced/drawn; let GC reclaim it.
   }
 
   /**

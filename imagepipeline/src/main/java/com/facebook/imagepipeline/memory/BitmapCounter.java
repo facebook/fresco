@@ -9,6 +9,7 @@ package com.facebook.imagepipeline.memory;
 
 import android.graphics.Bitmap;
 import com.facebook.common.internal.Preconditions;
+import com.facebook.common.references.CloseableReference;
 import com.facebook.common.references.ResourceReleaser;
 import com.facebook.imageutils.BitmapUtil;
 import com.facebook.infer.annotation.Nullsafe;
@@ -40,7 +41,10 @@ public class BitmapCounter {
             try {
               decrease(value);
             } finally {
-              value.recycle();
+              if (!CloseableReference.shouldSkipBitmapRecycleForNoopRefs()) {
+                value.recycle();
+              }
+              // else: NOOP refs — the bitmap may still be referenced/drawn; let GC reclaim it.
             }
           }
         };

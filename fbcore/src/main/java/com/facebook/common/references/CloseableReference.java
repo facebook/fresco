@@ -82,9 +82,28 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
 
   private static @CloseableRefType int sBitmapCloseableRefType = REF_TYPE_DEFAULT;
 
+  private static volatile boolean sSkipBitmapRecycleForNoopRefs = false;
+
   public static void setDisableCloseableReferencesForBitmaps(
       @CloseableRefType int bitmapCloseableRefType) {
     sBitmapCloseableRefType = bitmapCloseableRefType;
+  }
+
+  public static @CloseableRefType int getBitmapCloseableRefType() {
+    return sBitmapCloseableRefType;
+  }
+
+  /**
+   * Independently controls the bitmap-pool recycle skip behavior so it can be A/B tested separately
+   * from the ref-type rollout.
+   */
+  public static void setSkipBitmapRecycleForNoopRefs(boolean skip) {
+    sSkipBitmapRecycleForNoopRefs = skip;
+  }
+
+  /** True when a bitmap pool should skip {@link Bitmap#recycle()}. Gated by an A/B test. */
+  public static boolean shouldSkipBitmapRecycleForNoopRefs() {
+    return sSkipBitmapRecycleForNoopRefs && sBitmapCloseableRefType == REF_TYPE_NOOP;
   }
 
   @GuardedBy("this")
