@@ -10,4 +10,5 @@ package com.facebook.common.util
 object ByteConstants {
   const val KB: Int = 1024
   const val MB: Int = 1024 * KB
+  const val GB: Long = 1024L * MB
 }
