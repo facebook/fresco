@@ -255,10 +255,12 @@ public class ImagePipelineFactory {
    *
    * <p>This is a dangerous combination: a non-GC-safe (counting) cache evicts by waiting for the
    * client reference count to drop to zero, but under NOOP refs that count never reaches zero, so
-   * the cache would never evict, leading to unbounded growth / OOM. Extracted as a package-private
-   * static helper so the predicate can be unit-tested directly.
+   * the cache would never evict, leading to unbounded growth / OOM. Extracted as a static helper so
+   * the predicate can be unit-tested directly and reused by FB4A config code that needs to enforce
+   * the same invariant at cache-factory selection time.
    */
-  static boolean isNoopWithNonGcSafeFactory(BitmapMemoryCacheFactory bitmapMemoryCacheFactory) {
+  public static boolean isNoopWithNonGcSafeFactory(
+      BitmapMemoryCacheFactory bitmapMemoryCacheFactory) {
     return CloseableReference.getBitmapCloseableRefType() == CloseableReference.REF_TYPE_NOOP
         && !bitmapMemoryCacheFactory.isGcSafe();
   }
