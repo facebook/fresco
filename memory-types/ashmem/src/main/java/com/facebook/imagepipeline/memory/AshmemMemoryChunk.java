@@ -30,6 +30,7 @@ public class AshmemMemoryChunk implements MemoryChunk, Closeable {
   /** Unique identifier of the chunk */
   private final long mId;
 
+  @SuppressWarnings("this-escape")
   public AshmemMemoryChunk(final int size) {
     Preconditions.checkArgument(size > 0);
     try {
@@ -41,6 +42,7 @@ public class AshmemMemoryChunk implements MemoryChunk, Closeable {
     mId = System.identityHashCode(this);
   }
 
+  @SuppressWarnings("this-escape")
   @VisibleForTesting
   public AshmemMemoryChunk() {
     mSharedMemory = null;
