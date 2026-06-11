@@ -500,6 +500,7 @@ class DecodeProducer(
       maxBitmapDimension: Int,
   ) : ProgressiveDecoder(consumer, producerContext, decodeCancellationEnabled, maxBitmapDimension) {
     @Synchronized
+    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun updateDecodeJob(
         encodedImage: EncodedImage?,
         @Consumer.Status status: Int,
@@ -525,6 +526,7 @@ class DecodeProducer(
       maxBitmapDimension: Int,
   ) : ProgressiveDecoder(consumer, producerContext, decodeCancellationEnabled, maxBitmapDimension) {
     @Synchronized
+    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun updateDecodeJob(
         encodedImage: EncodedImage?,
         @Consumer.Status status: Int,

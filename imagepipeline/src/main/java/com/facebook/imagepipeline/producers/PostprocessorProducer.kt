@@ -364,6 +364,7 @@ class PostprocessorProducer(
       updateInternal()
     }
 
+    @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
     override fun onFailureImpl(throwable: Throwable) {
       if (close()) {
         consumer.onFailure(throwable)

@@ -43,6 +43,7 @@ protected constructor(
         )
       }
 
+      @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
       override fun onFailureImpl(throwable: Throwable) {
         this@AbstractProducerToDataSourceAdapter.onFailureImpl(throwable)
       }
