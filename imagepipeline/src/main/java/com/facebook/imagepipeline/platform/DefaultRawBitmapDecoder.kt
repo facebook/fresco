@@ -28,8 +28,8 @@ import java.util.Locale
 import javax.annotation.concurrent.ThreadSafe
 
 /**
- * Pool-free bitmap decoder using [BitmapFactory.decodeStream]. Produces mutable bitmaps. Delegates
- * to [RawBitmapDecoder] interface for use by both DefaultDecoder and IG adapter.
+ * Pool-free bitmap decoder using [BitmapFactory.decodeStream]. Produces mutable bitmaps. Implements
+ * the [RawBitmapDecoder] interface.
  */
 @ThreadSafe
 class DefaultRawBitmapDecoder(
@@ -50,7 +50,106 @@ class DefaultRawBitmapDecoder(
       sampleSize: Int,
       colorSpace: ColorSpace?,
   ): Bitmap? {
+    // Fast path for callers that already hold the bytes and use no BitmapPool: decode directly
+    // from the array, avoiding the ByteArrayInputStream + BitmapFactory.decodeStream indirection.
+    // Gated so the stream-based pooled path is unaffected.
+    if (platformDecoderOptions.preferByteArrayDecode && bitmapPool == null) {
+      return decodeByteArray(data, offset, length, bitmapConfig, sampleSize, colorSpace)
+    }
     return decode(ByteArrayInputStream(data, offset, length), bitmapConfig, sampleSize, colorSpace)
+  }
+
+  /** Pool-free byte-array decode via [BitmapFactory.decodeByteArray]. */
+  private fun decodeByteArray(
+      data: ByteArray,
+      offset: Int,
+      length: Int,
+      bitmapConfig: Bitmap.Config,
+      sampleSize: Int,
+      colorSpace: ColorSpace?,
+  ): Bitmap? {
+    val options = buildDecodeOptions(sampleSize, null, bitmapConfig)
+    if (
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+            (platformDecoderOptions.forceSrgbColorSpace || colorSpace != null)
+    ) {
+      options.inPreferredColorSpace = colorSpace ?: ColorSpace.get(ColorSpace.Named.SRGB)
+    }
+    // Reject images with invalid or excessively large dimensions before passing to the native
+    // decoder. Some vendor JPEG libraries (libjpeg-alpha.so) crash on malformed or oversized data.
+    if (platformDecoderOptions.enableDecodeDimensionValidation) {
+      val boundsOptions = BitmapFactory.Options()
+      boundsOptions.inJustDecodeBounds = true
+      BitmapFactory.decodeByteArray(data, offset, length, boundsOptions)
+      val w = boundsOptions.outWidth
+      val h = boundsOptions.outHeight
+      if (w <= 0 || h <= 0 || w > MAX_DECODE_DIMENSION || h > MAX_DECODE_DIMENSION) {
+        val message =
+            String.format(
+                Locale.ROOT,
+                "Rejecting decode with invalid dimensions: %dx%d",
+                w,
+                h,
+            )
+        FLog.e(TAG, message)
+        platformDecoderOptions.errorReporter?.reportError(
+            "DECODE_DIMENSION_VALIDATION",
+            message,
+            null,
+        )
+        return null
+      }
+    }
+    var byteBuffer = decodeBuffers.acquire()
+    if (byteBuffer == null) {
+      byteBuffer = ByteBuffer.allocate(DecodeBufferHelper.getRecommendedDecodeBufferSize())
+    }
+    return try {
+      options.inTempStorage = byteBuffer.array()
+      BitmapFactory.decodeByteArray(data, offset, length, options)
+    } catch (e: IllegalArgumentException) {
+      // This is thrown if the Bitmap options are invalid, so let's just try to decode the bitmap
+      // as-is, which might be inefficient - but it works.
+      val naiveDecodedBitmap = BitmapFactory.decodeByteArray(data, offset, length)
+      naiveDecodedBitmap
+          ?: if (platformDecoderOptions.catchNativeDecoderErrors) {
+            FLog.e(TAG, "Native decoder error", e)
+            platformDecoderOptions.errorReporter?.reportError(
+                "NATIVE_DECODER_ERROR",
+                "Native decoder error",
+                e,
+            )
+            null
+          } else {
+            throw e
+          }
+    } catch (re: RuntimeException) {
+      if (platformDecoderOptions.catchNativeDecoderErrors) {
+        FLog.e(TAG, "Native decoder error", re)
+        platformDecoderOptions.errorReporter?.reportError(
+            "NATIVE_DECODER_ERROR",
+            "Native decoder error",
+            re,
+        )
+        null
+      } else {
+        throw re
+      }
+    } catch (error: Error) {
+      if (platformDecoderOptions.catchNativeDecoderErrors) {
+        FLog.e(TAG, "Native decoder error", error)
+        platformDecoderOptions.errorReporter?.reportError(
+            "NATIVE_DECODER_ERROR",
+            "Native decoder error",
+            error,
+        )
+        null
+      } else {
+        throw error
+      }
+    } finally {
+      decodeBuffers.release(byteBuffer)
+    }
   }
 
   override fun decode(
@@ -167,8 +266,13 @@ class DefaultRawBitmapDecoder(
     // inBitmap can be nullable
     options.inBitmap = bitmapToReuse
 
-    // Performs transformation at load time to target color space.
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    // Performs transformation at load time to target color space. Skipped when
+    // forceSrgbColorSpace is false and no explicit colorSpace was requested, to avoid the
+    // sRGB conversion cost for sources that don't need it.
+    if (
+        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+            (platformDecoderOptions.forceSrgbColorSpace || colorSpace != null)
+    ) {
       options.inPreferredColorSpace = colorSpace ?: ColorSpace.get(ColorSpace.Named.SRGB)
     }
 
@@ -304,13 +408,20 @@ class DefaultRawBitmapDecoder(
     val options = BitmapFactory.Options()
     options.inSampleSize = sampleSize
     options.inJustDecodeBounds = true
-    options.inDither = true
+    options.inDither = platformDecoderOptions.enableDither
     val isHardwareBitmap =
         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && bitmapConfig == Bitmap.Config.HARDWARE
     if (!isHardwareBitmap) {
       options.inPreferredConfig = bitmapConfig
     }
-    options.inMutable = true
+    // Mutable bitmaps are only needed for inBitmap reuse (a non-null BitmapPool). When immutable
+    // bitmaps are requested, skip inMutable so the bitmap is cheaper and hardware configs are
+    // possible. Defaults to mutable to preserve existing pooled behavior.
+    options.inMutable = !platformDecoderOptions.decodeImmutableBitmaps || bitmapPool != null
+    if (isHardwareBitmap) {
+      // HARDWARE bitmaps cannot be mutable
+      options.inMutable = false
+    }
     if (prePassStream != null) {
       BitmapFactory.decodeStream(prePassStream, null, options)
       if (options.outWidth == -1 || options.outHeight == -1) {
