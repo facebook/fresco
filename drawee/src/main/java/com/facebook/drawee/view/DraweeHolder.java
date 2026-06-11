@@ -71,6 +71,7 @@ public class DraweeHolder<DH extends DraweeHierarchy> implements VisibilityCallb
    *
    * @param hierarchy
    */
+  @SuppressWarnings("this-escape")
   public DraweeHolder(@Nullable DH hierarchy) {
     if (hierarchy != null) {
       setHierarchy(hierarchy);

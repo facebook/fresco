@@ -43,6 +43,7 @@ public class GestureDetector {
   @VisibleForTesting float mActionDownX;
   @VisibleForTesting float mActionDownY;
 
+  @SuppressWarnings("this-escape")
   public GestureDetector(Context context) {
     final ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
     mSingleTapSlopPx = viewConfiguration.getScaledTouchSlop();

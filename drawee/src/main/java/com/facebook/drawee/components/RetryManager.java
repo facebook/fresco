@@ -18,6 +18,7 @@ public class RetryManager {
   private int mMaxTapToRetryAttempts;
   private int mTapToRetryAttempts;
 
+  @SuppressWarnings("this-escape")
   public RetryManager() {
     init();
   }
