@@ -30,4 +30,4 @@ data class Dimensions(val w: Int, val h: Int) {
   override fun hashCode(): Int = 31 * w + h
 }
 
-fun Rect.asDimensions() = Dimensions(width(), height())
+fun Rect.asDimensions(): Dimensions = Dimensions(width(), height())
