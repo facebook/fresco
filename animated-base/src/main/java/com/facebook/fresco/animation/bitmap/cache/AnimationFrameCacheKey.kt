@@ -24,19 +24,19 @@ constructor(imageId: Int, private val deepEquals: Boolean = false) : CacheKey {
 
   override fun isResourceIdForDebugging(): Boolean = false
 
-  override fun equals(o: Any?): Boolean {
+  override fun equals(other: Any?): Boolean {
     if (!deepEquals) {
-      return super.equals(o)
+      return super.equals(other)
     }
 
-    if (this === o) {
+    if (this === other) {
       return true
     }
-    if (o == null || javaClass != o.javaClass) {
+    if (other == null || javaClass != other.javaClass) {
       return false
     }
 
-    val that = o as AnimationFrameCacheKey
+    val that = other as AnimationFrameCacheKey
     return animationUriString == that.animationUriString
   }
 
