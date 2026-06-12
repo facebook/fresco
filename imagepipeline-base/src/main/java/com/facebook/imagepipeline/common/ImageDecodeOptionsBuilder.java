@@ -344,6 +344,7 @@ public class ImageDecodeOptionsBuilder<T extends ImageDecodeOptionsBuilder> {
     return new ImageDecodeOptions(this);
   }
 
+  @SuppressWarnings("unchecked")
   protected T getThis() {
     return (T) this;
   }

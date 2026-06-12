@@ -98,6 +98,7 @@ public abstract class BaseCloseableImage implements CloseableImage {
     return getExtra(key, null);
   }
 
+  @SuppressWarnings("unchecked")
   @Override
   public <T> T getExtra(String key, @Nullable T valueIfNotFound) {
     Object value = mExtras.get(key);

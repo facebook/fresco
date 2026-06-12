@@ -519,6 +519,7 @@ public class EncodedImage implements Closeable, HasExtraData {
     mExtras.putAll(extras);
   }
 
+  @SuppressWarnings("unchecked")
   @Nullable
   @Override
   public <T> T getExtra(String key) {
@@ -526,6 +527,7 @@ public class EncodedImage implements Closeable, HasExtraData {
     return (T) mExtras.get(key);
   }
 
+  @SuppressWarnings("unchecked")
   @Nullable
   @Override
   public <E> E getExtra(String key, @Nullable E valueIfNotFound) {
