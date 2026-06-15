@@ -27,6 +27,11 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class AnimatedDrawable2CircuitBreakerTest {
 
+  companion object {
+    // Must match DEFAULT_MAX_CONSECUTIVE_DROPPED_FRAMES in AnimatedDrawable2.kt
+    private const val CIRCUIT_BREAKER_THRESHOLD = 150
+  }
+
   @Mock private lateinit var animationBackend: AnimationBackend
   @Mock private lateinit var canvas: Canvas
   @Mock private lateinit var callback: Drawable.Callback
@@ -61,8 +66,8 @@ class AnimatedDrawable2CircuitBreakerTest {
     // All frames fail to render
     whenever(animationBackend.drawFrame(any(), any(), any())).thenReturn(false)
 
-    // Draw more than the circuit breaker threshold (default 30)
-    repeat(31) { drawable.draw(canvas) }
+    // Draw more than the circuit breaker threshold
+    repeat(CIRCUIT_BREAKER_THRESHOLD + 1) { drawable.draw(canvas) }
 
     // Animation should have stopped
     assertThat(drawable.isRunning).isFalse()
@@ -70,19 +75,19 @@ class AnimatedDrawable2CircuitBreakerTest {
 
   @Test
   fun `successful frame resets consecutive drop counter`() {
-    // First 29 frames fail (just under threshold)
+    // First N-1 frames fail (just under threshold)
     whenever(animationBackend.drawFrame(any(), any(), any())).thenReturn(false)
-    repeat(29) { drawable.draw(canvas) }
+    repeat(CIRCUIT_BREAKER_THRESHOLD - 1) { drawable.draw(canvas) }
 
     // One successful frame resets the counter
     whenever(animationBackend.drawFrame(any(), any(), any())).thenReturn(true)
     drawable.draw(canvas)
 
-    // Another 29 failures should not trip the breaker (counter was reset)
+    // Another N-1 failures should not trip the breaker (counter was reset)
     whenever(animationBackend.drawFrame(any(), any(), any())).thenReturn(false)
-    repeat(29) { drawable.draw(canvas) }
+    repeat(CIRCUIT_BREAKER_THRESHOLD - 1) { drawable.draw(canvas) }
 
-    // Should still be running since we never hit 30 consecutive failures
+    // Should still be running since we never hit the threshold consecutive failures
     assertThat(drawable.isRunning).isTrue()
   }
 
@@ -90,7 +95,7 @@ class AnimatedDrawable2CircuitBreakerTest {
   fun `circuit breaker notifies animation listener on stop`() {
     whenever(animationBackend.drawFrame(any(), any(), any())).thenReturn(false)
 
-    repeat(31) { drawable.draw(canvas) }
+    repeat(CIRCUIT_BREAKER_THRESHOLD + 1) { drawable.draw(canvas) }
 
     // onAnimationStop should have been called when the circuit breaker tripped
     verify(animationListener, org.mockito.kotlin.atLeastOnce()).onAnimationStop(drawable)
@@ -100,7 +105,7 @@ class AnimatedDrawable2CircuitBreakerTest {
   fun `start resets circuit breaker after it trips`() {
     // Trip the circuit breaker
     whenever(animationBackend.drawFrame(any(), any(), any())).thenReturn(false)
-    repeat(31) { drawable.draw(canvas) }
+    repeat(CIRCUIT_BREAKER_THRESHOLD + 1) { drawable.draw(canvas) }
     assertThat(drawable.isRunning).isFalse()
 
     // Restart the animation (simulates view becoming visible again)
@@ -128,7 +133,7 @@ class AnimatedDrawable2CircuitBreakerTest {
   fun `animation backend clear is not called when circuit breaker trips`() {
     // Trip the circuit breaker
     whenever(animationBackend.drawFrame(any(), any(), any())).thenReturn(false)
-    repeat(31) { drawable.draw(canvas) }
+    repeat(CIRCUIT_BREAKER_THRESHOLD + 1) { drawable.draw(canvas) }
 
     // clear() should NOT be called — we want to preserve the last drawn frame
     verify(animationBackend, never()).clear()

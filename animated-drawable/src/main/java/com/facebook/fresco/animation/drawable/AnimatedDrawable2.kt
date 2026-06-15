@@ -213,6 +213,13 @@ constructor(private var _animationBackend: AnimationBackend? = null) :
           maxConsecutiveDroppedFrames > 0 &&
               _consecutiveDroppedFrames >= maxConsecutiveDroppedFrames
       ) {
+        FLog.w(
+            TAG,
+            "Animation circuit breaker tripped after %d consecutive dropped frames; stopping animation (frameToDraw=%d, totalDropped=%d)",
+            _consecutiveDroppedFrames,
+            frameNumberToDraw,
+            _droppedFrames,
+        )
         _isRunning = false
         unscheduleSelf(invalidateRunnable)
         animationListener.onAnimationStop(this)
@@ -484,7 +491,9 @@ constructor(private var _animationBackend: AnimationBackend? = null) :
 
     private const val DEFAULT_FRAME_SCHEDULING_DELAY_MS = 8
     private const val DEFAULT_FRAME_SCHEDULING_OFFSET_MS = 0
-    private const val DEFAULT_MAX_CONSECUTIVE_DROPPED_FRAMES = 30
+    // ~150 consecutive dropped frames is roughly 1s (idle) to 5s (under load) of no rendered frame
+    // before the circuit breaker stops the animation, since the draw cadence stretches under load.
+    private const val DEFAULT_MAX_CONSECUTIVE_DROPPED_FRAMES = 150
 
     private fun createSchedulerForBackendAndDelayMethod(
         animationBackend: AnimationBackend?
