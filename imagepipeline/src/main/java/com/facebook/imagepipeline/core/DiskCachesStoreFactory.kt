@@ -20,7 +20,7 @@ class DiskCachesStoreFactory(
     private val poolFactory: PoolFactory,
     private val executorSupplier: ExecutorSupplier,
     private val imageCacheStatsTracker: ImageCacheStatsTracker,
-    @MemoryChunkType private val memoryChunkType: Int,
+    @param:MemoryChunkType private val memoryChunkType: Int,
     private val mainDiskCacheConfig: DiskCacheConfig,
     private val smallImageDiskCacheConfig: DiskCacheConfig,
     private val dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>?,
