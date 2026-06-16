@@ -38,12 +38,8 @@ jobs:
       run: echo '${{ secrets.GPG_KEY_CONTENTS }}' | base64 -d > /tmp/secring.gpg
     - name: Update gradle.properties
       run: echo -e "signing.secretKeyRingFile=/tmp/secring.gpg\nsigning.keyId=${{ secrets.SIGNING_KEY_ID }}\nsigning.password=${{ secrets.SIGNING_PASSWORD }}\nmavenCentralPassword=${{ secrets.SONATYPE_NEXUS_PASSWORD }}\nmavenCentralUsername=${{ secrets.SONATYPE_NEXUS_USERNAME }}" >> gradle.properties
-    - name: Upload Android Archives
-      run: ./gradlew publish --no-daemon --no-parallel --info --stacktrace
-      env:
-        ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
-    - name: Release and close
-      run: ./gradlew closeAndReleaseRepository
+    - name: Upload and release Android Archives
+      run: ./gradlew publishAndReleaseToMavenCentral --no-daemon --no-parallel --info --stacktrace
       env:
         ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
     - name: Clean secrets
