@@ -340,7 +340,7 @@ class DiskStorageCache(
   override fun remove(key: CacheKey) {
     synchronized(lock) {
       try {
-        var resourceId: String? = null
+        var resourceId: String?
         val resourceIds: List<String> = CacheKeyUtil.getResourceIds(key)
         for (i in resourceIds.indices) {
           resourceId = resourceIds.get(i)
@@ -571,7 +571,7 @@ class DiskStorageCache(
 
   override fun hasKeySync(key: CacheKey): Boolean {
     synchronized(lock) {
-      var resourceId: String? = null
+      var resourceId: String?
       val resourceIds: List<String?> = CacheKeyUtil.getResourceIds(key)
       for (i in resourceIds.indices) {
         resourceId = resourceIds.get(i)
@@ -589,7 +589,7 @@ class DiskStorageCache(
         return true
       }
       try {
-        var resourceId: String? = null
+        var resourceId: String?
         val resourceIds: List<String> = CacheKeyUtil.getResourceIds(key)
         for (i in resourceIds.indices) {
           resourceId = resourceIds.get(i)
