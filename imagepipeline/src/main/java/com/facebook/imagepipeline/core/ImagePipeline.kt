@@ -941,7 +941,7 @@ class ImagePipeline(
 
     val dynamicDiskCacheIterator = diskCachesStore.dynamicBufferedDiskCaches.iterator()
     var prevTask: Task<Boolean> = Task.forResult(false)
-    var curTask = prevTask
+    var curTask: Task<Boolean>
 
     while (dynamicDiskCacheIterator.hasNext()) {
       val curDynamicDiskCache = dynamicDiskCacheIterator.next().value
