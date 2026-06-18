@@ -28,6 +28,15 @@ class PlatformDecoderOptions(
     // BitmapFactory.decodeByteArray (avoiding ByteArrayInputStream + decodeStream overhead) on the
     // pool-free path. Only applies when no BitmapPool is configured. Defaults to false.
     val preferByteArrayDecode: Boolean = false,
+    // When true, validates input data (bounds check + image header magic bytes) before decoding.
+    // Defaults to true to preserve existing behavior. Set to false to skip validation.
+    val enableInputValidation: Boolean = true,
+    // When true, OOM retry uses RGB_565 (half pixel memory, same resolution).
+    // When false, OOM retry doubles inSampleSize (half resolution, same color depth).
+    val respectLowFidelityConfig: Boolean = false,
+    // When true, decode failures (IOException, IllegalArgumentException, UnsatisfiedLinkError, OOM)
+    // are retried with BitmapFactory before giving up. When false, exceptions propagate.
+    val enableDecodeRetry: Boolean = false,
 ) {
   fun interface DecoderErrorReporter {
     fun reportError(category: String, message: String, cause: Throwable?)
