@@ -245,7 +245,7 @@ class DecodeProducer(
                 internalDecode(encodedImage, length, quality)
               } catch (e: DecodeException) {
                 val failedEncodedImage = e.encodedImage
-                FLog.w(
+                FLog.d(
                     TAG,
                     "%s, {uri: %s, firstEncodedBytes: %s, length: %d}",
                     e.message,
