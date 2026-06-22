@@ -128,7 +128,7 @@ class DecodeProducer(
       encodedImage.sampleSize = sampleSize
     }
 
-    public override fun onNewResultImpl(newResult: EncodedImage?, @Consumer.Status status: Int) =
+    override fun onNewResultImpl(newResult: EncodedImage?, @Consumer.Status status: Int) =
         traceSection("DecodeProducer#onNewResultImpl") {
           val isLast = isLast(status)
           if (isLast) {
@@ -176,11 +176,11 @@ class DecodeProducer(
       super.onProgressUpdateImpl(progress * 0.99f)
     }
 
-    public override fun onFailureImpl(t: Throwable) {
+    override fun onFailureImpl(t: Throwable) {
       handleError(t)
     }
 
-    public override fun onCancellationImpl() {
+    override fun onCancellationImpl() {
       handleCancellation()
     }
 
