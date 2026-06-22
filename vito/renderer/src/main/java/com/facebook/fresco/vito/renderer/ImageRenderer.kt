@@ -40,7 +40,7 @@ object ImageRenderer {
     }
   }
 
-  inline fun BitmapImageDataModel.createRenderCommand(
+  fun BitmapImageDataModel.createRenderCommand(
       shape: Shape,
       paint: Paint,
       imageTransformation: Matrix? = null,
@@ -58,13 +58,13 @@ object ImageRenderer {
         }
       }
 
-  inline fun ColorIntImageDataModel.createRenderCommand(shape: Shape, paint: Paint): RenderCommand {
+  fun ColorIntImageDataModel.createRenderCommand(shape: Shape, paint: Paint): RenderCommand {
     // The image transformation is a no-op for solid colors since it remains a solid color
     paint.color = ColorUtils.multiplyColorAlpha(colorInt, paint.alpha)
     return paintRenderCommand(shape, paint)
   }
 
-  inline fun DrawableImageDataModel.createRenderCommand(
+  fun DrawableImageDataModel.createRenderCommand(
       shape: Shape,
       paint: Paint,
       imageTransformation: Matrix? = null,
@@ -113,7 +113,7 @@ object ImageRenderer {
     }
   }
 
-  inline fun bitmapRenderCommand(
+  fun bitmapRenderCommand(
       paint: Paint,
       bitmap: Bitmap,
       imageTransformation: Matrix?,
@@ -122,11 +122,11 @@ object ImageRenderer {
     canvas.drawBitmap(bitmap, 0f, 0f, paint)
   }
 
-  inline fun paintRenderCommand(shape: Shape, paint: Paint): RenderCommand = { canvas ->
+  fun paintRenderCommand(shape: Shape, paint: Paint): RenderCommand = { canvas ->
     shape.draw(canvas, paint)
   }
 
-  inline fun Paint.setBitmap(
+  fun Paint.setBitmap(
       bitmap: Bitmap,
       shaderTransformation: Matrix? = null,
   ): Paint {
