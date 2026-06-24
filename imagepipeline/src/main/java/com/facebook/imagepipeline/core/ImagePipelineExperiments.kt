@@ -26,6 +26,7 @@ import com.facebook.imagepipeline.decoder.ImageDecoder
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.platform.PlatformDecoderOptions
+import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imageutils.BitmapUtil
 
 /**
@@ -86,6 +87,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val usePostProcessedCacheKey: Boolean
   val usePostprocessorDuringDecodedPrefetch: Boolean
   val useSeparateNonBitmapImageCache: Boolean
+  val encodedImageRequestTransformer: ((ImageRequest) -> ImageRequest)?
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
     @JvmField var shouldUseDecodingBufferHelper = false
@@ -157,6 +159,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var usePostprocessorDuringDecodedPrefetch = false
 
     @JvmField var useSeparateNonBitmapImageCache = false
+
+    @JvmField var encodedImageRequestTransformer: ((ImageRequest) -> ImageRequest)? = null
 
     private fun asBuilder(block: () -> Unit): Builder {
       block()
@@ -411,6 +415,16 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.useSeparateNonBitmapImageCache = useSeparateNonBitmapImageCache
     }
 
+    /**
+     * Optional transformer applied to every `fetchEncodedImage` request before it is submitted
+     * (identity when unset). A generic hook that lets the app rewrite a request (e.g. to redirect
+     * it to a different cache keyspace) without the pipeline carrying any feature-specific logic.
+     * Provide it MobileConfig-gated from the app config.
+     */
+    fun setEncodedImageRequestTransformer(
+        encodedImageRequestTransformer: ((ImageRequest) -> ImageRequest)?
+    ) = asBuilder { this.encodedImageRequestTransformer = encodedImageRequestTransformer }
+
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)
   }
 
@@ -557,9 +571,20 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     usePostProcessedCacheKey = builder.usePostProcessedCacheKey
     usePostprocessorDuringDecodedPrefetch = builder.usePostprocessorDuringDecodedPrefetch
     useSeparateNonBitmapImageCache = builder.useSeparateNonBitmapImageCache
+    // Null when unset: fetchEncodedImage submits the request unchanged (identity).
+    encodedImageRequestTransformer = builder.encodedImageRequestTransformer
   }
 
   companion object {
+    /**
+     * Suffix appended to the encoded cache key for `fetchEncodedImage` raw-bytes requests by the
+     * AVIF predecode [encodedImageRequestTransformer], keeping them in a separate keyspace from any
+     * AVIF predecode recompressed blob stored under the plain encoded key. Kept here (rather than
+     * in the predecode feature module) so the core cache-key normalization (`FbCacheKeyFactory`)
+     * can reference it without depending on that feature module.
+     */
+    const val AVIF_PREDECODE_RAW_ENCODED_KEY_SUFFIX: String = ":avif-raw-encoded"
+
     @JvmStatic
     fun newBuilder(configBuilder: ImagePipelineConfig.Builder): Builder = Builder(configBuilder)
   }

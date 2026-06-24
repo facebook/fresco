@@ -245,7 +245,9 @@ open class ProducerFactory(
     return DiskCacheReadProducer(mDiskCachesStoreSupplier, mCacheKeyFactory, inputProducer)
   }
 
-  fun newDiskCacheWriteProducer(inputProducer: Producer<EncodedImage>): DiskCacheWriteProducer {
+  open fun newDiskCacheWriteProducer(
+      inputProducer: Producer<EncodedImage>
+  ): Producer<EncodedImage> {
     return DiskCacheWriteProducer(mDiskCachesStoreSupplier, mCacheKeyFactory, inputProducer)
   }
 
