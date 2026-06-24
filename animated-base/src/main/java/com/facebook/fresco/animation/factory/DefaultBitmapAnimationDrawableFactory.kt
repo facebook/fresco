@@ -117,27 +117,26 @@ class DefaultBitmapAnimationDrawableFactory(
     val startTime = System.nanoTime()
     animatedImagePerfLoggingListener?.onDrawableCreationStart(imageId, startTime)
 
-    val animationBackend: AnimationBackend =
-        runCatching {
-              createAnimationBackend(
-                  Preconditions.checkNotNull(closeable.imageResult),
-                  animatedImage?.animatedBitmapConfig,
-                  imageOptions,
-              )
-            }
-            .getOrElse { e ->
-              when (e) {
-                is NullPointerException -> {
-                  val uri = closeableImage.getExtra<Any?>(HasExtraData.KEY_URI_SOURCE)
-                  if (uri != null) {
-                    throw NullPointerException("${e.message} uri=${uri}")
-                  } else {
-                    throw e
-                  }
-                }
-                else -> throw e
+    val animationBackend: AnimationBackend = runCatching {
+      createAnimationBackend(
+          Preconditions.checkNotNull(closeable.imageResult),
+          animatedImage?.animatedBitmapConfig,
+          imageOptions,
+      )
+    }
+        .getOrElse { e ->
+          when (e) {
+            is NullPointerException -> {
+              val uri = closeableImage.getExtra<Any?>(HasExtraData.KEY_URI_SOURCE)
+              if (uri != null) {
+                throw NullPointerException("${e.message} uri=${uri}")
+              } else {
+                throw e
               }
             }
+            else -> throw e
+          }
+        }
 
     val drawable =
         if (useRendererAnimatedDrawable.get()) {
