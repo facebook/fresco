@@ -376,10 +376,17 @@ public class EncodedImage implements Closeable, HasExtraData {
         // NULLSAFE_FIXME[Parameter Not Nullable]
         ImageFormatChecker.getImageFormat_WrapIOException(getInputStream());
     mImageFormat = imageFormat;
+    // A format may register a dimensions decoder for headers BitmapFactory cannot parse (e.g. a
+    // custom container); consult it before the generic BitmapFactory path. The registry is empty
+    // unless a format opts in, so existing formats are unaffected.
+    final EncodedImageDimensionsDecoder dimensionsDecoder =
+        EncodedImageDimensionsDecoderRegistry.get(imageFormat);
     // BitmapUtil.decodeDimensions has a bug where it will return 100x100 for some WebPs even though
     // those are not its actual dimensions
     final Pair<Integer, Integer> dimensions;
-    if (DefaultImageFormats.isWebpFormat(imageFormat)) {
+    if (dimensionsDecoder != null) {
+      dimensions = readCustomImageSize(dimensionsDecoder);
+    } else if (DefaultImageFormats.isWebpFormat(imageFormat)) {
       dimensions = readWebPImageSize();
     } else {
       dimensions = readImageMetaData().getDimensions();
@@ -397,6 +404,33 @@ public class EncodedImage implements Closeable, HasExtraData {
       mRotationAngle = JfifUtil.getAutoRotateAngleFromOrientation(mExifOrientation);
     } else if (mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
       mRotationAngle = 0;
+    }
+  }
+
+  /** We get the size from a format-specific dimensions decoder registered for this image format. */
+  @Nullable
+  private Pair<Integer, Integer> readCustomImageSize(EncodedImageDimensionsDecoder decoder) {
+    final InputStream stream = getInputStream();
+    if (stream == null) {
+      return null;
+    }
+    try {
+      final Pair<Integer, Integer> dimensions = decoder.decodeDimensions(stream);
+      if (dimensions != null) {
+        mWidth = dimensions.component1();
+        mHeight = dimensions.component2();
+      }
+      return dimensions;
+    } catch (IOException | RuntimeException e) {
+      // A truncated/broken stream (or a misbehaving decoder) must not let dimension parsing escape
+      // parseMetaData(): match the WebP/generic paths, which leave dimensions unknown on failure.
+      return null;
+    } finally {
+      try {
+        stream.close();
+      } catch (IOException e) {
+        // Head in the sand
+      }
     }
   }
 
