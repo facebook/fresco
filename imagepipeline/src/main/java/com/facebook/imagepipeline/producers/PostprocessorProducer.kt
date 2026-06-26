@@ -351,7 +351,6 @@ class PostprocessorProducer(
       )
     }
 
-    // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
     override fun onNewResultImpl(
         newResult: CloseableReference<CloseableImage>?,
         @Consumer.Status status: Int,
