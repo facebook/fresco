@@ -295,7 +295,7 @@ class DiskStorageCache(
   }
 
   @Throws(IOException::class)
-  override fun insert(key: CacheKey, callback: WriterCallback): BinaryResource {
+  override fun insert(key: CacheKey, writer: WriterCallback): BinaryResource {
     // Write to a temp file, then move it into place. This allows more parallelism
     // when writing files.
     val cacheEvent = SettableCacheEvent.obtain().setCacheKey(key)
@@ -312,7 +312,7 @@ class DiskStorageCache(
       // getting the file is synchronized
       val inserter = startInsert(resourceId, key)
       try {
-        inserter.writeData(callback, key)
+        inserter.writeData(writer, key)
         // Committing the file is synchronized
         val resource = endInsert(inserter, key, resourceId)
         cacheEvent.setItemSize(resource.size()).setCacheSize(cacheStats.size)
