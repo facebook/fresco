@@ -37,8 +37,8 @@ class DiskCacheWriteProducer(
     private val cacheKeyFactory: CacheKeyFactory,
     private val inputProducer: Producer<EncodedImage>,
 ) : Producer<EncodedImage> {
-  override fun produceResults(consumer: Consumer<EncodedImage>, producerContext: ProducerContext) {
-    maybeStartInputProducer(consumer, producerContext)
+  override fun produceResults(consumer: Consumer<EncodedImage>, context: ProducerContext) {
+    maybeStartInputProducer(consumer, context)
   }
 
   private fun maybeStartInputProducer(
