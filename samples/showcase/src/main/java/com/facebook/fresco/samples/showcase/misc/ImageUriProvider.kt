@@ -15,7 +15,6 @@ import android.provider.MediaStore
 import androidx.preference.PreferenceManager
 import com.facebook.common.internal.Preconditions
 import com.facebook.fresco.samples.showcase.R
-import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample
 import com.facebook.imageformat.DefaultImageFormats
 import com.facebook.imageformat.ImageFormat
 import java.util.*
@@ -95,7 +94,7 @@ class ImageUriProvider constructor(context: Context) {
       DefaultImageFormats.WEBP_SIMPLE -> createWebpStaticUri()
       DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA -> createWebpTranslucentUri()
       DefaultImageFormats.WEBP_ANIMATED -> createWebpAnimatedUri()
-      KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES -> createKeyframesUri()
+      IMAGE_FORMAT_KEYFRAMES -> createKeyframesUri()
       else -> null
     }
   }
@@ -253,6 +252,8 @@ class ImageUriProvider constructor(context: Context) {
   private fun <T> chooseRandom(vararg data: T): T = data.random()
 
   companion object {
+
+    val IMAGE_FORMAT_KEYFRAMES = ImageFormat("KEYFRAMES", "keyframes")
 
     private const val PREF_KEY_CACHE_BREAKING_BY_DEFAULT = "uri_cache_breaking"
     private const val PREF_KEY_URI_OVERRIDE = "uri_override"

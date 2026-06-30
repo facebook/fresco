@@ -8,7 +8,7 @@
 package com.facebook.fresco.samples.showcase.vito;
 
 import android.net.Uri;
-import com.facebook.fresco.samples.showcase.ShowcaseApplication;
+import com.facebook.fresco.samples.showcase.ShowcaseProvider;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.litho.annotations.FromEvent;
 import com.facebook.litho.annotations.OnEvent;
@@ -48,7 +48,7 @@ public class SimpleListSectionSpec {
   }
 
   private static List<Data> generateData(final SectionContext c, int count) {
-    ImageUriProvider uris = ShowcaseApplication.Companion.getImageUriProvider();
+    ImageUriProvider uris = ShowcaseProvider.INSTANCE.getImageUriProvider();
     ArrayList<Data> data = new ArrayList<>(count);
     for (int i = 1; i <= count; i++) {
       data.add(

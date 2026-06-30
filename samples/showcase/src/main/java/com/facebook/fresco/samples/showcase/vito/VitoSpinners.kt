@@ -170,7 +170,7 @@ object VitoSpinners {
                   },
               "color res" to
                   { _: Context, builder: ImageOptions.Builder ->
-                    builder.progressRes(R.color.progress_bar_color)
+                    builder.progressRes(R.color.showcase_progress_bar_color)
                   },
               "indeterminate" to
                   { _: Context, builder: ImageOptions.Builder ->
@@ -182,9 +182,9 @@ object VitoSpinners {
                   { c: Context, builder: ImageOptions.Builder ->
                     builder.progress(
                         ProgressBarDrawable().apply {
-                          color = ContextCompat.getColor(c, R.color.progress_bar_color)
+                          color = ContextCompat.getColor(c, R.color.showcase_progress_bar_color)
                           backgroundColor =
-                              ContextCompat.getColor(c, R.color.progress_bar_background)
+                              ContextCompat.getColor(c, R.color.showcase_progress_bar_background)
                         }
                     )
                   },

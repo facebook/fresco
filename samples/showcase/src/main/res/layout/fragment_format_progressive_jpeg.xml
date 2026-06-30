@@ -11,21 +11,21 @@
       android:id="@+id/spinner"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       />
 
   <ImageView
       android:id="@+id/image"
       android:layout_width="@dimen/drawee_width_medium"
       android:layout_height="@dimen/drawee_height_medium"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       />
 
   <androidx.appcompat.widget.SwitchCompat
       android:id="@+id/switch_progressive_enabled"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:checked="true"
       android:text="@string/format_pjpeg_switch_rendering_enabled"
       />
@@ -33,7 +33,7 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:textAppearance="?android:attr/textAppearanceSmall"
       android:text="@string/format_pjpeg_help"
       />
@@ -42,7 +42,7 @@
       android:id="@+id/debug_output_scroll_view"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:padding="@dimen/padding_medium"
       android:clipToPadding="false"
       android:background="@color/grey900"

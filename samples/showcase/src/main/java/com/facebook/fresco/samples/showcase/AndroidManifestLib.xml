@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.facebook.fresco.samples.showcase">
+  <application>
+    <activity android:name=".ShowcaseListActivity" android:label="Fresco Showcase"
+        android:theme="@style/AppTheme" android:exported="false" />
+    <activity android:name=".vito.transition.ImageDetailsActivity"
+        android:label="@string/vito_transition_details_title"
+        android:theme="@style/AppTheme.ImageDetails" android:exported="false" />
+  </application>
+</manifest>

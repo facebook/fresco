@@ -38,7 +38,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:text="@string/drawee_hierarchy_switch_rounded"
       />
   <androidx.appcompat.widget.SwitchCompat
@@ -46,13 +46,13 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:text="@string/drawee_hierarchy_switch_ninepatch"
       />
   <ImageView
       android:id="@+id/image"
       android:layout_width="match_parent"
       android:layout_height="@dimen/drawee_height_medium"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       />
 </LinearLayout>

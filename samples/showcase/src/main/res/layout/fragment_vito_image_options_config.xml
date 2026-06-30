@@ -27,7 +27,7 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/margin_medium"
+          android:layout_marginTop="@dimen/showcase_margin_medium"
           android:gravity="center"
           android:text="@string/vito_litho_image_options_config_help_source"
           android:textAppearance="?android:attr/textAppearanceSmall"
@@ -48,7 +48,7 @@
       <TextView
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:layout_marginTop="@dimen/margin_medium"
+          android:layout_marginTop="@dimen/showcase_margin_medium"
           android:gravity="center"
           android:text="@string/vito_litho_image_options_config_help_options"
           android:textAppearance="?android:attr/textAppearanceSmall"
@@ -59,7 +59,7 @@
           android:text="@string/vito_litho_image_options_config_switch_auto_play_animations"
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
-          android:paddingLeft="@dimen/switch_padding"
+          android:paddingLeft="@dimen/showcase_switch_padding"
           android:checked="true"
           />
 

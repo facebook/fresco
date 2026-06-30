@@ -35,7 +35,6 @@ import com.facebook.fresco.vito.core.DefaultFrescoVitoConfig
 import com.facebook.fresco.vito.core.FrescoVitoConfig
 import com.facebook.fresco.vito.core.impl.DebugOverlayHandler
 import com.facebook.fresco.vito.init.FrescoVito
-import com.facebook.fresco.vito.provider.FrescoVitoProvider
 import com.facebook.fresco.vito.provider.impl.NoOpCallerContextVerifier
 import com.facebook.fresco.vito.provider.impl.kotlin.KFrescoVitoProvider
 import com.facebook.fresco.vito.tools.liveeditor.ImageSelector
@@ -62,7 +61,7 @@ class ShowcaseApplication : Application() {
 
   override fun onCreate() {
     super.onCreate()
-    imageUriProvider = ImageUriProvider(applicationContext)
+    ShowcaseProvider.initIfNeeded(applicationContext)
     FLog.minimumLoggingLevel = FLog.VERBOSE
     val forwardingRequestListener = ForwardingRequestListener()
     val requestListeners =
@@ -126,14 +125,7 @@ class ShowcaseApplication : Application() {
     }
 
     Fresco.initialize(this, imagePipelineConfig, draweeConfigBuilder.build())
-    imageTracker = ImageTracker()
     initVito(resources)
-    imageSelector =
-        ImageSelector(
-            imageTracker,
-            FrescoVitoProvider.getImagePipeline(),
-            FrescoVitoProvider.getController(),
-        )
     val context = this
     Stetho.initialize(
         Stetho.newInitializerBuilder(context)
@@ -203,13 +195,13 @@ class ShowcaseApplication : Application() {
 
   companion object {
     private val sFlipperImageTracker = FlipperImageTracker()
-    lateinit var imageTracker: ImageTracker
-      private set
+    val imageTracker: ImageTracker
+      get() = ShowcaseProvider.imageTracker
 
-    lateinit var imageUriProvider: ImageUriProvider
-      private set
+    val imageUriProvider: ImageUriProvider
+      get() = ShowcaseProvider.imageUriProvider
 
-    lateinit var imageSelector: ImageSelector
-      private set
+    val imageSelector: ImageSelector
+      get() = ShowcaseProvider.imageSelector
   }
 }

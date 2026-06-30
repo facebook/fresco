@@ -168,7 +168,7 @@ public class ImageFormatGifFragment extends BaseShowcaseFragment {
       return;
     }
 
-    final ImageDecodeOptionsBuilder optionsBuilder =
+    final ImageDecodeOptionsBuilder<?> optionsBuilder =
         ImageDecodeOptions.newBuilder().setMaxDimensionPx(4000);
 
     if (mGifDecoder != null) {

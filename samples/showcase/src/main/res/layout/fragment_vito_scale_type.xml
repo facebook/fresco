@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginLeft="@dimen/showcase_activity_horizontal_margin"
+    android:layout_marginRight="@dimen/showcase_activity_horizontal_margin"
     android:orientation="vertical"
     android:gravity="center_horizontal"
     >
@@ -13,7 +13,7 @@
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
-      android:layout_marginTop="@dimen/activity_vertical_margin"
+      android:layout_marginTop="@dimen/showcase_activity_vertical_margin"
       android:orientation="horizontal"
       >
 
@@ -22,8 +22,8 @@
         android:layout_width="@dimen/drawee_width_small"
         android:layout_height="@dimen/drawee_height_small"
         android:layout_weight="1"
-        android:layout_marginRight="@dimen/margin_small"
-        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginRight="@dimen/showcase_margin_small"
+        android:layout_marginEnd="@dimen/showcase_margin_small"
         android:background="@color/accent"
         android:padding="@dimen/padding_small"
         />
@@ -33,8 +33,8 @@
         android:layout_width="@dimen/drawee_width_small"
         android:layout_height="@dimen/drawee_height_small"
         android:layout_weight="1"
-        android:layout_marginLeft="@dimen/margin_small"
-        android:layout_marginStart="@dimen/margin_small"
+        android:layout_marginLeft="@dimen/showcase_margin_small"
+        android:layout_marginStart="@dimen/showcase_margin_small"
         android:padding="@dimen/padding_small"
         android:background="@color/accent"
         />
@@ -45,7 +45,7 @@
       android:layout_width="@dimen/drawee_width_medium"
       android:layout_height="@dimen/drawee_height_medium"
       android:layout_gravity="center_horizontal"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:background="@color/primary"
       android:padding="@dimen/padding_small"
       />
@@ -55,14 +55,14 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       />
 
   <TextView
       android:id="@+id/text_view"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:textAppearance="?android:attr/textAppearanceSmall"
       android:text="@string/vito_scale_type_help"
       />

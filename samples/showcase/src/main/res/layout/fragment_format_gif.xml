@@ -12,7 +12,7 @@
       android:id="@+id/spinner_select_decoder"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:entries="@array/gif_decoder_options"
       />
 
@@ -20,21 +20,21 @@
       android:id="@+id/spinner"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       />
 
   <ImageView
       android:id="@+id/image"
       android:layout_width="@dimen/drawee_width_medium"
       android:layout_height="@dimen/drawee_height_medium"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       />
 
   <androidx.appcompat.widget.SwitchCompat
       android:id="@+id/switch_background"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:text="@string/format_switch_checker_board"
       />
 
@@ -42,7 +42,7 @@
       android:id="@+id/switch_aspect_ratio"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:text="@string/format_switch_aspect_ratio"
       />
   
@@ -50,7 +50,7 @@
     android:id="@+id/switch_autoplay"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_medium"
+    android:layout_marginTop="@dimen/showcase_margin_medium"
       android:checked="true"
     android:text="@string/format_switch_autoplay"
     />
@@ -58,7 +58,7 @@
   <TextView
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:textAppearance="?android:attr/textAppearanceSmall"
       android:text="@string/format_gif_help"
       />

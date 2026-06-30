@@ -33,6 +33,7 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
+    ShowcaseProvider.initIfNeeded(this)
     setContentView(R.layout.activity_main)
     setSupportActionBar(toolbar)
 
@@ -118,8 +119,8 @@ class MainActivity : AppCompatActivity() {
 
   override fun onOptionsItemSelected(item: MenuItem): Boolean {
     when (item.itemId) {
-      R.id.action_next_image -> ShowcaseApplication.imageSelector.selectNext(this)
-      R.id.action_prev_image -> ShowcaseApplication.imageSelector.selectPrevious(this)
+      R.id.action_next_image -> ShowcaseProvider.imageSelector.selectNext(this)
+      R.id.action_prev_image -> ShowcaseProvider.imageSelector.selectPrevious(this)
       R.id.action_settings -> showFragment(ExampleDatabase.settings)
       R.id.action_edit_image -> showImageOptionsEditor()
     }
@@ -128,7 +129,7 @@ class MainActivity : AppCompatActivity() {
 
   private fun showImageOptionsEditor() {
     supportFragmentManager.let {
-      ImageOptionsBottomSheet.newInstance(ShowcaseApplication.imageSelector, Bundle()).apply {
+      ImageOptionsBottomSheet.newInstance(ShowcaseProvider.imageSelector, Bundle()).apply {
         show(it, tag)
       }
     }
@@ -157,11 +158,11 @@ class MainActivity : AppCompatActivity() {
     fragmentTransaction.commit()
 
     setTitle(title)
-    ShowcaseApplication.imageTracker.reset()
+    ShowcaseProvider.imageTracker.reset()
   }
 
   private fun maybeShowUriOverrideReminder() {
-    if (ShowcaseApplication.imageUriProvider.uriOverride == null) {
+    if (ShowcaseProvider.imageUriProvider.uriOverride == null) {
       return
     }
     Snackbar.make(contentMain, R.string.snackbar_uri_override_reminder_text, Snackbar.LENGTH_LONG)

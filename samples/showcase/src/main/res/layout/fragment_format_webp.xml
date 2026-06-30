@@ -18,13 +18,13 @@
         android:id="@+id/image_view_webp_static"
         android:layout_width="@dimen/drawee_width_medium"
         android:layout_height="@dimen/drawee_height_medium"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/showcase_margin_medium"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/showcase_margin_medium"
         android:text="@string/format_webp_static_help"
         android:textAppearance="?android:attr/textAppearanceSmall"
         />
@@ -35,21 +35,21 @@
         android:id="@+id/image_view_webp_translucent"
         android:layout_width="@dimen/drawee_width_medium"
         android:layout_height="@dimen/drawee_height_medium"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/showcase_margin_medium"
         />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/switch_background"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/showcase_margin_medium"
         android:text="@string/format_switch_checker_board"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/showcase_margin_medium"
         android:text="@string/format_webp_translucent_help"
         android:textAppearance="?android:attr/textAppearanceSmall"
         />
@@ -60,13 +60,13 @@
         android:id="@+id/image_view_webp_animated"
         android:layout_width="@dimen/drawee_width_medium"
         android:layout_height="@dimen/drawee_height_medium"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/showcase_margin_medium"
         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/showcase_margin_medium"
         android:text="@string/format_webp_animated_help"
         android:textAppearance="?android:attr/textAppearanceSmall"
         />
@@ -77,7 +77,7 @@
         android:id="@+id/text_webp_support_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_medium"
+        android:layout_marginTop="@dimen/showcase_margin_medium"
         android:fontFamily="monospace"
         android:textSize="8sp"
         />

@@ -92,11 +92,11 @@ public class ResizableFrameLayout extends FrameLayout {
       case MotionEvent.ACTION_MOVE:
         ViewGroup.LayoutParams layoutParams = getLayoutParams();
 
-        layoutParams.width += event.getX() - mLastX;
+        layoutParams.width += (int) (event.getX() - mLastX);
         layoutParams.width =
             Math.max(Math.min(layoutParams.width, mMaximumWidth), getMinimumWidth());
 
-        layoutParams.height += event.getY() - mLastY;
+        layoutParams.height += (int) (event.getY() - mLastY);
         layoutParams.height =
             Math.max(Math.min(layoutParams.height, mMaximumHeight), getMinimumHeight());
         setLayoutParams(layoutParams);

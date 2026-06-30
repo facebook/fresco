@@ -12,7 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.fresco.samples.showcase.R;
-import com.facebook.fresco.samples.showcase.ShowcaseApplication;
+import com.facebook.fresco.samples.showcase.ShowcaseProvider;
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider;
 import com.facebook.fresco.vito.litho.FrescoVitoImage2;
 import com.facebook.fresco.vito.litho.FrescoVitoTapToRetryImage;
@@ -47,7 +47,8 @@ public class SimpleGallerySectionSpec {
   @OnCreateChildren
   static Children onCreateChildren(final SectionContext c) {
     List<Uri> data =
-        ShowcaseApplication.Companion.getImageUriProvider()
+        ShowcaseProvider.INSTANCE
+            .getImageUriProvider()
             .getRandomSampleUris(ImageUriProvider.ImageSize.M, 500);
 
     return Children.create()

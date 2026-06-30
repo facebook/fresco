@@ -7,14 +7,9 @@
 
 package com.facebook.fresco.samples.showcase
 
-import com.facebook.fresco.samples.showcase.drawee.*
-import com.facebook.fresco.samples.showcase.imageformat.color.ImageFormatColorFragment
 import com.facebook.fresco.samples.showcase.imageformat.datauri.ImageFormatDataUriFragment
 import com.facebook.fresco.samples.showcase.imageformat.gif.ImageFormatGifFragment
-import com.facebook.fresco.samples.showcase.imageformat.keyframes.ImageFormatKeyframesFragment
-import com.facebook.fresco.samples.showcase.imageformat.override.ImageFormatOverrideExample
 import com.facebook.fresco.samples.showcase.imageformat.pjpeg.ImageFormatProgressiveJpegFragment
-import com.facebook.fresco.samples.showcase.imageformat.svg.ImageFormatSvgFragment
 import com.facebook.fresco.samples.showcase.imageformat.webp.ImageFormatWebpFragment
 import com.facebook.fresco.samples.showcase.imageformat.xml.ImageFormatXmlFragment
 import com.facebook.fresco.samples.showcase.imagepipeline.*
@@ -55,12 +50,8 @@ object ExampleDatabase {
               "Image Formats",
               listOf(
                   ExampleItem("Progressive JPEG") { ImageFormatProgressiveJpegFragment() },
-                  ExampleItem("Color") { ImageFormatColorFragment() },
                   ExampleItem("GIF") { ImageFormatGifFragment() },
                   ExampleItem("WebP") { ImageFormatWebpFragment() },
-                  ExampleItem("SVG") { ImageFormatSvgFragment() },
-                  ExampleItem("Keyframes") { ImageFormatKeyframesFragment() },
-                  ExampleItem("Decoder Override") { ImageFormatOverrideExample() },
                   ExampleItem("Data URI") { ImageFormatDataUriFragment() },
                   ExampleItem("XML") { ImageFormatXmlFragment() },
               ),
@@ -79,9 +70,6 @@ object ExampleDatabase {
                   ExampleItem("Vito Litho: Image Options configurator") {
                     FrescoVitoLithoImageOptionsConfigFragment()
                   },
-                  ExampleItem("Vito Litho: Sections (RecyclerView)") {
-                    FrescoVitoLithoSectionsFragment()
-                  },
                   ExampleItem(
                       "Vito Litho: Listener",
                       FrescoVitoLithoListenerExample,
@@ -89,7 +77,6 @@ object ExampleDatabase {
                   ),
                   ExampleItem("Scale Type") { VitoScaleTypeFragment() },
                   ExampleItem("Rotation") { VitoRotationFragment() },
-                  ExampleItem("Vito Litho: Gallery") { FrescoVitoLithoGalleryFragment() },
                   ExampleItem("Vito View: Simple") { VitoViewSimpleFragment() },
                   ExampleItem("Vito View: Simple 2") { VitoSimpleFragment() },
                   ExampleItem("Vito View: Recycler") { VitoViewRecyclerFragment() },
@@ -110,7 +97,6 @@ object ExampleDatabase {
                       "Vito Litho DrawableImageSource",
                       FrescoVitoLithoDrawableImageSourceExample,
                   ),
-                  ExampleItem("Media Provider") { VitoMediaPickerFragment() },
                   ExampleItem("Multi URI") { MultiUriFragment() },
                   ExampleItem("Placeholder, Progress, Failure") { ImageLayersFragment() },
                   ExampleItem("Rounded Corners") { VitoRoundedCornersFragment() },

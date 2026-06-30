@@ -146,9 +146,9 @@ public class ImageFormatProgressiveJpegFragment extends BaseShowcaseFragment {
         };
 
     ProgressBarDrawable progressBarDrawable = new ProgressBarDrawable();
-    progressBarDrawable.setColor(getResources().getColor(R.color.progress_bar_color));
+    progressBarDrawable.setColor(getResources().getColor(R.color.showcase_progress_bar_color));
     progressBarDrawable.setBackgroundColor(
-        getResources().getColor(R.color.progress_bar_background));
+        getResources().getColor(R.color.showcase_progress_bar_background));
 
     VitoView.show(
         uri,

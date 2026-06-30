@@ -36,23 +36,20 @@ class MultiUriFragment : BaseShowcaseFragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     val imageView = view.findViewById<ImageView>(R.id.image_view)
-    val btnFirstAvailable = view.findViewById<Button>(R.id.btn_first_available)
-    val btnIncreasingQuality = view.findViewById<Button>(R.id.btn_increasing_quality)
-    val btnBoth = view.findViewById<Button>(R.id.btn_both)
 
-    btnFirstAvailable.setOnClickListener {
+    view.findViewById<Button>(R.id.btn_first_available).setOnClickListener {
       val requests =
           sampleUris().createSampleUriSet().map(ImageSourceProvider::forUri).toTypedArray()
       VitoView.show(ImageSourceProvider.firstAvailable(*requests), imageView)
     }
 
-    btnIncreasingQuality.setOnClickListener {
+    view.findViewById<Button>(R.id.btn_increasing_quality).setOnClickListener {
       val lowRes = sampleUris().createSampleUri(ImageUriProvider.ImageSize.XS).asImageSource()
       val highRes = sampleUris().createSampleUri(ImageUriProvider.ImageSize.XXL).asImageSource()
       VitoView.show(ImageSourceProvider.increasingQuality(lowRes, highRes), imageView)
     }
 
-    btnBoth.setOnClickListener {
+    view.findViewById<Button>(R.id.btn_both).setOnClickListener {
       val lowRes = sampleUris().createSampleUri(ImageUriProvider.ImageSize.XS).asImageSource()
       val anyHighRes =
           listOf(

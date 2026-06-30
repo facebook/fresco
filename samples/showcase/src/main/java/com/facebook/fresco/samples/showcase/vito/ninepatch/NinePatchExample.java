@@ -96,10 +96,17 @@ public class NinePatchExample {
         int length,
         QualityInfo qualityInfo,
         ImageDecodeOptions options) {
-      InputStream inputStream = encodedImage.getInputStream();
-      Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+      @Nullable InputStream inputStream = encodedImage.getInputStream();
+      if (inputStream == null) {
+        throw new IllegalArgumentException("EncodedImage has no InputStream");
+      }
+      @Nullable Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+      if (bitmap == null) {
+        throw new IllegalArgumentException("Could not decode bitmap from stream");
+      }
       int sizeInBytes = BitmapUtil.getSizeInBytes(bitmap);
       byte[] chunk = bitmap.getNinePatchChunk();
+      @SuppressWarnings("nullsafe")
       NinePatch ninePatch = new NinePatch(bitmap, chunk, null);
       return new NinePatchClosableImage(ninePatch, sizeInBytes);
     }

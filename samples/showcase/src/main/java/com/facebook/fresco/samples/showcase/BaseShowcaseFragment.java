@@ -16,6 +16,6 @@ import com.facebook.infer.annotation.Nullsafe;
 public abstract class BaseShowcaseFragment extends Fragment {
 
   public ImageUriProvider sampleUris() {
-    return ShowcaseApplication.Companion.getImageUriProvider();
+    return ShowcaseProvider.INSTANCE.getImageUriProvider();
   }
 }

@@ -42,41 +42,35 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
 
   override fun onViewCreated(container: View, savedInstanceState: Bundle?) {
     val uri = sampleUris().createSampleUri(ImageUriProvider.ImageSize.M)
-    val view = container.findViewById<View>(R.id.view)
+    val imageView = container.findViewById<View>(R.id.view)
 
     val prefetcher = FrescoVitoProvider.getPrefetcher()
 
-    val buttonPrefetchBitmap = container.findViewById<Button>(R.id.button_prefetch_bitmap)
-    val buttonPrefetchEncoded = container.findViewById<Button>(R.id.button_prefetch_encoded)
-    val buttonPrefetchDisk = container.findViewById<Button>(R.id.button_prefetch_disk)
-    val buttonToggleImages = container.findViewById<Button>(R.id.button_toggle_images)
-    val buttonClearCache = container.findViewById<Button>(R.id.button_clear_cache)
-    val buttonClearCacheSingleItem =
-        container.findViewById<Button>(R.id.button_clear_cache_single_item)
-
-    buttonPrefetchBitmap.setOnClickListener {
+    container.findViewById<Button>(R.id.button_prefetch_bitmap).setOnClickListener {
       prefetcher.prefetchToBitmapCache(uri, imageOptions, "prefetch_bitmap", "sample")
     }
 
-    buttonPrefetchEncoded.setOnClickListener {
+    container.findViewById<Button>(R.id.button_prefetch_encoded).setOnClickListener {
       prefetcher.prefetchToEncodedCache(uri, imageOptions, "prefetch_encoded", "sample")
     }
 
-    buttonPrefetchDisk.setOnClickListener {
+    container.findViewById<Button>(R.id.button_prefetch_disk).setOnClickListener {
       prefetcher.prefetchToDiskCache(uri, imageOptions, "prefetch_disk", "sample")
     }
 
-    buttonToggleImages.setOnClickListener {
+    container.findViewById<Button>(R.id.button_toggle_images).setOnClickListener {
       if (imageVisible) {
-        VitoView.show(null, view)
+        VitoView.show(null, imageView)
       } else {
-        VitoView.show(uri, imageOptions, view)
+        VitoView.show(uri, imageOptions, imageView)
       }
       imageVisible = !imageVisible
     }
 
-    buttonClearCache.setOnClickListener { Fresco.getImagePipeline().clearCaches() }
-    buttonClearCacheSingleItem.setOnClickListener {
+    container.findViewById<Button>(R.id.button_clear_cache).setOnClickListener {
+      Fresco.getImagePipeline().clearCaches()
+    }
+    container.findViewById<Button>(R.id.button_clear_cache_single_item).setOnClickListener {
       FrescoVitoProvider.getImagePipeline()
           .evictFromCaches(
               FrescoVitoProvider.getImagePipeline()

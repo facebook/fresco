@@ -4,8 +4,8 @@
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-    android:layout_marginRight="@dimen/activity_horizontal_margin"
+    android:layout_marginLeft="@dimen/showcase_activity_horizontal_margin"
+    android:layout_marginRight="@dimen/showcase_activity_horizontal_margin"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     >
@@ -15,7 +15,7 @@
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_gravity="center_horizontal"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       />
 
   <ImageView
@@ -23,7 +23,7 @@
       android:layout_width="match_parent"
       android:layout_height="@dimen/drawee_height_medium"
       android:layout_gravity="center_horizontal"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:background="@color/primary"
       android:padding="@dimen/padding_small"
       fresco:actualImageScaleType="fitCenter"
@@ -33,7 +33,7 @@
       android:id="@+id/button"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:text="@string/imagepipeline_postprocessor_refresh"
       />
 
@@ -41,7 +41,7 @@
       android:id="@+id/text_view"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:textAppearance="?android:attr/textAppearanceSmall"
       android:text="@string/imagepipeline_postprocessor_help"
       />

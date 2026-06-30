@@ -20,7 +20,7 @@
       android:layout_gravity="bottom"
       android:background="@color/image_detail_help_background"
       android:textColor="@android:color/white"
-      android:padding="@dimen/activity_horizontal_margin"
+      android:padding="@dimen/showcase_activity_horizontal_margin"
       android:text="@string/vito_transition_details_help"
       />
 

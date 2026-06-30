@@ -11,7 +11,7 @@
       android:id="@+id/spinner"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       />
 
   <ImageView
@@ -19,7 +19,7 @@
       android:layout_width="match_parent"
       android:layout_height="@dimen/drawee_height_medium"
       android:layout_gravity="center_horizontal"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:background="@color/primary"
       android:padding="@dimen/padding_small"
       />
@@ -28,7 +28,7 @@
       android:id="@+id/text_view"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:layout_marginTop="@dimen/margin_medium"
+      android:layout_marginTop="@dimen/showcase_margin_medium"
       android:textAppearance="?android:attr/textAppearanceSmall"
       android:text="@string/drawee_rotation_help"
       />

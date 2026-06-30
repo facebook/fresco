@@ -21,8 +21,8 @@
   <style name="VitoRoundedCorners.Image" parent="AppTheme">
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">@dimen/drawee_height_medium</item>
-    <item name="android:layout_marginTop">@dimen/margin_medium</item>
-    <item name="android:layout_marginBottom">@dimen/margin_medium</item>
+    <item name="android:layout_marginTop">@dimen/showcase_margin_medium</item>
+    <item name="android:layout_marginBottom">@dimen/showcase_margin_medium</item>
   </style>
 
   <style name="thumb">

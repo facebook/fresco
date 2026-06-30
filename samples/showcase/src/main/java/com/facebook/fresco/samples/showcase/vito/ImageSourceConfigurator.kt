@@ -9,7 +9,6 @@ package com.facebook.fresco.samples.showcase.vito
 
 import com.facebook.common.util.UriUtil
 import com.facebook.fresco.samples.showcase.R
-import com.facebook.fresco.samples.showcase.imageformat.keyframes.KeyframesDecoderExample
 import com.facebook.fresco.samples.showcase.misc.ImageUriProvider
 import com.facebook.fresco.vito.source.*
 import com.facebook.imageformat.DefaultImageFormats
@@ -30,7 +29,7 @@ data class ImageSourceConfigurator(
           "WebP simple" to DefaultImageFormats.WEBP_SIMPLE,
           "WebP with alpha" to DefaultImageFormats.WEBP_EXTENDED_WITH_ALPHA,
           "Animated WebP" to DefaultImageFormats.WEBP_ANIMATED,
-          "Keyframes" to KeyframesDecoderExample.IMAGE_FORMAT_KEYFRAMES,
+          "Keyframes" to ImageUriProvider.IMAGE_FORMAT_KEYFRAMES,
       )
 
   val imageFormatUpdater =
