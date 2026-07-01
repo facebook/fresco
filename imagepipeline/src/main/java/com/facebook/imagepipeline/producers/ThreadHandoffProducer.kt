@@ -29,12 +29,12 @@ class ThreadHandoffProducer<T>(
 
       val statefulRunnable: StatefulProducerRunnable<T> =
           object : StatefulProducerRunnable<T>(consumer, producerListener, context, PRODUCER_NAME) {
-            override fun onSuccess(ignored: T?) {
+            override fun onSuccess(result: T?) {
               producerListener.onProducerFinishWithSuccess(context, PRODUCER_NAME, null)
               inputProducer.produceResults(consumer, context)
             }
 
-            override fun disposeResult(ignored: T?) = Unit
+            override fun disposeResult(result: T?) = Unit
 
             @Throws(Exception::class)
             override fun getResult(): T? {
