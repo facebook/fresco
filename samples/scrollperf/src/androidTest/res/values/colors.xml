@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="failure">#ffff3333</color>
-    <color name="placeholder">#e1e4eb</color>
-    <color name="error">#ff9999</color>
-</resources>
