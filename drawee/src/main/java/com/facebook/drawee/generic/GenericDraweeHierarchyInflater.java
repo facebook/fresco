@@ -262,7 +262,11 @@ public class GenericDraweeHierarchyInflater {
     if (resourceId == 0) {
       return null;
     }
-    return context.getDrawable(resourceId);
+    try {
+      return context.getDrawable(resourceId);
+    } catch (Resources.NotFoundException e) {
+      return null;
+    }
   }
 
   /**
