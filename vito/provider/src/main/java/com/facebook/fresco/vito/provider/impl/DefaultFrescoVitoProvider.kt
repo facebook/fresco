@@ -89,10 +89,16 @@ class DefaultFrescoVitoProvider(
       val bitmapFactory = BitmapDrawableFactory()
       val xmlFactory =
           ImagePipelineFactory.getInstance().xmlDrawableFactory?.let(DrawableFactoryWrapper::wrap)
-      val factories = listOfNotNull(bitmapFactory, animatedDrawableFactory, xmlFactory)
-      return when (factories.size) {
-        1 -> factories[0]
-        else -> ArrayVitoDrawableFactory(*factories.toTypedArray())
+      // Pass varargs positionally. Do NOT collapse to `*list.toTypedArray()` — that path crashes
+      // on Android 16 / SDK 36 with a NPE on `Class.isPrimitive()` (null component type) inside
+      // `ArrayList.toArray(T[]) -> Arrays.copyOf -> Array.newInstance`.
+      return when {
+        animatedDrawableFactory != null && xmlFactory != null ->
+            ArrayVitoDrawableFactory(bitmapFactory, animatedDrawableFactory, xmlFactory)
+        animatedDrawableFactory != null ->
+            ArrayVitoDrawableFactory(bitmapFactory, animatedDrawableFactory)
+        xmlFactory != null -> ArrayVitoDrawableFactory(bitmapFactory, xmlFactory)
+        else -> bitmapFactory
       }
     }
   }
