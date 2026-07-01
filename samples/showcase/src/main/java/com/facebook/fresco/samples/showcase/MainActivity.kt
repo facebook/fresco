@@ -12,6 +12,8 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -30,6 +32,11 @@ class MainActivity : AppCompatActivity() {
   private val drawerLayout: DrawerLayout by lazy { findViewById(R.id.drawer_layout) }
   private val navView: NavigationView by lazy { findViewById(R.id.nav_view) }
   private val contentMain: View by lazy { findViewById(R.id.content_main) }
+
+  private val selectCustomImages =
+      registerForActivityResult(ActivityResultContracts.PickMultipleVisualMedia()) {
+        ShowcaseProvider.imageUriProvider.customUris = it
+      }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -123,6 +130,7 @@ class MainActivity : AppCompatActivity() {
       R.id.action_prev_image -> ShowcaseProvider.imageSelector.selectPrevious(this)
       R.id.action_settings -> showFragment(ExampleDatabase.settings)
       R.id.action_edit_image -> showImageOptionsEditor()
+      R.id.action_select_images -> selectCustomImages.launch(PickVisualMediaRequest())
     }
     return super.onOptionsItemSelected(item)
   }

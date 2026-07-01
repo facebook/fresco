@@ -8,6 +8,7 @@
   <string name="navdrawer_subtitle">frescolib.org</string>
 
   <string name="action_settings">Settings</string>
+  <string name="action_select_custom_images" description="Toolbar action label that lets the user pick local images to display across the Showcase gallery and list examples">Select Custom Images</string>
 
   <string name="vito_simple_help">Basic Vito example that just sets the image URI.</string>
 

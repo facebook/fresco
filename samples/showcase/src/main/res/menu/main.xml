@@ -20,9 +20,15 @@
       android:icon="@drawable/ic_edit"
       app:showAsAction="ifRoom"
       />
+  <item android:id="@+id/action_select_images"
+      android:title="@string/action_select_custom_images"
+      android:orderInCategory="104"
+      android:icon="@drawable/ic_edit"
+      app:showAsAction="ifRoom"
+      />
   <item android:id="@+id/action_settings"
       android:title="@string/action_settings"
-      android:orderInCategory="104"
+      android:orderInCategory="105"
       android:icon="@drawable/ic_settings_black_24dp"
       app:showAsAction="ifRoom"
       />

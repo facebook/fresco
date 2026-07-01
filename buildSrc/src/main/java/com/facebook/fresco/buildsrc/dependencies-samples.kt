@@ -15,6 +15,7 @@ object SampleDeps {
     const val multidex = "androidx.multidex:multidex:2.0.1"
     const val preference = "androidx.preference:preference:1.0.0"
     const val recyclerview = "androidx.recyclerview:recyclerview:1.0.0"
+    const val activityKtx = "androidx.activity:activity-ktx:1.7.2"
   }
 
   object Google {

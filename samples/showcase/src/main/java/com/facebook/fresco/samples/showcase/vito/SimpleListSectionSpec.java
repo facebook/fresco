@@ -50,11 +50,15 @@ public class SimpleListSectionSpec {
   private static List<Data> generateData(final SectionContext c, int count) {
     ImageUriProvider uris = ShowcaseProvider.INSTANCE.getImageUriProvider();
     ArrayList<Data> data = new ArrayList<>(count);
+    List<Uri> custom = ShowcaseProvider.INSTANCE.getImageUriProvider().getCustomUris();
+    boolean hasCustom = custom != null && !custom.isEmpty();
     for (int i = 1; i <= count; i++) {
       data.add(
           new Data(
               uris.createSampleUri(ImageUriProvider.ImageSize.S),
-              uris.createSampleUri(ImageUriProvider.ImageSize.M),
+              hasCustom
+                  ? custom.get(i % custom.size())
+                  : uris.createSampleUri(ImageUriProvider.ImageSize.M),
               "Photo " + i));
     }
     return data;

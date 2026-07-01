@@ -46,10 +46,13 @@ public class SimpleGallerySectionSpec {
 
   @OnCreateChildren
   static Children onCreateChildren(final SectionContext c) {
+    List<Uri> custom = ShowcaseProvider.INSTANCE.getImageUriProvider().getCustomUris();
     List<Uri> data =
-        ShowcaseProvider.INSTANCE
-            .getImageUriProvider()
-            .getRandomSampleUris(ImageUriProvider.ImageSize.M, 500);
+        custom != null && !custom.isEmpty()
+            ? custom
+            : ShowcaseProvider.INSTANCE
+                .getImageUriProvider()
+                .getRandomSampleUris(ImageUriProvider.ImageSize.M, 500);
 
     return Children.create()
         .child(

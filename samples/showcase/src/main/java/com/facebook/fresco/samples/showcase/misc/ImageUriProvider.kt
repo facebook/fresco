@@ -22,6 +22,9 @@ import java.util.*
 /** Provider for sample URIs that are used by the samples in the showcase app */
 class ImageUriProvider constructor(context: Context) {
 
+  /** User-picked local image URIs that, when set, override the built-in sample URIs. */
+  var customUris: List<Uri?>? = null
+
   private val sharedPreferences: SharedPreferences =
       PreferenceManager.getDefaultSharedPreferences(context)
 

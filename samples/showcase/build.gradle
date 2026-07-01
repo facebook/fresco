@@ -99,6 +99,7 @@ dependencies {
     compileOnly Deps.inferAnnotation
     compileOnly Deps.javaxAnnotation
 
+    implementation SampleDeps.AndroidX.activityKtx
     implementation SampleDeps.AndroidX.appcompat
     implementation SampleDeps.AndroidX.preference
     implementation SampleDeps.AndroidX.recyclerview
