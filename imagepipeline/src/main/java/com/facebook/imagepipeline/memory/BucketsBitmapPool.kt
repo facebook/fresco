@@ -42,13 +42,13 @@ class BucketsBitmapPool(
    * Allocate a bitmap that has a backing memory allocation of 'size' bytes. This is configuration
    * agnostic so the size is the actual size in bytes of the bitmap.
    *
-   * @param size the 'size' in bytes of the bitmap
+   * @param bucketedSize the 'size' in bytes of the bitmap
    * @return a new bitmap with the specified size in memory
    */
-  public override fun alloc(size: Int): Bitmap {
+  public override fun alloc(bucketedSize: Int): Bitmap {
     return Bitmap.createBitmap(
         1,
-        ceil(size / BitmapUtil.RGB_565_BYTES_PER_PIXEL.toDouble()).toInt(),
+        ceil(bucketedSize / BitmapUtil.RGB_565_BYTES_PER_PIXEL.toDouble()).toInt(),
         Bitmap.Config.RGB_565,
     )
   }
