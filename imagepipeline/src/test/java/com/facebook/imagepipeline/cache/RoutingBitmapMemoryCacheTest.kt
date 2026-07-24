@@ -75,16 +75,6 @@ class RoutingBitmapMemoryCacheTest {
   }
 
   @Test
-  fun cache_nullValue_isRejected() {
-    val nullRef = mock<CloseableReference<CloseableImage>>()
-    whenever(nullRef.get()).thenReturn(null)
-
-    assertThat(router.cache(key, nullRef)).isNull()
-    verify(bitmapCache, never()).cache(any(), any())
-    verify(nonBitmapCache, never()).cache(any(), any())
-  }
-
-  @Test
   fun get_hitsBitmapCacheFirst() {
     whenever(bitmapCache.get(key)).thenReturn(bitmapRef)
 

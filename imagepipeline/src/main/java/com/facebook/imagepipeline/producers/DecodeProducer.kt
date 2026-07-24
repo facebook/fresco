@@ -128,7 +128,7 @@ class DecodeProducer(
       encodedImage.sampleSize = sampleSize
     }
 
-    override fun onNewResultImpl(newResult: EncodedImage?, @Consumer.Status status: Int) =
+    override fun onNewResultImpl(newResult: EncodedImage?, @Consumer.Status status: Int): Unit =
         traceSection("DecodeProducer#onNewResultImpl") {
           val isLast = isLast(status)
           if (isLast) {
@@ -213,7 +213,7 @@ class DecodeProducer(
         return
       }
       val imageFormat = encodedImage.imageFormat
-      val imageFormatStr = imageFormat.name ?: "unknown"
+      val imageFormatStr = imageFormat.name
       val encodedImageSize = encodedImage.width.toString() + "x" + encodedImage.height
       val sampleSize = encodedImage.sampleSize.toString()
       val isLast = isLast(status)

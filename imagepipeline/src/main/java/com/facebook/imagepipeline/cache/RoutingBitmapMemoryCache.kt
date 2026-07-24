@@ -43,7 +43,7 @@ class RoutingBitmapMemoryCache(
       key: CacheKey,
       value: CloseableReference<CloseableImage>,
   ): CloseableReference<CloseableImage>? {
-    val image = value.get() ?: return null
+    val image: CloseableImage = value.get()
     return if (image is CloseableBitmap) {
       bitmapCache.cache(key, value)
     } else {
@@ -55,7 +55,8 @@ class RoutingBitmapMemoryCache(
       key: CacheKey,
       value: CloseableReference<CloseableImage>,
   ): CloseableReference<CloseableImage>? {
-    val image = value.get() ?: return null
+    val image: CloseableImage = value.get()
+
     return if (image is CloseableBitmap) {
       bitmapCache.cacheOnRelease(key, value)
     } else {

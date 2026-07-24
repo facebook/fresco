@@ -9,6 +9,7 @@ package com.facebook.common.references;
 
 import android.graphics.Bitmap;
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import com.facebook.common.internal.Closeables;
 import com.facebook.common.internal.Preconditions;
@@ -259,7 +260,7 @@ public abstract class CloseableReference<T> implements Cloneable, Closeable {
    * Returns the underlying Closeable if this reference is not closed yet. Otherwise
    * IllegalStateException is thrown.
    */
-  public synchronized T get() {
+  public synchronized @NonNull T get() {
     Preconditions.checkState(!mIsClosed);
     return Preconditions.checkNotNull(mSharedReference.get());
   }
