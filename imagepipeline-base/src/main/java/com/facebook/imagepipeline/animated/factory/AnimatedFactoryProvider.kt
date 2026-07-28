@@ -66,6 +66,8 @@ object AnimatedFactoryProvider {
         serialExecutorService,
         enableBufferFrameLoaderFix,
         false,
+        false,
+        false,
     )
   }
 
@@ -81,6 +83,8 @@ object AnimatedFactoryProvider {
       serialExecutorService: ExecutorService?,
       enableBufferFrameLoaderFix: Boolean,
       enableSingleFrameRendering: Boolean,
+      enableUnusedFrameLoaderCleanupSync: Boolean,
+      enableUnusedFrameLoaderCleanupSyncAndClear: Boolean,
   ): AnimatedFactory? {
     if (!implLoaded) {
       try {
@@ -105,6 +109,8 @@ object AnimatedFactoryProvider {
                 frameLoaderListenerClass,
                 java.lang.Boolean.TYPE,
                 animatedImagePerfLoggingListenerClass,
+                java.lang.Boolean.TYPE,
+                java.lang.Boolean.TYPE,
             )
         impl =
             constructor.newInstance(
@@ -120,6 +126,8 @@ object AnimatedFactoryProvider {
                 null,
                 enableSingleFrameRendering,
                 null,
+                enableUnusedFrameLoaderCleanupSync,
+                enableUnusedFrameLoaderCleanupSyncAndClear,
             ) as AnimatedFactory
       } catch (e: Throwable) {
         // Head in the sand

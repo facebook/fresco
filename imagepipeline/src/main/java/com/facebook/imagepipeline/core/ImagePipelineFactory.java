@@ -215,7 +215,11 @@ public class ImagePipelineFactory {
               mConfig.getExperiments().getUseBalancedAnimationStrategy(),
               mConfig.getExperiments().getAnimationRenderFpsLimit(),
               mConfig.getExperiments().getAnimationStrategyBufferLengthMilliseconds(),
-              mConfig.getExecutorServiceForAnimatedImages());
+              mConfig.getExecutorServiceForAnimatedImages(),
+              false, // enableBufferFrameLoaderFix
+              false, // enableSingleFrameRendering
+              mConfig.getExperiments().getEnableUnusedFrameLoaderCleanupSync(),
+              mConfig.getExperiments().getEnableUnusedFrameLoaderCleanupSyncAndClear());
     }
     return mAnimatedFactory;
   }

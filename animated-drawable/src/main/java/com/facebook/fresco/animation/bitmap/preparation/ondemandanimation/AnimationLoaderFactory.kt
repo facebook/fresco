@@ -21,6 +21,8 @@ class FrameLoaderFactory(
     private val enableBufferFrameLoaderFix: Boolean = false,
     private val frameLoaderListener: FrameLoaderListener? = null,
     private val enableSingleFrameRendering: Boolean = false,
+    val enableUnusedFrameLoaderCleanupSync: Boolean = false,
+    val enableUnusedFrameLoaderCleanupSyncAndClear: Boolean = false,
 ) {
 
   fun createBufferLoader(
@@ -51,8 +53,29 @@ class FrameLoaderFactory(
   companion object {
     private val UNUSED_FRAME_LOADERS = ConcurrentHashMap<String, UnusedFrameLoader>()
 
-    fun saveUnusedFrame(cacheKey: String, frameLoader: FrameLoader) {
-      UNUSED_FRAME_LOADERS[cacheKey] = UnusedFrameLoader(frameLoader, Date())
+    fun saveUnusedFrame(
+        cacheKey: String,
+        frameLoader: FrameLoader,
+        enableSynchronization: Boolean,
+        enableSyncAndClear: Boolean,
+    ) {
+      // Clearing a displaced loader is only safe under the map lock (otherwise it races
+      // createBufferLoader() handing that loader out for reuse), so sync-and-clear implies
+      // synchronization.
+      if (!enableSynchronization && !enableSyncAndClear) {
+        UNUSED_FRAME_LOADERS[cacheKey] = UnusedFrameLoader(frameLoader, Date())
+        return
+      }
+      // Match the locking of clearUnusedUntil()/createBufferLoader(): a bare put() can be clobbered
+      // by their remove(key), orphaning a just-saved loader that is then never cleared.
+      synchronized(UNUSED_FRAME_LOADERS) {
+        val previous = UNUSED_FRAME_LOADERS.put(cacheKey, UnusedFrameLoader(frameLoader, Date()))
+        // Those two methods are the only callers of clear() and both reach loaders through this
+        // map, so overwriting an entry without clearing it leaks the loader's buffered frames.
+        if (enableSyncAndClear) {
+          previous?.frameLoader?.takeIf { it !== frameLoader }?.clear()
+        }
+      }
     }
 
     fun clearUnusedUntil(until: Date) {

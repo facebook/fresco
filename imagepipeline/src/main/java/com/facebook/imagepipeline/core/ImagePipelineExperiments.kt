@@ -73,6 +73,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val shouldUseDecodingBufferHelper: Boolean
   val allowProgressiveOnPrefetch: Boolean
   val animationRenderFpsLimit: Int
+  val enableUnusedFrameLoaderCleanupSync: Boolean
+  val enableUnusedFrameLoaderCleanupSyncAndClear: Boolean
   val prefetchShortcutEnabled: Boolean
   val platformDecoderOptions: PlatformDecoderOptions
   val isBinaryXmlEnabled: Boolean
@@ -136,6 +138,9 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var shouldIgnoreCacheSizeMismatch = false
     @JvmField var allowProgressiveOnPrefetch = false
     @JvmField var animationRenderFpsLimit = 30
+    @JvmField var enableUnusedFrameLoaderCleanupSync = false
+    @JvmField var enableUnusedFrameLoaderCleanupSyncAndClear = false
+    @JvmField var cancelDecodeOnCacheMiss = false
     @JvmField var prefetchShortcutEnabled = false
 
     @JvmField var platformDecoderOptions = PlatformDecoderOptions()
@@ -354,6 +359,32 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.animationRenderFpsLimit = animationRenderFpsLimit
     }
 
+    /**
+     * Gates synchronizing `saveUnusedFrame` on the on-demand animation cache map, matching the
+     * locking of the other accessors so a bare `put` cannot be clobbered by their `remove`. See
+     * `FrameLoaderFactory`.
+     */
+    fun setEnableUnusedFrameLoaderCleanupSync(enableUnusedFrameLoaderCleanupSync: Boolean) =
+        asBuilder {
+          this.enableUnusedFrameLoaderCleanupSync = enableUnusedFrameLoaderCleanupSync
+        }
+
+    /**
+     * Gates releasing a displaced `FrameLoader` (and its buffered frames) when an unused loader is
+     * overwritten in the on-demand animation cache. Clearing a displaced loader is only safe under
+     * the map lock, so enabling this implies synchronization (it is a superset of
+     * `enableUnusedFrameLoaderCleanupSync`). See `FrameLoaderFactory`.
+     */
+    fun setEnableUnusedFrameLoaderCleanupSyncAndClear(
+        enableUnusedFrameLoaderCleanupSyncAndClear: Boolean
+    ) = asBuilder {
+      this.enableUnusedFrameLoaderCleanupSyncAndClear = enableUnusedFrameLoaderCleanupSyncAndClear
+    }
+
+    fun setCancelDecodeOnCacheMiss(cancelDecodeOnCacheMiss: Boolean) = asBuilder {
+      this.cancelDecodeOnCacheMiss = cancelDecodeOnCacheMiss
+    }
+
     fun setSkipNonJpegIntermediateDecodeScheduling(
         skipNonJpegIntermediateDecodeScheduling: Boolean
     ) = asBuilder {
@@ -540,6 +571,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     trackedKeysSize = builder.trackedKeysSize
     allowProgressiveOnPrefetch = builder.allowProgressiveOnPrefetch
     animationRenderFpsLimit = builder.animationRenderFpsLimit
+    enableUnusedFrameLoaderCleanupSync = builder.enableUnusedFrameLoaderCleanupSync
+    enableUnusedFrameLoaderCleanupSyncAndClear = builder.enableUnusedFrameLoaderCleanupSyncAndClear
     allowDelay = builder.allowDelay
     handOffOnUiThreadOnly = builder.handOffOnUiThreadOnly
     isCriticalThread =

@@ -56,6 +56,8 @@ constructor(
     private val frameLoaderListener: FrameLoaderListener? = null,
     private val enableSingleFrameRendering: Boolean = false,
     private val animatedImagePerfLoggingListener: AnimatedImagePerfLoggingListener? = null,
+    private val enableUnusedFrameLoaderCleanupSync: Boolean = false,
+    private val enableUnusedFrameLoaderCleanupSyncAndClear: Boolean = false,
 ) : AnimatedFactory {
 
   private var animatedDrawableBackendProvider: AnimatedDrawableBackendProvider? = null
@@ -99,6 +101,8 @@ constructor(
         enableBufferFrameLoaderFix,
         frameLoaderListener,
         enableSingleFrameRendering,
+        enableUnusedFrameLoaderCleanupSync,
+        enableUnusedFrameLoaderCleanupSyncAndClear,
     )
   }
 

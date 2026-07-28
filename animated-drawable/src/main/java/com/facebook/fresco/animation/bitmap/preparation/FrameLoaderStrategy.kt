@@ -97,7 +97,14 @@ class FrameLoaderStrategy(
   }
 
   override fun clearFrames() {
-    frameLoader?.let { FrameLoaderFactory.saveUnusedFrame(cacheKey, it) }
+    frameLoader?.let {
+      FrameLoaderFactory.saveUnusedFrame(
+          cacheKey,
+          it,
+          frameLoaderFactory.enableUnusedFrameLoaderCleanupSync,
+          frameLoaderFactory.enableUnusedFrameLoaderCleanupSyncAndClear,
+      )
+    }
     frameLoader = null
     isRunning = false
   }
