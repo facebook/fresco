@@ -552,7 +552,7 @@ class DefaultDiskStorage(rootDirectory: File, version: Int, cacheErrorLogger: Ca
         throw fne
       }
 
-      var length: Long
+      val length: Long
       try {
         val countingStream = CountingOutputStream(fileStream)
         callback.write(countingStream)
