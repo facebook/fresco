@@ -50,7 +50,7 @@ constructor(
   /** @param okHttpClient client to use */
   constructor(
       okHttpClient: OkHttpClient
-  ) : this(okHttpClient, okHttpClient.dispatcher().executorService())
+  ) : this(okHttpClient, okHttpClient.dispatcher.executorService)
 
   class OkHttpNetworkFetchState(
       consumer: Consumer<EncodedImage?>,
@@ -122,7 +122,7 @@ constructor(
           @Throws(IOException::class)
           override fun onResponse(call: Call, response: Response) {
             fetchState.responseTime = SystemClock.elapsedRealtime()
-            val responseBody: ResponseBody? = response.body()
+            val responseBody: ResponseBody? = response.body
             responseBody?.use { body ->
               try {
                 if (!response.isSuccessful) {
@@ -133,7 +133,7 @@ constructor(
                   )
                   return@use
                 }
-                val responseRange = fromContentRangeHeader(response.header("Content-Range"))
+                val responseRange = fromContentRangeHeader(response.header("Content-Range", null))
                 if (
                     responseRange != null &&
                         !(responseRange.from == 0 &&
@@ -174,7 +174,7 @@ constructor(
    * onCancellation is called. Otherwise onFailure is called.
    */
   private fun handleException(call: Call, e: Exception, callback: NetworkFetcher.Callback) {
-    if (call.isCanceled) {
+    if (call.isCanceled()) {
       callback.onCancellation()
     } else {
       callback.onFailure(e)
