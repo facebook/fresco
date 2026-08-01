@@ -34,7 +34,7 @@ class BitmapImageDataModel(val bitmap: Bitmap, val isBitmapCircular: Boolean = f
   override val height: Int = bitmap.height
   override val defaultPaintFlags: Int = Paint.FILTER_BITMAP_FLAG or Paint.DITHER_FLAG
 
-  fun hasGainmap() =
+  fun hasGainmap(): Boolean =
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
         bitmap.hasGainmap() == true
       } else {

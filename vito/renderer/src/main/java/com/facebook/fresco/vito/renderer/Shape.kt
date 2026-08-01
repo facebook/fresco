@@ -17,7 +17,9 @@ sealed class Shape {
 }
 
 class RectShape(val rect: RectF) : Shape() {
-  override fun draw(canvas: Canvas, paint: Paint) = canvas.drawRect(rect, paint)
+  override fun draw(canvas: Canvas, paint: Paint) {
+    canvas.drawRect(rect, paint)
+  }
 }
 
 class CircleShape(
@@ -42,9 +44,13 @@ class CircleShape(
 }
 
 class RoundedRectShape(val rect: RectF, val rx: Float, val ry: Float) : Shape() {
-  override fun draw(canvas: Canvas, paint: Paint) = canvas.drawRoundRect(rect, rx, ry, paint)
+  override fun draw(canvas: Canvas, paint: Paint) {
+    canvas.drawRoundRect(rect, rx, ry, paint)
+  }
 }
 
 class PathShape(val path: Path) : Shape() {
-  override fun draw(canvas: Canvas, paint: Paint) = canvas.drawPath(path, paint)
+  override fun draw(canvas: Canvas, paint: Paint) {
+    canvas.drawPath(path, paint)
+  }
 }
