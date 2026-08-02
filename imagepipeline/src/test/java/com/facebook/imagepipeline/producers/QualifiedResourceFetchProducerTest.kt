@@ -76,8 +76,8 @@ class QualifiedResourceFetchProducerTest {
     val pooledByteBuffer = Mockito.mock<PooledByteBuffer?>(PooledByteBuffer::class.java)
     Mockito.`when`<PooledByteBuffer?>(
             pooledByteBufferFactory.newByteBuffer(
-                ArgumentMatchers.any<InputStream?>(InputStream::class.java)
-            )
+                ArgumentMatchers.any<InputStream?>(InputStream::class.java),
+            ),
         )
         .thenReturn(pooledByteBuffer)
 

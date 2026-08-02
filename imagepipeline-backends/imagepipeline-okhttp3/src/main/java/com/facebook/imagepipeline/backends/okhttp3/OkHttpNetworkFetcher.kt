@@ -49,7 +49,7 @@ constructor(
 
   /** @param okHttpClient client to use */
   constructor(
-      okHttpClient: OkHttpClient
+      okHttpClient: OkHttpClient,
   ) : this(okHttpClient, okHttpClient.dispatcher.executorService)
 
   class OkHttpNetworkFetchState(
@@ -115,7 +115,7 @@ constructor(
               cancellationExecutor.execute { call.cancel() }
             }
           }
-        }
+        },
     )
     call.enqueue(
         object : Callback {
@@ -159,7 +159,7 @@ constructor(
           }
 
           override fun onFailure(call: Call, e: IOException) = handleException(call, e, callback)
-        }
+        },
     )
   }
 

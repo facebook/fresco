@@ -15,7 +15,7 @@ import com.facebook.drawee.controller.BaseControllerListener
  * intermediate time and failure cases also
  */
 class ImageLoadingTimeControllerListener(
-    private val imageLoadingTimeListener: ImageLoadingTimeListener?
+    private val imageLoadingTimeListener: ImageLoadingTimeListener?,
 ) : BaseControllerListener<Any?>() {
 
   private var requestSubmitTimeMs = -1L

@@ -542,7 +542,7 @@ class LruCountingMemoryCacheTest {
               override fun apply(key: String): Boolean {
                 return key == KEYS[2] || key == KEYS[3]
               }
-            }
+            },
         )
 
     assertThat(numEvictedEntries).isEqualTo(2)

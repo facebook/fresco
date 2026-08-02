@@ -132,38 +132,38 @@ class BaseConsumerTest {
   @Test
   fun testStatusHasFlag() {
     assertThat(
-            BaseConsumer.statusHasFlag(
-                Consumer.IS_PLACEHOLDER or Consumer.IS_LAST,
-                Consumer.IS_PLACEHOLDER,
-            )
-        )
+        BaseConsumer.statusHasFlag(
+            Consumer.IS_PLACEHOLDER or Consumer.IS_LAST,
+            Consumer.IS_PLACEHOLDER,
+        ),
+    )
         .isTrue()
 
     assertThat(
-            BaseConsumer.statusHasFlag(
-                Consumer.DO_NOT_CACHE_ENCODED or Consumer.IS_LAST,
-                Consumer.IS_PLACEHOLDER,
-            )
-        )
+        BaseConsumer.statusHasFlag(
+            Consumer.DO_NOT_CACHE_ENCODED or Consumer.IS_LAST,
+            Consumer.IS_PLACEHOLDER,
+        ),
+    )
         .isFalse()
   }
 
   @Test
   fun testStatusHasAnyFlag() {
     assertThat(
-            BaseConsumer.statusHasAnyFlag(
-                Consumer.IS_PLACEHOLDER or Consumer.IS_LAST,
-                Consumer.IS_PLACEHOLDER or Consumer.DO_NOT_CACHE_ENCODED,
-            )
-        )
+        BaseConsumer.statusHasAnyFlag(
+            Consumer.IS_PLACEHOLDER or Consumer.IS_LAST,
+            Consumer.IS_PLACEHOLDER or Consumer.DO_NOT_CACHE_ENCODED,
+        ),
+    )
         .isTrue()
 
     assertThat(
-            BaseConsumer.statusHasAnyFlag(
-                Consumer.IS_PLACEHOLDER or Consumer.IS_LAST,
-                Consumer.IS_PARTIAL_RESULT or Consumer.DO_NOT_CACHE_ENCODED,
-            )
-        )
+        BaseConsumer.statusHasAnyFlag(
+            Consumer.IS_PLACEHOLDER or Consumer.IS_LAST,
+            Consumer.IS_PARTIAL_RESULT or Consumer.DO_NOT_CACHE_ENCODED,
+        ),
+    )
         .isFalse()
   }
 }

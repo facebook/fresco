@@ -496,7 +496,7 @@ constructor(private var _animationBackend: AnimationBackend? = null) :
     private const val DEFAULT_MAX_CONSECUTIVE_DROPPED_FRAMES = 150
 
     private fun createSchedulerForBackendAndDelayMethod(
-        animationBackend: AnimationBackend?
+        animationBackend: AnimationBackend?,
     ): FrameScheduler? {
       if (animationBackend == null) {
         return null

@@ -100,7 +100,7 @@ class ControllerListenerWrapper(private val controllerListener: ControllerListen
      */
     @JvmStatic
     fun create(
-        @PropagatesNullable controllerListener: ControllerListener<ImageInfo>?
+        @PropagatesNullable controllerListener: ControllerListener<ImageInfo>?,
     ): ControllerListenerWrapper? = controllerListener?.let { ControllerListenerWrapper(it) }
 
     private fun toStringId(id: Long): String = "v$id"

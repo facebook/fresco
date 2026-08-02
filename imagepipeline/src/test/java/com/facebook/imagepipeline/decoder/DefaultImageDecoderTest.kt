@@ -56,14 +56,14 @@ class DefaultImageDecoderTest {
     encodedImage = EncodedImage(CloseableReference.of<PooledByteBuffer>(byteBuffer))
 
     whenever(
-            platformDecoder.decodeJPEGFromEncodedImageWithColorSpace(
-                any(),
-                any(),
-                anyOrNull(),
-                any(),
-                anyOrNull(),
-            )
-        )
+        platformDecoder.decodeJPEGFromEncodedImageWithColorSpace(
+            any(),
+            any(),
+            anyOrNull(),
+            any(),
+            anyOrNull(),
+        ),
+    )
         .thenReturn(bitmapRef.clone())
   }
 

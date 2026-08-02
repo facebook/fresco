@@ -61,13 +61,13 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
       refresh(imageOptionsBuilder.scale(it.first).focusPoint(it.second))
     }
     view.findViewById<Spinner>(R.id.spinner_image_source).setupWithList(
-        imageSourceProvider.imageSources
+        imageSourceProvider.imageSources,
     ) { imageSourceSetter ->
       imageSourceSetter()
       refresh()
     }
     view.findViewById<Spinner>(R.id.spinner_image_format).setupWithList(
-        imageSourceProvider.imageFormatUpdater
+        imageSourceProvider.imageFormatUpdater,
     ) { formatUpdater ->
       formatUpdater()
       refresh()
@@ -76,7 +76,7 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
       refresh(imageOptionsBuilder.colorFilter(it))
     }
     view.findViewById<Spinner>(R.id.spinner_placeholder).setupWithList(
-        VitoSpinners.placeholderOptions(resources)
+        VitoSpinners.placeholderOptions(resources),
     ) {
       refresh(it(imageOptionsBuilder))
     }
@@ -93,7 +93,7 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
       refresh(it(requireContext(), imageOptionsBuilder))
     }
     view.findViewById<Spinner>(R.id.spinner_postprocessor).setupWithList(
-        VitoSpinners.postprocessorOptions
+        VitoSpinners.postprocessorOptions,
     ) {
       refresh(it(imageOptionsBuilder))
     }
@@ -104,7 +104,7 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
       refresh(it(imageOptionsBuilder))
     }
     view.findViewById<Spinner>(R.id.spinner_custom_drawable_factory).setupWithList(
-        VitoSpinners.customDrawableFactoryOptions
+        VitoSpinners.customDrawableFactoryOptions,
     ) {
       refresh(it(imageOptionsBuilder))
     }

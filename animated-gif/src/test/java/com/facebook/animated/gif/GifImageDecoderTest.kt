@@ -83,12 +83,12 @@ class GifImageDecoderTest {
     // Expect a call to GifImage.createFromNativeMemory
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
-            GifImage.createFromNativeMemory(
-                eq(byteBuffer.nativePtr),
-                eq(byteBuffer.size()),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        GifImage.createFromNativeMemory(
+            eq(byteBuffer.nativePtr),
+            eq(byteBuffer.size()),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockGifImage)
 
     testCreateDefaults(mockGifImage, byteBuffer)
@@ -101,11 +101,11 @@ class GifImageDecoderTest {
     // Expect a call to GifImage.createFromByteBuffer
     val byteBuffer: TrivialBufferPooledByteBuffer = createDirectByteBuffer()
     whenever(
-            GifImage.createFromByteBuffer(
-                ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.byteBuffer),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        GifImage.createFromByteBuffer(
+            ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.byteBuffer),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockGifImage)
 
     testCreateDefaults(mockGifImage, byteBuffer)
@@ -120,12 +120,12 @@ class GifImageDecoderTest {
     // Expect a call to GifImage.createFromNativeMemory
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
-            GifImage.createFromNativeMemory(
-                eq(byteBuffer.nativePtr),
-                eq(byteBuffer.size()),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        GifImage.createFromNativeMemory(
+            eq(byteBuffer.nativePtr),
+            eq(byteBuffer.size()),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockGifImage)
     whenever(mockGifImage.getWidth()).thenReturn(50)
     whenever(mockGifImage.getHeight()).thenReturn(50)
@@ -144,11 +144,11 @@ class GifImageDecoderTest {
     // Expect a call to GifImage.createFromByteBuffer
     val byteBuffer: TrivialBufferPooledByteBuffer = createDirectByteBuffer()
     whenever(
-            GifImage.createFromByteBuffer(
-                ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.byteBuffer),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        GifImage.createFromByteBuffer(
+            ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.byteBuffer),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockGifImage)
     whenever(mockGifImage.getWidth()).thenReturn(50)
     whenever(mockGifImage.getHeight()).thenReturn(50)
@@ -169,12 +169,12 @@ class GifImageDecoderTest {
     // Expect a call to GifImage.createFromNativeMemory
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
-            GifImage.createFromNativeMemory(
-                eq(byteBuffer.nativePtr),
-                eq(byteBuffer.size()),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        GifImage.createFromNativeMemory(
+            eq(byteBuffer.nativePtr),
+            eq(byteBuffer.size()),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockGifImage)
     whenever(mockGifImage.getWidth()).thenReturn(50)
     whenever(mockGifImage.getHeight()).thenReturn(50)
@@ -195,11 +195,11 @@ class GifImageDecoderTest {
     // Expect a call to GifImage.createFromByteBuffer
     val byteBuffer: TrivialBufferPooledByteBuffer = createDirectByteBuffer()
     whenever(
-            GifImage.createFromByteBuffer(
-                ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.byteBuffer),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        GifImage.createFromByteBuffer(
+            ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.byteBuffer),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockGifImage)
     whenever(mockGifImage.getWidth()).thenReturn(50)
     whenever(mockGifImage.getHeight()).thenReturn(50)
@@ -327,12 +327,12 @@ class GifImageDecoderTest {
 
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
-            GifImage.createFromNativeMemory(
-                eq(byteBuffer.nativePtr),
-                eq(byteBuffer.size()),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        GifImage.createFromNativeMemory(
+            eq(byteBuffer.nativePtr),
+            eq(byteBuffer.size()),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockGifImage)
     whenever(mockGifImage.getWidth()).thenReturn(50)
     whenever(mockGifImage.getHeight()).thenReturn(50)

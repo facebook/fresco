@@ -58,7 +58,7 @@ class RendererShapeExampleFragment : BaseShowcaseKotlinFragment() {
                   ),
                   Path.Direction.CW,
               )
-            }
+            },
         ),
     )
 
@@ -76,7 +76,7 @@ class RendererShapeExampleFragment : BaseShowcaseKotlinFragment() {
               w,
               h,
               DrawableImageDataModel(
-                  ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher)!!
+                  ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher)!!,
               ),
               shape,
           )

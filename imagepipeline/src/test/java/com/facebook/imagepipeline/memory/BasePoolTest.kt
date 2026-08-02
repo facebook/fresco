@@ -62,7 +62,7 @@ class BasePoolTest {
     for (s in sizes) {
       val size = s
       Assertions.assertThatThrownBy(
-              ThrowableAssert.ThrowingCallable { mPool!!.getBucketedSize(size) }
+              ThrowableAssert.ThrowingCallable { mPool!!.getBucketedSize(size) },
           )
           .isInstanceOf(InvalidSizeException::class.java)
     }
@@ -339,7 +339,7 @@ class BasePoolTest {
     Assertions.assertThat(mStats!!.usedBytes).isEqualTo(2)
     Assertions.assertThat<Int?, IntPair?>(mStats!!.bucketStats)
         .isEqualTo(
-            ImmutableMap.of<Int?, IntPair?>(2, IntPair(1, 0), 4, IntPair(0, 0), 6, IntPair(0, 1))
+            ImmutableMap.of<Int?, IntPair?>(2, IntPair(1, 0), 4, IntPair(0, 0), 6, IntPair(0, 1)),
         )
 
     // perform another trim
@@ -349,7 +349,7 @@ class BasePoolTest {
     Assertions.assertThat(mStats!!.usedBytes).isEqualTo(2)
     Assertions.assertThat<Int?, IntPair?>(mStats!!.bucketStats)
         .isEqualTo(
-            ImmutableMap.of<Int?, IntPair?>(2, IntPair(1, 0), 4, IntPair(0, 0), 6, IntPair(0, 0))
+            ImmutableMap.of<Int?, IntPair?>(2, IntPair(1, 0), 4, IntPair(0, 0), 6, IntPair(0, 0)),
         )
   }
 

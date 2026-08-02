@@ -38,7 +38,7 @@ constructor(val blurRadius: Int, val context: Context, val iterations: Int = DEF
 
   init {
     Preconditions.checkArgument(
-        blurRadius > 0 && blurRadius <= RenderScriptBlurFilter.BLUR_MAX_RADIUS
+        blurRadius > 0 && blurRadius <= RenderScriptBlurFilter.BLUR_MAX_RADIUS,
     )
     Preconditions.checkArgument(iterations > 0)
   }

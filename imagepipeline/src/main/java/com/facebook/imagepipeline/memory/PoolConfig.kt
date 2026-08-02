@@ -99,7 +99,7 @@ class PoolConfig private constructor(builder: Builder) {
     }
 
     fun setNativeMemoryChunkPoolStatsTracker(
-        memoryChunkPoolStatsTracker: PoolStatsTracker
+        memoryChunkPoolStatsTracker: PoolStatsTracker,
     ): Builder {
       this.memoryChunkPoolStatsTracker = memoryChunkPoolStatsTracker
       return this
@@ -111,7 +111,7 @@ class PoolConfig private constructor(builder: Builder) {
     }
 
     fun setSmallByteArrayPoolStatsTracker(
-        smallByteArrayPoolStatsTracker: PoolStatsTracker
+        smallByteArrayPoolStatsTracker: PoolStatsTracker,
     ): Builder {
       this.smallByteArrayPoolStatsTracker = smallByteArrayPoolStatsTracker
       return this
@@ -137,7 +137,7 @@ class PoolConfig private constructor(builder: Builder) {
     }
 
     fun setRegisterLruBitmapPoolAsMemoryTrimmable(
-        registerLruBitmapPoolAsMemoryTrimmable: Boolean
+        registerLruBitmapPoolAsMemoryTrimmable: Boolean,
     ): Builder {
       this.registerLruBitmapPoolAsMemoryTrimmable = registerLruBitmapPoolAsMemoryTrimmable
       return this

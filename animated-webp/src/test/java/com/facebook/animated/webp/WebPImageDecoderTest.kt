@@ -78,12 +78,12 @@ class WebPImageDecoderTest {
     // Expect a call to WebPImage.createFromNativeMemory
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
-            WebPImage.createFromNativeMemory(
-                eq(byteBuffer.nativePtr),
-                eq(byteBuffer.size()),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        WebPImage.createFromNativeMemory(
+            eq(byteBuffer.nativePtr),
+            eq(byteBuffer.size()),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockWebPImage)
 
     testCreateDefaults(mockWebPImage, byteBuffer)
@@ -96,11 +96,11 @@ class WebPImageDecoderTest {
     // Expect a call to WebPImage.createFromByteBuffer
     val byteBuffer: TrivialBufferPooledByteBuffer = createDirectByteBuffer()
     whenever(
-            WebPImage.createFromByteBuffer(
-                ArgumentMatchers.any<ByteBuffer>(),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        WebPImage.createFromByteBuffer(
+            ArgumentMatchers.any<ByteBuffer>(),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockWebPImage)
 
     testCreateDefaults(mockWebPImage, byteBuffer)
@@ -115,12 +115,12 @@ class WebPImageDecoderTest {
     // Expect a call to WebPImage.createFromNativeMemory
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
-            WebPImage.createFromNativeMemory(
-                eq(byteBuffer.nativePtr),
-                eq(byteBuffer.size()),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        WebPImage.createFromNativeMemory(
+            eq(byteBuffer.nativePtr),
+            eq(byteBuffer.size()),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockWebPImage)
     whenever(mockWebPImage.width).thenReturn(50)
     whenever(mockWebPImage.height).thenReturn(50)
@@ -139,11 +139,11 @@ class WebPImageDecoderTest {
     // Expect a call to WebPImage.createFromByteBuffer
     val byteBuffer: TrivialBufferPooledByteBuffer = createDirectByteBuffer()
     whenever(
-            WebPImage.createFromByteBuffer(
-                ArgumentMatchers.any<ByteBuffer>(),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        WebPImage.createFromByteBuffer(
+            ArgumentMatchers.any<ByteBuffer>(),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockWebPImage)
     whenever(mockWebPImage.width).thenReturn(50)
     whenever(mockWebPImage.height).thenReturn(50)
@@ -164,12 +164,12 @@ class WebPImageDecoderTest {
     // Expect a call to WebPImage.createFromNativeMemory
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
-            WebPImage.createFromNativeMemory(
-                eq(byteBuffer.nativePtr),
-                eq(byteBuffer.size()),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        WebPImage.createFromNativeMemory(
+            eq(byteBuffer.nativePtr),
+            eq(byteBuffer.size()),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockWebPImage)
     whenever(mockWebPImage.width).thenReturn(50)
     whenever(mockWebPImage.height).thenReturn(50)
@@ -190,11 +190,11 @@ class WebPImageDecoderTest {
     // Expect a call to WebPImage.createFromByteBuffer
     val byteBuffer: TrivialBufferPooledByteBuffer = createDirectByteBuffer()
     whenever(
-            WebPImage.createFromByteBuffer(
-                ArgumentMatchers.any<ByteBuffer>(),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        WebPImage.createFromByteBuffer(
+            ArgumentMatchers.any<ByteBuffer>(),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockWebPImage)
     whenever(mockWebPImage.width).thenReturn(50)
     whenever(mockWebPImage.height).thenReturn(50)
@@ -324,12 +324,12 @@ class WebPImageDecoderTest {
 
     val byteBuffer: TrivialPooledByteBuffer = createByteBuffer()
     whenever(
-            WebPImage.createFromNativeMemory(
-                eq(byteBuffer.nativePtr),
-                eq(byteBuffer.size()),
-                ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
-            )
-        )
+        WebPImage.createFromNativeMemory(
+            eq(byteBuffer.nativePtr),
+            eq(byteBuffer.size()),
+            ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
+        ),
+    )
         .thenReturn(mockWebPImage)
     whenever(mockWebPImage.width).thenReturn(50)
     whenever(mockWebPImage.height).thenReturn(50)

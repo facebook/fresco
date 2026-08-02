@@ -74,7 +74,7 @@ class VitoViewPrefetchFragment : BaseShowcaseFragment() {
       FrescoVitoProvider.getImagePipeline()
           .evictFromCaches(
               FrescoVitoProvider.getImagePipeline()
-                  .createImageRequest(resources, ImageSourceProvider.forUri(uri), imageOptions)
+                  .createImageRequest(resources, ImageSourceProvider.forUri(uri), imageOptions),
           )
     }
   }

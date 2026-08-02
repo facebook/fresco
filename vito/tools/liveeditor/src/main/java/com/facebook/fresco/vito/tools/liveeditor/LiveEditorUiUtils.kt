@@ -60,7 +60,7 @@ class LiveEditorUiUtils(
         addView(createWithList(context, ImageOptionsSampleValues.bitmapConfig))
         addView(createWithList(context, ImageOptionsSampleValues.resizeToViewportConfig))
         addView(
-            createWithList(context, ImageOptionsSampleValues.localThumbnailPreviewsEnabledConfig)
+            createWithList(context, ImageOptionsSampleValues.localThumbnailPreviewsEnabledConfig),
         )
         addView(createWithList(context, ImageOptionsSampleValues.progressiveRenderingEnabledConfig))
         addView(createWithList(context, ImageOptionsSampleValues.placeholderColors))
@@ -102,11 +102,11 @@ class LiveEditorUiUtils(
                       val titleHorizontalPad = 12.dpToPx(context)
                       val titleBottomPad = 6.dpToPx(context)
                       setPadding(titleHorizontalPad, 0, titleHorizontalPad, titleBottomPad)
-                    }
+                    },
                 )
               }
               block(this)
-            }
+            },
         )
       }
 
@@ -122,7 +122,7 @@ class LiveEditorUiUtils(
                 @SuppressLint("SetTextI18n")
                 text = "No image options available"
                 setTextColor(dialogTextColor(context))
-              }
+              },
           )
         }
         info.forEach { infoItem ->
@@ -221,7 +221,7 @@ class LiveEditorUiUtils(
               TextView(context).apply {
                 text = "Source is Empty"
                 setTextColor(dialogTextColor(context))
-              }
+              },
           )
         }
         info.forEach { infoItem ->

@@ -15,7 +15,7 @@ import kotlin.jvm.JvmField
 
 /** Inspects values cached in bitmap memory cache. */
 class CountingMemoryCacheInspector<K, V>(
-    private val countingBitmapCache: CountingMemoryCache<K, V>
+    private val countingBitmapCache: CountingMemoryCache<K, V>,
 ) {
 
   /** Cache entry info for use by dumpers. */

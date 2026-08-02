@@ -24,7 +24,7 @@ class LruBitmapPoolTest {
   fun setup() {
     pool =
         Mockito.spy(
-            LruBitmapPool(10 * 1024 * 1024, 1024 * 1024, NoOpPoolStatsTracker.getInstance(), null)
+            LruBitmapPool(10 * 1024 * 1024, 1024 * 1024, NoOpPoolStatsTracker.getInstance(), null),
         )
   }
 

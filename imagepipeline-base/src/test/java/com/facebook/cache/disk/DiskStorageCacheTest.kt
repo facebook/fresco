@@ -81,7 +81,7 @@ class DiskStorageCacheTest {
               "Cannot create cache dir: %s: directory %s",
               cacheDirectory!!.getAbsolutePath(),
               if (cacheDirectory!!.exists()) "already exists" else "does not exist",
-          )
+          ),
       )
     }
     storage = createDiskStorage(TESTCACHE_VERSION_START_OF_VERSIONING)
@@ -336,7 +336,7 @@ class DiskStorageCacheTest {
     val resourceId2 = verifyListenerOnWriteSuccessAndGetResourceId(key2, value2Size.toLong())
 
     (this@DiskStorageCacheTest.storage as DiskStorageWithReadFailures).setPoisonResourceId(
-        resourceId2
+        resourceId2,
     )
 
     assertThat(this@DiskStorageCacheTest.cache!!.getResource(key2)).isNull()
@@ -668,7 +668,7 @@ class DiskStorageCacheTest {
 
   @Throws(IOException::class)
   private fun putOneThingInCache(
-      cache: DiskStorageCache = this@DiskStorageCacheTest.cache!!
+      cache: DiskStorageCache = this@DiskStorageCacheTest.cache!!,
   ): CacheKey {
     val key: CacheKey = SimpleCacheKey("foo")
     val value1 = ByteArray(101)

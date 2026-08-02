@@ -91,7 +91,7 @@ class PostprocessorProducer(
             override fun onCancellationRequested() {
               maybeNotifyOnCancellation()
             }
-          }
+          },
       )
     }
 
@@ -160,7 +160,7 @@ class PostprocessorProducer(
               }
               clearRunningAndStartIfDirty()
             }
-          }
+          },
       )
     }
 
@@ -347,7 +347,7 @@ class PostprocessorProducer(
                 consumer.onCancellation()
               }
             }
-          }
+          },
       )
     }
 

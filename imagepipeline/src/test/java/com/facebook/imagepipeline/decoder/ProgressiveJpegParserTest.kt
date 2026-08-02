@@ -47,18 +47,18 @@ class ProgressiveJpegParserTest {
     jpegBytes =
         ByteStreams.toByteArray(
             requireNotNull(
-                ProgressiveJpegParserTest::class.java.getResourceAsStream("images/image.jpg")
+                ProgressiveJpegParserTest::class.java.getResourceAsStream("images/image.jpg"),
             ) {
               "Could not find test resource: images/image.jpg"
-            }
+            },
         )
     webpBytes =
         ByteStreams.toByteArray(
             requireNotNull(
-                ProgressiveJpegParserTest::class.java.getResourceAsStream("images/image.webp")
+                ProgressiveJpegParserTest::class.java.getResourceAsStream("images/image.webp"),
             ) {
               "Could not find test resource: images/image.webp"
-            }
+            },
         )
     partialWebpBytes = ByteArray(webpBytes.size / 2)
     System.arraycopy(webpBytes, 0, partialWebpBytes, 0, partialWebpBytes.size)
@@ -159,10 +159,10 @@ class ProgressiveJpegParserTest {
       bestScanEndOffset: Int,
   ) {
     assertThat(
-            progressiveJpegParser.parseMoreData(
-                buildEncodedImage(TrivialPooledByteBuffer(byteArray.copyOf(n)))
-            )
-        )
+        progressiveJpegParser.parseMoreData(
+            buildEncodedImage(TrivialPooledByteBuffer(byteArray.copyOf(n))),
+        ),
+    )
         .isEqualTo(foundNewScan)
     assertThat(progressiveJpegParser.isJpeg).isTrue()
     assertThat(progressiveJpegParser.bestScanNumber).isEqualTo(expectedBestScan)

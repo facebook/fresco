@@ -44,21 +44,20 @@ constructor(
 ) : BasePostprocessor() {
 
   // Precompute a stable cache key so identical postprocess requests can reuse cached results.
-  private val cacheKey: CacheKey =
-      SimpleCacheKey(
-          // Build a unique string incorporating all parameters that affect output.
-          // Using Locale null ensures default formatting without locale-specific variations.
-          String.format(
-              null as Locale?,
-              "DownScaleBlur;r%d;w%d;h%d;i%d;s%.2f;n%.2f",
-              blurRadius, // blur radius
-              targetWidth, // final upscaled width
-              targetHeight, // final upscaled height
-              iterations, // number of blur iterations
-              scaleFactor, // downscale factor before blur
-              ntscDampeningFactor, // optional NTSC dampening factor for luminance adjustment
-          )
-      )
+  private val cacheKey: CacheKey = SimpleCacheKey(
+      // Build a unique string incorporating all parameters that affect output.
+      // Using Locale null ensures default formatting without locale-specific variations.
+      String.format(
+          null as Locale?,
+          "DownScaleBlur;r%d;w%d;h%d;i%d;s%.2f;n%.2f",
+          blurRadius, // blur radius
+          targetWidth, // final upscaled width
+          targetHeight, // final upscaled height
+          iterations, // number of blur iterations
+          scaleFactor, // downscale factor before blur
+          ntscDampeningFactor, // optional NTSC dampening factor for luminance adjustment
+      ),
+  )
 
   init {
     Preconditions.checkArgument(

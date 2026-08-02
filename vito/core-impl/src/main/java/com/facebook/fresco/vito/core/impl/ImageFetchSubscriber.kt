@@ -115,7 +115,7 @@ class ImageFetchSubscriber(
   }
 
   private fun notifyFinalResult(
-      dataSource: DataSource<CloseableReference<CloseableImage>>?
+      dataSource: DataSource<CloseableReference<CloseableImage>>?,
   ): Boolean {
     return dataSource == null || dataSource.isFinished || dataSource.hasMultipleResults()
   }

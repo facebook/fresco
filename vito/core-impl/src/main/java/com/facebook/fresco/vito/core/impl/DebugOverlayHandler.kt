@@ -137,7 +137,7 @@ class DebugOverlayHandler(
   }
 
   private fun extractLightweightOverlayDrawable(
-      drawable: KFrescoVitoDrawable
+      drawable: KFrescoVitoDrawable,
   ): LightweightDebugOverlayDrawable {
     val model = drawable.debugOverlayImageLayer?.getDataModel()
     if (

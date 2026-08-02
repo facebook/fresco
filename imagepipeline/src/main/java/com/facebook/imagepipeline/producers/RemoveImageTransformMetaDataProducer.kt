@@ -28,7 +28,7 @@ class RemoveImageTransformMetaDataProducer(private val inputProducer: Producer<E
   }
 
   private inner class RemoveImageTransformMetaDataConsumer(
-      consumer: Consumer<CloseableReference<PooledByteBuffer>>
+      consumer: Consumer<CloseableReference<PooledByteBuffer>>,
   ) : DelegatingConsumer<EncodedImage, CloseableReference<PooledByteBuffer>>(consumer) {
     override fun onNewResultImpl(newResult: EncodedImage?, @Consumer.Status status: Int) {
       var ret: CloseableReference<PooledByteBuffer>? = null

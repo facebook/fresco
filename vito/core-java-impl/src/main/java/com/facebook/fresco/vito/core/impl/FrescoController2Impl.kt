@@ -179,7 +179,7 @@ open class FrescoController2Impl(
 
     // Set layers that are always visible
     drawable.setOverlayDrawable(
-        hierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions)
+        hierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions),
     )
 
     // We're fetching a new image, so we're updating the ID
@@ -228,7 +228,7 @@ open class FrescoController2Impl(
           imageRequest,
           extras,
           (imageRequest.imageSource as DrawableResImageSource).createDrawable(
-              imageRequest.resources
+              imageRequest.resources,
           ),
       )
       return true
@@ -260,7 +260,7 @@ open class FrescoController2Impl(
     if (needsPlaceholderDrawable) {
       // The image is not in cache -> Set up layers visible until the image is available
       drawable.setProgressDrawable(
-          hierarcher.buildProgressDrawable(imageRequest.resources, imageRequest.imageOptions)
+          hierarcher.buildProgressDrawable(imageRequest.resources, imageRequest.imageOptions),
       )
       // Immediately show the progress image and set progress to 0
       drawable.setProgress(0f)
@@ -303,7 +303,7 @@ open class FrescoController2Impl(
     frescoDrawable.setVitoImageRequestListener(globalImageListener)
     frescoDrawable.internalListener.onEmptyEvent(callerContext)
     frescoDrawable.setOverlayDrawable(
-        hierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions)
+        hierarcher.buildOverlayDrawable(imageRequest.resources, imageRequest.imageOptions),
     )
     setUpPlaceholder(frescoDrawable, imageRequest, EMPTY_IMAGE_ID)
   }
@@ -633,7 +633,7 @@ open class FrescoController2Impl(
     }
 
     private fun notifyFinalResult(
-        dataSource: DataSource<CloseableReference<CloseableImage>>?
+        dataSource: DataSource<CloseableReference<CloseableImage>>?,
     ): Boolean = dataSource == null || dataSource.isFinished || dataSource.hasMultipleResults()
   }
 }

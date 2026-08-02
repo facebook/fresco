@@ -24,7 +24,7 @@ class EmptyJpegGenerator(private val mPooledByteBufferFactory: PooledByteBufferF
     try {
       os =
           mPooledByteBufferFactory.newOutputStream(
-              EMPTY_JPEG_PREFIX.size + EMPTY_JPEG_SUFFIX.size + 4
+              EMPTY_JPEG_PREFIX.size + EMPTY_JPEG_SUFFIX.size + 4,
           )
       os.write(EMPTY_JPEG_PREFIX)
       os.write((height.toInt() shr 8).toByte().toInt())

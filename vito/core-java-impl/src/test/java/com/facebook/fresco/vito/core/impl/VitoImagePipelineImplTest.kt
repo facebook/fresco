@@ -53,7 +53,7 @@ class VitoImagePipelineImplTest {
   }
 
   private fun createRequest(
-      imageSource: com.facebook.fresco.vito.source.ImageSource
+      imageSource: com.facebook.fresco.vito.source.ImageSource,
   ): VitoImageRequest {
     val resources = mock<android.content.res.Resources>()
     return VitoImageRequest(
@@ -157,10 +157,9 @@ class VitoImagePipelineImplTest {
     whenever(config.experimentalDynamicSizeIsProductEnabled(any(), anyOrNull())).thenReturn(false)
     whenever(config.experimentalDynamicSizeWithCacheFallbackVito2()).thenReturn(true)
 
-    val request =
-        createRequest(
-            SmartImageSource(testUri, smartFetchOptIn = SmartFetchOptIn.ENABLED_NO_FALLBACK)
-        )
+    val request = createRequest(
+        SmartImageSource(testUri, smartFetchOptIn = SmartFetchOptIn.ENABLED_NO_FALLBACK),
+    )
     val result = vitoImagePipeline.determineFetchStrategy(request, callerContext, contextChain)
 
     assertThat(result).isEqualTo(SmartFetchStrategy.FALLBACK_DISABLED)
@@ -177,10 +176,9 @@ class VitoImagePipelineImplTest {
     whenever(config.isCallerContextBloks(any())).thenReturn(false)
     whenever(config.experimentalDynamicSizeDiskCacheCheckTimeoutMs()).thenReturn(0L)
 
-    val request =
-        createRequest(
-            SmartImageSource(testUri, smartFetchOptIn = SmartFetchOptIn.ENABLED_WITH_FALLBACK)
-        )
+    val request = createRequest(
+        SmartImageSource(testUri, smartFetchOptIn = SmartFetchOptIn.ENABLED_WITH_FALLBACK),
+    )
     val result = vitoImagePipeline.determineFetchStrategy(request, callerContext, contextChain)
 
     // With fallback enabled + not in disk cache → SmartFetchStrategy.DEFAULT
@@ -197,10 +195,9 @@ class VitoImagePipelineImplTest {
     // MC says fallback IS enabled, but opt-in overrides to no fallback
     whenever(config.experimentalDynamicSizeIsFallbackEnabled(any(), anyOrNull())).thenReturn(true)
 
-    val request =
-        createRequest(
-            SmartImageSource(testUri, smartFetchOptIn = SmartFetchOptIn.ENABLED_NO_FALLBACK)
-        )
+    val request = createRequest(
+        SmartImageSource(testUri, smartFetchOptIn = SmartFetchOptIn.ENABLED_NO_FALLBACK),
+    )
     val result = vitoImagePipeline.determineFetchStrategy(request, callerContext, contextChain)
 
     assertThat(result).isEqualTo(SmartFetchStrategy.FALLBACK_DISABLED)
@@ -217,10 +214,9 @@ class VitoImagePipelineImplTest {
     whenever(config.isCallerContextBloks(any())).thenReturn(false)
     whenever(config.experimentalDynamicSizeDiskCacheCheckTimeoutMs()).thenReturn(0L)
 
-    val request =
-        createRequest(
-            SmartImageSource(testUri, smartFetchOptIn = SmartFetchOptIn.ENABLED_WITH_FALLBACK)
-        )
+    val request = createRequest(
+        SmartImageSource(testUri, smartFetchOptIn = SmartFetchOptIn.ENABLED_WITH_FALLBACK),
+    )
     val result = vitoImagePipeline.determineFetchStrategy(request, callerContext, contextChain)
 
     assertThat(result).isNotEqualTo(SmartFetchStrategy.FALLBACK_DISABLED)
@@ -260,10 +256,9 @@ class VitoImagePipelineImplTest {
   fun determineFetchStrategy_optIn_appDisabled_stillReturnsAppDisabled() {
     whenever(config.experimentalDynamicSizeVito2()).thenReturn(false)
 
-    val request =
-        createRequest(
-            SmartImageSource(testUri, smartFetchOptIn = SmartFetchOptIn.ENABLED_NO_FALLBACK)
-        )
+    val request = createRequest(
+        SmartImageSource(testUri, smartFetchOptIn = SmartFetchOptIn.ENABLED_NO_FALLBACK),
+    )
     val result = vitoImagePipeline.determineFetchStrategy(request, callerContext, contextChain)
 
     assertThat(result).isEqualTo(ClassicFetchStrategy.APP_DISABLED)
@@ -274,10 +269,9 @@ class VitoImagePipelineImplTest {
     whenever(config.experimentalDynamicSizeVito2()).thenReturn(true)
     whenever(config.experimentalDynamicSizeIsUriEligible(any())).thenReturn(false)
 
-    val request =
-        createRequest(
-            SmartImageSource(testUri, smartFetchOptIn = SmartFetchOptIn.ENABLED_NO_FALLBACK)
-        )
+    val request = createRequest(
+        SmartImageSource(testUri, smartFetchOptIn = SmartFetchOptIn.ENABLED_NO_FALLBACK),
+    )
     val result = vitoImagePipeline.determineFetchStrategy(request, callerContext, contextChain)
 
     assertThat(result).isEqualTo(ClassicFetchStrategy.URI_INELIGIBLE)

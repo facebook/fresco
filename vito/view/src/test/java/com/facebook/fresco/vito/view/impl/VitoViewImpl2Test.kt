@@ -471,7 +471,7 @@ class VitoViewImpl2Test {
     assertThat(testDrawable.refetchRunnable)
         .describedAs(
             "refetchRunnable must survive detach — " +
-                "only VitoViewImpl2.release() should clear it"
+                "only VitoViewImpl2.release() should clear it",
         )
         .isNotNull()
         .isSameAs(originalRunnable)

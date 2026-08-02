@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity() {
           }
 
           override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
+        },
     )
     mLoaderSelect!!.setSelection(mCurrentLoaderAdapterIndex)
 
@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
           }
 
           override fun onNothingSelected(parent: AdapterView<*>?) {}
-        }
+        },
     )
     mSourceSelect!!.setSelection(mCurrentSourceAdapterIndex)
     val storagePermission =

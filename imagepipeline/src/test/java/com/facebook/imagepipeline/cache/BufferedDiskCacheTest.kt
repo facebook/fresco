@@ -217,12 +217,12 @@ class BufferedDiskCacheTest {
     whenever(stagingArea.get(cacheKey)).thenReturn(encodedImage)
     assertThat(closeableReference.underlyingReferenceTestOnly.refCountTestOnly).isEqualTo(2)
     assertThat(
-            bufferedDiskCache
-                .get(cacheKey, isCancelled)
-                .result
-                .byteBufferRef
-                .underlyingReferenceTestOnly
-        )
+        bufferedDiskCache
+            .get(cacheKey, isCancelled)
+            .result
+            .byteBufferRef
+            .underlyingReferenceTestOnly,
+    )
         .isSameAs(closeableReference.underlyingReferenceTestOnly)
   }
 

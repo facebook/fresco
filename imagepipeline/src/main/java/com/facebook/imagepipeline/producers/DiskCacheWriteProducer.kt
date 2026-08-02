@@ -119,7 +119,7 @@ class DiskCacheWriteProducer(
             producerContext,
             PRODUCER_NAME,
             DiskCacheDecisionNoDiskCacheChosenException(
-                "Got no disk cache for CacheChoice: " + imageRequest.cacheChoice.ordinal.toString()
+                "Got no disk cache for CacheChoice: " + imageRequest.cacheChoice.ordinal.toString(),
             ),
             null,
         )

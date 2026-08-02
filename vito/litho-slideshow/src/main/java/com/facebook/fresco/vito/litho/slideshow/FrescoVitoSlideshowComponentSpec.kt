@@ -54,7 +54,7 @@ object FrescoVitoSlideshowComponentSpec {
   @JvmStatic
   @OnCreateMountContent
   fun onCreateMountContent(
-      c: Context?
+      c: Context?,
   ): FrescoVitoSlideshowDrawable<*> = FrescoVitoSlideshowDrawable(
       FrescoVitoProvider.getController().createDrawable("litho"),
       FrescoVitoProvider.getController().createDrawable("litho"),

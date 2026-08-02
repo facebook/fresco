@@ -262,7 +262,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     /** The balanced animation strategy buffer length for single animation */
     fun setAnimationStrategyBufferLengthMilliseconds(
-        animationStrategyBufferLengthMilliseconds: Int
+        animationStrategyBufferLengthMilliseconds: Int,
     ) = asBuilder {
       this.animationStrategyBufferLengthMilliseconds = animationStrategyBufferLengthMilliseconds
     }
@@ -376,7 +376,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
      * `enableUnusedFrameLoaderCleanupSync`). See `FrameLoaderFactory`.
      */
     fun setEnableUnusedFrameLoaderCleanupSyncAndClear(
-        enableUnusedFrameLoaderCleanupSyncAndClear: Boolean
+        enableUnusedFrameLoaderCleanupSyncAndClear: Boolean,
     ) = asBuilder {
       this.enableUnusedFrameLoaderCleanupSyncAndClear = enableUnusedFrameLoaderCleanupSyncAndClear
     }
@@ -386,7 +386,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     }
 
     fun setSkipNonJpegIntermediateDecodeScheduling(
-        skipNonJpegIntermediateDecodeScheduling: Boolean
+        skipNonJpegIntermediateDecodeScheduling: Boolean,
     ) = asBuilder {
       this.skipNonJpegIntermediateDecodeScheduling = skipNonJpegIntermediateDecodeScheduling
     }
@@ -405,7 +405,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         }
 
     fun setLoadThumbnailFromContentResolverForContentUriOnly(
-        loadThumbnailFromContentResolverForContentUriOnly: Boolean
+        loadThumbnailFromContentResolverForContentUriOnly: Boolean,
     ) = asBuilder {
       this.loadThumbnailFromContentResolverForContentUriOnly =
           loadThumbnailFromContentResolverForContentUriOnly
@@ -456,7 +456,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
      * Provide it MobileConfig-gated from the app config.
      */
     fun setEncodedImageRequestTransformer(
-        encodedImageRequestTransformer: ((ImageRequest) -> ImageRequest)?
+        encodedImageRequestTransformer: ((ImageRequest) -> ImageRequest)?,
     ) = asBuilder { this.encodedImageRequestTransformer = encodedImageRequestTransformer }
 
     fun build(): ImagePipelineExperiments = ImagePipelineExperiments(this)

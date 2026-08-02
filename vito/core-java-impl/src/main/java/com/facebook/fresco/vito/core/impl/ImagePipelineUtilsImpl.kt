@@ -72,7 +72,7 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
             ImageDecodeOptions.newBuilder()
                 .setFrom(decodeOptions)
                 .setIntermediateImageBitmapTransformation(
-                    imageOptions.intermediateImageBitmapTransformation
+                    imageOptions.intermediateImageBitmapTransformation,
                 )
                 .build()
           } else {
@@ -82,7 +82,7 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
       imageDecodeOptions =
           ImageDecodeOptions.newBuilder()
               .setIntermediateImageBitmapTransformation(
-                  imageOptions.intermediateImageBitmapTransformation
+                  imageOptions.intermediateImageBitmapTransformation,
               )
               .build()
     }

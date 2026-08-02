@@ -51,7 +51,7 @@ abstract class AnimatedImageDecoderBase(
   companion object {
     /** Creates an AnimatedDrawableBackendProvider for animated image decoding. */
     fun createAnimatedDrawableBackendProvider(
-        downscaleFrameToDrawableDimensions: Boolean
+        downscaleFrameToDrawableDimensions: Boolean,
     ): AnimatedDrawableBackendProvider {
       return object : AnimatedDrawableBackendProvider {
         override fun get(

@@ -158,12 +158,11 @@ class EncodedImageTest {
   @Test
   @Throws(IOException::class)
   fun testParseMetaData_JPEG() {
-    val buf: PooledByteBuffer =
-        TrivialPooledByteBuffer(
-            ByteStreams.toByteArray(
-                EncodedImageTest::class.java.getResourceAsStream("images/image.jpg")!!
-            )
-        )
+    val buf: PooledByteBuffer = TrivialPooledByteBuffer(
+        ByteStreams.toByteArray(
+            EncodedImageTest::class.java.getResourceAsStream("images/image.jpg")!!,
+        ),
+    )
     val encodedImage: EncodedImage = EncodedImage(CloseableReference.of(buf))
     encodedImage.parseMetaData()
     assertThat(encodedImage.imageFormat).isSameAs(DefaultImageFormats.JPEG)
@@ -176,12 +175,11 @@ class EncodedImageTest {
   @Test
   @Throws(IOException::class)
   fun testParseMetaData_PNG() {
-    val buf: PooledByteBuffer =
-        TrivialPooledByteBuffer(
-            ByteStreams.toByteArray(
-                EncodedImageTest::class.java.getResourceAsStream("images/image.png")!!
-            )
-        )
+    val buf: PooledByteBuffer = TrivialPooledByteBuffer(
+        ByteStreams.toByteArray(
+            EncodedImageTest::class.java.getResourceAsStream("images/image.png")!!,
+        ),
+    )
     val encodedImage: EncodedImage = EncodedImage(CloseableReference.of(buf))
     encodedImage.parseMetaData()
     assertThat(encodedImage.imageFormat).isSameAs(DefaultImageFormats.PNG)
@@ -198,10 +196,9 @@ class EncodedImageTest {
       expectedWidth: Int,
       expectedHeight: Int,
   ) {
-    val buf: PooledByteBuffer =
-        TrivialPooledByteBuffer(
-            ByteStreams.toByteArray(EncodedImageTest::class.java.getResourceAsStream(imagePath)!!)
-        )
+    val buf: PooledByteBuffer = TrivialPooledByteBuffer(
+        ByteStreams.toByteArray(EncodedImageTest::class.java.getResourceAsStream(imagePath)!!),
+    )
     val encodedImage: EncodedImage = EncodedImage(CloseableReference.of(buf))
     encodedImage.parseMetaData()
     assertThat(encodedImage.imageFormat).isSameAs(imageFormat)

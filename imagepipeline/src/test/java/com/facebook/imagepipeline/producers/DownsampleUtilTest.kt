@@ -45,14 +45,14 @@ class DownsampleUtilTest {
     Mockito.`when`(imageRequest.getRotationOptions()).thenReturn(autoRotate())
     // Null resizeOptions
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(1)
   }
 
@@ -61,39 +61,39 @@ class DownsampleUtilTest {
     whenImageWidthAndHeight(0, 0)
     whenRequestResizeWidthAndHeightWithExifRotation(1, 1)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(1)
 
     // Width or height of the encoded image are 0
     encodedImage.setWidth(100)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(1)
     encodedImage.setWidth(0)
     encodedImage.setHeight(100)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(1)
   }
 
@@ -102,26 +102,26 @@ class DownsampleUtilTest {
     whenImageWidthAndHeight(100, 100)
     whenRequestResizeWidthAndHeightWithExifRotation(50, 50)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(2)
 
     whenRequestResizeWidthAndHeightWithExifRotation(50, 25)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(2)
   }
 
@@ -131,14 +131,14 @@ class DownsampleUtilTest {
     encodedImage.setImageFormat(DefaultImageFormats.PNG)
     whenRequestResizeWidthAndHeightWithExifRotation(50, 50)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(3)
   }
 
@@ -148,26 +148,26 @@ class DownsampleUtilTest {
 
     whenRequestResizeWidthAndHeightWithExifRotation(50, 25)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(2)
 
     whenRequestResizeWidthAndHeightWithExifRotation(25, 50)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(1)
   }
 
@@ -179,40 +179,40 @@ class DownsampleUtilTest {
     // 50,100 -> 50,25 = 1
     whenRequestResizeWidthHeightAndForcedRotation(50, 25, 90)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(1)
 
     // 50,100 -> 25,50 = 2
     whenRequestResizeWidthHeightAndForcedRotation(25, 50, 270)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(2)
 
     // 50,100 -> 10,20 = 5
     whenRequestResizeWidthHeightAndForcedRotation(10, 20, 180)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(5)
   }
 
@@ -222,27 +222,27 @@ class DownsampleUtilTest {
 
     whenRequestResizeWidthAndHeightWithExifRotation(4000, 4000)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(2)
 
     whenImageWidthAndHeight(8000, 8000)
     whenRequestResizeWidthAndHeightWithExifRotation(8000, 8000)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(4)
   }
 
@@ -252,27 +252,27 @@ class DownsampleUtilTest {
 
     whenRequestResizeWidthHeightAndMaxBitmapSize(4000, 4000, 4096f)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(1)
 
     whenImageWidthAndHeight(8000, 8000)
     whenRequestResizeWidthHeightAndMaxBitmapSize(8000, 8000, 4096f)
     assertThat(
-            DownsampleUtil.determineSampleSize(
-                    imageRequest.getRotationOptions(),
-                    imageRequest.getResizeOptions(),
-                    encodedImage,
-                    MAX_BITMAP_SIZE,
-                )
-                .toLong()
-        )
+        DownsampleUtil.determineSampleSize(
+                imageRequest.getRotationOptions(),
+                imageRequest.getResizeOptions(),
+                encodedImage,
+                MAX_BITMAP_SIZE,
+            )
+            .toLong(),
+    )
         .isEqualTo(2)
   }
 
@@ -328,8 +328,8 @@ class DownsampleUtilTest {
     encodedImage =
         EncodedImage(
             CloseableReference.of<PooledByteBuffer?>(
-                Mockito.mock<PooledByteBuffer?>(PooledByteBuffer::class.java)
-            )
+                Mockito.mock<PooledByteBuffer?>(PooledByteBuffer::class.java),
+            ),
         )
     encodedImage.setWidth(width)
     encodedImage.setHeight(height)

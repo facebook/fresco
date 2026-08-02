@@ -204,10 +204,9 @@ class DecodeProducer(
           encodedImage.imageFormat == DefaultImageFormats.GIF &&
               isTooBig(encodedImage, imageDecodeOptions)
       ) {
-        val e =
-            IllegalStateException(
-                "Image is too big to attempt decoding: w = ${encodedImage.width}, h = ${encodedImage.height}, pixel config = ${imageDecodeOptions.bitmapConfig}, max bitmap size = $MAX_BITMAP_SIZE"
-            )
+        val e = IllegalStateException(
+            "Image is too big to attempt decoding: w = ${encodedImage.width}, h = ${encodedImage.height}, pixel config = ${imageDecodeOptions.bitmapConfig}, max bitmap size = $MAX_BITMAP_SIZE",
+        )
         producerListener.onProducerFinishWithFailure(producerContext, PRODUCER_NAME, e, null)
         handleError(e)
         return
@@ -249,7 +248,7 @@ class DecodeProducer(
                     e.message,
                     requestUri,
                     failedEncodedImage.getFirstBytesAsHexString(
-                        DECODE_EXCEPTION_MESSAGE_NUM_HEADER_BYTES
+                        DECODE_EXCEPTION_MESSAGE_NUM_HEADER_BYTES,
                     ),
                     failedEncodedImage.size,
                 )
@@ -491,7 +490,7 @@ class DecodeProducer(
                 handleCancellation()
               }
             }
-          }
+          },
       )
     }
   }

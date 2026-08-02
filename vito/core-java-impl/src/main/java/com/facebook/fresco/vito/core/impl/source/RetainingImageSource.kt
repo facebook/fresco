@@ -48,7 +48,7 @@ class RetainingImageSource(
   }
 
   fun setImageSourceUpdateFunction(
-      function: (ImageSource) -> Supplier<DataSource<CloseableReference<CloseableImage>>>
+      function: (ImageSource) -> Supplier<DataSource<CloseableReference<CloseableImage>>>,
   ) {
     imageSourceUpdateFunction = function
     updateImageSource(_currentSource, true)

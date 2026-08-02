@@ -97,7 +97,7 @@ class SampleApplication : Application() {
 
     // 8. Set CacheRequest routing flag
     IgImageInfraProvider.setUseFrescoPipelineInCacheRequest(
-        useFrescoInCacheRequest && useFrescoPipeline
+        useFrescoInCacheRequest && useFrescoPipeline,
     )
 
     // 9. Set Vito rendering flag — construct with real constructor so all mc-dependent

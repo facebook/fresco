@@ -20,7 +20,7 @@ import java.nio.ByteBuffer
  */
 class BufferMemoryChunk(
     /** Size of the ByteBuffer */
-    override val size: Int
+    override val size: Int,
 ) : MemoryChunk, Closeable {
 
   /** Internal representation of the chunk */

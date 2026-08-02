@@ -12,7 +12,7 @@ import com.facebook.imagepipeline.animated.base.AnimatedDrawableBackend
 
 /** [AnimationInformation] that wraps an [AnimatedDrawableBackend]. */
 class AnimatedDrawableBackendAnimationInformation(
-    private val animatedDrawableBackend: AnimatedDrawableBackend
+    private val animatedDrawableBackend: AnimatedDrawableBackend,
 ) : AnimationInformation {
 
   override fun getFrameCount(): Int = animatedDrawableBackend.frameCount

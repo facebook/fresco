@@ -202,19 +202,19 @@ open class ProducerFactory(
   )
 
   fun newBitmapMemoryCacheGetProducer(
-      inputProducer: Producer<CloseableReference<CloseableImage>>
+      inputProducer: Producer<CloseableReference<CloseableImage>>,
   ): BitmapMemoryCacheGetProducer {
     return BitmapMemoryCacheGetProducer(mBitmapMemoryCache, mCacheKeyFactory, inputProducer)
   }
 
   fun newBitmapMemoryCacheKeyMultiplexProducer(
-      inputProducer: Producer<CloseableReference<CloseableImage>>
+      inputProducer: Producer<CloseableReference<CloseableImage>>,
   ): BitmapMemoryCacheKeyMultiplexProducer {
     return BitmapMemoryCacheKeyMultiplexProducer(mCacheKeyFactory, inputProducer, mConfig)
   }
 
   fun newBitmapMemoryCacheProducer(
-      inputProducer: Producer<CloseableReference<CloseableImage>>
+      inputProducer: Producer<CloseableReference<CloseableImage>>,
   ): BitmapMemoryCacheProducer {
     return BitmapMemoryCacheProducer(mBitmapMemoryCache, mCacheKeyFactory, inputProducer)
   }
@@ -246,7 +246,7 @@ open class ProducerFactory(
   }
 
   open fun newDiskCacheWriteProducer(
-      inputProducer: Producer<EncodedImage>
+      inputProducer: Producer<EncodedImage>,
   ): Producer<EncodedImage> {
     return DiskCacheWriteProducer(mDiskCachesStoreSupplier, mCacheKeyFactory, inputProducer)
   }
@@ -262,7 +262,7 @@ open class ProducerFactory(
   }
 
   open fun newEncodedCacheKeyMultiplexProducer(
-      inputProducer: Producer<EncodedImage>
+      inputProducer: Producer<EncodedImage>,
   ): EncodedCacheKeyMultiplexProducer {
     return EncodedCacheKeyMultiplexProducer(
         mCacheKeyFactory,
@@ -273,7 +273,7 @@ open class ProducerFactory(
   }
 
   fun newBitmapProbeProducer(
-      inputProducer: Producer<CloseableReference<CloseableImage>>
+      inputProducer: Producer<CloseableReference<CloseableImage>>,
   ): BitmapProbeProducer {
     return BitmapProbeProducer(
         mEncodedMemoryCache,
@@ -296,7 +296,7 @@ open class ProducerFactory(
   }
 
   open fun newEncodedMemoryCacheProducer(
-      inputProducer: Producer<EncodedImage>
+      inputProducer: Producer<EncodedImage>,
   ): Producer<EncodedImage> {
     return EncodedMemoryCacheProducer(mEncodedMemoryCache, mCacheKeyFactory, inputProducer)
   }
@@ -334,7 +334,7 @@ open class ProducerFactory(
   }
 
   fun newThumbnailBranchProducer(
-      thumbnailProducers: Array<ThumbnailProducer<EncodedImage>>
+      thumbnailProducers: Array<ThumbnailProducer<EncodedImage>>,
   ): ThumbnailBranchProducer {
     return ThumbnailBranchProducer(*thumbnailProducers)
   }
@@ -368,7 +368,7 @@ open class ProducerFactory(
   }
 
   fun newPostprocessorBitmapMemoryCacheProducer(
-      inputProducer: Producer<CloseableReference<CloseableImage>>
+      inputProducer: Producer<CloseableReference<CloseableImage>>,
   ): PostprocessedBitmapMemoryCacheProducer {
     return PostprocessedBitmapMemoryCacheProducer(
         mBitmapMemoryCache,
@@ -378,7 +378,7 @@ open class ProducerFactory(
   }
 
   fun newPostprocessorProducer(
-      inputProducer: Producer<CloseableReference<CloseableImage>>
+      inputProducer: Producer<CloseableReference<CloseableImage>>,
   ): PostprocessorProducer {
     return PostprocessorProducer(
         inputProducer,
@@ -424,7 +424,7 @@ open class ProducerFactory(
   }
 
   fun newBitmapPrepareProducer(
-      inputProducer: Producer<CloseableReference<CloseableImage>>
+      inputProducer: Producer<CloseableReference<CloseableImage>>,
   ): BitmapPrepareProducer {
     return BitmapPrepareProducer(
         inputProducer,
@@ -456,7 +456,7 @@ open class ProducerFactory(
 
   companion object {
     fun newAddImageTransformMetaDataProducer(
-        inputProducer: Producer<EncodedImage>
+        inputProducer: Producer<EncodedImage>,
     ): AddImageTransformMetaDataProducer {
       return AddImageTransformMetaDataProducer(inputProducer)
     }

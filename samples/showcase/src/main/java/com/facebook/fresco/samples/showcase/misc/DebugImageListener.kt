@@ -32,7 +32,7 @@ class DebugImageListener(val log: (String) -> Unit = { Log.d("DebugImageListener
       drawable: Drawable?,
   ) {
     log(
-        "onFinalImageSet: id=$id, origin=${ImageOriginUtils.toString(imageOrigin)}, imageInfo=$imageInfo, drawable=$drawable"
+        "onFinalImageSet: id=$id, origin=${ImageOriginUtils.toString(imageOrigin)}, imageInfo=$imageInfo, drawable=$drawable",
     )
   }
 

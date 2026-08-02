@@ -56,7 +56,7 @@ class ShapeCalculator {
                   Path().apply {
                     addRoundRect(bounds, radii, Path.Direction.CW)
                     fillType = Path.FillType.WINDING
-                  }
+                  },
               )
             }
           }

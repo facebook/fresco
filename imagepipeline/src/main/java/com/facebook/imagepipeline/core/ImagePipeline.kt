@@ -988,7 +988,7 @@ class ImagePipeline(
     val finalContinuation =
         Continuation<Boolean, Void> { task ->
           dataSource.setResult(
-              dataSource.result ?: false || !task.isCancelled && !task.isFaulted && task.result
+              dataSource.result ?: false || !task.isCancelled && !task.isFaulted && task.result,
           )
           null
         }

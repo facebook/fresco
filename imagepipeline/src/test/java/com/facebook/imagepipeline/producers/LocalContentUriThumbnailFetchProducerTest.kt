@@ -111,7 +111,7 @@ class LocalContentUriThumbnailFetchProducerTest {
                 ArgumentMatchers.anyLong(),
                 ArgumentMatchers.anyInt(),
                 ArgumentMatchers.any(),
-            )
+            ),
         )
         .thenAnswer { cursor }
     val dataColumnIndex = 5
@@ -150,7 +150,7 @@ class LocalContentUriThumbnailFetchProducerTest {
                 ArgumentMatchers.any(),
                 ArgumentMatchers.any(),
                 ArgumentMatchers.any(),
-            )
+            ),
         )
         .thenReturn(cursor)
     Mockito.`when`(contentResolver.openInputStream(contentUri))
@@ -179,7 +179,7 @@ class LocalContentUriThumbnailFetchProducerTest {
 
     val pooledByteBuffer = Mockito.mock(PooledByteBuffer::class.java)
     Mockito.`when`(
-            pooledByteBufferFactory.newByteBuffer(ArgumentMatchers.any(InputStream::class.java))
+            pooledByteBufferFactory.newByteBuffer(ArgumentMatchers.any(InputStream::class.java)),
         )
         .thenReturn(pooledByteBuffer)
 
@@ -198,7 +198,7 @@ class LocalContentUriThumbnailFetchProducerTest {
     mockResizeOptions(512, 384)
 
     Mockito.`when`(
-            pooledByteBufferFactory.newByteBuffer(ArgumentMatchers.any(InputStream::class.java))
+            pooledByteBufferFactory.newByteBuffer(ArgumentMatchers.any(InputStream::class.java)),
         )
         .thenThrow(exception)
     Mockito.verify(consumer).onFailure(exception)

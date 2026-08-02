@@ -104,7 +104,7 @@ class LocalExifThumbnailProducerTest {
                     EncodedImage.cloneOrNull(invocation.getArguments()[0] as EncodedImage?)
                 return null
               }
-            }
+            },
         )
         .`when`(consumer)
         .onNewResult(ArgumentMatchers.notNull(EncodedImage::class.java), ArgumentMatchers.anyInt())
@@ -124,12 +124,12 @@ class LocalExifThumbnailProducerTest {
     // captured by EncodedImage and the one that is created when
     // getByteBufferRef is called on EncodedImage
     assertThat(
-            capturedEncodedImage
-                ?.getByteBufferRef()
-                ?.getUnderlyingReferenceTestOnly()
-                ?.getRefCountTestOnly()
-                ?.toLong()
-        )
+        capturedEncodedImage
+            ?.getByteBufferRef()
+            ?.getUnderlyingReferenceTestOnly()
+            ?.getRefCountTestOnly()
+            ?.toLong(),
+    )
         .isEqualTo(2)
     assertThat(capturedEncodedImage?.getByteBufferRef()?.get()).isSameAs(thumbnailByteBuffer)
     assertThat(capturedEncodedImage?.getImageFormat()).isEqualTo(DefaultImageFormats.JPEG)

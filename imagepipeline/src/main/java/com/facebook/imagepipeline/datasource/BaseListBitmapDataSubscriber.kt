@@ -27,7 +27,7 @@ import com.facebook.imagepipeline.image.CloseableImage
 abstract class BaseListBitmapDataSubscriber :
     BaseDataSubscriber<List<CloseableReference<CloseableImage>>?>() {
   public override fun onNewResultImpl(
-      dataSource: DataSource<List<CloseableReference<CloseableImage>>?>
+      dataSource: DataSource<List<CloseableReference<CloseableImage>>?>,
   ) {
     if (!dataSource.isFinished) {
       return

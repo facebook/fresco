@@ -110,7 +110,7 @@ private fun Resources.getNullableDrawable(drawableRes: Int): Drawable? {
 }
 
 fun ScalingUtils.ScaleType.getCanvasTransformation(
-    focusPoint: PointF? = null
+    focusPoint: PointF? = null,
 ): CanvasTransformation =
     object : CanvasTransformation {
       override fun calculateTransformation(

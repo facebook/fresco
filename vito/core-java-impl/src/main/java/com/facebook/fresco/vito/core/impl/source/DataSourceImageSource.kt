@@ -15,7 +15,7 @@ import com.facebook.imagepipeline.image.CloseableImage
 
 /** ImageSource that directly supplies a DataSource */
 open class DataSourceImageSource(
-    val dataSourceSupplier: Supplier<DataSource<CloseableReference<CloseableImage>>>
+    val dataSourceSupplier: Supplier<DataSource<CloseableReference<CloseableImage>>>,
 ) : ImageSource {
   override fun getClassNameString(): String = "DataSourceImageSource"
 }

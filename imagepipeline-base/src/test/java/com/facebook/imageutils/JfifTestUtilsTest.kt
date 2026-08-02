@@ -37,23 +37,23 @@ class JfifTestUtilsTest {
   @Test
   fun testMakeSOFSection() {
     assertThat(
-            JfifTestUtils.makeSOFSection(
-                10, // length
-                3, // bit depth
-                310, // width
-                255, // height
-            )
-        )
+        JfifTestUtils.makeSOFSection(
+            10, // length
+            3, // bit depth
+            310, // width
+            255, // height
+        ),
+    )
         .isEqualTo("FFC0000A0300FF0136000000")
 
     assertThat(
-            JfifTestUtils.makeSOFSection(
-                20, // length
-                1, // bit depth
-                255, // width
-                310, // height
-            )
-        )
+        JfifTestUtils.makeSOFSection(
+            20, // length
+            1, // bit depth
+            255, // width
+            310, // height
+        ),
+    )
         .isEqualTo("FFC0001401013600FF00000000000000000000000000")
   }
 
@@ -109,7 +109,7 @@ class JfifTestUtilsTest {
                 "011A00030000000100FF0000" +
                 "011B00030000000100FF0000" +
                 "011C00030000000100FF0000" +
-                "00000008"
+                "00000008",
         )
 
     // Test little endian
@@ -122,7 +122,7 @@ class JfifTestUtilsTest {
                 "1A01030001000000FF000000" +
                 "1B01030001000000FF000000" +
                 "1C01030001000000FF000000" +
-                "09000000"
+                "09000000",
         )
   }
 

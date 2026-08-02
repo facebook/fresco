@@ -105,7 +105,7 @@ class ImageSelector(
           val (bx, by) = positions[j]
           val yDiff = ay - by
           if (yDiff != 0) yDiff else ax - bx
-        }
+        },
     )
   }
 }

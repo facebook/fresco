@@ -218,7 +218,7 @@ object SampleInfraFactory {
                 ignoreSizeMismatch: Boolean,
                 observer: EntryStateObserver<CacheKey>?,
             ): CountingMemoryCache<CacheKey, CloseableImage> = memoryCache.countingMemoryCache
-          }
+          },
       )
       Log.d(TAG, "Fresco config: sharing IgFrescoBitmapCacheAdapter with Fresco pipeline")
     }

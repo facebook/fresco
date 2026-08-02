@@ -143,7 +143,7 @@ class DiskStorageCache(
               indexReady = true
               countDownLatch!!.countDown()
             }
-          }
+          },
       )
     } else {
       countDownLatch = CountDownLatch(0)
@@ -497,7 +497,7 @@ class DiskStorageCache(
    * delta (this constant) to account for network time changes, timezone changes, etc.
    */
   private fun getSortedEntries(
-      allEntries: MutableCollection<DiskStorage.Entry>
+      allEntries: MutableCollection<DiskStorage.Entry>,
   ): MutableCollection<DiskStorage.Entry> {
     val threshold: Long = clock.now() + FUTURE_TIMESTAMP_THRESHOLD_MS
     val sortedList = ArrayList<DiskStorage.Entry>(allEntries.size)

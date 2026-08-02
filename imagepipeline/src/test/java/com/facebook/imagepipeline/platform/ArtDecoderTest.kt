@@ -139,8 +139,8 @@ class ArtDecoderTest {
     Mockito.mockStatic(BitmapFactory::class.java).use { mockedBitmapFactory ->
       // Setup mock to return null for bounds check, then a different bitmap
       whenever(
-              BitmapFactory.decodeStream(any<InputStream>(), isNull(), any<BitmapFactory.Options>())
-          )
+          BitmapFactory.decodeStream(any<InputStream>(), isNull(), any<BitmapFactory.Options>()),
+      )
           .thenAnswer { invocation ->
             val options = invocation.getArgument<BitmapFactory.Options>(2)
             options.outWidth = MockBitmapFactory.DEFAULT_BITMAP_WIDTH
@@ -162,8 +162,8 @@ class ArtDecoderTest {
     Mockito.mockStatic(BitmapFactory::class.java).use { mockedBitmapFactory ->
       // Setup mock to return null for bounds check, then throw exception
       whenever(
-              BitmapFactory.decodeStream(any<InputStream>(), isNull(), any<BitmapFactory.Options>())
-          )
+          BitmapFactory.decodeStream(any<InputStream>(), isNull(), any<BitmapFactory.Options>()),
+      )
           .thenAnswer { invocation ->
             val options = invocation.getArgument<BitmapFactory.Options>(2)
             options.outWidth = MockBitmapFactory.DEFAULT_BITMAP_WIDTH
@@ -285,7 +285,7 @@ class ArtDecoderTest {
   }
 
   private fun setupBitmapFactoryMocks(
-      mockedBitmapFactory: org.mockito.MockedStatic<BitmapFactory>
+      mockedBitmapFactory: org.mockito.MockedStatic<BitmapFactory>,
   ) {
     whenever(BitmapFactory.decodeStream(any<InputStream>(), isNull(), any<BitmapFactory.Options>()))
         .thenAnswer { invocation ->
@@ -346,7 +346,7 @@ class ArtDecoderTest {
   }
 
   private fun getDecodedBytes(
-      mockedBitmapFactory: org.mockito.MockedStatic<BitmapFactory>
+      mockedBitmapFactory: org.mockito.MockedStatic<BitmapFactory>,
   ): ByteArray {
     val inputStreamArgumentCaptor = ArgumentCaptor.forClass(InputStream::class.java)
     mockedBitmapFactory.verify(
@@ -370,7 +370,7 @@ class ArtDecoderTest {
   }
 
   private fun verifyDecodedFromStream(
-      mockedBitmapFactory: org.mockito.MockedStatic<BitmapFactory>
+      mockedBitmapFactory: org.mockito.MockedStatic<BitmapFactory>,
   ) {
     mockedBitmapFactory.verify(
         {

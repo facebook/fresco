@@ -119,12 +119,12 @@ class ResizeAndRotateProducerTest {
     mTestScheduledExecutorService = TestScheduledExecutorService(mFakeClockForScheduled)
     mUiThreadImmediateExecutorService = mock(UiThreadImmediateExecutorService::class.java)
     `when`(
-            mUiThreadImmediateExecutorService.schedule(
-                any(Runnable::class.java),
-                anyLong(),
-                any(TimeUnit::class.java),
-            )
-        )
+        mUiThreadImmediateExecutorService.schedule(
+            any(Runnable::class.java),
+            anyLong(),
+            any(TimeUnit::class.java),
+        ),
+    )
         .thenAnswer { invocation ->
           mTestScheduledExecutorService.schedule(
               invocation.arguments[0] as Runnable,
@@ -595,21 +595,21 @@ class ResizeAndRotateProducerTest {
     assertThat(JpegTranscoderUtils.roundNumerator(1.0f / 8, ResizeOptions.DEFAULT_ROUNDUP_FRACTION))
         .isEqualTo(1)
     assertThat(
-            JpegTranscoderUtils.roundNumerator(5.0f / 32, ResizeOptions.DEFAULT_ROUNDUP_FRACTION)
-        )
+        JpegTranscoderUtils.roundNumerator(5.0f / 32, ResizeOptions.DEFAULT_ROUNDUP_FRACTION),
+    )
         .isEqualTo(1)
     assertThat(
-            JpegTranscoderUtils.roundNumerator(
-                1.0f / 6 - 0.01f,
-                ResizeOptions.DEFAULT_ROUNDUP_FRACTION,
-            )
-        )
+        JpegTranscoderUtils.roundNumerator(
+            1.0f / 6 - 0.01f,
+            ResizeOptions.DEFAULT_ROUNDUP_FRACTION,
+        ),
+    )
         .isEqualTo(1)
     assertThat(JpegTranscoderUtils.roundNumerator(1.0f / 6, ResizeOptions.DEFAULT_ROUNDUP_FRACTION))
         .isEqualTo(2)
     assertThat(
-            JpegTranscoderUtils.roundNumerator(3.0f / 16, ResizeOptions.DEFAULT_ROUNDUP_FRACTION)
-        )
+        JpegTranscoderUtils.roundNumerator(3.0f / 16, ResizeOptions.DEFAULT_ROUNDUP_FRACTION),
+    )
         .isEqualTo(2)
     assertThat(JpegTranscoderUtils.roundNumerator(2.0f / 8, ResizeOptions.DEFAULT_ROUNDUP_FRACTION))
         .isEqualTo(2)
@@ -661,30 +661,34 @@ class ResizeAndRotateProducerTest {
   }
 
   private fun verifyJpegTranscoderInteractions(numerator: Int, rotationAngle: Int) {
-    mockedNativeJpegTranscoder.verify({
-      NativeJpegTranscoder.transcodeJpeg(
-          any(InputStream::class.java),
-          any(OutputStream::class.java),
-          eq(rotationAngle),
-          eq(numerator),
-          eq(DEFAULT_JPEG_QUALITY),
-      )
-    })
+    mockedNativeJpegTranscoder.verify(
+        {
+          NativeJpegTranscoder.transcodeJpeg(
+              any(InputStream::class.java),
+              any(OutputStream::class.java),
+              eq(rotationAngle),
+              eq(numerator),
+              eq(DEFAULT_JPEG_QUALITY),
+          )
+        },
+    )
   }
 
   private fun verifyJpegTranscoderExifOrientationInteractions(
       numerator: Int,
       exifOrientation: Int,
   ) {
-    mockedNativeJpegTranscoder.verify({
-      NativeJpegTranscoder.transcodeJpegWithExifOrientation(
-          any(InputStream::class.java),
-          any(OutputStream::class.java),
-          eq(exifOrientation),
-          eq(numerator),
-          eq(DEFAULT_JPEG_QUALITY),
-      )
-    })
+    mockedNativeJpegTranscoder.verify(
+        {
+          NativeJpegTranscoder.transcodeJpegWithExifOrientation(
+              any(InputStream::class.java),
+              any(OutputStream::class.java),
+              eq(exifOrientation),
+              eq(numerator),
+              eq(DEFAULT_JPEG_QUALITY),
+          )
+        },
+    )
   }
 
   private fun verifyZeroJpegTranscoderInteractions() {

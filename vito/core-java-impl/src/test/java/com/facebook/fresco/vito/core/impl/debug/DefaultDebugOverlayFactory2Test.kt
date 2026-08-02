@@ -334,7 +334,7 @@ class DefaultDebugOverlayFactory2Test {
 
   @Suppress("UNCHECKED_CAST")
   private fun getDebugData(
-      overlay: DebugOverlayDrawable
+      overlay: DebugOverlayDrawable,
   ): LinkedHashMap<String, Pair<String, Int>> {
     val field = DebugOverlayDrawable::class.java.getDeclaredField("debugData")
     field.isAccessible = true

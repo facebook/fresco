@@ -54,7 +54,7 @@ object VitoViewInflater {
                       AutoRotateDrawable(progressBarDrawable, progressBarAutoRotateInterval)
                     } else {
                       progressBarDrawable
-                    }
+                    },
                 )
               }
             }
@@ -110,7 +110,7 @@ object VitoViewInflater {
                         if (roundTopRight) radius else 0f,
                         if (roundBottomRight) radius else 0f,
                         if (roundBottomLeft) radius else 0f,
-                    )
+                    ),
                 )
               }
             }
@@ -127,7 +127,7 @@ object VitoViewInflater {
                                 0,
                             )
                             .toFloat(),
-                    )
+                    ),
                 )
               }
             }

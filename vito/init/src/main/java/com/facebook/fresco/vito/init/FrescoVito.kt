@@ -86,7 +86,7 @@ class FrescoVito {
                 )
               } ?: NoOpDebugOverlayFactory2(),
               imagePerfListenerSupplier,
-          )
+          ),
       )
     }
 

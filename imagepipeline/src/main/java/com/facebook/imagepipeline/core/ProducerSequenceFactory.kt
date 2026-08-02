@@ -79,7 +79,7 @@ class ProducerSequenceFactory(
    * @return the sequence that should be used to process the request
    */
   fun getEncodedImageProducerSequence(
-      imageRequest: ImageRequest
+      imageRequest: ImageRequest,
   ): Producer<CloseableReference<PooledByteBuffer>> =
       traceSection("ProducerSequenceFactory#getEncodedImageProducerSequence") {
         validateEncodedImageRequest(imageRequest)
@@ -107,7 +107,7 @@ class ProducerSequenceFactory(
             }
             throw IllegalArgumentException(
                 "Unsupported uri scheme for encoded image fetch! Uri is: " +
-                    getShortenedUriString(uri)
+                    getShortenedUriString(uri),
             )
           }
         }
@@ -137,7 +137,7 @@ class ProducerSequenceFactory(
   val localContentUriFetchEncodedImageProducerSequence:
       Producer<CloseableReference<PooledByteBuffer>> by lazy {
     traceSection(
-        "ProducerSequenceFactory#getLocalContentUriFetchEncodedImageProducerSequence:init"
+        "ProducerSequenceFactory#getLocalContentUriFetchEncodedImageProducerSequence:init",
     ) {
       RemoveImageTransformMetaDataProducer(backgroundLocalContentUriFetchToEncodeMemorySequence)
     }
@@ -161,7 +161,7 @@ class ProducerSequenceFactory(
       else -> {
         val uri = imageRequest.sourceUri
         throw IllegalArgumentException(
-            "Unsupported uri scheme for encoded image fetch! Uri is: " + getShortenedUriString(uri)
+            "Unsupported uri scheme for encoded image fetch! Uri is: " + getShortenedUriString(uri),
         )
       }
     }
@@ -174,7 +174,7 @@ class ProducerSequenceFactory(
    * @return the sequence that should be used to process the request
    */
   fun getDecodedImageProducerSequence(
-      imageRequest: ImageRequest
+      imageRequest: ImageRequest,
   ): Producer<CloseableReference<CloseableImage>> =
       traceSection("ProducerSequenceFactory#getDecodedImageProducerSequence") {
         var pipelineSequence = getBasicDecodedImageSequence(imageRequest)
@@ -208,7 +208,7 @@ class ProducerSequenceFactory(
   }
 
   private fun getBasicDecodedImageSequence(
-      imageRequest: ImageRequest
+      imageRequest: ImageRequest,
   ): Producer<CloseableReference<CloseableImage>> =
       traceSection("ProducerSequenceFactory#getBasicDecodedImageSequence") {
         val uri = imageRequest.sourceUri
@@ -259,7 +259,7 @@ class ProducerSequenceFactory(
               }
             }
             throw IllegalArgumentException(
-                "Unsupported uri scheme! Uri is: <${getShortenedUriString(uri)}> ${customProducerSequenceFactories?.size} custom factories"
+                "Unsupported uri scheme! Uri is: <${getShortenedUriString(uri)}> ${customProducerSequenceFactories?.size} custom factories",
             )
           }
         }
@@ -361,7 +361,7 @@ class ProducerSequenceFactory(
    */
   val backgroundLocalContentUriFetchToEncodeMemorySequence: Producer<EncodedImage> by lazy {
     traceSection(
-        "ProducerSequenceFactory#getBackgroundLocalContentUriFetchToEncodeMemorySequence:init"
+        "ProducerSequenceFactory#getBackgroundLocalContentUriFetchToEncodeMemorySequence:init",
     ) {
       val localFileFetchProducer = producerFactory.newLocalContentUriFetchProducer()
       val toEncodedMultiplexProducer =
@@ -416,7 +416,7 @@ class ProducerSequenceFactory(
           producerFactory.newLocalThumbnailBitmapSdk29Producer(
               loadThumbnailFromContentResolverFirst,
               loadThumbnailFromContentResolverForContentUriOnly,
-          )
+          ),
       )
     } else {
       throw Throwable("Unreachable exception. Just to make linter happy for the lazy block.")
@@ -510,7 +510,7 @@ class ProducerSequenceFactory(
    * @return bitmap cache get to decode sequence
    */
   fun newBitmapCacheGetToDecodeSequence(
-      inputProducer: Producer<EncodedImage>
+      inputProducer: Producer<EncodedImage>,
   ): Producer<CloseableReference<CloseableImage>> {
     traceSection("ProducerSequenceFactory#newBitmapCacheGetToDecodeSequence") {
       val decodeProducer = producerFactory.newDecodeProducer(inputProducer)
@@ -559,7 +559,7 @@ class ProducerSequenceFactory(
    * @return bitmap cache get to bitmap cache sequence
    */
   private fun newBitmapCacheGetToBitmapCacheSequence(
-      inputProducer: Producer<CloseableReference<CloseableImage>>
+      inputProducer: Producer<CloseableReference<CloseableImage>>,
   ): Producer<CloseableReference<CloseableImage>> {
     val bitmapMemoryCacheProducer = producerFactory.newBitmapMemoryCacheProducer(inputProducer)
     val bitmapKeyMultiplexProducer =
@@ -606,7 +606,7 @@ class ProducerSequenceFactory(
   }
 
   private fun newLocalThumbnailProducer(
-      thumbnailProducers: Array<ThumbnailProducer<EncodedImage>>
+      thumbnailProducers: Array<ThumbnailProducer<EncodedImage>>,
   ): Producer<EncodedImage> {
     val thumbnailBranchProducer = producerFactory.newThumbnailBranchProducer(thumbnailProducers)
     return producerFactory.newResizeAndRotateProducer(
@@ -619,7 +619,7 @@ class ProducerSequenceFactory(
   /** post-processor producer -> inputProducer */
   @Synchronized
   private fun getPostprocessorSequence(
-      inputProducer: Producer<CloseableReference<CloseableImage>>
+      inputProducer: Producer<CloseableReference<CloseableImage>>,
   ): Producer<CloseableReference<CloseableImage>> {
     var result = postprocessorSequences[inputProducer]
     if (result == null) {
@@ -633,7 +633,7 @@ class ProducerSequenceFactory(
   /** swallow result producer -> inputProducer */
   @Synchronized
   private fun getDecodedImagePrefetchSequence(
-      inputProducer: Producer<CloseableReference<CloseableImage>>
+      inputProducer: Producer<CloseableReference<CloseableImage>>,
   ): Producer<Void?> {
     var result = closeableImagePrefetchSequences[inputProducer]
     if (result == null) {
@@ -646,7 +646,7 @@ class ProducerSequenceFactory(
   /** bitmap prepare producer -> inputProducer */
   @Synchronized
   private fun getBitmapPrepareSequence(
-      inputProducer: Producer<CloseableReference<CloseableImage>>
+      inputProducer: Producer<CloseableReference<CloseableImage>>,
   ): Producer<CloseableReference<CloseableImage>> {
     var bitmapPrepareProducer = bitmapPrepareSequences[inputProducer]
     if (bitmapPrepareProducer == null) {
@@ -658,7 +658,7 @@ class ProducerSequenceFactory(
 
   @Synchronized
   private fun getDelaySequence(
-      inputProducer: Producer<CloseableReference<CloseableImage>>
+      inputProducer: Producer<CloseableReference<CloseableImage>>,
   ): Producer<CloseableReference<CloseableImage>> {
     return producerFactory.newDelayProducer(inputProducer)
   }
@@ -667,7 +667,7 @@ class ProducerSequenceFactory(
     private fun validateEncodedImageRequest(imageRequest: ImageRequest) {
       Preconditions.checkArgument(
           imageRequest.lowestPermittedRequestLevel.value <=
-              ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE.value
+              ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE.value,
       )
     }
 

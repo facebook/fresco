@@ -139,7 +139,7 @@ object ImageSourceToImagePipelineAdapter {
                     extras,
                     viewport,
                 )
-              }
+              },
           )
 
       is IncreasingQualityImageSource ->
@@ -167,7 +167,7 @@ object ImageSourceToImagePipelineAdapter {
                       extras,
                       viewport,
                   ),
-              )
+              ),
           )
 
       is RetainingImageSource -> {

@@ -244,7 +244,7 @@ class DefaultBitmapAnimationDrawableFactory(
   }
 
   private fun createAnimatedDrawableBackend(
-      animatedImageResult: AnimatedImageResult
+      animatedImageResult: AnimatedImageResult,
   ): AnimatedDrawableBackend {
     val animatedImage = animatedImageResult.image
     val initialBounds = Rect(0, 0, animatedImage.width, animatedImage.height)
@@ -264,7 +264,7 @@ class DefaultBitmapAnimationDrawableFactory(
   }
 
   private fun createAnimatedFrameCache(
-      animatedImageResult: AnimatedImageResult
+      animatedImageResult: AnimatedImageResult,
   ): AnimatedFrameCache {
     return AnimatedFrameCache(
         AnimationFrameCacheKey(animatedImageResult.hashCode(), useDeepEqualsForCacheKey.get()),

@@ -52,7 +52,7 @@ class DefaultFrescoVitoProvider(
   init {
     if (!ImagePipelineFactory.hasBeenInitialized()) {
       throw RuntimeException(
-          "Fresco must be initialized before DefaultFrescoVitoProvider can be used!"
+          "Fresco must be initialized before DefaultFrescoVitoProvider can be used!",
       )
     }
     frescoVitoPrefetcher =

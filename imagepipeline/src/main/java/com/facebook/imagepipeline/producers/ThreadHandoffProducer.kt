@@ -47,10 +47,10 @@ class ThreadHandoffProducer<T>(
               statefulRunnable.cancel()
               threadHandoffProducerQueue.remove(statefulRunnable)
             }
-          }
+          },
       )
       threadHandoffProducerQueue.addToQueueOrExecute(
-          FrescoInstrumenter.decorateRunnable(statefulRunnable, getInstrumentationTag(context))
+          FrescoInstrumenter.decorateRunnable(statefulRunnable, getInstrumentationTag(context)),
       )
     }
   }

@@ -79,7 +79,7 @@ class HttpUrlConnectionNetworkFetcherTest {
               override fun answer(invocation: InvocationOnMock): URLConnection {
                 return connectionsQueue.poll()
               }
-            }
+            },
         )
     Mockito.`when`(UriUtil.uriToUrl(ArgumentMatchers.any(Uri::class.java))).thenReturn(mockURL)
   }
@@ -93,7 +93,7 @@ class HttpUrlConnectionNetworkFetcherTest {
               override fun answer(invocation: InvocationOnMock): Uri {
                 return mockUri(invocation.getArguments()[0] as String)
               }
-            }
+            },
         )
   }
 
@@ -108,7 +108,7 @@ class HttpUrlConnectionNetworkFetcherTest {
               override fun answer(invocation: InvocationOnMock): Uri {
                 return invocation.getArguments()[0] as Uri
               }
-            }
+            },
         )
   }
 
@@ -122,7 +122,7 @@ class HttpUrlConnectionNetworkFetcherTest {
               override fun answer(invocation: InvocationOnMock): String {
                 return url.substring(0, url.indexOf(':'))
               }
-            }
+            },
         )
     return uri
   }
@@ -136,7 +136,7 @@ class HttpUrlConnectionNetworkFetcherTest {
               override fun answer(invocation: InvocationOnMock): Uri {
                 return mockUri(INITIAL_TEST_URL)
               }
-            }
+            },
         )
   }
 

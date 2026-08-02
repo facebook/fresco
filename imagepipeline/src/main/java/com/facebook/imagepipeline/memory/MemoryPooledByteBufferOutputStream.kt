@@ -88,7 +88,7 @@ constructor(pool: MemoryChunkPool, initialCapacity: Int = pool.minBufferSize) :
   override fun write(buffer: ByteArray, offset: Int, count: Int) {
     if (offset < 0 || count < 0 || offset + count > buffer.size) {
       throw ArrayIndexOutOfBoundsException(
-          "length=${buffer.size}; regionStart=${offset}; regionLength=${count}"
+          "length=${buffer.size}; regionStart=${offset}; regionLength=${count}",
       )
     }
     ensureValid()

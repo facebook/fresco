@@ -747,7 +747,7 @@ class AbstractAdaptiveCountingMemoryCacheTest {
               override fun apply(key: String): Boolean {
                 return key == KEYS[2] || key == KEYS[3]
               }
-            }
+            },
         )
 
     assertThat(numEvictedEntries).isEqualTo(2)
@@ -1649,9 +1649,9 @@ class AbstractAdaptiveCountingMemoryCacheTest {
         .isTrue()
     assertThat(cache.mCachedEntries.contains(key)).describedAs("Key found in cache").isFalse()
     assertThat(
-            cache.mLeastFrequentlyUsedExclusiveEntries.contains(key) ||
-                cache.mMostFrequentlyUsedExclusiveEntries.contains(key)
-        )
+        cache.mLeastFrequentlyUsedExclusiveEntries.contains(key) ||
+            cache.mMostFrequentlyUsedExclusiveEntries.contains(key),
+    )
         .describedAs("Key found in exclusive")
         .isFalse()
     assertThat(cache.mLeastFrequentlyUsedKeysGhostList.contains(key))
@@ -1685,9 +1685,9 @@ class AbstractAdaptiveCountingMemoryCacheTest {
         .isFalse()
     assertThat(cache.mCachedEntries.contains(key)).describedAs("Key found in cache").isFalse()
     assertThat(
-            cache.mLeastFrequentlyUsedExclusiveEntries.contains(key) ||
-                cache.mMostFrequentlyUsedExclusiveEntries.contains(key)
-        )
+        cache.mLeastFrequentlyUsedExclusiveEntries.contains(key) ||
+            cache.mMostFrequentlyUsedExclusiveEntries.contains(key),
+    )
         .describedAs("Key found in exclusive")
         .isFalse()
     assertThat(cache.mMostFrequentlyUsedKeysGhostList.contains(key))
@@ -1738,9 +1738,9 @@ class AbstractAdaptiveCountingMemoryCacheTest {
         .describedAs("key not found in the cache")
         .isTrue()
     assertThat(
-            cache.mLeastFrequentlyUsedExclusiveEntries.contains(key) ||
-                cache.mMostFrequentlyUsedExclusiveEntries.contains(key)
-        )
+        cache.mLeastFrequentlyUsedExclusiveEntries.contains(key) ||
+            cache.mMostFrequentlyUsedExclusiveEntries.contains(key),
+    )
         .describedAs("key not found in the exclusives")
         .isTrue()
     val entry = cache.mCachedEntries.get(key)
@@ -1792,9 +1792,9 @@ class AbstractAdaptiveCountingMemoryCacheTest {
   private fun assertNotCached(key: String, value: Int) {
     assertThat(cache.mCachedEntries.contains(key)).describedAs("key found in the cache").isFalse()
     assertThat(
-            cache.mLeastFrequentlyUsedExclusiveEntries.contains(key) ||
-                cache.mMostFrequentlyUsedExclusiveEntries.contains(key)
-        )
+        cache.mLeastFrequentlyUsedExclusiveEntries.contains(key) ||
+            cache.mMostFrequentlyUsedExclusiveEntries.contains(key),
+    )
         .describedAs("key found in the exclusives")
         .isFalse()
   }

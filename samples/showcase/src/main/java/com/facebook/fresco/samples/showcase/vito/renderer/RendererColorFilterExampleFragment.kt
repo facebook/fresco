@@ -58,7 +58,7 @@ class RendererColorFilterExampleFragment : BaseShowcaseKotlinFragment() {
                   ),
                   Path.Direction.CW,
               )
-            }
+            },
         ),
     )
 
@@ -80,7 +80,7 @@ class RendererColorFilterExampleFragment : BaseShowcaseKotlinFragment() {
                 w,
                 h,
                 DrawableImageDataModel(
-                    ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher)!!
+                    ContextCompat.getDrawable(requireContext(), R.mipmap.ic_launcher)!!,
                 ),
                 shape,
                 null,

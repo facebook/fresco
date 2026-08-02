@@ -18,7 +18,7 @@ import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.imagepipeline.request.ImageRequestBuilder
 
 class DefaultImageDecodeOptionsProviderImpl(
-    private val circularBitmapRounding: CircularBitmapRounding?
+    private val circularBitmapRounding: CircularBitmapRounding?,
 ) : ImageDecodeOptionsProvider {
 
   override fun create(
@@ -37,7 +37,7 @@ class DefaultImageDecodeOptionsProviderImpl(
 
     @JvmStatic
     fun maybeCreateFromConfigAndCustomDecoder(
-        imageOptions: DecodedImageOptions
+        imageOptions: DecodedImageOptions,
     ): ImageDecodeOptions? {
       val bitmapConfig = imageOptions.bitmapConfig
       val imageDecodeOptions = imageOptions.imageDecodeOptions

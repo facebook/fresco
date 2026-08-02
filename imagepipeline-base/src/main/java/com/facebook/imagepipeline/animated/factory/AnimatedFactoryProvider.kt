@@ -91,7 +91,7 @@ object AnimatedFactoryProvider {
         val clazz = Class.forName("com.facebook.fresco.animation.factory.AnimatedFactoryV2Impl")
         val frameLoaderListenerClass =
             Class.forName(
-                "com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoaderListener"
+                "com.facebook.fresco.animation.bitmap.preparation.ondemandanimation.FrameLoaderListener",
             )
         val animatedImagePerfLoggingListenerClass =
             Class.forName("com.facebook.fresco.vito.core.AnimatedImagePerfLoggingListener")

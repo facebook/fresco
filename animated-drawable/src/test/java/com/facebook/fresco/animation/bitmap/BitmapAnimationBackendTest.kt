@@ -465,7 +465,7 @@ class BitmapAnimationBackendTest {
   }
 
   fun createBackendWithNewRenderImplementation(
-      isNewRenderImplementation: Boolean
+      isNewRenderImplementation: Boolean,
   ): BitmapAnimationBackend {
     return BitmapAnimationBackend(
         platformBitmapFactory,
@@ -712,7 +712,7 @@ class BitmapAnimationBackendTest {
   }
 
   private fun createBackendWithAnimatedOptions(
-      animatedOptions: AnimatedOptions?
+      animatedOptions: AnimatedOptions?,
   ): BitmapAnimationBackend {
     return BitmapAnimationBackend(
         platformBitmapFactory,

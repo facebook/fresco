@@ -104,7 +104,7 @@ class DiskCachesStoreFactory(
                           false,
                           null,
                       )
-                    }
+                    },
                 )
               }
         }

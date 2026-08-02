@@ -170,7 +170,7 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
             entry.type,
             entry.size / KB,
             entry.path,
-        )
+        ),
     )
   }
 
@@ -198,7 +198,7 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
             entryValue.get().height,
             entry.key,
             RealtimeSinceBootClock.get().now() - cacheKey.inBitmapCacheSince,
-        )
+        ),
     )
   }
 
@@ -211,11 +211,11 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
       writer.println()
       writer.println("Params:")
       writer.println(
-          formatStrLocaleSafe("Max size:          %7.2fMB", dumpInfo.maxSize / (1_024.0 * KB))
+          formatStrLocaleSafe("Max size:          %7.2fMB", dumpInfo.maxSize / (1_024.0 * KB)),
       )
       writer.println(formatStrLocaleSafe("Max entries count: %9d", dumpInfo.maxEntriesCount))
       writer.println(
-          formatStrLocaleSafe("Max entry size:    %7.2fMB", dumpInfo.maxEntrySize / (1_024.0 * KB))
+          formatStrLocaleSafe("Max entry size:    %7.2fMB", dumpInfo.maxEntrySize / (1_024.0 * KB)),
       )
       writer.println()
       writer.println("Summary of current content:")
@@ -223,23 +223,23 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
           formatStrLocaleSafe(
               "Total size:        %7.2fMB (includes in-use content)",
               dumpInfo.size / (1_024.0 * KB),
-          )
+          ),
       )
       writer.println(
           formatStrLocaleSafe(
               "Entries count:     %9d",
               dumpInfo.lruEntries.size + dumpInfo.sharedEntries.size,
-          )
+          ),
       )
       writer.println(
-          formatStrLocaleSafe("LRU size:          %7.2fMB", dumpInfo.lruSize / (1_024.0 * KB))
+          formatStrLocaleSafe("LRU size:          %7.2fMB", dumpInfo.lruSize / (1_024.0 * KB)),
       )
       writer.println(formatStrLocaleSafe("LRU count:         %9d", dumpInfo.lruEntries.size))
       writer.println(
           formatStrLocaleSafe(
               "Shared size:       %7.2fMB",
               (dumpInfo.size - dumpInfo.lruSize) / (1_024.0 * KB),
-          )
+          ),
       )
       writer.println(formatStrLocaleSafe("Shared count:      %9d", dumpInfo.sharedEntries.size))
       writer.println()
@@ -290,11 +290,11 @@ abstract class BaseFrescoStethoPlugin() : DumperPlugin {
       writer.println()
       writer.println("$cmdName memcache: Show contents of bitmap memory cache.")
       writer.println(
-          "$cmdName memcache -g: Get contents of bitmap memory cache and store themon the sdcard."
+          "$cmdName memcache -g: Get contents of bitmap memory cache and store themon the sdcard.",
       )
       writer.println("$cmdName diskcache: Show contents of disk storage cache.")
       writer.println(
-          "$cmdName diskcache -s: Show contents of disk storage cache formatted for script consumption."
+          "$cmdName diskcache -s: Show contents of disk storage cache formatted for script consumption.",
       )
       writer.println("$cmdName clear: Clear all caches.")
       writer.println()

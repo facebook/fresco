@@ -17,7 +17,7 @@ import androidx.annotation.IntRange
 /** Animation backend delegate that forwards all calls to a given [AnimationBackend] */
 open class AnimationBackendDelegate<T : AnimationBackend?>(
     /** Current animation backend in use */
-    private var _animationBackend: T?
+    private var _animationBackend: T?,
 ) : AnimationBackend {
 
   // Animation backend parameters

@@ -202,7 +202,7 @@ class LightweightDebugOverlayFactory2(
       val debugOverlay = LightweightDebugOverlayDrawable()
       if (existingOverlay != null) {
         drawable.setOverlayDrawable(
-            LightweightDebugOverlayDrawableWrapper(existingOverlay, debugOverlay)
+            LightweightDebugOverlayDrawableWrapper(existingOverlay, debugOverlay),
         )
       } else {
         drawable.setOverlayDrawable(debugOverlay)

@@ -241,7 +241,7 @@ class ViewTypeScreen(
         Button(activity).apply {
           text = "Load Image"
           setOnClickListener { loadImage() }
-        }
+        },
     )
 
     scroll.addView(container)
@@ -336,7 +336,7 @@ class ViewTypeScreen(
                       crViewHeight = imageView.height,
                       lowFidelity = lowFidelity,
                       progressive = progressive,
-                  )
+                  ),
               )
               showMetadata(
                   durationMs,
@@ -371,13 +371,13 @@ class ViewTypeScreen(
               )
             }
           }
-        }
+        },
     )
 
     // Set progressive image config when progressive switch is checked
     if (progressive) {
       imageView.setProgressiveImageConfig(
-          com.instagram.common.cache.image.utils.ProgressiveImageConfig()
+          com.instagram.common.cache.image.utils.ProgressiveImageConfig(),
       )
     }
 
@@ -390,7 +390,7 @@ class ViewTypeScreen(
                   clearCachedItem = false,
                   requestLowFidelityDecoding = true,
                   imageType = selectedImageType,
-              )
+              ),
           )
       selectedSampleSize > 1 ->
           imageView.setUrl(
@@ -398,7 +398,7 @@ class ViewTypeScreen(
                   imageUrl = imageUrl,
                   analyticsModule = module,
                   maxSampleSize = selectedSampleSize,
-              )
+              ),
           )
       else ->
           imageView.setUrl(
@@ -406,7 +406,7 @@ class ViewTypeScreen(
                   imageUrl = imageUrl,
                   analyticsModule = module,
                   imageType = selectedImageType,
-              )
+              ),
           )
     }
   }
@@ -516,7 +516,7 @@ class ViewTypeScreen(
                 setTextColor(TEXT_PRIMARY)
                 layoutParams =
                     LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
-              }
+              },
           )
           addView(switch)
         }

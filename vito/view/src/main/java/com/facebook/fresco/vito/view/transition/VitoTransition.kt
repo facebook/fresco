@@ -100,7 +100,7 @@ constructor(
                 imageView,
             )
           }
-        }
+        },
     )
 
     return animator
@@ -128,7 +128,7 @@ constructor(
       val transitionSet = TransitionSet()
       transitionSet.addTransition(ChangeBounds())
       transitionSet.addTransition(
-          VitoTransition(callerContext, fromScale, toScale, fromFocusPoint, toFocusPoint)
+          VitoTransition(callerContext, fromScale, toScale, fromFocusPoint, toFocusPoint),
       )
       return transitionSet
     }

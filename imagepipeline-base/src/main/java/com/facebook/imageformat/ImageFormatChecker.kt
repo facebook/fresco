@@ -28,7 +28,7 @@ class ImageFormatChecker private constructor() {
   }
 
   fun setCustomImageFormatCheckers(
-      customImageFormatCheckers: List<FormatChecker>?
+      customImageFormatCheckers: List<FormatChecker>?,
   ): ImageFormatChecker {
     this.customImageFormatCheckers = customImageFormatCheckers
     updateMaxHeaderLength()

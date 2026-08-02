@@ -112,7 +112,7 @@ class LocalVideoThumbnailProducerTest {
             ThumbnailUtils.createVideoThumbnail(
                 TEST_FILENAME,
                 MediaStore.Images.Thumbnails.MINI_KIND,
-            )
+            ),
         )
         .thenReturn(bitmap)
     Mockito.doAnswer(
@@ -124,7 +124,7 @@ class LocalVideoThumbnailProducerTest {
                         as CloseableReference<CloseableStaticBitmap>
                 return null
               }
-            }
+            },
         )
         .`when`(consumer)
         .onNewResult(
@@ -152,7 +152,7 @@ class LocalVideoThumbnailProducerTest {
             ThumbnailUtils.createVideoThumbnail(
                 TEST_FILENAME,
                 MediaStore.Images.Thumbnails.MICRO_KIND,
-            )
+            ),
         )
         .thenReturn(bitmap)
     Mockito.doAnswer(
@@ -164,7 +164,7 @@ class LocalVideoThumbnailProducerTest {
                         as CloseableReference<CloseableStaticBitmap>
                 return null
               }
-            }
+            },
         )
         .`when`(consumer)
         .onNewResult(
@@ -193,7 +193,7 @@ class LocalVideoThumbnailProducerTest {
             ThumbnailUtils.createVideoThumbnail(
                 TEST_FILENAME,
                 MediaStore.Images.Thumbnails.MICRO_KIND,
-            )
+            ),
         )
         .thenReturn(null)
     localVideoThumbnailProducer.produceResults(consumer, producerContext)
@@ -216,7 +216,7 @@ class LocalVideoThumbnailProducerTest {
             ThumbnailUtils.createVideoThumbnail(
                 TEST_FILENAME,
                 MediaStore.Images.Thumbnails.MICRO_KIND,
-            )
+            ),
         )
         .thenThrow(exception)
     localVideoThumbnailProducer.produceResults(consumer, producerContext)

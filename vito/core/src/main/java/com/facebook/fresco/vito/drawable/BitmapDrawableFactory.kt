@@ -107,7 +107,7 @@ class BitmapDrawableFactory : ImageOptionsDrawableFactory {
 
   /* Returns true if there is anything to rotate using the EXIF orientation */
   private fun hasTransformableExifOrientation(
-      closeableStaticBitmap: CloseableStaticBitmap
+      closeableStaticBitmap: CloseableStaticBitmap,
   ): Boolean =
       closeableStaticBitmap.exifOrientation != ExifInterface.ORIENTATION_NORMAL &&
           closeableStaticBitmap.exifOrientation != ExifInterface.ORIENTATION_UNDEFINED

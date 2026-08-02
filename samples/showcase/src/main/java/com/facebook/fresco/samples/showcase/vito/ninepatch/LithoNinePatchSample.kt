@@ -28,7 +28,7 @@ class LithoNinePatchSample : LithoSample {
             .imageDecodeOptions(
                 ImageDecodeOptions.newBuilder()
                     .setCustomImageDecoder(NinePatchExample.NinePatchDecoder())
-                    .build()
+                    .build(),
             )
             .customDrawableFactory(NinePatchExample.NinePatchDrawableFactory(c.resources))
             .scale(ScalingUtils.ScaleType.FIT_XY)

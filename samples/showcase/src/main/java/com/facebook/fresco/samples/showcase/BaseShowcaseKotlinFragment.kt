@@ -16,7 +16,7 @@ import com.facebook.fresco.samples.showcase.common.dpToPx
 
 /** A base Kotlin class for ShowcaseFragment */
 abstract class BaseShowcaseKotlinFragment(
-    @LayoutRes private val layoutResId: Int = R.layout.fragment_scrolling_linear_layout
+    @LayoutRes private val layoutResId: Int = R.layout.fragment_scrolling_linear_layout,
 ) : BaseShowcaseFragment() {
 
   override fun onCreateView(

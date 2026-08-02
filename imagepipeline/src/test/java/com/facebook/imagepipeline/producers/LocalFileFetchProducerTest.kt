@@ -84,7 +84,7 @@ class LocalFileFetchProducerTest {
                     EncodedImage.cloneOrNull(invocation.getArguments()[0] as EncodedImage?)
                 return null
               }
-            }
+            },
         )
         .`when`<Consumer<EncodedImage?>?>(consumer)
         .onNewResult(
@@ -114,18 +114,18 @@ class LocalFileFetchProducerTest {
             pooledByteBufferFactory.newByteBuffer(
                 ArgumentMatchers.any<InputStream?>(InputStream::class.java),
                 ArgumentMatchers.eq(INPUT_STREAM_LENGTH),
-            )
+            ),
         )
         .thenReturn(pooledByteBuffer)
     localFileFetchProducer.produceResults(consumer, producerContext)
     executor.runUntilIdle()
     assertThat(
-            capturedEncodedImage
-                ?.getByteBufferRef()
-                ?.getUnderlyingReferenceTestOnly()
-                ?.getRefCountTestOnly()
-                ?.toLong()
-        )
+        capturedEncodedImage
+            ?.getByteBufferRef()
+            ?.getUnderlyingReferenceTestOnly()
+            ?.getRefCountTestOnly()
+            ?.toLong(),
+    )
         .isEqualTo(2)
     assertThat(capturedEncodedImage?.getByteBufferRef()?.get()).isSameAs(pooledByteBuffer)
     Mockito.verify<ProducerListener2?>(producerListener)
@@ -143,7 +143,7 @@ class LocalFileFetchProducerTest {
             pooledByteBufferFactory.newByteBuffer(
                 ArgumentMatchers.any<InputStream?>(InputStream::class.java),
                 ArgumentMatchers.eq(INPUT_STREAM_LENGTH),
-            )
+            ),
         )
         .thenThrow(exception)
     Mockito.verify<Consumer<EncodedImage?>?>(consumer).onFailure(exception)

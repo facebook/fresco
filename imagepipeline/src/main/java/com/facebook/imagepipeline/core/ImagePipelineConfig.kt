@@ -135,7 +135,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         builder.bitmapMemoryCacheParamsSupplier
             ?: DefaultBitmapMemoryCacheParamsSupplier(
                 (checkNotNull(builder.context.getSystemService(Context.ACTIVITY_SERVICE))
-                    as ActivityManager)
+                    as ActivityManager),
             )
     bitmapMemoryCacheTrimStrategy =
         builder.bitmapMemoryCacheTrimStrategy ?: BitmapMemoryCacheTrimStrategy()
@@ -350,13 +350,13 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     fun setBitmapsConfig(config: Bitmap.Config?): Builder = apply { this.bitmapConfig = config }
 
     fun setBitmapMemoryCacheParamsSupplier(
-        bitmapMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>?
+        bitmapMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>?,
     ): Builder = apply {
       this.bitmapMemoryCacheParamsSupplier = checkNotNull(bitmapMemoryCacheParamsSupplier)
     }
 
     fun setBitmapMemoryCacheEntryStateObserver(
-        bitmapMemoryCacheEntryStateObserver: EntryStateObserver<CacheKey>?
+        bitmapMemoryCacheEntryStateObserver: EntryStateObserver<CacheKey>?,
     ): Builder = apply {
       this.bitmapMemoryCacheEntryStateObserver = bitmapMemoryCacheEntryStateObserver
     }
@@ -408,7 +408,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     }
 
     fun setEncodedMemoryCacheParamsSupplier(
-        encodedMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>?
+        encodedMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>?,
     ): Builder = apply {
       this.encodedMemoryCacheParamsSupplier = checkNotNull(encodedMemoryCacheParamsSupplier)
     }
@@ -427,7 +427,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     }
 
     fun setEnableEncodedImageColorSpaceUsage(
-        enableEncodedImageColorSpaceUsage: Supplier<Boolean>?
+        enableEncodedImageColorSpaceUsage: Supplier<Boolean>?,
     ): Builder = apply {
       this.enableEncodedImageColorSpaceUsage = enableEncodedImageColorSpaceUsage
     }
@@ -472,7 +472,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     }
 
     fun setDefaultIntermediateImageBitmapTransformation(
-        transformation: BitmapTransformation?
+        transformation: BitmapTransformation?,
     ): Builder = apply { this.defaultIntermediateImageBitmapTransformation = transformation }
 
     fun setProgressiveJpegConfig(progressiveJpegConfig: ProgressiveJpegConfig?): Builder = apply {
@@ -488,7 +488,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     }
 
     fun setCustomFetchSequenceFactories(
-        customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?
+        customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?,
     ): Builder = apply { this.customProducerSequenceFactories = customProducerSequenceFactories }
 
     fun setResizeAndRotateEnabledForNetwork(resizeAndRotateEnabledForNetwork: Boolean): Builder =
@@ -509,7 +509,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     }
 
     fun setCloseableReferenceLeakTracker(
-        closeableReferenceLeakTracker: CloseableReferenceLeakTracker
+        closeableReferenceLeakTracker: CloseableReferenceLeakTracker,
     ): Builder = apply { this.closeableReferenceLeakTracker = closeableReferenceLeakTracker }
 
     fun setBitmapMemoryCache(bitmapMemoryCache: MemoryCache<CacheKey, CloseableImage>?): Builder =
@@ -518,11 +518,11 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
         }
 
     fun setEncodedMemoryCache(
-        encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>?
+        encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>?,
     ): Builder = apply { this.encodedMemoryCache = encodedMemoryCache }
 
     fun setExecutorServiceForAnimatedImages(
-        serialExecutorService: SerialExecutorService?
+        serialExecutorService: SerialExecutorService?,
     ): Builder = apply { this.serialExecutorServiceForAnimatedImages = serialExecutorService }
 
     fun setBitmapMemoryCacheFactory(bitmapMemoryCacheFactory: BitmapMemoryCacheFactory?): Builder =
@@ -536,7 +536,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
      * the animated cache reuses [bitmapMemoryCacheParamsSupplier].
      */
     fun setNonBitmapImageMemoryCacheParamsSupplier(
-        nonBitmapImageMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>?
+        nonBitmapImageMemoryCacheParamsSupplier: Supplier<MemoryCacheParams>?,
     ): Builder = apply {
       this.nonBitmapImageMemoryCacheParamsSupplier = nonBitmapImageMemoryCacheParamsSupplier
     }
@@ -546,13 +546,13 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     }
 
     fun setDynamicDiskCacheConfigMap(
-        dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>
+        dynamicDiskCacheConfigMap: Map<String, DiskCacheConfig>,
     ): Builder = apply { this.dynamicDiskCacheConfigMap = dynamicDiskCacheConfigMap }
 
     fun experiment(): ImagePipelineExperiments.Builder = experimentsBuilder
 
     fun setDecodedOriginalImageAnalyzers(
-        decodedOriginalImageAnalyzers: Set<DecodeProducer.DecodedOriginalImageAnalyzer>?
+        decodedOriginalImageAnalyzers: Set<DecodeProducer.DecodedOriginalImageAnalyzer>?,
     ): Builder = apply { this.decodedOriginalImageAnalyzers = decodedOriginalImageAnalyzers }
 
     fun build(): ImagePipelineConfig = ImagePipelineConfig(this)

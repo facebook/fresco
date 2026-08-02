@@ -93,7 +93,7 @@ fun LinearLayout.addRow(
         }
       } else {
         createLinearLayout(true, block)
-      }
+      },
   )
 }
 
@@ -107,7 +107,7 @@ fun LinearLayout.addExample(
 ) {
   addImageView(w, h)
       .setImageDrawable(
-          RendererExampleDrawable(imageDataModel, shape, transformationMatrix, colorFilter)
+          RendererExampleDrawable(imageDataModel, shape, transformationMatrix, colorFilter),
       )
 }
 
@@ -123,7 +123,7 @@ fun LinearLayout.addText(text: String?) {
                   ViewGroup.LayoutParams.WRAP_CONTENT,
               )
           setPadding(padding, padding, padding, padding)
-        }
+        },
     )
   }
 }

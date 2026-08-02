@@ -177,7 +177,7 @@ class FrescoFrameCache(
     @JvmStatic
     @VisibleForTesting
     fun convertToBitmapReferenceAndClose(
-        closeableImage: CloseableReference<CloseableImage>?
+        closeableImage: CloseableReference<CloseableImage>?,
     ): CloseableReference<Bitmap>? {
       try {
         if (
@@ -214,7 +214,7 @@ class FrescoFrameCache(
     }
 
     private fun createImageReference(
-        bitmapReference: CloseableReference<Bitmap>
+        bitmapReference: CloseableReference<Bitmap>,
     ): CloseableReference<CloseableImage?>? {
       // The given CloseableStaticBitmap will be cached and then released by the resource releaser
       // of the closeable reference
