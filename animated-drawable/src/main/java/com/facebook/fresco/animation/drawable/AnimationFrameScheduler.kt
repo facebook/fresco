@@ -9,7 +9,7 @@ package com.facebook.fresco.animation.drawable
 
 import android.os.SystemClock
 import com.facebook.fresco.animation.frame.FrameScheduler
-import com.facebook.fresco.animation.frame.FrameScheduler.NO_NEXT_TARGET_RENDER_TIME
+import com.facebook.fresco.animation.frame.FrameScheduler.Companion.NO_NEXT_TARGET_RENDER_TIME
 import kotlin.math.max
 
 const val INVALID_FRAME_TIME = -1L

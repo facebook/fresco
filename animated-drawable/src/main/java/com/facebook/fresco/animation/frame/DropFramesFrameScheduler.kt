@@ -31,17 +31,18 @@ class DropFramesFrameScheduler(private val animationInformation: AnimationInform
     return getFrameNumberWithinLoop(timeInCurrentLoopMs)
   }
 
-  override fun getLoopDurationMs(): Long {
-    if (_loopDurationMs != UNSET.toLong()) {
+  override val loopDurationMs: Long
+    get() {
+      if (_loopDurationMs != UNSET.toLong()) {
+        return _loopDurationMs
+      }
+      _loopDurationMs = 0
+      val frameCount = animationInformation.frameCount
+      for (i in 0 until frameCount) {
+        _loopDurationMs += animationInformation.getFrameDurationMs(i).toLong()
+      }
       return _loopDurationMs
     }
-    _loopDurationMs = 0
-    val frameCount = animationInformation.frameCount
-    for (i in 0 until frameCount) {
-      _loopDurationMs += animationInformation.getFrameDurationMs(i).toLong()
-    }
-    return _loopDurationMs
-  }
 
   override fun getTargetRenderTimeMs(frameNumber: Int): Long {
     var targetRenderTimeMs = 0L
@@ -80,8 +81,8 @@ class DropFramesFrameScheduler(private val animationInformation: AnimationInform
     return animationTimeMs + timeUntilNextFrameInLoopMs
   }
 
-  override fun isInfiniteAnimation(): Boolean =
-      animationInformation.loopCount == AnimationInformation.LOOP_COUNT_INFINITE
+  override val isInfiniteAnimation: Boolean
+    get() = animationInformation.loopCount == AnimationInformation.LOOP_COUNT_INFINITE
 
   @VisibleForTesting
   fun getFrameNumberWithinLoop(timeInCurrentLoopMs: Long): Int {
