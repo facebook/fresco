@@ -37,6 +37,10 @@ class PlatformDecoderOptions(
     // When true, decode failures (IOException, IllegalArgumentException, UnsatisfiedLinkError, OOM)
     // are retried with BitmapFactory before giving up. When false, exceptions propagate.
     val enableDecodeRetry: Boolean = false,
+    // When true, DefaultRawBitmapDecoder skips its naive BitmapFactory retry on an invalid-options
+    // decode failure and instead logs/reports the exception. Defaults to false to preserve the
+    // existing (always-retry) behavior.
+    val disableDefaultDecoderRetry: Boolean = false,
 ) {
   fun interface DecoderErrorReporter {
     fun reportError(category: String, message: String, cause: Throwable?)
