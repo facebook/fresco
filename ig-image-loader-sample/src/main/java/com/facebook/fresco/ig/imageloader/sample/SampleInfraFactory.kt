@@ -12,6 +12,7 @@ import android.util.Log
 import com.facebook.cache.common.CacheKey
 import com.facebook.common.internal.Supplier
 import com.facebook.common.memory.MemoryTrimmableRegistry
+import com.facebook.common.time.AwakeTimeSinceBootClock
 import com.facebook.imagepipeline.cache.BitmapMemoryCacheFactory
 import com.facebook.imagepipeline.cache.CountingMemoryCache
 import com.facebook.imagepipeline.cache.CountingMemoryCache.EntryStateObserver
@@ -22,7 +23,6 @@ import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.quicklog.NoOpQuickPerformanceLogger
 import com.facebook.storage.supplier.igapps.IGAppsStorageDependencySupplier
-import com.instagram.common.api.base.httprequest.HttpRequestPolicy
 import com.instagram.common.cache.igdiskcache.intf.EditorOutputStream
 import com.instagram.common.cache.igdiskcache.intf.IgPersistentCache
 import com.instagram.common.cache.igdiskcache.intf.OptionalStream
@@ -37,23 +37,24 @@ import com.instagram.common.cache.image.diskcachelayer.intf.DiskCacheFactory
 import com.instagram.common.cache.image.memorycachelayer.data.CacheType
 import com.instagram.common.cache.image.memorycachelayer.data.Configuration
 import com.instagram.common.cache.image.memorycachelayer.intf.InMemoryBitmapCacheIntf
-import com.instagram.common.cache.image.networklayer.IgFetchConfig
-import com.instagram.common.cache.image.networklayer.IgUnifiedImageNetworkLayerImpl
+import com.instagram.common.cache.image.networklayer.IgFoAImageFetchListener
+import com.instagram.common.cache.image.networklayer.IgFoAImageNetworkPolicy
+import com.instagram.common.cache.image.networklayer.IgFoAImageTransport
+import com.instagram.common.cache.image.networklayer.IgFoAImageTransportRequestFactory
 import com.instagram.common.cache.image.networklayer.NetworkImageLoaderFactoryImpl
-import com.instagram.common.cache.image.networklayer.intf.NetworkImageLoader
 import com.instagram.common.cache.image.utils.IgImageInfraConstants
-import com.instagram.common.cache.image.utils.UnsafeImageTaskConfig
 import com.instagram.common.context.AppContext
 import com.instagram.common.session.Session
+import com.instagram.common.session.UserSession
 import com.instagram.common.storage.cask.IgCask
-import com.instagram.common.typedurl.SimpleImageUrl
 import com.instagram.common.util.concurrent.LoggedRunnable
 import com.instagram.criticalpath.CriticalPath
 import com.instagram.criticalpath.CriticalPathJobDispatcher
 import com.instagram.fresco.cache.IgBitmapMemoryCacheFactory
 import com.instagram.fresco.cache.IgFrescoBitmapCacheAdapter
-import com.meta.images.network.UnifiedImageNetworkLayer
-import com.meta.images.network.UnifiedImageNetworkLayerAdapter
+import com.meta.images.network.foa.FoAImageNetworkFetcher
+import com.meta.images.network.foa.FoAImageRequestDecoration
+import com.meta.images.network.foa.FoAImageRequestDecorator
 
 /**
  * Builds real IG image infrastructure for the sample app.
@@ -68,6 +69,7 @@ object SampleInfraFactory {
   private const val DISK_CACHE_SIZE_BYTES = 500L * 1024 * 1024
   private const val DISK_CACHE_TRIM_FACTOR = 0.2
   private const val DISK_CACHE_STALE_DAYS = 30
+  private val FOA_IMAGE_REQUEST_DECORATOR = FoAImageRequestDecorator { FoAImageRequestDecoration() }
 
   var storageBootstrapped = false
     private set
@@ -196,13 +198,13 @@ object SampleInfraFactory {
 
   /**
    * Builds [ImagePipelineConfig] for Fresco, optionally sharing IG's memory cache and routing
-   * network through IG's unified network layer.
+   * network through IG's FoA image transport.
    */
   fun buildFrescoImagePipelineConfig(
       context: Context,
       toggles: Map<String, Boolean>,
       memoryCache: InMemoryBitmapCacheIntf,
-      session: Session,
+      session: UserSession,
   ): ImagePipelineConfig {
     val builder = ImagePipelineConfig.newBuilder(context)
 
@@ -223,44 +225,30 @@ object SampleInfraFactory {
       Log.d(TAG, "Fresco config: sharing IgFrescoBitmapCacheAdapter with Fresco pipeline")
     }
 
-    // Route Fresco network through IG's unified network layer
+    // Route Fresco network through IG's FoA transport.
     if (toggles["use_fresco_network_pipeline"] == true) {
       try {
         val imageInfra = IgImageInfraKotlin.getInstance()
         val loaderHost = imageInfra?.getImageLoaderHost()
-        if (loaderHost != null) {
-          val networkLayerFactory:
-              (com.facebook.imagepipeline.producers.ProducerContext) -> UnifiedImageNetworkLayer =
-              { producerContext ->
-                val uri = producerContext.imageRequest.sourceUri
-                val imageUrl = SimpleImageUrl(uri.toString())
-                val fetchConfig = IgFetchConfig(
-                    fetcherHost = loaderHost,
-                    imageUri = imageUrl,
-                    startScan = 0,
-                    endScan = IgImageInfraConstants.ALL_SCANS,
-                    byteArray = null,
-                    estimatedScansSizesBytes = imageUrl.estimatedScansSizesBytes,
-                    diskCacheKey = uri.toString(),
-                    unsafeConfig = UnsafeImageTaskConfig(),
-                    imageRefreshMaxProgress = 0,
-                    requestPolicy =
-                        HttpRequestPolicy.Builder()
-                            .setRequestType(HttpRequestPolicy.RequestType.Image)
-                            .build(),
-                    failOnErrorHttpResponse = true,
-                    photosQPL = null,
-                    isRequestedByImageView = true,
-                    trafficTokenProvider = NetworkImageLoader.TrafficTokenProvider { null },
-                    origin = "sample_app",
-                    session = session,
-                    enableProgressiveStreaming =
-                        toggles["use_fresco_progressive_rendering"] == true,
-                )
-                IgUnifiedImageNetworkLayerImpl(NetworkImageLoaderFactoryImpl, fetchConfig)
-              }
-          builder.setNetworkFetcher(UnifiedImageNetworkLayerAdapter(networkLayerFactory))
-          Log.d(TAG, "Fresco config: network routed through UnifiedImageNetworkLayerAdapter")
+        if (imageInfra != null && loaderHost != null) {
+          val requestFactory = IgFoAImageTransportRequestFactory(
+              loaderHost,
+              session,
+              enableProgressiveStreaming = toggles["use_fresco_progressive_rendering"] == true,
+              diskCacheKeyProvider = imageInfra::getDiskCacheKey,
+              photosQPLFactory = { null },
+          )
+          val transport = IgFoAImageTransport(NetworkImageLoaderFactoryImpl, requestFactory)
+          builder.setNetworkFetcher(
+              FoAImageNetworkFetcher(
+                  AwakeTimeSinceBootClock.get(),
+                  FOA_IMAGE_REQUEST_DECORATOR,
+                  IgFoAImageNetworkPolicy,
+                  transport,
+                  IgFoAImageFetchListener,
+              )
+          )
+          Log.d(TAG, "Fresco config: network routed through FoA image transport")
         } else {
           Log.w(TAG, "Fresco network toggle ON but IgImageInfra not available")
         }

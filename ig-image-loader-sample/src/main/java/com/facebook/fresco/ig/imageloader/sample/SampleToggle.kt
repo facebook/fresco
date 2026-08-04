@@ -54,7 +54,7 @@ data class SampleToggle(
             key = "use_fresco_network_pipeline",
             label = "Fresco Network Pipeline",
             description =
-                "ON: Fresco uses UnifiedImageNetworkLayerAdapter → IG HTTP layer. OFF: default HttpUrlConnection",
+                "ON: Fresco uses IG's FoA image transport. OFF: default HttpUrlConnection",
             category = ToggleCategory.PIPELINE,
             defaultValue = false,
         ),

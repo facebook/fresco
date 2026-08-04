@@ -26,7 +26,7 @@ import com.instagram.fresco.vitoutils.VitoExperimentHelper
  * - **use_vito**: Vito rendering vs legacy IgImageView rendering
  * - **use_fresco_pipeline**: Fresco's ImagePipeline vs IG's IgVitoImagePipeline
  * - **use_fresco_in_cache_request**: CacheRequest routes to Fresco vs IG's IgImageInfra
- * - **use_fresco_network_pipeline**: Fresco uses IG's UnifiedImageNetworkLayerAdapter
+ * - **use_fresco_network_pipeline**: Fresco routes network requests through IG's FoA transport
  * - **use_fresco_progressive_rendering**: Progressive JPEG rendering via streaming
  * - **use_fresco_bitmap_memory_cache**: IG pipeline uses Fresco's LruCountingMemoryCache
  * - **use_ig_cache_in_fresco**: IG pipeline uses the owner-based decoded-image cache path
