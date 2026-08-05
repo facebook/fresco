@@ -36,13 +36,14 @@ Before bumping a dependency version in `buildSrc/dependencies.kt`, verify the ar
 
 AndroidX library upgrades can require a higher `compileSdkVersion`. For example, `androidx.core:core:1.15.0` requires `compileSdk 35` but Fresco uses 34. Check the AAR metadata for `minCompileSdk` requirements before bumping.
 
-### OkHttp 3 vs 4
+### OkHttp 4.x Property Syntax
 
-The `imagepipeline-okhttp3` module uses OkHttp 3 Java method-call syntax (`response.body()`, `okHttpClient.dispatcher().executorService()`). OkHttp 4 is a Kotlin rewrite where these became properties (`response.body`, `okHttpClient.dispatcher.executorService`). Do not bump to OkHttp 4.x without updating all call sites.
+The `imagepipeline-okhttp3` module uses OkHttp 4.x Kotlin property-accessor syntax (`response.body`, `dispatcher.executorService`, `call.isCanceled()`). Do not revert to 3.x method-call syntax (`response.body()`, `dispatcher().executorService()`). The dep is `provided_deps` — each consuming app packages its own OkHttp version.
 
 ### Evidence
 
-- **D91469563**: Bumped Stetho to 1.6.1 (does not exist), Volley to 1.2.2 (does not exist), OkHttp to 4.11.0 (API incompatible), AndroidX Core to 1.15.0 (requires compileSdk 35)
+- **D91469563**: Bumped Stetho to 1.6.1 (does not exist), Volley to 1.2.2 (does not exist), AndroidX Core to 1.15.0 (requires compileSdk 35)
+- **D113934992**: Migrated `imagepipeline-okhttp3` from 3.x method-call syntax to 4.x property accessors
 
 ## 3. New BUCK Test Dependencies Need Gradle Equivalents
 
