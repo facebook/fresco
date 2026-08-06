@@ -773,7 +773,7 @@ class ResizeAndRotateProducerTest {
   private fun whenResizingEnabledIs(resizingEnabled: Boolean) {
     val nativeJpegTranscoder = NativeJpegTranscoder(resizingEnabled, MAX_BITMAP_SIZE, false, false)
     val jpegTranscoderFactory = mock(NativeJpegTranscoderFactory::class.java)
-    `when`(jpegTranscoderFactory.createImageTranscoder(any(ImageFormat::class.java), anyBoolean()))
+    `when`(jpegTranscoderFactory.createImageTranscoder(anyObject<ImageFormat>(), anyBoolean()))
         .thenReturn(nativeJpegTranscoder)
 
     mResizeAndRotateProducer =
