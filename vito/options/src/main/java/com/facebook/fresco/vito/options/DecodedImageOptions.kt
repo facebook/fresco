@@ -27,6 +27,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
   val imageDecodeOptions: ImageDecodeOptions? = builder.imageDecodeOptions
   val roundingOptions: RoundingOptions? = builder.roundingOptions
   val animatedOptions: AnimatedOptions? = builder.animatedOptions
+  val shouldRoundUpFractionalFrameBudget: Boolean = builder.shouldRoundUpFractionalFrameBudget
   val borderOptions: BorderOptions? = builder.borderOptions
   val actualImageScaleType: ScalingUtils.ScaleType = builder.actualImageScaleType
   val actualImageFocusPoint: PointF? = builder.actualFocusPoint
@@ -59,6 +60,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
             !Objects.equal(imageDecodeOptions, other.imageDecodeOptions) ||
             !Objects.equal(roundingOptions, other.roundingOptions) ||
             !Objects.equal(animatedOptions, other.animatedOptions) ||
+            shouldRoundUpFractionalFrameBudget != other.shouldRoundUpFractionalFrameBudget ||
             !Objects.equal(borderOptions, other.borderOptions) ||
             !Objects.equal(actualImageScaleType, other.actualImageScaleType) ||
             !Objects.equal(actualImageFocusPoint, other.actualImageFocusPoint) ||
@@ -82,6 +84,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     result = 31 * result + (imageDecodeOptions?.hashCode() ?: 0)
     result = 31 * result + (roundingOptions?.hashCode() ?: 0)
     result = 31 * result + (animatedOptions?.hashCode() ?: 0)
+    result = 31 * result + shouldRoundUpFractionalFrameBudget.hashCode()
     result = 31 * result + (borderOptions?.hashCode() ?: 0)
     result = 31 * result + actualImageScaleType.hashCode()
     result = 31 * result + (actualImageFocusPoint?.hashCode() ?: 0)
@@ -105,6 +108,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
           .add("imageDecodeOptions", imageDecodeOptions)
           .add("roundingOptions", roundingOptions)
           .add("animatedOptions", animatedOptions)
+          .add("shouldRoundUpFractionalFrameBudget", shouldRoundUpFractionalFrameBudget)
           .add("borderOptions", borderOptions)
           .add("actualImageScaleType", actualImageScaleType)
           .add("actualImageFocusPoint", actualImageFocusPoint)
@@ -123,6 +127,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     internal var imageDecodeOptions: ImageDecodeOptions? = null
     internal var roundingOptions: RoundingOptions? = null
     internal var animatedOptions: AnimatedOptions? = null
+    internal var shouldRoundUpFractionalFrameBudget: Boolean = false
     internal var borderOptions: BorderOptions? = null
     internal var actualImageScaleType: ScalingUtils.ScaleType = ScalingUtils.ScaleType.CENTER_CROP
     internal var actualFocusPoint: PointF? = null
@@ -144,6 +149,7 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
       imageDecodeOptions = decodedImageOptions.imageDecodeOptions
       roundingOptions = decodedImageOptions.roundingOptions
       animatedOptions = decodedImageOptions.animatedOptions
+      shouldRoundUpFractionalFrameBudget = decodedImageOptions.shouldRoundUpFractionalFrameBudget
       borderOptions = decodedImageOptions.borderOptions
       actualImageScaleType = decodedImageOptions.actualImageScaleType
       actualFocusPoint = decodedImageOptions.actualImageFocusPoint
@@ -203,6 +209,11 @@ open class DecodedImageOptions(builder: Builder<*>) : EncodedImageOptions(builde
     fun animated(animatedOptions: AnimatedOptions?): T = modify {
       this.animatedOptions = animatedOptions
     }
+
+    fun shouldRoundUpFractionalFrameBudget(shouldRoundUpFractionalFrameBudget: Boolean): T =
+        modify {
+          this.shouldRoundUpFractionalFrameBudget = shouldRoundUpFractionalFrameBudget
+        }
 
     fun borders(borderOptions: BorderOptions?): T = modify { this.borderOptions = borderOptions }
 
