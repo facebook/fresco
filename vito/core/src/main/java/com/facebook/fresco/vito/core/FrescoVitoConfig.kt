@@ -48,6 +48,14 @@ interface FrescoVitoConfig {
 
   fun fastPathForEmptyRequests(): Boolean
 
+  /**
+   * When on, controllers honor [EmptyImageSource.isExpectedEmpty] and route "expected empty"
+   * requests through the `onEmptyEvent` success-with-no-image callback path instead of firing
+   * `onFailure` with `"No image request was specified!"`. Default off preserves legacy failure
+   * semantics for all callers.
+   */
+  fun handleExpectedEmptyImageSource(): Boolean = false
+
   fun enableWindowWideColorGamut(): Boolean
 
   fun handleImageResultInBackground(): Boolean

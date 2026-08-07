@@ -42,6 +42,7 @@ import com.facebook.fresco.vito.source.BitmapImageSource
 import com.facebook.fresco.vito.source.ColorImageSource
 import com.facebook.fresco.vito.source.DrawableImageSource
 import com.facebook.fresco.vito.source.DrawableResImageSource
+import com.facebook.fresco.vito.source.EmptyImageSource
 import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.CloseableStaticBitmap
@@ -235,6 +236,24 @@ class KFrescoController(
           val resourceDrawable = source.createDrawable(imageRequest.resources)
           setDrawableAsActualImage(drawable, resourceDrawable, imageRequest, imageId)
           return true
+        }
+        is EmptyImageSource -> {
+          // Expected empty: caller opted in via `isExpectedEmpty` and the config flag is on. Route
+          // through `onEmptyEvent` + placeholder — skipping the default fetch path where
+          // `ImageSourceToImagePipelineAdapter.NO_REQUEST_SUPPLIER` produces an immediate failure
+          // with `"No image request was specified!"`. The config read is the LAST condition so we
+          // only exercise the new path when the source is genuinely expected-empty. Non-expected
+          // empty sources fall through to today's failure path.
+          if (source.isExpectedEmpty && config.handleExpectedEmptyImageSource()) {
+            drawable.listenerManager.onEmptyEvent(callerContext)
+            drawable.placeholderLayer.setPlaceholder(imageRequest.resources, options)
+            drawable.listenerManager.onPlaceholderSet(
+                imageId,
+                imageRequest,
+                drawable.placeholderLayer.getDataModel().maybeGetDrawable(),
+            )
+            return true
+          }
         }
       }
 

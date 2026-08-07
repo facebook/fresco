@@ -95,8 +95,17 @@ open class FrescoController2Impl(
       FLog.e(TAG, "Drawable not supported $drawable")
       return false
     }
-    // Fast path for null-URIs
-    if (config.fastPathForEmptyRequests() && imageRequest.imageSource is EmptyImageSource) {
+    // Fast path for null-URIs. Two entry points: (a) the existing global
+    // `fastPathForEmptyRequests` toggle, or (b) a per-source opt-in via
+    // `EmptyImageSource.isExpectedEmpty` (callers who know "no image" is the legitimate outcome and
+    // want it counted as onEmptyEvent rather than onFailure). The config read is the LAST condition
+    // so (b) only exercises the new path when the source is genuinely expected-empty.
+    val emptySource = imageRequest.imageSource as? EmptyImageSource
+    if (
+        emptySource != null &&
+            (config.fastPathForEmptyRequests() ||
+                (emptySource.isExpectedEmpty && config.handleExpectedEmptyImageSource()))
+    ) {
       emptyRequestFastPath(drawable, imageRequest, callerContext)
       return true
     }

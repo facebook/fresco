@@ -52,6 +52,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun fastPathForEmptyRequests(): Boolean = false
 
+  override fun handleExpectedEmptyImageSource(): Boolean = false
+
   override fun enableWindowWideColorGamut(): Boolean = false
 
   override fun handleImageResultInBackground(): Boolean = false
