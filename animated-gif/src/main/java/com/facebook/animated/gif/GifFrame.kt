@@ -22,7 +22,7 @@ open class GifFrame
  */
 @DoNotStrip
 internal constructor( // Accessed by native methods
-    @field:DoNotStrip @field:Suppress("unused") private var mNativeContext: Long
+    @field:DoNotStrip @field:Suppress("unused") private var mNativeContext: Long,
 ) : AnimatedImageFrame {
 
   // This is a valid use of finalize. No other mechanism is appropriate.

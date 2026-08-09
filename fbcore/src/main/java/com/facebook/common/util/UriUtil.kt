@@ -221,7 +221,7 @@ object UriUtil {
         selection = "${getMediaIdString(isVideo)}=?"
         selectionArgs =
             arrayOf(
-                documentId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1]
+                documentId.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[1],
             )
       }
       val cursor =

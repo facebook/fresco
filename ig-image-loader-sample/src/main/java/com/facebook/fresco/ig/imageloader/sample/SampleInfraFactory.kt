@@ -246,7 +246,7 @@ object SampleInfraFactory {
                   IgFoAImageNetworkPolicy,
                   transport,
                   IgFoAImageFetchListener,
-              )
+              ),
           )
           Log.d(TAG, "Fresco config: network routed through FoA image transport")
         } else {
