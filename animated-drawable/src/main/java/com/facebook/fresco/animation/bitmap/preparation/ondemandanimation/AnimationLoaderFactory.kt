@@ -23,6 +23,7 @@ class FrameLoaderFactory(
     private val enableSingleFrameRendering: Boolean = false,
     val enableUnusedFrameLoaderCleanupSync: Boolean = false,
     val enableUnusedFrameLoaderCleanupSyncAndClear: Boolean = false,
+    private val shouldRoundUpFractionalFrameBudget: Boolean = false,
 ) {
 
   fun createBufferLoader(
@@ -41,7 +42,7 @@ class FrameLoaderFactory(
     return BufferFrameLoader(
         platformBitmapFactory,
         bitmapFrameRenderer,
-        FpsCompressorInfo(maxFpsRender),
+        FpsCompressorInfo(maxFpsRender, shouldRoundUpFractionalFrameBudget),
         animationInformation,
         bufferLengthMilliseconds,
         enableBufferFrameLoaderFix,

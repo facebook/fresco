@@ -9,8 +9,12 @@ package com.facebook.fresco.animation.bitmap.preparation.loadframe
 
 import android.graphics.Bitmap
 import com.facebook.common.references.CloseableReference
+import kotlin.math.ceil
 
-class FpsCompressorInfo(private val maxFpsLimit: Int) {
+class FpsCompressorInfo(
+    private val maxFpsLimit: Int,
+    private val shouldRoundUpFractionalFrameBudget: Boolean = false,
+) {
 
   /**
    * @param frameBitmaps has the bitmaps of the animation. FrameNumber -> Bitmap
@@ -38,8 +42,15 @@ class FpsCompressorInfo(private val maxFpsLimit: Int) {
   fun calculateReducedIndexes(durationMs: Int, frameCount: Int, targetFps: Int): Map<Int, Int> {
     val sanitiseFps = targetFps.coerceAtLeast(1).coerceAtMost(maxFpsLimit)
     val maxAllowedFrames = sanitiseFps.times(durationMs.millisecondsToSeconds()).coerceAtLeast(0f)
+    val fractionalFrameBudget = maxAllowedFrames % 1f
+    val adjustedMaxAllowedFrames =
+        if (shouldRoundUpFractionalFrameBudget && fractionalFrameBudget > 0.5f) {
+          ceil(maxAllowedFrames)
+        } else {
+          maxAllowedFrames
+        }
 
-    val skipRatio = frameCount.div(maxAllowedFrames.coerceAtMost(frameCount.toFloat()))
+    val skipRatio = frameCount.div(adjustedMaxAllowedFrames.coerceAtMost(frameCount.toFloat()))
     var prevFrame = 0
     return (0 until frameCount).associateWith { frameIndex ->
       if ((frameIndex % skipRatio).toInt() == 0) {

@@ -204,6 +204,8 @@ class DefaultBitmapAnimationDrawableFactory(
                   enableSingleFrameRendering,
                   enableUnusedFrameLoaderCleanupSync,
                   enableUnusedFrameLoaderCleanupSyncAndClear,
+                  shouldRoundUpFractionalFrameBudget =
+                      imageOptions?.shouldRoundUpFractionalFrameBudget == true,
               ),
               downscaleFrameToDrawableDimensions.get(),
           )
