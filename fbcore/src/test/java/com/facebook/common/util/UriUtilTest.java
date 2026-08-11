@@ -85,6 +85,92 @@ public class UriUtilTest {
     assertConversionFromUriToUrl(FB_COM, Arrays.asList("{", "}"), NO_KEYS, NO_VALS);
   }
 
+  @Test
+  public void withQueryParameterReplacesExistingValuesWithoutRewritingUnrelatedQuery() {
+    String original =
+        "https://facebook.com/story?first=1&join_id=old&q=hello+world&flag&encoded=%2f%2B&join%5Fid=older&first=2#section%201";
+    Uri uri = Uri.parse(original);
+
+    Uri result = UriUtilKt.withQueryParameter(uri, "join_id", "current");
+
+    org.junit.Assert.assertEquals(original, uri.toString());
+    org.junit.Assert.assertEquals(
+        "https://facebook.com/story?first=1&q=hello+world&flag&encoded=%2f%2B&first=2&join_id=current#section%201",
+        result.toString());
+  }
+
+  @Test
+  public void withQueryParameterEncodesOnlyNewNameAndValue() {
+    Uri uri = Uri.parse("https://facebook.com/story#section%201");
+
+    Uri result = UriUtilKt.withQueryParameter(uri, "new name", "hello+world &more");
+
+    org.junit.Assert.assertEquals(
+        "https://facebook.com/story?new%20name=hello%2Bworld%20%26more#section%201",
+        result.toString());
+  }
+
+  @Test
+  public void withQueryParameterPreservesEmptyAndValuelessComponents() {
+    Uri uri = Uri.parse("https://facebook.com/story?flag&&empty=&");
+
+    Uri result = UriUtilKt.withQueryParameter(uri, "join_id", "current");
+
+    org.junit.Assert.assertEquals(
+        "https://facebook.com/story?flag&&empty=&&join_id=current", result.toString());
+  }
+
+  @Test
+  public void withQueryParameterPreservesQuestionMarksAndFragment() {
+    Uri uri =
+        Uri.parse(
+            "https://facebook.com/story?next=https%3A%2F%2Fexample.com%2F%3Fa%3D1%26b%3D2&literal=what?still-query#fragment?still-fragment");
+
+    Uri result = UriUtilKt.withQueryParameter(uri, "join_id", "current");
+
+    org.junit.Assert.assertEquals(
+        "https://facebook.com/story?next=https%3A%2F%2Fexample.com%2F%3Fa%3D1%26b%3D2&literal=what?still-query&join_id=current#fragment?still-fragment",
+        result.toString());
+  }
+
+  @Test
+  public void withQueryParameterReplacesOnlyExistingParameterWithoutExtraSeparator() {
+    Uri uri = Uri.parse("https://facebook.com/story?join_id=old");
+
+    Uri result = UriUtilKt.withQueryParameter(uri, "join_id", "current");
+
+    org.junit.Assert.assertEquals("https://facebook.com/story?join_id=current", result.toString());
+  }
+
+  @Test
+  public void withQueryParameterReturnsExactlyOneReplacementValue() {
+    Uri uri =
+        Uri.parse("https://facebook.com/story?id=1&join_id=old&source=messenger&join_id=older");
+
+    Uri result = UriUtilKt.withQueryParameter(uri, "join_id", "current");
+
+    org.junit.Assert.assertEquals(
+        Collections.singletonList("current"), result.getQueryParameters("join_id"));
+    org.junit.Assert.assertEquals("1", result.getQueryParameter("id"));
+    org.junit.Assert.assertEquals("messenger", result.getQueryParameter("source"));
+  }
+
+  @Test
+  public void withQueryParameterPreservesMultipleValuesForOtherParameters() {
+    Uri uri = Uri.parse("https://facebook.com/story?id=1&id=2");
+
+    Uri result = UriUtilKt.withQueryParameter(uri, "join_id", "current");
+
+    org.junit.Assert.assertEquals(Arrays.asList("1", "2"), result.getQueryParameters("id"));
+  }
+
+  @Test
+  public void withQueryParameterLeavesOpaqueUriUnchanged() {
+    Uri uri = Uri.parse("mailto:user@example.com");
+
+    org.junit.Assert.assertSame(uri, UriUtilKt.withQueryParameter(uri, "join_id", "current"));
+  }
+
   private void assertConversionFromUriToUrl(
       String authority, List<String> paths, List<String> keys, List<String> values) {
 

@@ -316,3 +316,27 @@ object UriUtil {
           .path(resourceId.toString())
           .build()
 }
+
+/**
+ * Returns a copy of this URI containing exactly one query parameter named [name] with [value] as
+ * its value. Existing values with the same name are removed. All other encoded query components
+ * remain byte-for-byte unchanged and in their original order. Opaque URIs are returned unchanged.
+ */
+fun Uri.withQueryParameter(name: String, value: String): Uri {
+  if (isOpaque) {
+    return this
+  }
+
+  val preservedEncodedParameters =
+      encodedQuery
+          ?.takeIf { it.isNotEmpty() }
+          ?.split('&')
+          ?.filterNot { encodedParameter ->
+            Uri.decode(encodedParameter.substringBefore('=')) == name
+          }
+  val builder = buildUpon().clearQuery()
+  if (!preservedEncodedParameters.isNullOrEmpty()) {
+    builder.encodedQuery(preservedEncodedParameters.joinToString("&"))
+  }
+  return builder.appendQueryParameter(name, value).build()
+}
