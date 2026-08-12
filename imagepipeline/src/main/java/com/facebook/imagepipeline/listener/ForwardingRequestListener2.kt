@@ -9,23 +9,22 @@ package com.facebook.imagepipeline.listener
 
 import com.facebook.common.logging.FLog
 import com.facebook.imagepipeline.producers.ProducerContext
-import java.util.ArrayList
 
 class ForwardingRequestListener2 : RequestListener2 {
 
-  private val requestListeners: MutableList<RequestListener2>
+  // Initialized at declaration so the field is never observed as null, even if
+  // the enclosing ImagePipeline is unsafely published across threads (see
+  // ImagePipelineFactory.getImagePipeline, which is unsynchronized).
+  private val requestListeners: MutableList<RequestListener2> = mutableListOf()
 
   constructor(listenersToAdd: Set<RequestListener2?>?) {
     if (listenersToAdd == null) {
-      requestListeners = mutableListOf()
       return
     }
-    requestListeners = ArrayList(listenersToAdd.size)
     listenersToAdd.filterNotNullTo(requestListeners)
   }
 
   constructor(vararg listenersToAdd: RequestListener2?) {
-    requestListeners = ArrayList(listenersToAdd.size)
     listenersToAdd.filterNotNullTo(requestListeners)
   }
 
