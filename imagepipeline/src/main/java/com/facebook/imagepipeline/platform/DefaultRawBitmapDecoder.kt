@@ -108,41 +108,23 @@ class DefaultRawBitmapDecoder(
       options.inTempStorage = byteBuffer.array()
       BitmapFactory.decodeByteArray(data, offset, length, options)
     } catch (e: IllegalArgumentException) {
-      if (platformDecoderOptions.disableDefaultDecoderRetry) {
-        FLog.e(TAG, "decodeByteArray IllegalArgumentException", e)
-        platformDecoderOptions.errorReporter?.reportError(
-            "DECODE_IAE",
-            "decodeByteArray IllegalArgumentException",
-            e,
-        )
-        if (platformDecoderOptions.catchNativeDecoderErrors) null else throw e
-      } else {
-        // This is thrown if the Bitmap options are invalid, so let's just try to decode the bitmap
-        // as-is, which might be inefficient - but it works.
-        val naiveDecodedBitmap = BitmapFactory.decodeByteArray(data, offset, length)
-        naiveDecodedBitmap
-            ?: if (platformDecoderOptions.catchNativeDecoderErrors) {
-              FLog.e(TAG, "Native decoder error", e)
-              platformDecoderOptions.errorReporter?.reportError(
-                  "NATIVE_DECODER_ERROR",
-                  "Native decoder error",
-                  e,
-              )
-              null
-            } else {
-              throw e
-            }
-      }
+      // This is thrown if the Bitmap options are invalid, so let's just try to decode the bitmap
+      // as-is, which might be inefficient - but it works.
+      val naiveDecodedBitmap = BitmapFactory.decodeByteArray(data, offset, length)
+      naiveDecodedBitmap
+          ?: if (platformDecoderOptions.catchNativeDecoderErrors) {
+            FLog.e(TAG, "Native decoder error", e)
+            platformDecoderOptions.errorReporter?.reportError(
+                "NATIVE_DECODER_ERROR",
+                "Native decoder error",
+                e,
+            )
+            null
+          } else {
+            throw e
+          }
     } catch (re: RuntimeException) {
-      if (platformDecoderOptions.disableDefaultDecoderRetry) {
-        FLog.e(TAG, "decodeByteArray RuntimeException", re)
-        platformDecoderOptions.errorReporter?.reportError(
-            "DECODE_RUNTIME",
-            "decodeByteArray RuntimeException",
-            re,
-        )
-        if (platformDecoderOptions.catchNativeDecoderErrors) null else throw re
-      } else if (platformDecoderOptions.catchNativeDecoderErrors) {
+      if (platformDecoderOptions.catchNativeDecoderErrors) {
         FLog.e(TAG, "Native decoder error", re)
         platformDecoderOptions.errorReporter?.reportError(
             "NATIVE_DECODER_ERROR",
@@ -154,15 +136,7 @@ class DefaultRawBitmapDecoder(
         throw re
       }
     } catch (error: Error) {
-      if (platformDecoderOptions.disableDefaultDecoderRetry) {
-        FLog.e(TAG, "decodeByteArray Error", error)
-        platformDecoderOptions.errorReporter?.reportError(
-            "DECODE_ERROR",
-            "decodeByteArray Error",
-            error,
-        )
-        if (platformDecoderOptions.catchNativeDecoderErrors) null else throw error
-      } else if (platformDecoderOptions.catchNativeDecoderErrors) {
+      if (platformDecoderOptions.catchNativeDecoderErrors) {
         FLog.e(TAG, "Native decoder error", error)
         platformDecoderOptions.errorReporter?.reportError(
             "NATIVE_DECODER_ERROR",
