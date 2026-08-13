@@ -47,11 +47,11 @@ import com.facebook.litho.widget.PrimitiveImage
 @LayoutSpec
 object FrescoVitoTapToRetryImageSpec {
 
-  @PropDefault const val maxTapCount = Int.MAX_VALUE
+  @PropDefault const val maxTapCount: Int = Int.MAX_VALUE
 
-  @PropDefault const val imageAspectRatio = FrescoVitoImage2Spec.imageAspectRatio
+  @PropDefault const val imageAspectRatio: Float = FrescoVitoImage2Spec.imageAspectRatio
 
-  @PropDefault val prefetch = FrescoVitoImage2Spec.prefetch
+  @PropDefault val prefetch: FrescoVitoImage2Spec.Prefetch = FrescoVitoImage2Spec.prefetch
 
   @JvmStatic
   @OnCreateInitialState
