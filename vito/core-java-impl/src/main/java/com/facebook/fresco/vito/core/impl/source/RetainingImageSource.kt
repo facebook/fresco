@@ -25,7 +25,7 @@ class RetainingImageSource(
     val dataSourceSupplier: RetainingDataSourceSupplier<CloseableReference<CloseableImage>> =
         RetainingDataSourceSupplier(),
 ) : ImageSource {
-  val currentSource
+  val currentSource: ImageSource
     get() = _currentSource
 
   private var imageSourceUpdateFunction:
