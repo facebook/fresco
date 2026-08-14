@@ -126,6 +126,7 @@ class ImageFetchSubscriber(
       "disk" -> ImageOrigin.DISK
       "memory_encoded" -> ImageOrigin.MEMORY_ENCODED
       "memory_bitmap" -> ImageOrigin.MEMORY_BITMAP
+      "memory_bitmap_shortcut" -> ImageOrigin.MEMORY_BITMAP_SHORTCUT
       "local" -> ImageOrigin.LOCAL
       else -> ImageOrigin.UNKNOWN
     }
