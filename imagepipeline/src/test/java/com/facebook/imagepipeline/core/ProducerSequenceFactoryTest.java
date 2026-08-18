@@ -23,6 +23,8 @@ import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 import android.net.Uri;
+import com.facebook.common.internal.Supplier;
+import com.facebook.common.internal.Suppliers;
 import com.facebook.common.media.MediaUtils;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
@@ -41,6 +43,7 @@ import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.Collections;
+import javax.annotation.Nullable;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -98,6 +101,7 @@ public class ProducerSequenceFactoryTest {
             false,
             false,
             null,
+            Suppliers.of(false),
             5,
             false,
             false,
@@ -148,6 +152,58 @@ public class ProducerSequenceFactoryTest {
 
     Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
     assertThat(producerSequenceFactory.isCalled).isSameAs(false);
+  }
+
+  @Test
+  public void testCustomNetworkSequenceCalledWhenAllowed() {
+    RecordingCustomNetworkSequenceFactory customFactory =
+        new RecordingCustomNetworkSequenceFactory(new DummyProducer());
+    internalUseSequenceFactoryWithCustomSequence(customFactory, Suppliers.of(true));
+    when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
+
+    Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
+
+    assertThat(customFactory.isCalled).isSameAs(true);
+    assertThat(producer).isSameAs(customFactory.sequence);
+  }
+
+  @Test
+  public void testCustomNetworkSequenceNotCalledWhenNotAllowed() {
+    RecordingCustomNetworkSequenceFactory customFactory =
+        new RecordingCustomNetworkSequenceFactory(new DummyProducer());
+    internalUseSequenceFactoryWithCustomSequence(customFactory, Suppliers.of(false));
+    when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
+
+    Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
+
+    assertThat(customFactory.isCalled).isSameAs(false);
+    assertThat(producer).isSameAs(mProducerSequenceFactory.getNetworkFetchSequence());
+  }
+
+  @Test
+  public void testCustomNetworkSequenceFallsThroughWhenFactoryDeclines() {
+    RecordingCustomNetworkSequenceFactory customFactory =
+        new RecordingCustomNetworkSequenceFactory(null);
+    internalUseSequenceFactoryWithCustomSequence(customFactory, Suppliers.of(true));
+    when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
+
+    Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
+
+    assertThat(customFactory.isCalled).isSameAs(true);
+    assertThat(producer).isSameAs(mProducerSequenceFactory.getNetworkFetchSequence());
+  }
+
+  @Test
+  public void testCustomNetworkSequenceDoesNotAffectLocalUris() {
+    RecordingCustomNetworkSequenceFactory customFactory =
+        new RecordingCustomNetworkSequenceFactory(new DummyProducer());
+    internalUseSequenceFactoryWithCustomSequence(customFactory, Suppliers.of(true));
+    when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_IMAGE_FILE);
+
+    Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
+
+    assertThat(customFactory.isCalled).isSameAs(false);
+    assertThat(producer).isSameAs(mProducerSequenceFactory.getLocalImageFileFetchSequence());
   }
 
   @Test
@@ -394,6 +450,36 @@ public class ProducerSequenceFactoryTest {
             false,
             false,
             null,
+            Suppliers.of(false),
+            5,
+            false,
+            false,
+            false);
+  }
+
+  private void internalUseSequenceFactoryWithCustomSequence(
+      CustomProducerSequenceFactory customProducerSequenceFactory,
+      Supplier<Boolean> allowCustomNetworkSequences) {
+    ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
+    ImageTranscoderFactory imageTranscoderFactory = mock(ImageTranscoderFactory.class);
+
+    mProducerSequenceFactory =
+        new ProducerSequenceFactory(
+            RuntimeEnvironment.application.getContentResolver(),
+            producerFactory,
+            mNetworkFetcher,
+            true,
+            mThreadHandoffProducerQueue,
+            DownsampleMode.AUTO,
+            false,
+            false,
+            true,
+            imageTranscoderFactory,
+            false,
+            false,
+            false,
+            Collections.singleton(customProducerSequenceFactory),
+            allowCustomNetworkSequences,
             5,
             false,
             false,
@@ -421,6 +507,7 @@ public class ProducerSequenceFactoryTest {
             false,
             false,
             Collections.singleton(customProducerSequenceFactory),
+            Suppliers.of(false),
             5,
             false,
             false,
@@ -437,6 +524,34 @@ public class ProducerSequenceFactoryTest {
         ImageRequest imageRequest, ProducerSequenceFactory producerSequenceFactory) {
       this.isCalled = true;
       return new DummyProducer();
+    }
+  }
+
+  /**
+   * Only overrides the network hook, so it must never be consulted for non-network URI types and
+   * must never be consulted at all when allowCustomNetworkSequences is off.
+   */
+  private static class RecordingCustomNetworkSequenceFactory extends CustomProducerSequenceFactory {
+
+    boolean isCalled = false;
+    final @Nullable Producer<CloseableReference<CloseableImage>> sequence;
+
+    RecordingCustomNetworkSequenceFactory(
+        @Nullable Producer<CloseableReference<CloseableImage>> sequence) {
+      this.sequence = sequence;
+    }
+
+    @Override
+    public @Nullable Producer<CloseableReference<CloseableImage>>
+        getCustomNetworkDecodedImageSequence(
+            ImageRequest imageRequest,
+            ProducerSequenceFactory producerSequenceFactory,
+            ProducerFactory producerFactory,
+            ThreadHandoffProducerQueue threadHandoffProducerQueue,
+            boolean isEncodedMemoryCacheProbingEnabled,
+            boolean isDiskCacheProbingEnabled) {
+      this.isCalled = true;
+      return sequence;
     }
   }
 

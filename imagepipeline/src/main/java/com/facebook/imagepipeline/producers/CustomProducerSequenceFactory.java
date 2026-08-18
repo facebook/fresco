@@ -45,4 +45,26 @@ public class CustomProducerSequenceFactory {
       ThreadHandoffProducerQueue threadHandoffProducerQueue) {
     return null;
   }
+
+  /**
+   * Claims a request whose URI is a network URI, i.e. one that would otherwise be served by the
+   * standard network fetch sequence.
+   *
+   * <p>Unlike {@link #getCustomDecodedImageSequence}, which is only consulted for URI schemes the
+   * pipeline does not recognise, this is consulted for {@code http(s)} requests. It is therefore
+   * only called when {@code ImagePipelineExperiments#getAllowCustomNetworkSequences} returns true,
+   * so that a config which does not opt in keeps the standard dispatch untouched.
+   *
+   * <p>Returning null means "not mine" and the standard network fetch sequence is used.
+   */
+  public @Nullable Producer<CloseableReference<CloseableImage>>
+      getCustomNetworkDecodedImageSequence(
+          ImageRequest imageRequest,
+          ProducerSequenceFactory producerSequenceFactory,
+          ProducerFactory producerFactory,
+          ThreadHandoffProducerQueue threadHandoffProducerQueue,
+          boolean isEncodedMemoryCacheProbingEnabled,
+          boolean isDiskCacheProbingEnabled) {
+    return null;
+  }
 }

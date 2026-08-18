@@ -507,6 +507,7 @@ public class ImagePipelineFactory {
               mConfig.getExperiments().isDiskCacheProbingEnabled(),
               mConfig.getExperiments().getAllowDelay(),
               mConfig.getCustomProducerSequenceFactories(),
+              mConfig.getExperiments().getAllowCustomNetworkSequences(),
               mConfig.getExperiments().getThrottlingProducerMaxSimultaneousRequests(),
               mConfig.getExperiments().getLoadThumbnailFromContentResolverFirst(),
               mConfig.getExperiments().getLoadThumbnailFromContentResolverForContentUriOnly(),

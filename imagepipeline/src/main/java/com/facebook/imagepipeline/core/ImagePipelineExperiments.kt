@@ -55,6 +55,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val isLazyDataSource: Supplier<Boolean>
   val downscaleFrameToDrawableDimensions: Boolean
   val suppressBitmapPrefetchingSupplier: Supplier<Boolean>
+  val allowCustomNetworkSequences: Supplier<Boolean>
   val isExperimentalThreadHandoffQueueEnabled: Boolean
   val throttlingProducerMaxSimultaneousRequests: Long
   val memoryType: Long
@@ -114,6 +115,8 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var downscaleFrameToDrawableDimensions = false
 
     @JvmField var suppressBitmapPrefetchingSupplier = Suppliers.of(false)
+
+    @JvmField var allowCustomNetworkSequences: Supplier<Boolean> = Suppliers.of(false)
 
     @JvmField var experimentalThreadHandoffQueueEnabled = false
 
@@ -306,6 +309,15 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         asBuilder {
           this.suppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier
         }
+
+    /**
+     * Allows registered [CustomProducerSequenceFactory] instances to claim network (http/https)
+     * requests via [CustomProducerSequenceFactory.getCustomNetworkDecodedImageSequence]. When false
+     * (the default) network dispatch is untouched and that method is never called.
+     */
+    fun setAllowCustomNetworkSequences(allowCustomNetworkSequences: Supplier<Boolean>) = asBuilder {
+      this.allowCustomNetworkSequences = allowCustomNetworkSequences
+    }
 
     fun setExperimentalThreadHandoffQueueEnabled(experimentalThreadHandoffQueueEnabled: Boolean) =
         asBuilder {
@@ -559,6 +571,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     isLazyDataSource = builder.lazyDataSource ?: Suppliers.BOOLEAN_FALSE
     downscaleFrameToDrawableDimensions = builder.downscaleFrameToDrawableDimensions
     suppressBitmapPrefetchingSupplier = builder.suppressBitmapPrefetchingSupplier
+    allowCustomNetworkSequences = builder.allowCustomNetworkSequences
     isExperimentalThreadHandoffQueueEnabled = builder.experimentalThreadHandoffQueueEnabled
     throttlingProducerMaxSimultaneousRequests = builder.throttlingProducerMaxSimultaneousRequests
     memoryType = builder.memoryType

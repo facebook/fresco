@@ -13,6 +13,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
 import com.facebook.common.internal.Preconditions
+import com.facebook.common.internal.Supplier
 import com.facebook.common.media.MediaUtils.isVideo
 import com.facebook.common.memory.PooledByteBuffer
 import com.facebook.common.references.CloseableReference
@@ -44,6 +45,7 @@ class ProducerSequenceFactory(
     private val isDiskCacheProbingEnabled: Boolean,
     private val allowDelay: Boolean,
     private val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?,
+    private val allowCustomNetworkSequences: Supplier<Boolean>,
     private val localImageThrottlingMaxSimultaneousRequests: Long,
     private val loadThumbnailFromContentResolverFirst: Boolean,
     private val loadThumbnailFromContentResolverForContentUriOnly: Boolean,
@@ -214,7 +216,8 @@ class ProducerSequenceFactory(
         val uri = imageRequest.sourceUri
         checkNotNull(uri) { "Uri is null." }
         when (imageRequest.sourceUriType) {
-          SourceUriType.SOURCE_TYPE_NETWORK -> networkFetchSequence
+          SourceUriType.SOURCE_TYPE_NETWORK ->
+              getCustomNetworkSequence(imageRequest) ?: networkFetchSequence
           SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE -> {
             if (imageRequest.loadThumbnailOnlyForAndroidSdkAboveQ) {
               return localThumbnailBitmapSdk29FetchSequence
@@ -264,6 +267,34 @@ class ProducerSequenceFactory(
           }
         }
       }
+
+  /**
+   * Gives registered [CustomProducerSequenceFactory] instances a chance to serve a network request
+   * themselves. Only consulted when the config opts in, so a config that does not set
+   * [ImagePipelineExperiments.allowCustomNetworkSequences] keeps the previous dispatch exactly.
+   */
+  private fun getCustomNetworkSequence(
+      imageRequest: ImageRequest,
+  ): Producer<CloseableReference<CloseableImage>>? {
+    if (customProducerSequenceFactories == null || allowCustomNetworkSequences.get() != true) {
+      return null
+    }
+    for (customProducerSequenceFactory in customProducerSequenceFactories) {
+      val sequence =
+          customProducerSequenceFactory.getCustomNetworkDecodedImageSequence(
+              imageRequest,
+              this,
+              producerFactory,
+              threadHandoffProducerQueue,
+              isEncodedMemoryCacheProbingEnabled,
+              isDiskCacheProbingEnabled,
+          )
+      if (sequence != null) {
+        return sequence
+      }
+    }
+    return null
+  }
 
   /**
    * swallow result if prefetch -> bitmap cache get -> background thread hand-off -> multiplex ->
