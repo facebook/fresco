@@ -44,7 +44,11 @@ data class CacheKeyConfig(
 
 /** Extracts width/height dimensions from a request for cache key generation. */
 interface DimensionExtractor {
-  fun extractDimensions(request: ImageRequest, sourceUri: Uri, callerContext: Any?): Pair<Int, Int>?
+  fun extractDimensions(
+      request: ImageRequest,
+      sourceUri: Uri,
+      callerContext: Any?,
+  ): Pair<Int, Int>?
 }
 
 /**

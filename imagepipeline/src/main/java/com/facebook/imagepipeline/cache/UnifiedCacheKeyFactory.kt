@@ -20,9 +20,13 @@ import com.facebook.imagepipeline.request.ImageRequest
  * This replaces app-specific subclasses of [DefaultCacheKeyFactory] with one composable
  * implementation.
  */
-class UnifiedCacheKeyFactory(
+class UnifiedCacheKeyFactory
+@JvmOverloads
+constructor(
     private val uriNormalizer: UriNormalizer,
     private val config: CacheKeyConfig,
+    private val hashEncodedKey: Boolean = true,
+    private val encodedDimensionExtractor: DimensionExtractor? = null,
 ) : CacheKeyFactory {
 
   override fun getBitmapCacheKey(request: ImageRequest, callerContext: Any?): CacheKey {
@@ -61,24 +65,23 @@ class UnifiedCacheKeyFactory(
           ?: SimpleCacheKey(customCacheKey)
     }
 
-    val normalized = uriNormalizer.normalize(sourceUri, callerContext)
-    var keyString = normalized.cacheKeyString
-
-    if (config.includeDimensionsInEncodedKey) {
-      val dims = config.dimensionExtractor?.extractDimensions(request, sourceUri, callerContext)
-      if (dims != null) {
-        keyString =
-            if (config.enableDiskSimilarity && normalized.groupKey != null) {
-              "${normalized.groupKey}_${dims.first}_${dims.second}"
-            } else {
-              "${keyString}${dims.first}_${dims.second}"
-            }
-      }
-    }
-
-    if (keyString.length >= config.hashThreshold) {
-      keyString = keyString.hashCode().toString()
-    }
+    val dimensions =
+        if (config.includeDimensionsInEncodedKey)
+            (encodedDimensionExtractor ?: config.dimensionExtractor)?.extractDimensions(
+                request,
+                sourceUri,
+                callerContext,
+            )
+        else null
+    val keyString =
+        generator
+            .resolve(
+                UnifiedCacheKeyInput(
+                    uriNormalizer.normalize(sourceUri, callerContext),
+                    encodedDimensions = dimensions?.let { CacheKeyDimensions(it.first, it.second) },
+                ),
+            )
+            .encodedKey
 
     return config.encodedKeyEnricher?.enrich(keyString, callerContext, sourceUri)
         ?: SimpleCacheKey(keyString)
@@ -91,22 +94,29 @@ class UnifiedCacheKeyFactory(
       postprocessorName: String?,
   ): CacheKey {
     val customKey = request.customCacheKey
-    var sourceString =
-        customKey ?: uriNormalizer.normalize(request.sourceUri, callerContext).cacheKeyString
-
-    // Only append dimensions for URI-derived keys, not customCacheKey.
-    // customCacheKey is caller-provided and used as-is (matching DefaultCacheKeyFactory behavior).
-    if (customKey == null && config.includeDimensionsInBitmapKey) {
-      val dims =
-          config.dimensionExtractor?.extractDimensions(request, request.sourceUri, callerContext)
-      if (dims != null) {
-        sourceString = "${sourceString}${dims.first}_${dims.second}"
-      }
-    }
-
-    if (customKey == null && sourceString.length >= config.hashThreshold) {
-      sourceString = sourceString.hashCode().toString()
-    }
+    val normalized =
+        if (customKey == null) uriNormalizer.normalize(request.sourceUri, callerContext)
+        else NormalizedUri(customKey)
+    val dimensions =
+        if (customKey == null) {
+          if (config.includeDimensionsInBitmapKey)
+              config.dimensionExtractor?.extractDimensions(
+                  request,
+                  request.sourceUri,
+                  callerContext,
+              )
+          else null
+        } else null
+    val sourceString =
+        generator
+            .resolve(
+                UnifiedCacheKeyInput(
+                    normalized,
+                    customKey,
+                    bitmapDimensions = dimensions?.let { CacheKeyDimensions(it.first, it.second) },
+                ),
+            )
+            .bitmapSourceKey
 
     val resizeOptions =
         config.resizeOptionsFilter?.invoke(request.sourceUriType, request.resizeOptions)
@@ -134,4 +144,14 @@ class UnifiedCacheKeyFactory(
     config.debugImageTracker?.invoke(request, cacheKey)
     return cacheKey
   }
+
+  private val generator = UnifiedCacheKeyGenerator(
+      UnifiedCacheKeyGeneratorConfig(
+          config.includeDimensionsInBitmapKey,
+          config.includeDimensionsInEncodedKey,
+          config.enableDiskSimilarity,
+          config.hashThreshold,
+          hashEncodedKey = hashEncodedKey,
+      ),
+  )
 }
