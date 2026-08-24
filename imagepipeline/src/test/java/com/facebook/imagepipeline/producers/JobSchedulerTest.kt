@@ -342,19 +342,14 @@ class JobSchedulerTest {
     fakeClockForTime.incrementBy(0)
     fakeClockForScheduled.incrementBy(0)
     fakeClockForWorker.incrementBy(0) // this line blocks
-    assertThat(jobScheduler.mJobState).isEqualTo(JobScheduler.JobState.QUEUED)
-    assertThat(testScheduledExecutorService.pendingCount).isEqualTo(1)
-    assertThat(testExecutorService.pendingCount).isEqualTo(0)
-    assertThat(testJobRunnable.jobs.size).isEqualTo(1)
-    testJobRunnable.jobs[0]?.let { assertJobsEqual(it, encodedImage1, Consumer.IS_LAST) }
-
-    fakeClockForTime.incrementBy(INTERVAL.toLong())
-    fakeClockForScheduled.incrementBy(INTERVAL.toLong())
-    fakeClockForWorker.incrementBy(INTERVAL.toLong())
+    // The pending job carries the last result, so it is not held for the rest of the interval:
+    // onJobFinished enqueues it with no delay, which submits it inline. Both jobs have therefore
+    // run by the time the blocking tick above returns, leaving the scheduler idle.
     assertThat(jobScheduler.mJobState).isEqualTo(JobScheduler.JobState.IDLE)
     assertThat(testScheduledExecutorService.pendingCount).isEqualTo(0)
     assertThat(testExecutorService.pendingCount).isEqualTo(0)
     assertThat(testJobRunnable.jobs.size).isEqualTo(2)
+    testJobRunnable.jobs[0]?.let { assertJobsEqual(it, encodedImage1, Consumer.IS_LAST) }
     testJobRunnable.jobs[1]?.let { assertJobsEqual(it, encodedImage3, Consumer.IS_LAST) }
   }
 
@@ -373,18 +368,8 @@ class JobSchedulerTest {
     fakeClockForWorker.incrementBy((INTERVAL - 5).toLong())
     fakeClockForScheduled.incrementBy((INTERVAL - 5).toLong())
     jobScheduler.scheduleJob()
-    fakeClockForTime.incrementBy(0)
-    fakeClockForWorker.incrementBy(0)
-    fakeClockForScheduled.incrementBy(0)
-    assertThat(testScheduledExecutorService.pendingCount).isEqualTo(1)
-    assertThat(testScheduledExecutorService.getScheduledQueue().getNextPendingCommandDelay())
-        .isEqualTo(5)
-    assertThat(testExecutorService.pendingCount).isEqualTo(0)
-    assertThat(testJobRunnable.jobs.size).isEqualTo(1)
-
-    fakeClockForTime.incrementBy(5)
-    fakeClockForWorker.incrementBy(5)
-    fakeClockForScheduled.incrementBy(5)
+    // The interval has 5ms left to run, but this job carries the last result, which is never
+    // throttled: it goes straight to the executor rather than the scheduled queue.
     assertThat(testScheduledExecutorService.pendingCount).isEqualTo(0)
     assertThat(testExecutorService.pendingCount).isEqualTo(1)
     assertThat(testJobRunnable.jobs.size).isEqualTo(1)
@@ -399,7 +384,7 @@ class JobSchedulerTest {
   }
 
   @Test
-  fun testProgressiveThrottle_realDecodeAfterIntermediate_isDelayedByFullInterval() {
+  fun testProgressiveThrottle_realDecodeAfterIntermediate_isNotDelayed() {
     jobScheduler.updateJob(fakeEncodedImage(), Consumer.NO_FLAGS)
     jobScheduler.scheduleJob()
     fakeClockForTime.incrementBy(1234)
@@ -408,6 +393,30 @@ class JobSchedulerTest {
     assertThat(testJobRunnable.jobs.size).isEqualTo(1)
 
     jobScheduler.updateJob(fakeEncodedImage(), Consumer.IS_LAST)
+    jobScheduler.scheduleJob()
+
+    // The minimum interval throttles intermediate results only. Holding the last result back
+    // cannot save a decode -- that decode has to happen either way -- it only delays the finished
+    // image, by up to a whole interval.
+    assertThat(testScheduledExecutorService.pendingCount).isEqualTo(0)
+    assertThat(testExecutorService.pendingCount).isEqualTo(1)
+
+    fakeClockForTime.incrementBy(0)
+    fakeClockForWorker.incrementBy(0)
+    fakeClockForScheduled.incrementBy(0)
+    assertThat(testJobRunnable.jobs.size).isEqualTo(2)
+  }
+
+  @Test
+  fun testProgressiveThrottle_intermediateAfterIntermediate_isStillDelayed() {
+    jobScheduler.updateJob(fakeEncodedImage(), Consumer.NO_FLAGS)
+    jobScheduler.scheduleJob()
+    fakeClockForTime.incrementBy(1234)
+    fakeClockForWorker.incrementBy(1234)
+    fakeClockForScheduled.incrementBy(1234)
+    assertThat(testJobRunnable.jobs.size).isEqualTo(1)
+
+    jobScheduler.updateJob(fakeEncodedImage(), Consumer.NO_FLAGS)
     jobScheduler.scheduleJob()
     fakeClockForTime.incrementBy(0)
     fakeClockForWorker.incrementBy(0)

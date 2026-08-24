@@ -24,6 +24,9 @@ import javax.annotation.concurrent.GuardedBy;
 /**
  * Manages jobs so that only one can be executed at a time and no more often than once in <code>
  * mMinimumJobIntervalMs</code> milliseconds.
+ *
+ * <p>The interval throttles intermediate results only. A job carrying the last result is scheduled
+ * immediately, since rate-limiting it cannot save a decode and would only delay the finished image.
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class JobScheduler {
@@ -191,7 +194,7 @@ public class JobScheduler {
       }
       switch (mJobState) {
         case IDLE:
-          when = Math.max(mJobStartTime + mMinimumJobIntervalMs, now);
+          when = nextJobTime(now);
           shouldEnqueue = true;
           mJobSubmitTime = now;
           mJobState = JobState.QUEUED;
@@ -261,7 +264,7 @@ public class JobScheduler {
     boolean shouldEnqueue = false;
     synchronized (this) {
       if (mJobState == JobState.RUNNING_AND_PENDING) {
-        when = Math.max(mJobStartTime + mMinimumJobIntervalMs, now);
+        when = nextJobTime(now);
         shouldEnqueue = true;
         mJobSubmitTime = now;
         mJobState = JobState.QUEUED;
@@ -272,6 +275,25 @@ public class JobScheduler {
     if (shouldEnqueue) {
       enqueueJob(when - now);
     }
+  }
+
+  /**
+   * When the pending job may run.
+   *
+   * <p>The minimum interval exists to stop a progressively downloaded image being re-decoded on
+   * every scan, which is a cost that buys nothing once the image is complete. The last result is
+   * not an intermediate one: delaying it does not save a decode, it only holds back the finished
+   * image, by up to the whole interval. {@link #shouldProcess} already treats the last result as
+   * special in deciding *whether* to run; this does the same for *when*.
+   *
+   * <p>Callers must hold this object's monitor, as {@code mStatus} and {@code mJobStartTime} are
+   * guarded by it.
+   */
+  private long nextJobTime(long now) {
+    if (BaseConsumer.isLast(mStatus)) {
+      return now;
+    }
+    return Math.max(mJobStartTime + mMinimumJobIntervalMs, now);
   }
 
   @FalseOnNull
