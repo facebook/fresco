@@ -25,6 +25,7 @@ import com.facebook.imagepipeline.decoder.DecodeException
 import com.facebook.imagepipeline.decoder.ImageDecoder
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig
 import com.facebook.imagepipeline.decoder.ProgressiveJpegParser
+import com.facebook.imagepipeline.decoder.StreamingImageDecoder
 import com.facebook.imagepipeline.image.CloseableBitmap
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.CloseableStaticBitmap
@@ -118,6 +119,146 @@ class DecodeProducer(
     private val jobScheduler: JobScheduler
     var lastScheduledScanNumber = 0
 
+    /**
+     * Decode state for a format that consumes the encoded bytes incrementally. Belongs to this
+     * request alone, so it lives here rather than on the shared [imageDecoder]. Resolved lazily
+     * because the image format is not known until the first result arrives, and never for a request
+     * whose first result is already the complete image — there is nothing to stream then, and the
+     * format's normal decoder is the better one.
+     */
+    @GuardedBy("this") private var streamingSession: StreamingImageDecoder.Session? = null
+
+    @GuardedBy("this") private var streamingSessionResolved = false
+
+    /**
+     * Whether a decode thread is currently inside [StreamingImageDecoder.Session.decode].
+     *
+     * A request can end on any thread — cancellation in particular arrives on whichever thread
+     * asked for it — so a close can land while the decode pool is still inside the session. Closing
+     * there would pull the session's state out from under the decode, which for a native decoder
+     * means freeing memory it is reading. So the close is handed to the decoding thread instead of
+     * being done on the spot, and neither thread ever waits for the other.
+     */
+    @GuardedBy("this") private var streamingDecodeInFlight = false
+
+    @GuardedBy("this") private var streamingSessionCloseRequested = false
+
+    private fun getOrCreateStreamingSession(
+        encodedImage: EncodedImage,
+    ): StreamingImageDecoder.Session? {
+      if (!isStreamingSessionResolved()) {
+        publishStreamingSession(newStreamingSession(encodedImage))
+      }
+      return getExistingStreamingSession()
+    }
+
+    @Synchronized private fun isStreamingSessionResolved(): Boolean = streamingSessionResolved
+
+    /**
+     * Asks the decoder for a session. Deliberately called with no lock held: this is
+     * decoder-supplied code that allocates the format's decode state, and the monitor it would
+     * otherwise hold is the one [maybeFinish] takes on whichever thread cancelled the request —
+     * routinely the UI thread releasing a view.
+     */
+    private fun newStreamingSession(encodedImage: EncodedImage): StreamingImageDecoder.Session? =
+        if (producerContext.imagePipelineConfig.experiments.streamingDecodeEnabled) {
+          (imageDecoder as? StreamingImageDecoder)?.maybeCreateStreamingSession(encodedImage)
+        } else {
+          null
+        }
+
+    /**
+     * Publishes [session] as this request's, or closes it if the request no longer wants one —
+     * because another thread resolved one first, or because the request ended while this one was
+     * being created.
+     */
+    private fun publishStreamingSession(session: StreamingImageDecoder.Session?) {
+      val unwanted =
+          synchronized(this) {
+            if (streamingSessionResolved || isFinished || streamingSessionCloseRequested) {
+              session
+            } else {
+              streamingSessionResolved = true
+              streamingSession = session
+              null
+            }
+          }
+      closeSession(unwanted)
+    }
+
+    @Synchronized
+    private fun getExistingStreamingSession(): StreamingImageDecoder.Session? = streamingSession
+
+    /**
+     * Claims the session for one decode, so that a close arriving meanwhile is deferred to
+     * [endStreamingDecode] rather than done underneath it. Every non-null result must be paired
+     * with an [endStreamingDecode].
+     */
+    private fun beginStreamingDecode(
+        encodedImage: EncodedImage,
+        createIfAbsent: Boolean,
+    ): StreamingImageDecoder.Session? {
+      if (createIfAbsent) {
+        getOrCreateStreamingSession(encodedImage)
+      }
+      return claimStreamingSession()
+    }
+
+    @Synchronized
+    private fun claimStreamingSession(): StreamingImageDecoder.Session? {
+      if (streamingSessionCloseRequested) {
+        return null
+      }
+      val session = streamingSession ?: return null
+      streamingDecodeInFlight = true
+      return session
+    }
+
+    /**
+     * Ends the claim taken by [beginStreamingDecode].
+     *
+     * @return the session if a close was requested while the decode was running, in which case it
+     *   is now this thread's to close, or null if there is nothing to do.
+     */
+    @Synchronized
+    private fun endStreamingDecode(): StreamingImageDecoder.Session? {
+      streamingDecodeInFlight = false
+      return if (streamingSessionCloseRequested) takeStreamingSessionLocked() else null
+    }
+
+    @GuardedBy("this")
+    private fun takeStreamingSessionLocked(): StreamingImageDecoder.Session? {
+      val session = streamingSession
+      streamingSession = null
+      return session
+    }
+
+    /**
+     * Ends the session, or leaves that to the decode holding it. Never blocks and never runs a
+     * close concurrently with a decode.
+     */
+    private fun closeStreamingSession() {
+      closeSession(
+          synchronized(this) {
+            // Latch the session shut: no decode may take it, and none may be created from here on.
+            streamingSessionResolved = true
+            streamingSessionCloseRequested = true
+            if (streamingDecodeInFlight) null else takeStreamingSessionLocked()
+          },
+      )
+    }
+
+    private fun closeSession(session: StreamingImageDecoder.Session?) {
+      if (session == null) {
+        return
+      }
+      try {
+        session.close()
+      } catch (e: Exception) {
+        FLog.w(TAG, e, "Failed to close streaming decode session")
+      }
+    }
+
     private fun maybeIncreaseSampleSize(encodedImage: EncodedImage) {
       if (encodedImage.imageFormat !== DefaultImageFormats.JPEG) {
         return
@@ -160,15 +301,31 @@ class DecodeProducer(
             return
           }
           val isPlaceholder = statusHasFlag(status, Consumer.IS_PLACEHOLDER)
-          val scheduleIntermediateResult =
-              producerContext.isIntermediateResultExpected &&
-                  (!producerContext.imagePipelineConfig.experiments
-                      .skipNonJpegIntermediateDecodeScheduling ||
-                      newResult?.imageFormat === DefaultImageFormats.JPEG)
-          if (isLast || isPlaceholder || scheduleIntermediateResult) {
+          if (isLast || isPlaceholder || shouldScheduleIntermediateResult(newResult, status)) {
             jobScheduler.scheduleJob()
           }
         }
+
+    private fun shouldScheduleIntermediateResult(
+        newResult: EncodedImage?,
+        @Consumer.Status status: Int,
+    ): Boolean {
+      if (!producerContext.isIntermediateResultExpected) {
+        return false
+      }
+      if (
+          !producerContext.imagePipelineConfig.experiments
+              .skipNonJpegIntermediateDecodeScheduling ||
+              newResult?.imageFormat === DefaultImageFormats.JPEG
+      ) {
+        return true
+      }
+      // A format that decodes incrementally has real work to do on a partial result even though it
+      // is not a progressive JPEG.
+      return newResult != null &&
+          isNotLast(status) &&
+          getOrCreateStreamingSession(newResult) != null
+    }
 
     override fun onProgressUpdateImpl(progress: Float) {
       super.onProgressUpdateImpl(progress * 0.99f)
@@ -192,12 +349,43 @@ class DecodeProducer(
         @Consumer.Status status: Int,
         lastScheduledScanNumber: Int,
     ) {
-      // do not run for partial results of anything except JPEG
-      var newStatus = status
-      if (encodedImage.imageFormat !== DefaultImageFormats.JPEG && isNotLast(status)) {
+      if (isFinished || !EncodedImage.isValid(encodedImage)) {
         return
       }
-      if (isFinished || !EncodedImage.isValid(encodedImage)) {
+      // Partial results are only worth decoding for a format that can produce something from a
+      // prefix: progressive JPEG, or one with a streaming session for this request.
+      //
+      // A placeholder is a different image standing in for this one, not a prefix of it, so its
+      // bytes must never reach an incremental decoder.
+      //
+      // The claim spans the whole decode, not just the call into the session, so that a close
+      // cannot land part-way through it — including the close this decode triggers itself by
+      // delivering the last result.
+      val claimedSession =
+          if (statusHasFlag(status, Consumer.IS_PLACEHOLDER)) null
+          else beginStreamingDecode(encodedImage, isNotLast(status))
+      try {
+        doDecodeWithSession(encodedImage, status, lastScheduledScanNumber, claimedSession)
+      } finally {
+        if (claimedSession != null) {
+          closeSession(endStreamingDecode())
+        }
+      }
+    }
+
+    /** The body of [doDecode], run with [claimedSession] claimed for this thread. */
+    private fun doDecodeWithSession(
+        encodedImage: EncodedImage,
+        @Consumer.Status status: Int,
+        lastScheduledScanNumber: Int,
+        claimedSession: StreamingImageDecoder.Session?,
+    ) {
+      var newStatus = status
+      if (
+          claimedSession == null &&
+              encodedImage.imageFormat !== DefaultImageFormats.JPEG &&
+              isNotLast(status)
+      ) {
         return
       }
       if (
@@ -228,8 +416,10 @@ class DecodeProducer(
       try {
         val queueTime = jobScheduler.queuedTime
         val requestUri = producerContext.imageRequest.sourceUri.toString()
+        // A streaming session tracks its own progress through the buffer, so it always gets
+        // everything that has arrived; only progressive JPEG needs a scan-aligned cut.
         val length =
-            if (isLastAndComplete || isPlaceholder) encodedImage.size
+            if (isLastAndComplete || isPlaceholder || claimedSession != null) encodedImage.size
             else getIntermediateImageEndOffset(encodedImage)
         val quality =
             if (isLastAndComplete || isPlaceholder) ImmutableQualityInfo.FULL_QUALITY
@@ -239,7 +429,17 @@ class DecodeProducer(
         try {
           image =
               try {
-                internalDecode(encodedImage, length, quality)
+                internalDecode(
+                    encodedImage,
+                    length,
+                    // The session's "no more calls follow" flag. Derived from isLast, not
+                    // isLastAndComplete: a last result flagged IS_PARTIAL_RESULT is still the
+                    // final decode of the request, and telling the session otherwise would let it
+                    // return null as the request's result.
+                    isLast,
+                    quality,
+                    claimedSession,
+                )
               } catch (e: DecodeException) {
                 val failedEncodedImage = e.encodedImage
                 FLog.d(
@@ -294,12 +494,14 @@ class DecodeProducer(
     private fun internalDecode(
         encodedImage: EncodedImage,
         length: Int,
+        isComplete: Boolean,
         quality: QualityInfo,
+        claimedSession: StreamingImageDecoder.Session?,
     ): CloseableImage? {
       val recover = reclaimMemoryRunnable != null && recoverFromDecoderOOM.get()
       val image =
           try {
-            imageDecoder.decode(encodedImage, length, quality, imageDecodeOptions)
+            decodeWith(claimedSession, encodedImage, length, isComplete, quality)
           } catch (e: OutOfMemoryError) {
             if (!recover) {
               throw e
@@ -308,11 +510,34 @@ class DecodeProducer(
             reclaimMemoryRunnable.run()
             System.gc()
 
+            // Reclaiming still helps the rest of the pipeline, but a session is not retryable:
+            // it carries how far it has consumed and reconstructed across calls, so calling it
+            // again resumes from wherever the OOM left it rather than repeating the decode. Fail
+            // the request instead and let the session be closed.
+            if (claimedSession != null) {
+              throw e
+            }
+
             // Now we retry only once
-            imageDecoder.decode(encodedImage, length, quality, imageDecodeOptions)
+            decodeWith(null, encodedImage, length, isComplete, quality)
           }
       return image
     }
+
+    private fun decodeWith(
+        claimedSession: StreamingImageDecoder.Session?,
+        encodedImage: EncodedImage,
+        length: Int,
+        isComplete: Boolean,
+        quality: QualityInfo,
+    ): CloseableImage? =
+        // Not an elvis fallback: a session returning null means "nothing to draw yet", which the
+        // shared decoder cannot improve on and would only redo work over.
+        if (claimedSession != null) {
+          claimedSession.decode(encodedImage, length, isComplete, quality, imageDecodeOptions)
+        } else {
+          imageDecoder.decode(encodedImage, length, quality, imageDecodeOptions)
+        }
 
     private fun setImageExtras(
         encodedImage: EncodedImage,
@@ -398,6 +623,8 @@ class DecodeProducer(
         isFinished = true
       }
       jobScheduler.clearJob()
+      // Covers every way a request ends: last result, failure and cancellation all land here.
+      closeStreamingSession()
     }
 
     /** Notifies consumer of new result and finishes if the result is final. */
@@ -476,7 +703,8 @@ class DecodeProducer(
               if (producerContext.isIntermediateResultExpected) {
                 if (
                     producerContext.imagePipelineConfig.experiments
-                        .skipNonJpegIntermediateDecodeScheduling
+                        .skipNonJpegIntermediateDecodeScheduling &&
+                        getExistingStreamingSession() == null
                 ) {
                   jobScheduler.scheduleJobIfImageFormat(DefaultImageFormats.JPEG)
                 } else {

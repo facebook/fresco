@@ -43,15 +43,23 @@ import com.facebook.imagepipeline.decoder.ImageDecoder;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig;
 import com.facebook.imagepipeline.decoder.ProgressiveJpegParser;
 import com.facebook.imagepipeline.decoder.SimpleProgressiveJpegConfig;
+import com.facebook.imagepipeline.decoder.StreamingImageDecoder;
+import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.image.ImmutableQualityInfo;
+import com.facebook.imagepipeline.image.QualityInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.facebook.infer.annotation.Nullsafe;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.annotation.Nullable;
 import org.junit.After;
 import org.junit.Before;
@@ -689,5 +697,399 @@ public class DecodeProducerTest {
     PooledByteBuffer pooledByteBuffer = mock(PooledByteBuffer.class);
     when(pooledByteBuffer.size()).thenReturn(size);
     return pooledByteBuffer;
+  }
+
+  // ---------------------------------------------------------------------------------------------
+  // Streaming decode (StreamingImageDecoder)
+  // ---------------------------------------------------------------------------------------------
+
+  /** Lets one mock stand in for a decoder that also decodes incrementally. */
+  private interface StreamingCapableImageDecoder extends ImageDecoder, StreamingImageDecoder {}
+
+  private static final QualityInfo NO_QUALITY_YET = ImmutableQualityInfo.of(0, false, false);
+
+  private StreamingCapableImageDecoder mStreamingImageDecoder;
+  private StreamingImageDecoder.Session mStreamingSession;
+
+  /**
+   * A fresh result, as the network producer would deliver it. Each one has to be its own
+   * EncodedImage because a decode job closes the one it was given.
+   */
+  private static EncodedImage newEncodedAvif() {
+    EncodedImage encodedImage =
+        new EncodedImage(CloseableReference.of(mockPooledByteBuffer(IMAGE_SIZE)));
+    encodedImage.setImageFormat(DefaultImageFormats.AVIF);
+    encodedImage.setWidth(IMAGE_WIDTH);
+    encodedImage.setHeight(IMAGE_HEIGHT);
+    return encodedImage;
+  }
+
+  /** Rebuilds the producer around a decoder that offers a streaming session for every image. */
+  private void setupStreamingDecoder(boolean experimentEnabled) {
+    mStreamingSession = mock(StreamingImageDecoder.Session.class);
+    setupStreamingDecoder(experimentEnabled, mStreamingSession);
+  }
+
+  private void setupStreamingDecoder(
+      boolean experimentEnabled, StreamingImageDecoder.Session session) {
+    mStreamingImageDecoder = mock(StreamingCapableImageDecoder.class);
+    when(mStreamingImageDecoder.maybeCreateStreamingSession(any(EncodedImage.class)))
+        .thenReturn(session);
+    when(mPipelineExperiments.getStreamingDecodeEnabled()).thenReturn(experimentEnabled);
+    mDecodeProducer =
+        new DecodeProducer(
+            mByteArrayPool,
+            mExecutor,
+            mStreamingImageDecoder,
+            mProgressiveJpegConfig,
+            DownsampleMode.AUTO,
+            false,
+            false,
+            mInputProducer,
+            MAX_BITMAP_SIZE,
+            new CloseableReferenceFactory(new NoOpCloseableReferenceLeakTracker()),
+            null,
+            Suppliers.BOOLEAN_FALSE,
+            null);
+  }
+
+  @Test
+  public void testStreamingDecode_intermediateNonJpeg_goesToTheSession() throws Exception {
+    setupStreamingDecoder(true);
+    setupNetworkUri();
+    produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    EncodedImage partial = newEncodedAvif();
+    jobRunnable.run(partial, Consumer.NO_FLAGS);
+
+    // Everything downloaded so far, flagged as still incomplete.
+    verify(mStreamingSession)
+        .decode(partial, IMAGE_SIZE, false, NO_QUALITY_YET, IMAGE_DECODE_OPTIONS);
+    verify(mStreamingImageDecoder, never()).decode(any(EncodedImage.class), anyInt(), any(), any());
+  }
+
+  @Test
+  public void testStreamingDecode_finalResult_reusesTheSessionThenClosesIt() throws Exception {
+    setupStreamingDecoder(true);
+    setupNetworkUri();
+    produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    EncodedImage partial = newEncodedAvif();
+    EncodedImage complete = newEncodedAvif();
+    jobRunnable.run(partial, Consumer.NO_FLAGS);
+    jobRunnable.run(complete, Consumer.IS_LAST);
+
+    InOrder inOrder = inOrder(mStreamingImageDecoder, mStreamingSession);
+    inOrder.verify(mStreamingImageDecoder).maybeCreateStreamingSession(partial);
+    inOrder
+        .verify(mStreamingSession)
+        .decode(partial, IMAGE_SIZE, false, NO_QUALITY_YET, IMAGE_DECODE_OPTIONS);
+    inOrder
+        .verify(mStreamingSession)
+        .decode(
+            complete, IMAGE_SIZE, true, ImmutableQualityInfo.FULL_QUALITY, IMAGE_DECODE_OPTIONS);
+    inOrder.verify(mStreamingSession).close();
+    // One session for the whole request, not one per result.
+    verify(mStreamingImageDecoder, times(1)).maybeCreateStreamingSession(any(EncodedImage.class));
+  }
+
+  @Test
+  public void testStreamingDecode_experimentOff_intermediateNonJpegStillDropped() throws Exception {
+    setupStreamingDecoder(false);
+    setupNetworkUri();
+    produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    jobRunnable.run(newEncodedAvif(), Consumer.NO_FLAGS);
+
+    verify(mStreamingImageDecoder, never()).maybeCreateStreamingSession(any(EncodedImage.class));
+    verify(mStreamingImageDecoder, never()).decode(any(EncodedImage.class), anyInt(), any(), any());
+    verify(mProducerListener, never())
+        .onProducerStart(mProducerContext, DecodeProducer.PRODUCER_NAME);
+  }
+
+  @Test
+  public void testStreamingDecode_completeImageOnFirstResult_doesNotOpenASession()
+      throws Exception {
+    setupStreamingDecoder(true);
+    setupNetworkUri();
+    produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    EncodedImage complete = newEncodedAvif();
+    jobRunnable.run(complete, Consumer.IS_LAST);
+
+    // Nothing to stream, so the format's normal one-shot decoder handles it.
+    verify(mStreamingImageDecoder, never()).maybeCreateStreamingSession(any(EncodedImage.class));
+    verify(mStreamingImageDecoder)
+        .decode(complete, IMAGE_SIZE, ImmutableQualityInfo.FULL_QUALITY, IMAGE_DECODE_OPTIONS);
+  }
+
+  @Test
+  public void testStreamingDecode_failure_closesTheSession() throws Exception {
+    setupStreamingDecoder(true);
+    setupNetworkUri();
+    Consumer<EncodedImage> consumer = produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    jobRunnable.run(newEncodedAvif(), Consumer.NO_FLAGS);
+    consumer.onFailure(new RuntimeException());
+
+    verify(mStreamingSession).close();
+  }
+
+  @Test
+  public void testStreamingDecode_cancellation_closesTheSession() throws Exception {
+    setupStreamingDecoder(true);
+    setupNetworkUri();
+    Consumer<EncodedImage> consumer = produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    jobRunnable.run(newEncodedAvif(), Consumer.NO_FLAGS);
+    consumer.onCancellation();
+
+    verify(mStreamingSession).close();
+  }
+
+  // ---------------------------------------------------------------------------------------------
+  // Streaming decode: a request can end on any thread, a decode only ever runs on the decode pool
+  // ---------------------------------------------------------------------------------------------
+
+  private static final long AWAIT_TIMEOUT_MS = 10_000;
+
+  /**
+   * A session that parks inside {@link #decode} until released, and records whether a close ever
+   * landed while it was in there.
+   *
+   * <p>Real rather than mocked because what is under test is what two threads do to one session,
+   * which needs the session itself to observe the overlap. A close arriving mid-decode is not
+   * hypothetical: cancellation runs on whichever thread asked for it, and for a native decoder it
+   * would free the memory the decode is reading.
+   */
+  private static final class RecordingSession implements StreamingImageDecoder.Session {
+    /** One permit released on entry to each decode. */
+    final Semaphore decodeEntered = new Semaphore(0);
+
+    final CountDownLatch decodeMayReturn = new CountDownLatch(1);
+    final AtomicInteger decodeCount = new AtomicInteger();
+    final AtomicInteger closeCount = new AtomicInteger();
+    final AtomicBoolean inDecode = new AtomicBoolean();
+    final AtomicBoolean closedDuringDecode = new AtomicBoolean();
+
+    /** Whether a decode parks until {@link #decodeMayReturn}, rather than returning at once. */
+    volatile boolean blockInDecode = true;
+
+    @Override
+    public @Nullable CloseableImage decode(
+        EncodedImage encodedImage,
+        int length,
+        boolean isComplete,
+        QualityInfo qualityInfo,
+        ImageDecodeOptions options) {
+      decodeCount.incrementAndGet();
+      inDecode.set(true);
+      decodeEntered.release();
+      try {
+        if (blockInDecode) {
+          decodeMayReturn.await(AWAIT_TIMEOUT_MS, TimeUnit.MILLISECONDS);
+        }
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+      } finally {
+        inDecode.set(false);
+      }
+      return null;
+    }
+
+    @Override
+    public void close() {
+      if (inDecode.get()) {
+        closedDuringDecode.set(true);
+      }
+      closeCount.incrementAndGet();
+    }
+  }
+
+  /** Starts a decode job on its own thread and waits until it is inside the session. */
+  private Thread startBlockedDecode(
+      final JobScheduler.JobRunnable jobRunnable,
+      final RecordingSession session,
+      @Consumer.Status final int status)
+      throws Exception {
+    final EncodedImage encodedImage = newEncodedAvif();
+    Thread thread =
+        new Thread(
+            new Runnable() {
+              @Override
+              public void run() {
+                jobRunnable.run(encodedImage, status);
+              }
+            },
+            "decode-pool-stub");
+    session.decodeEntered.drainPermits();
+    thread.start();
+    assertThat(session.decodeEntered.tryAcquire(AWAIT_TIMEOUT_MS, TimeUnit.MILLISECONDS)).isTrue();
+    return thread;
+  }
+
+  private static void release(Thread decodeThread, RecordingSession session) throws Exception {
+    session.decodeMayReturn.countDown();
+    decodeThread.join(AWAIT_TIMEOUT_MS);
+    assertThat(decodeThread.isAlive()).isFalse();
+  }
+
+  @Test
+  public void testStreamingDecode_cancellationDuringDecode_closesOnlyOnceTheDecodeHasReturned()
+      throws Exception {
+    RecordingSession session = new RecordingSession();
+    setupStreamingDecoder(true, session);
+    setupNetworkUri();
+    Consumer<EncodedImage> consumer = produceResults();
+    Thread decodeThread = startBlockedDecode(getJobRunnable(), session, Consumer.NO_FLAGS);
+
+    consumer.onCancellation();
+
+    // The decode pool is still inside the session, so the close waits for it rather than pulling
+    // the session out from under it.
+    assertThat(session.closeCount.get()).isEqualTo(0);
+
+    release(decodeThread, session);
+
+    assertThat(session.closeCount.get()).isEqualTo(1);
+    assertThat(session.closedDuringDecode.get()).isFalse();
+  }
+
+  @Test
+  public void testStreamingDecode_failureDuringDecode_closesOnlyOnceTheDecodeHasReturned()
+      throws Exception {
+    RecordingSession session = new RecordingSession();
+    setupStreamingDecoder(true, session);
+    setupNetworkUri();
+    Consumer<EncodedImage> consumer = produceResults();
+    Thread decodeThread = startBlockedDecode(getJobRunnable(), session, Consumer.NO_FLAGS);
+
+    consumer.onFailure(new RuntimeException());
+
+    assertThat(session.closeCount.get()).isEqualTo(0);
+
+    release(decodeThread, session);
+
+    assertThat(session.closeCount.get()).isEqualTo(1);
+    assertThat(session.closedDuringDecode.get()).isFalse();
+  }
+
+  @Test
+  public void testStreamingDecode_cancellationDuringLastDecode_closesExactlyOnceAfterIt()
+      throws Exception {
+    RecordingSession session = new RecordingSession();
+    session.blockInDecode = false;
+    setupStreamingDecoder(true, session);
+    setupNetworkUri();
+    Consumer<EncodedImage> consumer = produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    // Open the session on a partial result; a request whose first result is already complete never
+    // streams at all.
+    jobRunnable.run(newEncodedAvif(), Consumer.NO_FLAGS);
+
+    // The last decode is the long one -- it is where the bitmap is produced -- so it is the decode
+    // a cancellation is most likely to land in. It also ends the request itself, so both routes to
+    // a close are live at once.
+    session.blockInDecode = true;
+    Thread decodeThread = startBlockedDecode(jobRunnable, session, Consumer.IS_LAST);
+    consumer.onCancellation();
+    assertThat(session.closeCount.get()).isEqualTo(0);
+
+    release(decodeThread, session);
+
+    assertThat(session.closeCount.get()).isEqualTo(1);
+    assertThat(session.closedDuringDecode.get()).isFalse();
+  }
+
+  @Test
+  public void testStreamingDecode_resultArrivingDuringDecode_doesNotOpenASecondSession()
+      throws Exception {
+    // With this on, a partial result consults the session to decide whether scheduling a decode is
+    // worth it -- so a result landing mid-decode reaches the session state from the network thread.
+    when(mPipelineExperiments.getSkipNonJpegIntermediateDecodeScheduling()).thenReturn(true);
+    RecordingSession session = new RecordingSession();
+    setupStreamingDecoder(true, session);
+    setupNetworkUri();
+    Consumer<EncodedImage> consumer = produceResults();
+    Thread decodeThread = startBlockedDecode(getJobRunnable(), session, Consumer.NO_FLAGS);
+
+    when(mJobScheduler.updateJob(any(EncodedImage.class), anyInt())).thenReturn(true);
+    consumer.onNewResult(newEncodedAvif(), Consumer.NO_FLAGS);
+
+    release(decodeThread, session);
+
+    verify(mStreamingImageDecoder, times(1)).maybeCreateStreamingSession(any(EncodedImage.class));
+    assertThat(session.decodeCount.get()).isEqualTo(1);
+  }
+
+  @Test
+  public void testStreamingDecode_cancellationThenLateResult_neverReachesTheClosedSession()
+      throws Exception {
+    setupStreamingDecoder(true);
+    setupNetworkUri();
+    Consumer<EncodedImage> consumer = produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    jobRunnable.run(newEncodedAvif(), Consumer.NO_FLAGS);
+    consumer.onCancellation();
+    // A job already handed to the decode pool when the request was cancelled.
+    jobRunnable.run(newEncodedAvif(), Consumer.NO_FLAGS);
+
+    verify(mStreamingSession, times(1))
+        .decode(any(EncodedImage.class), anyInt(), anyBoolean(), any(), any());
+    verify(mStreamingSession, times(1)).close();
+  }
+
+  @Test
+  public void testStreamingDecode_cancellationAfterLastResult_doesNotCloseTwice() throws Exception {
+    setupStreamingDecoder(true);
+    setupNetworkUri();
+    Consumer<EncodedImage> consumer = produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    jobRunnable.run(newEncodedAvif(), Consumer.NO_FLAGS);
+    jobRunnable.run(newEncodedAvif(), Consumer.IS_LAST);
+    consumer.onCancellation();
+
+    verify(mStreamingSession, times(1)).close();
+  }
+
+  @Test
+  public void testStreamingDecode_placeholderResult_neverOpensASession() throws Exception {
+    setupStreamingDecoder(true);
+    setupNetworkUri();
+    produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    jobRunnable.run(newEncodedAvif(), Consumer.IS_PLACEHOLDER);
+
+    // A placeholder is a different image standing in for this one, so its bytes are not a prefix
+    // of the image the session is reconstructing.
+    verify(mStreamingImageDecoder, never()).maybeCreateStreamingSession(any(EncodedImage.class));
+    verify(mStreamingSession, never())
+        .decode(any(EncodedImage.class), anyInt(), anyBoolean(), any(), any());
+  }
+
+  @Test
+  public void testStreamingDecode_lastPartialResult_isTheSessionsFinalCall() throws Exception {
+    setupStreamingDecoder(true);
+    setupNetworkUri();
+    produceResults();
+    JobScheduler.JobRunnable jobRunnable = getJobRunnable();
+
+    jobRunnable.run(newEncodedAvif(), Consumer.NO_FLAGS);
+    EncodedImage lastPartial = newEncodedAvif();
+    jobRunnable.run(lastPartial, Consumer.IS_LAST | Consumer.IS_PARTIAL_RESULT);
+
+    // A truncated response still ends the request. Telling the session otherwise would let it
+    // return null for what is in fact the request's final result.
+    verify(mStreamingSession).decode(eq(lastPartial), anyInt(), eq(true), any(), any());
   }
 }

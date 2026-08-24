@@ -48,7 +48,7 @@ import javax.annotation.Nullable;
  * on the most recent versions of Android.
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
-public class DefaultImageDecoder implements ImageDecoder {
+public class DefaultImageDecoder implements ImageDecoder, StreamingImageDecoder {
   private final @Nullable ImageDecoder mXmlDecoder;
   private final PlatformDecoder mPlatformDecoder;
   private final Supplier<Boolean> mEnableEncodedImageColorSpaceUsage;
@@ -168,6 +168,24 @@ public class DefaultImageDecoder implements ImageDecoder {
     }
 
     return mDefaultDecoder.decode(encodedImage, length, qualityInfo, options);
+  }
+
+  /**
+   * Routes to the registered decoder for this image's format, if that decoder can stream. None of
+   * the built-in formats can, so this only ever returns non-null for a custom decoder registered
+   * through {@link ImageDecoderConfig}.
+   */
+  @Override
+  public @Nullable StreamingImageDecoder.Session maybeCreateStreamingSession(
+      EncodedImage encodedImage) {
+    if (mCustomDecoders == null) {
+      return null;
+    }
+    ImageDecoder decoder = mCustomDecoders.get(encodedImage.getImageFormat());
+    if (decoder instanceof StreamingImageDecoder) {
+      return ((StreamingImageDecoder) decoder).maybeCreateStreamingSession(encodedImage);
+    }
+    return null;
   }
 
   private @Nullable CloseableImage decodeAnimatedFormat(

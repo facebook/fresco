@@ -86,6 +86,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val intermediateProgressUpdatesDisabled: Boolean
   val intermediateProgressUpdatesForPrefetchDisabled: Boolean
   val skipNonJpegIntermediateDecodeScheduling: Boolean
+  val streamingDecodeEnabled: Boolean
   val throwCacheMissExceptionOnCacheMiss: Boolean
   val usePostProcessedCacheKey: Boolean
   val usePostprocessorDuringDecodedPrefetch: Boolean
@@ -160,6 +161,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var intermediateProgressUpdatesForPrefetchDisabled = false
 
     @JvmField var skipNonJpegIntermediateDecodeScheduling = false
+
+    // Kill switch for the whole StreamingImageDecoder path in DecodeProducer. Off means partial
+    // results are handled exactly as before, whatever decoders are registered.
+    @JvmField var streamingDecodeEnabled = false
 
     @JvmField var throwCacheMissExceptionOnCacheMiss = false
 
@@ -403,6 +408,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.skipNonJpegIntermediateDecodeScheduling = skipNonJpegIntermediateDecodeScheduling
     }
 
+    fun setStreamingDecodeEnabled(streamingDecodeEnabled: Boolean) = asBuilder {
+      this.streamingDecodeEnabled = streamingDecodeEnabled
+    }
+
     fun setPlatformDecoderOptions(platformDecoderOptions: PlatformDecoderOptions) = asBuilder {
       this.platformDecoderOptions = platformDecoderOptions
     }
@@ -615,6 +624,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     intermediateProgressUpdatesForPrefetchDisabled =
         builder.intermediateProgressUpdatesForPrefetchDisabled
     skipNonJpegIntermediateDecodeScheduling = builder.skipNonJpegIntermediateDecodeScheduling
+    streamingDecodeEnabled = builder.streamingDecodeEnabled
     throwCacheMissExceptionOnCacheMiss = builder.throwCacheMissExceptionOnCacheMiss
     usePostProcessedCacheKey = builder.usePostProcessedCacheKey
     usePostprocessorDuringDecodedPrefetch = builder.usePostprocessorDuringDecodedPrefetch

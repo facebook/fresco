@@ -11,6 +11,7 @@ import com.facebook.common.internal.ByteStreams
 import com.facebook.common.internal.Closeables
 import com.facebook.common.internal.Throwables
 import com.facebook.imageformat.ImageFormat.FormatChecker
+import java.io.BufferedInputStream
 import java.io.FileInputStream
 import java.io.IOException
 import java.io.InputStream
@@ -18,7 +19,13 @@ import java.io.InputStream
 /** Detects the format of an encoded image. */
 class ImageFormatChecker private constructor() {
 
-  private var maxHeaderLength = 0
+  /**
+   * Longest header any registered checker inspects. A stream that can replay this many bytes can be
+   * identified by [determineImageFormat] and still be read from the start afterwards.
+   */
+  var maxHeaderLength = 0
+    private set
+
   private var customImageFormatCheckers: List<FormatChecker>? = null
   private val defaultFormatChecker = DefaultImageFormatChecker()
   private var binaryXmlEnabled = false
@@ -131,6 +138,28 @@ class ImageFormatChecker private constructor() {
     @JvmStatic
     @Throws(IOException::class)
     fun getImageFormat(`is`: InputStream): ImageFormat = instance.determineImageFormat(`is`)
+
+    /**
+     * Wraps `is` so that identifying it with [getImageFormat] leaves it readable from the start,
+     * buffering as many bytes as the registered checkers need to see.
+     *
+     * For callers that have to hand the stream on to someone else afterwards — a network fetcher
+     * sniffing a response body before passing it to the pipeline, say.
+     *
+     * A stream that already supports mark is returned unchanged, on the assumption that it can
+     * replay [maxHeaderLength] bytes; one whose mark support is more limited than that can still
+     * fail its own `reset`. The buffer size is likewise a snapshot: [setCustomImageFormatCheckers]
+     * can raise [maxHeaderLength] after a stream has been wrapped.
+     */
+    @JvmStatic
+    fun bufferForFormatDetection(`is`: InputStream): InputStream =
+        if (`is`.markSupported()) {
+          `is`
+        } else {
+          // Registered checkers should all report a positive header size, but the buffer size is
+          // an argument to a public constructor that rejects zero, so do not depend on it.
+          BufferedInputStream(`is`, instance.maxHeaderLength.coerceAtLeast(1))
+        }
 
     /*
      * A variant of getImageFormat that wraps IOException with RuntimeException.
