@@ -53,6 +53,57 @@ class UnifiedCacheKeyGeneratorTest {
   }
 
   @Test
+  fun resolve_reusesBitmapResultWhenPoliciesAndDimensionsAreEquivalent() {
+    val result =
+        generator(dimensions = true, threshold = 1).resolve(input(CacheKeyDimensions(100, 200)))
+
+    assertThat(result.encodedKey).isSameAs(result.bitmapSourceKey)
+  }
+
+  @Test
+  fun resolve_doesNotReuseBitmapResultWhenEncodedHashingIsDisabled() {
+    val result = UnifiedCacheKeyGenerator(
+        UnifiedCacheKeyGeneratorConfig(
+            includeDimensionsInBitmapKey = true,
+            includeDimensionsInEncodedKey = true,
+            hashThreshold = 1,
+            hashEncodedKey = false,
+        ),
+    )
+        .resolve(input(CacheKeyDimensions(100, 200)))
+
+    assertThat(result.bitmapSourceKey).isEqualTo("base100_200".hashCode().toString())
+    assertThat(result.encodedKey).isEqualTo("base100_200")
+  }
+
+  @Test
+  fun resolve_preservesIndependentDimensionPoliciesWhenNotEquivalent() {
+    val dimensions = CacheKeyDimensions(100, 200)
+    val input = input(dimensions)
+
+    assertThat(
+        UnifiedCacheKeyGenerator(
+            UnifiedCacheKeyGeneratorConfig(
+                includeDimensionsInBitmapKey = true,
+                includeDimensionsInEncodedKey = false,
+            ),
+        )
+            .resolve(input),
+    )
+        .isEqualTo(ResolvedCacheKeyStrings("base100_200", "base"))
+    assertThat(
+        UnifiedCacheKeyGenerator(
+            UnifiedCacheKeyGeneratorConfig(
+                includeDimensionsInBitmapKey = false,
+                includeDimensionsInEncodedKey = true,
+            ),
+        )
+            .resolve(input),
+    )
+        .isEqualTo(ResolvedCacheKeyStrings("base", "base100_200"))
+  }
+
+  @Test
   fun resolve_usesSeparateBitmapAndEncodedDimensions() {
     val result =
         generator(dimensions = true, similarity = true)

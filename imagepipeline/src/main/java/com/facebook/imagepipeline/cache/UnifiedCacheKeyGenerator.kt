@@ -45,6 +45,10 @@ class UnifiedCacheKeyGenerator(private val config: UnifiedCacheKeyGeneratorConfi
       bitmapKey = bitmapKey.hashCode().toString()
     }
 
+    if (canReuseBitmapSourceKey(input, customKey)) {
+      return ResolvedCacheKeyStrings(bitmapSourceKey = bitmapKey, encodedKey = bitmapKey)
+    }
+
     var encodedKey = customKey ?: input.normalizedUri.cacheKeyString
     if (customKey == null && config.includeDimensionsInEncodedKey) {
       input.encodedDimensions?.let {
@@ -62,4 +66,15 @@ class UnifiedCacheKeyGenerator(private val config: UnifiedCacheKeyGeneratorConfi
 
     return ResolvedCacheKeyStrings(bitmapSourceKey = bitmapKey, encodedKey = encodedKey)
   }
+
+  private fun canReuseBitmapSourceKey(
+      input: UnifiedCacheKeyInput,
+      customKey: String?,
+  ): Boolean =
+      customKey != null ||
+          (!config.enableDiskSimilarity &&
+              config.includeDimensionsInBitmapKey == config.includeDimensionsInEncodedKey &&
+              (!config.includeDimensionsInBitmapKey ||
+                  input.bitmapDimensions == input.encodedDimensions) &&
+              config.hashEncodedKey)
 }
