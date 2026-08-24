@@ -396,6 +396,12 @@ open class FrescoController2Impl(
     } else {
       drawable.fadeInImage(imageRequest.imageOptions.fadeDurationMs)
     }
+    if (
+        imageRequest.imageOptions.keepProgressIndicatorDuringIntermediateImages &&
+            (isIntermediateImage || dataSource?.isFinished == false)
+    ) {
+      drawable.showProgressImmediately()
+    }
     if (imageRequest.imageOptions.shouldAutoPlay() && actualDrawable is Animatable) {
       actualDrawable.start()
     }

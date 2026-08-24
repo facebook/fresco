@@ -30,6 +30,8 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
   @get:DrawableRes @DrawableRes val progressRes: Int = builder._progressRes
   val progressDrawable: Drawable? = builder._progressDrawable
   val progressScaleType: ScalingUtils.ScaleType? = builder._progressScaleType
+  val keepProgressIndicatorDuringIntermediateImages: Boolean =
+      builder._keepProgressIndicatorDuringIntermediateImages
 
   // Error
   @get:ColorInt @ColorInt val errorColor: Int? = builder._errorColor
@@ -125,6 +127,8 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
               progressRes != otherOptions.progressRes ||
               !Objects.equal(progressDrawable, otherOptions.progressDrawable) ||
               !Objects.equal(progressScaleType, otherOptions.progressScaleType) ||
+              keepProgressIndicatorDuringIntermediateImages !=
+                  otherOptions.keepProgressIndicatorDuringIntermediateImages ||
               !Objects.equal(actualImageColorFilter, otherOptions.actualImageColorFilter) ||
               _resizeToViewport != otherOptions._resizeToViewport ||
               fadeDurationMs != otherOptions.fadeDurationMs ||
@@ -153,6 +157,8 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
               progressRes != otherOptions.progressRes ||
               !Objects.equal(progressDrawable, otherOptions.progressDrawable) ||
               !Objects.equal(progressScaleType, otherOptions.progressScaleType) ||
+              keepProgressIndicatorDuringIntermediateImages !=
+                  otherOptions.keepProgressIndicatorDuringIntermediateImages ||
               !Objects.equal(actualImageColorFilter, otherOptions.actualImageColorFilter) ||
               _resizeToViewport != otherOptions._resizeToViewport ||
               fadeDurationMs != otherOptions.fadeDurationMs ||
@@ -184,6 +190,8 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
               progressRes != otherOptions.progressRes ||
               progressDrawable !== otherOptions.progressDrawable ||
               progressScaleType !== otherOptions.progressScaleType ||
+              keepProgressIndicatorDuringIntermediateImages !=
+                  otherOptions.keepProgressIndicatorDuringIntermediateImages ||
               !Objects.equal(actualImageColorFilter, otherOptions.actualImageColorFilter) ||
               _resizeToViewport != otherOptions._resizeToViewport ||
               fadeDurationMs != otherOptions.fadeDurationMs ||
@@ -217,6 +225,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     result = 31 * result + (backgroundDrawable?.hashCode() ?: 0)
     result = 31 * result + (progressDrawable?.hashCode() ?: 0)
     result = 31 * result + (progressScaleType?.hashCode() ?: 0)
+    result = 31 * result + if (keepProgressIndicatorDuringIntermediateImages) 1 else 0
     result = 31 * result + (actualImageColorFilter?.hashCode() ?: 0)
     result = 31 * result + if (_resizeToViewport) 1 else 0
     result = 31 * result + fadeDurationMs
@@ -241,6 +250,10 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
           .add("progressRes", progressRes)
           .add("progressDrawable", progressDrawable)
           .add("progressScaleType", progressScaleType)
+          .add(
+              "keepProgressIndicatorDuringIntermediateImages",
+              keepProgressIndicatorDuringIntermediateImages,
+          )
           .add("errorColor", errorColor)
           .add("errorRes", errorRes)
           .add("errorScaleType", errorScaleType)
@@ -269,6 +282,7 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
     @DrawableRes internal var _progressRes = 0
     internal var _progressDrawable: Drawable? = null
     internal var _progressScaleType: ScalingUtils.ScaleType? = null
+    internal var _keepProgressIndicatorDuringIntermediateImages = false
 
     @ColorInt internal var _errorColor: Int? = null
     @DrawableRes internal var _errorRes = 0
@@ -303,6 +317,8 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
       _progressRes = defaultOptions.progressRes
       _progressDrawable = defaultOptions.progressDrawable
       _progressScaleType = defaultOptions.progressScaleType
+      _keepProgressIndicatorDuringIntermediateImages =
+          defaultOptions.keepProgressIndicatorDuringIntermediateImages
       _errorColor = defaultOptions.errorColor
       _errorRes = defaultOptions.errorRes
       _errorScaleType = defaultOptions.errorScaleType
@@ -421,6 +437,15 @@ class ImageOptions(builder: Builder) : DecodedImageOptions(builder) {
 
     fun progressScaleType(progressScaleType: ScalingUtils.ScaleType?): Builder = modify {
       _progressScaleType = progressScaleType
+    }
+
+    /**
+     * Keeps the progress indicator visible while intermediate images are set. An increasing-quality
+     * or progressive source otherwise hides it as soon as the first low-quality image paints, even
+     * though the fetch is still running and still reporting progress.
+     */
+    fun keepProgressIndicatorDuringIntermediateImages(keep: Boolean): Builder = modify {
+      _keepProgressIndicatorDuringIntermediateImages = keep
     }
 
     fun overlayRes(@DrawableRes overlayRes: Int): Builder = modify {
