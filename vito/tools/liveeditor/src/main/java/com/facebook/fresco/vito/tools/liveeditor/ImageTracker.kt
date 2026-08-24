@@ -15,21 +15,30 @@ open class ImageTracker : BaseVitoImagePerfListener() {
   private val drawables: MutableList<WeakReference<FrescoDrawableInterface>> = ArrayList()
 
   val drawableCount: Int
-    get() = drawables.size
+    get() = synchronized(drawables) { drawables.size }
 
-  fun getDrawableOrNull(index: Int): FrescoDrawableInterface? = drawables.getOrNull(index)?.get()
+  fun getDrawableOrNull(index: Int): FrescoDrawableInterface? =
+      synchronized(drawables) { drawables.getOrNull(index)?.get() }
 
   fun reset() {
-    drawables.clear()
+    synchronized(drawables) { drawables.clear() }
   }
 
   private fun trackDrawable(drawable: FrescoDrawableInterface) {
-    drawables.add(WeakReference(drawable))
+    synchronized(drawables) { drawables.add(WeakReference(drawable)) }
   }
 
   private fun removeDrawable(drawable: FrescoDrawableInterface) {
     // Remove the Drawable and any null drawables that have been collected (weak reference)
-    drawables.removeAll { it.get() == drawable || it.get() == null }
+    synchronized(drawables) {
+      val iterator = drawables.iterator()
+      while (iterator.hasNext()) {
+        val ref = iterator.next()
+        if (ref.get() == null || ref.get() == drawable) {
+          iterator.remove()
+        }
+      }
+    }
   }
 
   override fun onImageMount(drawable: FrescoDrawableInterface) {
