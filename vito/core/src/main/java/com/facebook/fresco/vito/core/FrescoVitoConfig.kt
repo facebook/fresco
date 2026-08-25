@@ -142,4 +142,7 @@ interface FrescoVitoConfig {
 
   /** Prevents draw passes from using an image after its owning reference is closed. */
   fun fixClearActualImageLayerOnClose(): Boolean = false
+
+  /** Clears the placeholder layer when the actual image is set with a fade duration of 0. */
+  fun fixResetPlaceholderOnZeroFade(): Boolean = false
 }

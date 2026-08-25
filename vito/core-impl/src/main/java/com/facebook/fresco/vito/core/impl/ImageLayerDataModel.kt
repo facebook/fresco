@@ -27,6 +27,7 @@ class ImageLayerDataModel(
     var drawableCallbackProvider: (() -> Drawable.Callback?)? = null,
     var invalidateLayerCallback: (() -> Unit)? = null,
     val optimizeAlphaHandling: Boolean = false,
+    val resetOnZeroDurationFadeOut: Boolean = false,
 ) {
   private var dataModel: ImageDataModel? = null
   private var roundingOptions: RoundingOptions? = null
@@ -153,6 +154,9 @@ class ImageLayerDataModel(
     fadeAnimator?.end()
     if (durationMs == 0) {
       paint.alpha = 0
+      if (resetOnZeroDurationFadeOut && resetLayerWhenInvisible) {
+        reset(endAnimator = false)
+      }
       return
     }
     fadeAnimator =

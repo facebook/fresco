@@ -120,6 +120,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun fixClearActualImageLayerOnClose(): Boolean = false
 
+  override fun fixResetPlaceholderOnZeroFade(): Boolean = false
+
   open class DefaultPrefetchConfig : PrefetchConfig {
     override fun prefetchInOnPrepare(): Boolean = true
 

@@ -34,6 +34,7 @@ class KFrescoVitoDrawable(
     private val resetControllerListener2: Boolean = false,
     private val optimizeAlphaHandling: Boolean = false,
     private val clearActualImageLayerOnClose: Boolean = false,
+    private val resetPlaceholderOnZeroFade: Boolean = false,
 ) : Drawable(), FrescoDrawableInterface, Drawable.Callback {
 
   var _imageId: Long = 0
@@ -220,8 +221,12 @@ class KFrescoVitoDrawable(
 
   override fun getOpacity(): Int = PixelFormat.TRANSPARENT
 
-  internal fun createLayer() =
-      ImageLayerDataModel(callbackProvider, invalidateLayerCallback, optimizeAlphaHandling)
+  internal fun createLayer() = ImageLayerDataModel(
+      callbackProvider,
+      invalidateLayerCallback,
+      optimizeAlphaHandling,
+      resetPlaceholderOnZeroFade,
+  )
 
   override fun invalidateDrawable(who: Drawable) {
     invalidateSelf()
