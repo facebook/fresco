@@ -10,12 +10,17 @@ package com.facebook.fresco.vito.core.impl
 import android.net.Uri
 import com.facebook.fresco.vito.core.ImagePipelineUtils
 import com.facebook.fresco.vito.core.impl.ImagePipelineUtilsImpl.CircularBitmapRounding
+import com.facebook.fresco.vito.options.DecodedImageOptions
 import com.facebook.fresco.vito.options.ImageOptions
 import com.facebook.fresco.vito.options.RoundingOptions
+import com.facebook.fresco.vito.source.SingleImageSource
+import com.facebook.fresco.vito.source.SingleImageSourceImpl
 import com.facebook.imagepipeline.common.ImageDecodeOptions
 import com.facebook.imagepipeline.common.ResizeOptions
 import com.facebook.imagepipeline.common.RotationOptions
 import com.facebook.imagepipeline.core.DownsampleMode
+import com.facebook.imagepipeline.request.ImageRequest
+import com.facebook.imagepipeline.request.ImageRequestBuilder
 import com.facebook.imagepipeline.testing.TestNativeLoader
 import kotlin.test.fail
 import org.assertj.core.api.Assertions
@@ -170,6 +175,48 @@ class ImagePipelineUtilsImplTest {
 
     Assertions.assertThat(imageRequest.sourceUri).isEqualTo(URI)
     Assertions.assertThat(imageRequest.rotationOptions).isEqualTo(rotationOptions)
+  }
+
+  @Test
+  fun testBuildImageRequest_whenGivenImageSource_thenDefaultsToTheUriOverload() {
+    val rotationOptions = RotationOptions.forceRotation(RotationOptions.ROTATE_270)
+    val imageOptions = ImageOptions.create().rotate(rotationOptions).build()
+
+    val fromSource = imagePipelineUtils.buildImageRequest(SingleImageSourceImpl(URI), imageOptions)
+
+    Assertions.assertThat(fromSource).isNotNull
+    Assertions.assertThat(fromSource?.sourceUri).isEqualTo(URI)
+    Assertions.assertThat(fromSource?.rotationOptions).isEqualTo(rotationOptions)
+  }
+
+  /**
+   * The point of the overload: an implementation can read state that its own [SingleImageSource]
+   * subtype carries, which the URI alone cannot express.
+   */
+  @Test
+  fun testBuildImageRequest_whenOverridden_thenImplementationSeesTheSource() {
+    val utils =
+        object :
+            ImagePipelineUtilsImpl(
+                DefaultImageDecodeOptionsProviderImpl(TestCircularBitmapRounding()),
+            ) {
+          override fun buildImageRequest(
+              imageSource: SingleImageSource,
+              imageOptions: DecodedImageOptions,
+          ): ImageRequest? =
+              super.buildImageRequest(imageSource, imageOptions)?.let {
+                ImageRequestBuilder.fromRequest(it)
+                    .setCacheChoice(ImageRequest.CacheChoice.SMALL)
+                    .build()
+              }
+        }
+
+    val imageRequest = utils.buildImageRequest(SingleImageSourceImpl(URI), ImageOptions.defaults())
+
+    Assertions.assertThat(imageRequest?.cacheChoice).isEqualTo(ImageRequest.CacheChoice.SMALL)
+    // The URI overload is untouched by the override, so callers that still use it are unaffected.
+    Assertions.assertThat(utils.buildImageRequest(URI, ImageOptions.defaults())?.cacheChoice)
+        .isEqualTo(ImageRequest.CacheChoice.DEFAULT)
   }
 
   internal inner class TestCircularBitmapRounding : CircularBitmapRounding {

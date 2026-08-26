@@ -19,8 +19,9 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder
 /**
  * Utility methods to create [ImageRequest]s for [com.facebook.fresco.vito.options.ImageOptions].
  */
-class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecodeOptionsProvider) :
-    ImagePipelineUtils {
+open class ImagePipelineUtilsImpl(
+    private val imageDecodeOptionsProvider: ImageDecodeOptionsProvider,
+) : ImagePipelineUtils {
 
   fun interface CircularBitmapRounding {
     fun getDecodeOptions(antiAliased: Boolean): ImageDecodeOptions?
@@ -58,7 +59,7 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
       imageOptions: EncodedImageOptions,
   ): ImageRequest? = createEncodedImageRequestBuilder(uri, imageOptions)?.build()
 
-  protected fun createDecodedImageRequestBuilder(
+  protected open fun createDecodedImageRequestBuilder(
       imageRequestBuilder: ImageRequestBuilder?,
       imageOptions: DecodedImageOptions,
   ): ImageRequestBuilder? = imageRequestBuilder?.apply {
@@ -93,7 +94,7 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
     isFirstFrameThumbnailEnabled = imageOptions.isFirstFrameThumbnailEnabled
   }
 
-  protected fun createEncodedImageRequestBuilder(
+  protected open fun createEncodedImageRequestBuilder(
       uri: Uri?,
       imageOptions: EncodedImageOptions,
   ): ImageRequestBuilder? {
@@ -111,7 +112,7 @@ class ImagePipelineUtilsImpl(private val imageDecodeOptionsProvider: ImageDecode
     return builder
   }
 
-  protected fun createEncodedImageRequestBuilder(
+  protected open fun createEncodedImageRequestBuilder(
       imageRequest: ImageRequest?,
       imageOptions: EncodedImageOptions,
   ): ImageRequestBuilder? {

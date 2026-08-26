@@ -223,10 +223,14 @@ object ImageSourceToImagePipelineAdapter {
     }
   }
 
+  // Passes the whole source, not just imageUri, so an ImagePipelineUtils implementation can read
+  // state its own SingleImageSource subtype carries. Both callers of this — the fetch supplier and
+  // maybeExtractFinalImageRequest, which produces the cache key — route through here, so the two
+  // stay consistent.
   fun SingleImageSource.extractSingleRequest(
       imagePipelineUtils: ImagePipelineUtils,
       imageOptions: ImageOptions,
-  ): ImageRequest? = imagePipelineUtils.buildImageRequest(imageUri, imageOptions)
+  ): ImageRequest? = imagePipelineUtils.buildImageRequest(this, imageOptions)
 
   fun FirstAvailableImageSource.extractFirstAvailableRequest(
       imagePipelineUtils: ImagePipelineUtils,
