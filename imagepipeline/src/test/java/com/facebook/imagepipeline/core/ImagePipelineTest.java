@@ -482,6 +482,65 @@ public class ImagePipelineTest {
     assertThat(encodedMemoryCacheKeyPredicate.apply(dummyCacheKey)).isFalse();
   }
 
+  /**
+   * The reason this overload exists: with a custom CacheKeyFactory or a custom cache key, the Uri
+   * overload's URI-derived predicate matches nothing, so eviction silently does nothing.
+   */
+  @Test
+  public void testEvictFromMemoryCacheByImageRequest() {
+    SimpleCacheKey bitmapCacheKey = new SimpleCacheKey("bitmap-key");
+    SimpleCacheKey postprocessedCacheKey = new SimpleCacheKey("postprocessed-key");
+    SimpleCacheKey encodedCacheKey = new SimpleCacheKey("encoded-key");
+    when(mCacheKeyFactory.getBitmapCacheKey(any(ImageRequest.class), any()))
+        .thenReturn(bitmapCacheKey);
+    when(mCacheKeyFactory.getPostprocessedBitmapCacheKey(any(ImageRequest.class), any()))
+        .thenReturn(postprocessedCacheKey);
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any()))
+        .thenReturn(encodedCacheKey);
+
+    mImagePipeline.evictFromMemoryCache(mImageRequest, mCallerContext);
+
+    ArgumentCaptor<Predicate> bitmapCaptor = ArgumentCaptor.forClass(Predicate.class);
+    verify(mBitmapMemoryCache).removeAll(bitmapCaptor.capture());
+    Predicate<CacheKey> bitmapPredicate = bitmapCaptor.getValue();
+    assertThat(bitmapPredicate.apply(bitmapCacheKey)).isTrue();
+    // The postprocessed result is a sibling key in the same bitmap cache, so it must go too.
+    assertThat(bitmapPredicate.apply(postprocessedCacheKey)).isTrue();
+    assertThat(bitmapPredicate.apply(new SimpleCacheKey("someone-else"))).isFalse();
+
+    ArgumentCaptor<Predicate> encodedCaptor = ArgumentCaptor.forClass(Predicate.class);
+    verify(mEncodedMemoryCache).removeAll(encodedCaptor.capture());
+    Predicate<CacheKey> encodedPredicate = encodedCaptor.getValue();
+    assertThat(encodedPredicate.apply(encodedCacheKey)).isTrue();
+    // The bitmap key must not evict the encoded entry: they are different key spaces.
+    assertThat(encodedPredicate.apply(bitmapCacheKey)).isFalse();
+  }
+
+  /** The caller context can participate in the key, so it has to reach the factory. */
+  @Test
+  public void testEvictFromMemoryCacheByImageRequestForwardsCallerContext() {
+    when(mCacheKeyFactory.getBitmapCacheKey(any(ImageRequest.class), any()))
+        .thenReturn(new SimpleCacheKey("bitmap-key"));
+    when(mCacheKeyFactory.getPostprocessedBitmapCacheKey(any(ImageRequest.class), any()))
+        .thenReturn(new SimpleCacheKey("postprocessed-key"));
+    when(mCacheKeyFactory.getEncodedCacheKey(any(ImageRequest.class), any()))
+        .thenReturn(new SimpleCacheKey("encoded-key"));
+
+    mImagePipeline.evictFromMemoryCache(mImageRequest, mCallerContext);
+
+    verify(mCacheKeyFactory).getBitmapCacheKey(mImageRequest, mCallerContext);
+    verify(mCacheKeyFactory).getPostprocessedBitmapCacheKey(mImageRequest, mCallerContext);
+    verify(mCacheKeyFactory).getEncodedCacheKey(mImageRequest, mCallerContext);
+  }
+
+  @Test
+  public void testEvictFromMemoryCacheByImageRequestIgnoresNull() {
+    mImagePipeline.evictFromMemoryCache((ImageRequest) null);
+
+    verify(mBitmapMemoryCache, never()).removeAll(any(Predicate.class));
+    verify(mEncodedMemoryCache, never()).removeAll(any(Predicate.class));
+  }
+
   @Test
   public void testEvictFromDiskCache() {
     String uriString = "http://dummy/string";

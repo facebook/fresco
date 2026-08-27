@@ -683,6 +683,42 @@ class ImagePipeline(
   }
 
   /**
+   * Removes the images for the given [ImageRequest] from the memory caches.
+   *
+   * Prefer this to [evictFromMemoryCache] taking a [Uri] whenever the pipeline is configured with a
+   * custom [CacheKeyFactory], or the request carries a custom cache key. The [Uri] overload matches
+   * entries with a URI-derived predicate, so for a key that is not built entirely from the URI it
+   * silently evicts nothing. This overload asks the factory for the same keys the pipeline writes
+   * under, mirroring [evictFromDiskCache].
+   *
+   * A postprocessed result lives in the bitmap cache under a sibling key that also carries the
+   * postprocessor's cache key, so it is removed too. Only the postprocessor on [imageRequest] is
+   * known here — a result produced by a *different* postprocessor for the same image survives,
+   * which the [Uri] overload would have caught.
+   *
+   * @param imageRequest The request whose images should be evicted from the memory caches
+   * @param callerContext The caller context the request is fetched with. Pass the same value used
+   *   for the fetch: a custom factory may fold it into the key.
+   */
+  @JvmOverloads
+  fun evictFromMemoryCache(imageRequest: ImageRequest?, callerContext: Any? = null) {
+    if (imageRequest == null) {
+      return
+    }
+    val bitmapCacheKey = cacheKeyFactory.getBitmapCacheKey(imageRequest, callerContext)
+    // Equal to bitmapCacheKey when the request has no postprocessor, so this costs an extra
+    // comparison rather than being a second pass. MemoryCache exposes no remove(key) — removal is
+    // only expressible as a predicate.
+    val postprocessedCacheKey =
+        cacheKeyFactory.getPostprocessedBitmapCacheKey(imageRequest, callerContext)
+    bitmapMemoryCache.removeAll(
+        Predicate { key -> key == bitmapCacheKey || key == postprocessedCacheKey },
+    )
+    val encodedCacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, callerContext)
+    encodedMemoryCache.removeAll(Predicate { key -> key == encodedCacheKey })
+  }
+
+  /**
    * If you have supplied your own cache key factory when configuring the pipeline, this method may
    * not work correctly. It will only work if the custom factory builds the cache key entirely from
    * the URI. If that is not the case, use [evictFromDiskCache(ImageRequest)].
@@ -697,12 +733,15 @@ class ImagePipeline(
    * Removes all images with the specified [Uri] from disk cache.
    *
    * @param imageRequest The imageRequest for the image to evict from disk cache
+   * @param callerContext The caller context the request is fetched with. Pass the same value used
+   *   for the fetch: a custom factory may fold it into the encoded cache key.
    */
-  fun evictFromDiskCache(imageRequest: ImageRequest?) {
+  @JvmOverloads
+  fun evictFromDiskCache(imageRequest: ImageRequest?, callerContext: Any? = null) {
     if (imageRequest == null) {
       return
     }
-    val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, null)
+    val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, callerContext)
     val diskCachesStore = diskCachesStoreSupplier.get()
     diskCachesStore.mainBufferedDiskCache.remove(cacheKey)
     diskCachesStore.smallImageBufferedDiskCache.remove(cacheKey)
@@ -720,6 +759,23 @@ class ImagePipeline(
   fun evictFromCache(uri: Uri) {
     evictFromMemoryCache(uri)
     evictFromDiskCache(uri)
+  }
+
+  /**
+   * Removes the images for the given [ImageRequest] from both the memory and disk caches.
+   *
+   * Prefer this to [evictFromCache] taking a [Uri] whenever the pipeline is configured with a
+   * custom [CacheKeyFactory], or the request carries a custom cache key. See [evictFromMemoryCache]
+   * taking an [ImageRequest] for why the [Uri] overload silently evicts nothing in that case.
+   *
+   * @param imageRequest The request whose images should be evicted from the caches
+   * @param callerContext The caller context the request is fetched with. Pass the same value used
+   *   for the fetch: a custom factory may fold it into the key.
+   */
+  @JvmOverloads
+  fun evictFromCache(imageRequest: ImageRequest?, callerContext: Any? = null) {
+    evictFromMemoryCache(imageRequest, callerContext)
+    evictFromDiskCache(imageRequest, callerContext)
   }
 
   /** Clear the memory caches */
