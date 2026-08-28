@@ -57,8 +57,7 @@ public class CloseableProducerToDataSourceAdapter<T>
   }
 
   @Override
-  // NULLSAFE_FIXME[Inconsistent Subclass Parameter Annotation]
-  protected void closeResult(CloseableReference<T> result) {
+  protected void closeResult(@Nullable CloseableReference<T> result) {
     CloseableReference.closeSafely(result);
   }
 
