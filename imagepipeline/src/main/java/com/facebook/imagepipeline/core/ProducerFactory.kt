@@ -21,6 +21,7 @@ import com.facebook.common.memory.PooledByteBuffer
 import com.facebook.common.memory.PooledByteBufferFactory
 import com.facebook.common.references.CloseableReference
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
+import com.facebook.imagepipeline.cache.BoundedLinkedHashMap
 import com.facebook.imagepipeline.cache.BoundedLinkedHashSet
 import com.facebook.imagepipeline.cache.CacheKeyFactory
 import com.facebook.imagepipeline.cache.MemoryCache
@@ -107,6 +108,7 @@ open class ProducerFactory(
   @JvmField protected val mCacheKeyFactory: CacheKeyFactory
   protected val mEncodedMemoryCacheHistory: BoundedLinkedHashSet<CacheKey?>
   protected val mDiskCacheHistory: BoundedLinkedHashSet<CacheKey?>
+  protected val mEncodedMemoryCacheMetadata: BoundedLinkedHashMap<CacheKey, String>?
 
   // Postproc dependencies
   protected val mPlatformBitmapFactory: PlatformBitmapFactory
@@ -139,6 +141,12 @@ open class ProducerFactory(
     mPlatformBitmapFactory = platformBitmapFactory
     mEncodedMemoryCacheHistory = BoundedLinkedHashSet<CacheKey?>(trackedKeysSize)
     mDiskCacheHistory = BoundedLinkedHashSet<CacheKey?>(trackedKeysSize)
+    mEncodedMemoryCacheMetadata =
+        if (config.experiments.preserveMetadataInEncodedMemoryCache) {
+          BoundedLinkedHashMap(ENCODED_MEMORY_CACHE_METADATA_SIZE)
+        } else {
+          null
+        }
 
     mBitmapPrepareToDrawMinSizeBytes = bitmapPrepareToDrawMinSizeBytes
     mBitmapPrepareToDrawMaxSizeBytes = bitmapPrepareToDrawMaxSizeBytes
@@ -298,7 +306,12 @@ open class ProducerFactory(
   open fun newEncodedMemoryCacheProducer(
       inputProducer: Producer<EncodedImage>,
   ): Producer<EncodedImage> {
-    return EncodedMemoryCacheProducer(mEncodedMemoryCache, mCacheKeyFactory, inputProducer)
+    return EncodedMemoryCacheProducer(
+        mEncodedMemoryCache,
+        mCacheKeyFactory,
+        inputProducer,
+        mEncodedMemoryCacheMetadata,
+    )
   }
 
   fun newLocalAssetFetchProducer(): LocalAssetFetchProducer {
@@ -455,6 +468,13 @@ open class ProducerFactory(
   }
 
   companion object {
+    /**
+     * The encoded memory cache is bounded by bytes (up to 4MB), not entry count, so this is sized
+     * to cover the entries that realistically fit at typical encoded image sizes. Undersizing only
+     * costs coverage -- an evicted entry means a blank query, never a wrong one.
+     */
+    private const val ENCODED_MEMORY_CACHE_METADATA_SIZE = 128
+
     fun newAddImageTransformMetaDataProducer(
         inputProducer: Producer<EncodedImage>,
     ): AddImageTransformMetaDataProducer {

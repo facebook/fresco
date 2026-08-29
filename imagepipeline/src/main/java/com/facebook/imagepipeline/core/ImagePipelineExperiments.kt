@@ -83,6 +83,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val loadThumbnailFromContentResolverForContentUriOnly: Boolean
   val preserveMetadataOnDisk: Boolean
   val preserveMetadataOnDiskDuringStartup: Boolean
+  val preserveMetadataInEncodedMemoryCache: Boolean
   val intermediateProgressUpdatesDisabled: Boolean
   val intermediateProgressUpdatesForPrefetchDisabled: Boolean
   val skipNonJpegIntermediateDecodeScheduling: Boolean
@@ -156,6 +157,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     @JvmField var preserveMetadataOnDisk = false
     @JvmField var preserveMetadataOnDiskDuringStartup = false
+    @JvmField var preserveMetadataInEncodedMemoryCache = false
 
     @JvmField var intermediateProgressUpdatesDisabled = false
     @JvmField var intermediateProgressUpdatesForPrefetchDisabled = false
@@ -440,6 +442,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.preserveMetadataOnDiskDuringStartup = preserve
     }
 
+    fun setPreserveMetadataInEncodedMemoryCache(preserve: Boolean) = asBuilder {
+      this.preserveMetadataInEncodedMemoryCache = preserve
+    }
+
     fun setIntermediateProgressUpdatesDisabled(updatesDisabled: Boolean) = asBuilder {
       this.intermediateProgressUpdatesDisabled = updatesDisabled
     }
@@ -620,6 +626,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         builder.loadThumbnailFromContentResolverForContentUriOnly
     preserveMetadataOnDisk = builder.preserveMetadataOnDisk
     preserveMetadataOnDiskDuringStartup = builder.preserveMetadataOnDiskDuringStartup
+    preserveMetadataInEncodedMemoryCache = builder.preserveMetadataInEncodedMemoryCache
     intermediateProgressUpdatesDisabled = builder.intermediateProgressUpdatesDisabled
     intermediateProgressUpdatesForPrefetchDisabled =
         builder.intermediateProgressUpdatesForPrefetchDisabled

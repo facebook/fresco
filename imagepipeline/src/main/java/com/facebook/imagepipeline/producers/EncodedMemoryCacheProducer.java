@@ -13,6 +13,7 @@ import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
 import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.cache.BoundedLinkedHashMap;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.image.EncodedImage;
@@ -32,14 +33,24 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
   private final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
+  private final @Nullable BoundedLinkedHashMap<CacheKey, String> mMetadataCache;
 
   public EncodedMemoryCacheProducer(
       MemoryCache<CacheKey, PooledByteBuffer> memoryCache,
       CacheKeyFactory cacheKeyFactory,
       Producer<EncodedImage> inputProducer) {
+    this(memoryCache, cacheKeyFactory, inputProducer, null);
+  }
+
+  public EncodedMemoryCacheProducer(
+      MemoryCache<CacheKey, PooledByteBuffer> memoryCache,
+      CacheKeyFactory cacheKeyFactory,
+      Producer<EncodedImage> inputProducer,
+      @Nullable BoundedLinkedHashMap<CacheKey, String> metadataCache) {
     mMemoryCache = memoryCache;
     mCacheKeyFactory = cacheKeyFactory;
     mInputProducer = inputProducer;
+    mMetadataCache = metadataCache;
   }
 
   @Override
@@ -79,6 +90,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
             producerContext.putExtra(HasExtraData.KEY_ENCODED_WIDTH, cachedEncodedImage.getWidth());
             producerContext.putExtra(
                 HasExtraData.KEY_ENCODED_HEIGHT, cachedEncodedImage.getHeight());
+            maybeRestoreMetadata(cacheKey, cachedEncodedImage, producerContext);
             consumer.onProgressUpdate(1f);
             consumer.onNewResult(cachedEncodedImage, Consumer.IS_LAST);
             return;
@@ -109,7 +121,8 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
                 producerContext
                     .getImageRequest()
                     .isCacheEnabled(ImageRequest.CachesLocationsMasks.ENCODED_WRITE),
-                producerContext.getImagePipelineConfig().getExperiments().isEncodedCacheEnabled());
+                producerContext.getImagePipelineConfig().getExperiments().isEncodedCacheEnabled(),
+                mMetadataCache);
 
         listener.onProducerFinishWithSuccess(
             producerContext,
@@ -128,6 +141,24 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
     }
   }
 
+  /**
+   * The encoded memory cache stores raw bytes, so extras carried by the {@link EncodedImage} that
+   * produced them are lost on a hit. The cache key is a normalized URI deliberately shared by many
+   * fetch URLs, so the query has to come from the cached entry and must never be recomputed from
+   * the current request -- that would report a variation the cached bytes were not fetched with.
+   */
+  private void maybeRestoreMetadata(
+      CacheKey cacheKey, EncodedImage encodedImage, ProducerContext producerContext) {
+    if (mMetadataCache == null) {
+      return;
+    }
+    String query = mMetadataCache.get(cacheKey);
+    if (query != null) {
+      encodedImage.putExtra(HasExtraData.KEY_SF_QUERY, query);
+      producerContext.putExtra(HasExtraData.KEY_SF_QUERY, query);
+    }
+  }
+
   private static class EncodedMemoryCacheConsumer
       extends DelegatingConsumer<EncodedImage, EncodedImage> {
 
@@ -135,18 +166,37 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
     private final CacheKey mRequestedCacheKey;
     private final boolean mIsEncodedCacheEnabledForWrite;
     private final boolean mEncodedCacheEnabled;
+    private final @Nullable BoundedLinkedHashMap<CacheKey, String> mMetadataCache;
 
     public EncodedMemoryCacheConsumer(
         Consumer<EncodedImage> consumer,
         MemoryCache<CacheKey, PooledByteBuffer> memoryCache,
         CacheKey requestedCacheKey,
         boolean isEncodedCacheEnabledForWrite,
-        boolean encodedCacheEnabled) {
+        boolean encodedCacheEnabled,
+        @Nullable BoundedLinkedHashMap<CacheKey, String> metadataCache) {
       super(consumer);
       mMemoryCache = memoryCache;
       mRequestedCacheKey = requestedCacheKey;
       mIsEncodedCacheEnabledForWrite = isEncodedCacheEnabledForWrite;
       mEncodedCacheEnabled = encodedCacheEnabled;
+      mMetadataCache = metadataCache;
+    }
+
+    /**
+     * Must run for every cache write, including when the image has no query: leaving a previous
+     * entry in place would attach a stale query to the bytes that just replaced it.
+     */
+    private void saveMetadata(EncodedImage image) {
+      if (mMetadataCache == null) {
+        return;
+      }
+      String query = image.getExtra(HasExtraData.KEY_SF_QUERY);
+      if (query != null) {
+        mMetadataCache.put(mRequestedCacheKey, query);
+      } else {
+        mMetadataCache.remove(mRequestedCacheKey);
+      }
     }
 
     @Override
@@ -172,6 +222,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
           try {
             if (mEncodedCacheEnabled && mIsEncodedCacheEnabledForWrite) {
               cachedResult = mMemoryCache.cache(mRequestedCacheKey, ref);
+              saveMetadata(newResult);
             }
           } finally {
             CloseableReference.closeSafely(ref);

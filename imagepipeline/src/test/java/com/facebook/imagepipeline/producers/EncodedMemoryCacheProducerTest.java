@@ -17,7 +17,9 @@ import com.facebook.cache.common.SimpleCacheKey;
 import com.facebook.common.internal.ImmutableMap;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imageformat.ImageFormat;
+import com.facebook.imagepipeline.cache.BoundedLinkedHashMap;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
 import com.facebook.imagepipeline.common.BytesRange;
@@ -319,6 +321,61 @@ public class EncodedMemoryCacheProducerTest {
         .onProducerFinishWithSuccess(mProducerContext, PRODUCER_NAME, extraMap);
     verify(mProducerListener).onUltimateProducerReached(mProducerContext, PRODUCER_NAME, false);
     verifyNoMoreInteractions(mInputProducer);
+  }
+
+  @Test
+  public void testSmartQueryIsSavedOnWriteAndRestoredOnHit() {
+    BoundedLinkedHashMap<CacheKey, String> metadataCache = new BoundedLinkedHashMap<>(10);
+    EncodedMemoryCacheProducer producer =
+        new EncodedMemoryCacheProducer(
+            mMemoryCache, mCacheKeyFactory, mInputProducer, metadataCache);
+    mFinalEncodedImage.putExtra(HasExtraData.KEY_SF_QUERY, "stp=dst-jpg_s100x100&q=65");
+    setupEncodedMemoryCacheGetNotFound();
+    setupInputProducerStreamingSuccess();
+    producer.produceResults(mConsumer, mProducerContext);
+
+    Assert.assertEquals("stp=dst-jpg_s100x100&q=65", metadataCache.get(mCacheKey));
+
+    setupEncodedMemoryCacheGetSuccess();
+    producer.produceResults(mConsumer, mProducerContext);
+    verify(mProducerContext).putExtra(HasExtraData.KEY_SF_QUERY, "stp=dst-jpg_s100x100&q=65");
+  }
+
+  @Test
+  public void testSmartQueryIsNotSetOnHitWhenNoMetadataWasStored() {
+    EncodedMemoryCacheProducer producer =
+        new EncodedMemoryCacheProducer(
+            mMemoryCache, mCacheKeyFactory, mInputProducer, new BoundedLinkedHashMap<>(10));
+    setupEncodedMemoryCacheGetSuccess();
+    when(mProducerContext.getLowestPermittedRequestLevel())
+        .thenReturn(ImageRequest.RequestLevel.ENCODED_MEMORY_CACHE);
+    producer.produceResults(mConsumer, mProducerContext);
+    verify(mProducerContext, never()).putExtra(eq(HasExtraData.KEY_SF_QUERY), any());
+  }
+
+  @Test
+  public void testStaleSmartQueryIsClearedWhenNewImageHasNone() {
+    BoundedLinkedHashMap<CacheKey, String> metadataCache = new BoundedLinkedHashMap<>(10);
+    metadataCache.put(mCacheKey, "stp=dst-jpg_s100x100&q=65");
+    EncodedMemoryCacheProducer producer =
+        new EncodedMemoryCacheProducer(
+            mMemoryCache, mCacheKeyFactory, mInputProducer, metadataCache);
+    setupEncodedMemoryCacheGetNotFound();
+    setupInputProducerStreamingSuccess();
+    producer.produceResults(mConsumer, mProducerContext);
+    Assert.assertNull(metadataCache.get(mCacheKey));
+  }
+
+  @Test
+  public void testSmartQueryIsNotTrackedWithoutMetadataCache() {
+    mFinalEncodedImage.putExtra(HasExtraData.KEY_SF_QUERY, "stp=dst-jpg_s100x100&q=65");
+    setupEncodedMemoryCacheGetNotFound();
+    setupInputProducerStreamingSuccess();
+    mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
+
+    setupEncodedMemoryCacheGetSuccess();
+    mEncodedMemoryCacheProducer.produceResults(mConsumer, mProducerContext);
+    verify(mProducerContext, never()).putExtra(eq(HasExtraData.KEY_SF_QUERY), any());
   }
 
   private void setupEncodedMemoryCacheGetSuccess() {
