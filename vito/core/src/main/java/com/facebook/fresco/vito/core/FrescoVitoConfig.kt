@@ -145,4 +145,13 @@ interface FrescoVitoConfig {
 
   /** Clears the placeholder layer when the actual image is set with a fade duration of 0. */
   fun fixResetPlaceholderOnZeroFade(): Boolean = false
+
+  /**
+   * Releases a Compose painter's drawable via [FrescoController2.releaseDelayed] instead of
+   * [FrescoController2.releaseImmediately] when the painter is forgotten. The delayed path
+   * completes through `releaseNextFrame`, so it requires both
+   * `ImageReleaseScheduler.enableReleaseDelayed` and `ImageReleaseScheduler.enableReleaseNextFrame`
+   * — with either off the release is dropped and the drawable is never reset.
+   */
+  fun useReleaseDelayedInCompose(): Boolean = false
 }

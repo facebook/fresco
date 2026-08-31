@@ -122,6 +122,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun fixResetPlaceholderOnZeroFade(): Boolean = false
 
+  override fun useReleaseDelayedInCompose(): Boolean = false
+
   open class DefaultPrefetchConfig : PrefetchConfig {
     override fun prefetchInOnPrepare(): Boolean = true
 
