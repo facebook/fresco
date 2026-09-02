@@ -47,6 +47,24 @@ public class CustomProducerSequenceFactory {
   }
 
   /**
+   * Claims an encoded prefetch whose URI is a network URI.
+   *
+   * <p>This hook returns the terminal {@code Void} prefetch contract rather than encoded bytes, so
+   * an application-owned cache can perform the prefetch without also populating Fresco's encoded
+   * caches. It is only consulted when {@code
+   * ImagePipelineExperiments#getAllowCustomNetworkSequences} returns true.
+   *
+   * <p>Returning null means "not mine" and the standard encoded network prefetch sequence is used.
+   */
+  public @Nullable Producer<Void> getCustomNetworkEncodedImagePrefetchSequence(
+      ImageRequest imageRequest,
+      ProducerSequenceFactory producerSequenceFactory,
+      ProducerFactory producerFactory,
+      ThreadHandoffProducerQueue threadHandoffProducerQueue) {
+    return null;
+  }
+
+  /**
    * Claims a request whose URI is a network URI, i.e. one that would otherwise be served by the
    * standard network fetch sequence.
    *

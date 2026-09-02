@@ -148,8 +148,9 @@ class ProducerSequenceFactory(
   /**
    * Returns a sequence that can be used for a prefetch request for an encoded image.
    *
-   * Guaranteed to return the same sequence as `getEncodedImageProducerSequence(request)`, except
-   * that it is pre-pended with a [SwallowResultProducer].
+   * For standard sources this returns the same sequence as
+   * `getEncodedImageProducerSequence(request)`, pre-pended with a [SwallowResultProducer]. A custom
+   * network prefetch producer may instead own the terminal `Void` contract directly.
    *
    * @param imageRequest the request that will be submitted
    * @return the sequence that should be used to process the request
@@ -157,7 +158,9 @@ class ProducerSequenceFactory(
   fun getEncodedImagePrefetchProducerSequence(imageRequest: ImageRequest): Producer<Void?> {
     validateEncodedImageRequest(imageRequest)
     return when (imageRequest.sourceUriType) {
-      SourceUriType.SOURCE_TYPE_NETWORK -> networkFetchToEncodedMemoryPrefetchSequence
+      SourceUriType.SOURCE_TYPE_NETWORK ->
+          getCustomNetworkEncodedPrefetchSequence(imageRequest)
+              ?: networkFetchToEncodedMemoryPrefetchSequence
       SourceUriType.SOURCE_TYPE_LOCAL_VIDEO_FILE,
       SourceUriType.SOURCE_TYPE_LOCAL_IMAGE_FILE -> localFileFetchToEncodedMemoryPrefetchSequence
       else -> {
@@ -288,6 +291,32 @@ class ProducerSequenceFactory(
               threadHandoffProducerQueue,
               isEncodedMemoryCacheProbingEnabled,
               isDiskCacheProbingEnabled,
+          )
+      if (sequence != null) {
+        return sequence
+      }
+    }
+    return null
+  }
+
+  /**
+   * Gives registered factories a prefetch-only network hook. The returned producer owns the
+   * terminal prefetch contract, so it can warm an application cache without returning encoded bytes
+   * for Fresco to cache as well.
+   */
+  private fun getCustomNetworkEncodedPrefetchSequence(
+      imageRequest: ImageRequest,
+  ): Producer<Void?>? {
+    if (customProducerSequenceFactories == null || allowCustomNetworkSequences.get() != true) {
+      return null
+    }
+    for (customProducerSequenceFactory in customProducerSequenceFactories) {
+      val sequence =
+          customProducerSequenceFactory.getCustomNetworkEncodedImagePrefetchSequence(
+              imageRequest,
+              this,
+              producerFactory,
+              threadHandoffProducerQueue,
           )
       if (sequence != null) {
         return sequence

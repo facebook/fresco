@@ -265,6 +265,68 @@ public class ProducerSequenceFactoryTest {
   }
 
   @Test
+  public void testCustomNetworkEncodedPrefetchSequenceCalledWhenAllowed() {
+    Producer<Void> sequence = mock(Producer.class);
+    RecordingCustomNetworkEncodedPrefetchSequenceFactory customFactory =
+        new RecordingCustomNetworkEncodedPrefetchSequenceFactory(sequence);
+    internalUseSequenceFactoryWithCustomSequence(customFactory, Suppliers.of(true));
+    when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
+
+    Producer<Void> producer =
+        mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest);
+
+    assertThat(customFactory.isCalled).isTrue();
+    assertThat(producer).isSameAs(sequence);
+  }
+
+  @Test
+  public void testCustomNetworkEncodedPrefetchSequenceNotCalledWhenNotAllowed() {
+    Producer<Void> sequence = mock(Producer.class);
+    RecordingCustomNetworkEncodedPrefetchSequenceFactory customFactory =
+        new RecordingCustomNetworkEncodedPrefetchSequenceFactory(sequence);
+    internalUseSequenceFactoryWithCustomSequence(customFactory, Suppliers.of(false));
+    when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
+
+    Producer<Void> producer =
+        mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest);
+
+    assertThat(customFactory.isCalled).isFalse();
+    assertThat(producer)
+        .isSameAs(mProducerSequenceFactory.getNetworkFetchToEncodedMemoryPrefetchSequence());
+  }
+
+  @Test
+  public void testCustomNetworkEncodedPrefetchSequenceFallsThroughWhenFactoryDeclines() {
+    RecordingCustomNetworkEncodedPrefetchSequenceFactory customFactory =
+        new RecordingCustomNetworkEncodedPrefetchSequenceFactory(null);
+    internalUseSequenceFactoryWithCustomSequence(customFactory, Suppliers.of(true));
+    when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
+
+    Producer<Void> producer =
+        mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest);
+
+    assertThat(customFactory.isCalled).isTrue();
+    assertThat(producer)
+        .isSameAs(mProducerSequenceFactory.getNetworkFetchToEncodedMemoryPrefetchSequence());
+  }
+
+  @Test
+  public void testCustomNetworkEncodedPrefetchSequenceDoesNotAffectLocalUris() {
+    Producer<Void> sequence = mock(Producer.class);
+    RecordingCustomNetworkEncodedPrefetchSequenceFactory customFactory =
+        new RecordingCustomNetworkEncodedPrefetchSequenceFactory(sequence);
+    internalUseSequenceFactoryWithCustomSequence(customFactory, Suppliers.of(true));
+    when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_IMAGE_FILE);
+
+    Producer<Void> producer =
+        mProducerSequenceFactory.getEncodedImagePrefetchProducerSequence(mImageRequest);
+
+    assertThat(customFactory.isCalled).isFalse();
+    assertThat(producer)
+        .isSameAs(mProducerSequenceFactory.getLocalFileFetchToEncodedMemoryPrefetchSequence());
+  }
+
+  @Test
   public void testLocalImageFileFullFetch() {
     when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_IMAGE_FILE);
     Producer<CloseableReference<CloseableImage>> producer =
@@ -550,6 +612,27 @@ public class ProducerSequenceFactoryTest {
             ThreadHandoffProducerQueue threadHandoffProducerQueue,
             boolean isEncodedMemoryCacheProbingEnabled,
             boolean isDiskCacheProbingEnabled) {
+      this.isCalled = true;
+      return sequence;
+    }
+  }
+
+  private static class RecordingCustomNetworkEncodedPrefetchSequenceFactory
+      extends CustomProducerSequenceFactory {
+
+    boolean isCalled = false;
+    final @Nullable Producer<Void> sequence;
+
+    RecordingCustomNetworkEncodedPrefetchSequenceFactory(@Nullable Producer<Void> sequence) {
+      this.sequence = sequence;
+    }
+
+    @Override
+    public @Nullable Producer<Void> getCustomNetworkEncodedImagePrefetchSequence(
+        ImageRequest imageRequest,
+        ProducerSequenceFactory producerSequenceFactory,
+        ProducerFactory producerFactory,
+        ThreadHandoffProducerQueue threadHandoffProducerQueue) {
       this.isCalled = true;
       return sequence;
     }

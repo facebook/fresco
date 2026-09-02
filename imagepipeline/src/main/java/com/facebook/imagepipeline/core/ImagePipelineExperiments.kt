@@ -319,8 +319,9 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
 
     /**
      * Allows registered [CustomProducerSequenceFactory] instances to claim network (http/https)
-     * requests via [CustomProducerSequenceFactory.getCustomNetworkDecodedImageSequence]. When false
-     * (the default) network dispatch is untouched and that method is never called.
+     * requests via [CustomProducerSequenceFactory.getCustomNetworkDecodedImageSequence] and encoded
+     * prefetches via [CustomProducerSequenceFactory.getCustomNetworkEncodedImagePrefetchSequence].
+     * When false (the default), network dispatch is untouched and neither method is called.
      */
     fun setAllowCustomNetworkSequences(allowCustomNetworkSequences: Supplier<Boolean>) = asBuilder {
       this.allowCustomNetworkSequences = allowCustomNetworkSequences
