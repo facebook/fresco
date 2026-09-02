@@ -74,7 +74,7 @@
   <string name="imagepipeline_bitmap_factory_case_create_basic">Create Basic</string>
   <string name="imagepipeline_bitmap_factory_case_create_cropped">Create Cropped</string>
   <string name="imagepipeline_bitmap_factory_case_create_scaled">Create Scaled</string>
-  <string name="imagepipeline_bitmap_factory_case_create_transformed">Create Transformed</string>
+  <string name="imagepipeline_bitmap_factory_case_create_transformed" description="Dropdown option in the Fresco Showcase PlatformBitmapFactory demo. Selecting it creates a new bitmap from the source image with a geometric transformation (skew and rotation) applied. Here &quot;Transformed&quot; describes the resulting bitmap, i.e. &quot;create a transformed copy of the image&quot;.">Create Transformed</string>
 
   <string name="imagepipeline_region_decoding_help">Select a region for the full image above. The selected region will be rendered below. NOTE: This currently only works for JPEG images that are not resized / downsampled.</string>
 
