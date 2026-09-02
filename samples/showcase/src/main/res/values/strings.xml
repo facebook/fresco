@@ -222,7 +222,7 @@
 
   <string name="vito_view_simple_help">Basic Vito View example that just sets the image URI</string>
   <string name="vito_view_prefetch_title">Prefetch to cache:</string>
-  <string name="vito_view_ktx_help">Vito View Kotlin Extensions examples</string>
+  <string name="vito_view_ktx_help" description="Helper text on a Fresco Showcase demo screen, shown below a sample image. &quot;Vito View&quot; is the name of the Android View-based image loading component of the Fresco image library, and &quot;Kotlin Extensions&quot; means the Kotlin extension functions it provides for loading an image into a View. The screen shows examples of using those extension functions. Keep &quot;Vito View&quot; and &quot;Kotlin Extensions&quot; untranslated: they are API names.">Vito View Kotlin Extensions examples</string>
 
   <string name="preferences_category_vito">Vito</string>
   <string name="preference_vito_use_kotlin">Use Kotlin implementation</string>
