@@ -202,10 +202,10 @@
 
   <string name="transition_name">image_transition</string>
 
-  <string name="format_name_jpeg_landscape">JPEG landscape</string>
-  <string name="format_name_jpeg_portrait">JPEG portrait</string>
-  <string name="format_name_png_landscape">PNG landscape</string>
-  <string name="format_name_png_portrait">PNG portrait</string>
+  <string name="format_name_jpeg_landscape" description="Dropdown option in the Fresco Showcase resizing demo. Selecting it loads a sample JPEG image in landscape orientation. Here &quot;landscape&quot; refers to the image orientation (wider than tall), not to a landscape/scenery photograph.">JPEG landscape</string>
+  <string name="format_name_jpeg_portrait" description="Dropdown option in the Fresco Showcase resizing demo. Selecting it loads a sample JPEG image in portrait orientation. Here &quot;portrait&quot; refers to the image orientation (taller than wide), not to a portrait photograph of a person.">JPEG portrait</string>
+  <string name="format_name_png_landscape" description="Dropdown option in the Fresco Showcase resizing demo. Selecting it loads a sample PNG image in landscape orientation. Here &quot;landscape&quot; refers to the image orientation (wider than tall), not to a landscape/scenery photograph.">PNG landscape</string>
+  <string name="format_name_png_portrait" description="Dropdown option in the Fresco Showcase resizing demo. Selecting it loads a sample PNG image in portrait orientation. Here &quot;portrait&quot; refers to the image orientation (taller than wide), not to a portrait photograph of a person.">PNG portrait</string>
   <string name="format_name_webp">WebP</string>
   <string name="format_name_animated_webp">animated WebP</string>
   <string name="format_name_translucent_webp">translucent WebP</string>
