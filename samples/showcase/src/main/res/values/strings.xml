@@ -104,7 +104,7 @@
   <string name="format_pjpeg_label_slow">Slow progressive JPEG</string>
 
   <string name="format_color_switch">Color XML support enabled</string>
-  <string name="format_color_help">This example adds a custom color XML image format (&lt;color&gt;#rrggbb&lt;/color&gt;), decoder, and Drawable factory. In this example, you have to enable the decoder globally when Fresco is initialized. Toggle the switch and restart the application to enable/disable custom color XML support.</string>
+  <string name="format_color_help" description="Helper text for the custom color XML image format example in the Fresco Showcase app. Keep the following technical terms in English and do not translate them: &quot;Fresco&quot; is the name of the Meta Android image loading library, and &quot;Drawable&quot; is the name of an Android framework class (as in the Fresco DrawableFactory API).">This example adds a custom color XML image format (<xliff:g id="color_xml_snippet" example="&lt;color&gt;#rrggbb&lt;/color&gt;">&lt;color&gt;#rrggbb&lt;/color&gt;</xliff:g>), decoder, and Drawable factory. In this example, you have to enable the decoder globally when Fresco is initialized. Toggle the switch and restart the application to enable/disable custom color XML support.</string>
 
   <string name="format_svg_switch">SVG support enabled</string>
   <string name="format_svg_help">This example adds a custom SVG image format, decoder, and Drawable factory that has to be enabled when Fresco is initialized. Toggle the switch and restart the application to enable/disable SVG support.</string>
