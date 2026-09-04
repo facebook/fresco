@@ -154,4 +154,12 @@ interface FrescoVitoConfig {
    * — with either off the release is dropped and the drawable is never reset.
    */
   fun useReleaseDelayedInCompose(): Boolean = false
+
+  /**
+   * Skips writing the Compose painter's `drawableIntrinsicSize` snapshot state when the drawable's
+   * intrinsic size has not actually changed. For a `KFrescoVitoDrawable` it never changes — nothing
+   * calls `setIntrinsicSize`, so it stays `Size.Unspecified` — which makes every write on
+   * `invalidateDrawable` redundant.
+   */
+  fun skipRedundantIntrinsicSizeWrites(): Boolean = false
 }
