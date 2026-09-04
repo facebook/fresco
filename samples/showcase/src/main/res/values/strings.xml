@@ -1,5 +1,5 @@
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-  <string name="app_name">Fresco Showcase</string>
+  <string name="app_name" description="App title for the Fresco Showcase demo app. Fresco is a product/library name; keep it untranslated. Showcase may be translated.">Fresco Showcase</string>
 
   <string name="navigation_drawer_open">Open navigation drawer</string>
   <string name="navigation_drawer_close">Close navigation drawer</string>
