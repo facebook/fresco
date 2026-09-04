@@ -176,6 +176,7 @@ class VitoImagePipelineImpl(
           )
           .get()
 
+  @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
   override fun isInDiskCacheSync(
       imageRequest: VitoImageRequest,
   ): Boolean {
@@ -183,6 +184,7 @@ class VitoImagePipelineImpl(
     return imagePipeline.isInDiskCacheSync(finalRequest)
   }
 
+  @Suppress("PARAMETER_NAME_CHANGED_ON_OVERRIDE")
   override fun isInDiskCacheSync(
       imageRequest: VitoImageRequest,
       timeout: Long,
