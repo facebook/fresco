@@ -25,8 +25,10 @@ import javax.annotation.concurrent.GuardedBy;
  * Manages jobs so that only one can be executed at a time and no more often than once in <code>
  * mMinimumJobIntervalMs</code> milliseconds.
  *
- * <p>The interval throttles intermediate results only. A job carrying the last result is scheduled
- * immediately, since rate-limiting it cannot save a decode and would only delay the finished image.
+ * <p>When <code>scheduleLastResultImmediately</code> is set, the interval throttles intermediate
+ * results only: a job carrying the last result is scheduled immediately, since rate-limiting it
+ * cannot save a decode and would only delay the finished image. Otherwise the interval applies to
+ * every job.
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class JobScheduler {
@@ -55,6 +57,7 @@ public class JobScheduler {
   private final Runnable mDoJobRunnable;
   private final Runnable mSubmitJobRunnable;
   private final int mMinimumJobIntervalMs;
+  private final boolean mScheduleLastResultImmediately;
 
   @VisibleForTesting
   enum JobState {
@@ -91,9 +94,18 @@ public class JobScheduler {
   long mJobStartTime;
 
   public JobScheduler(Executor executor, JobRunnable jobRunnable, int minimumJobIntervalMs) {
+    this(executor, jobRunnable, minimumJobIntervalMs, true);
+  }
+
+  public JobScheduler(
+      Executor executor,
+      JobRunnable jobRunnable,
+      int minimumJobIntervalMs,
+      boolean scheduleLastResultImmediately) {
     mExecutor = executor;
     mJobRunnable = jobRunnable;
     mMinimumJobIntervalMs = minimumJobIntervalMs;
+    mScheduleLastResultImmediately = scheduleLastResultImmediately;
     mDoJobRunnable =
         new Runnable() {
           @Override
@@ -284,13 +296,14 @@ public class JobScheduler {
    * every scan, which is a cost that buys nothing once the image is complete. The last result is
    * not an intermediate one: delaying it does not save a decode, it only holds back the finished
    * image, by up to the whole interval. {@link #shouldProcess} already treats the last result as
-   * special in deciding *whether* to run; this does the same for *when*.
+   * special in deciding *whether* to run; when {@code scheduleLastResultImmediately} is set, this
+   * does the same for *when*.
    *
    * <p>Callers must hold this object's monitor, as {@code mStatus} and {@code mJobStartTime} are
    * guarded by it.
    */
   private long nextJobTime(long now) {
-    if (BaseConsumer.isLast(mStatus)) {
+    if (mScheduleLastResultImmediately && BaseConsumer.isLast(mStatus)) {
       return now;
     }
     return Math.max(mJobStartTime + mMinimumJobIntervalMs, now);

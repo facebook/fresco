@@ -696,7 +696,13 @@ class DecodeProducer(
           doDecode(encodedImage, status, lastScheduledScanNumber)
         }
       }
-      jobScheduler = JobScheduler(executor, job, imageDecodeOptions.minDecodeIntervalMs)
+      jobScheduler =
+          JobScheduler(
+              executor,
+              job,
+              imageDecodeOptions.minDecodeIntervalMs,
+              producerContext.imagePipelineConfig.experiments.scheduleLastResultImmediately,
+          )
       producerContext.addCallbacks(
           object : BaseProducerContextCallbacks() {
             override fun onIsIntermediateResultExpectedChanged() {

@@ -87,6 +87,14 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val intermediateProgressUpdatesDisabled: Boolean
   val intermediateProgressUpdatesForPrefetchDisabled: Boolean
   val skipNonJpegIntermediateDecodeScheduling: Boolean
+
+  /**
+   * Whether `ImageDecodeOptions.minDecodeIntervalMs` throttles intermediate decodes only, letting a
+   * decode that carries the last result start straight away. Turning this off applies the interval
+   * to every decode, so a finished image can wait out the remainder of an interval started by an
+   * intermediate scan.
+   */
+  val scheduleLastResultImmediately: Boolean
   val streamingDecodeEnabled: Boolean
   val throwCacheMissExceptionOnCacheMiss: Boolean
   val usePostProcessedCacheKey: Boolean
@@ -163,6 +171,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var intermediateProgressUpdatesForPrefetchDisabled = false
 
     @JvmField var skipNonJpegIntermediateDecodeScheduling = false
+
+    // Defaults on: this is the shipped behavior, and the flag exists so it can be turned off for
+    // the control group of an A/B test.
+    @JvmField var scheduleLastResultImmediately = true
 
     // Kill switch for the whole StreamingImageDecoder path in DecodeProducer. Off means partial
     // results are handled exactly as before, whatever decoders are registered.
@@ -411,6 +423,10 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.skipNonJpegIntermediateDecodeScheduling = skipNonJpegIntermediateDecodeScheduling
     }
 
+    fun setScheduleLastResultImmediately(scheduleLastResultImmediately: Boolean) = asBuilder {
+      this.scheduleLastResultImmediately = scheduleLastResultImmediately
+    }
+
     fun setStreamingDecodeEnabled(streamingDecodeEnabled: Boolean) = asBuilder {
       this.streamingDecodeEnabled = streamingDecodeEnabled
     }
@@ -632,6 +648,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     intermediateProgressUpdatesForPrefetchDisabled =
         builder.intermediateProgressUpdatesForPrefetchDisabled
     skipNonJpegIntermediateDecodeScheduling = builder.skipNonJpegIntermediateDecodeScheduling
+    scheduleLastResultImmediately = builder.scheduleLastResultImmediately
     streamingDecodeEnabled = builder.streamingDecodeEnabled
     throwCacheMissExceptionOnCacheMiss = builder.throwCacheMissExceptionOnCacheMiss
     usePostProcessedCacheKey = builder.usePostProcessedCacheKey

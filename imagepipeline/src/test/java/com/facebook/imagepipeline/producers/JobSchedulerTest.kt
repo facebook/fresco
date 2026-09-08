@@ -108,6 +108,12 @@ class JobSchedulerTest {
     jobScheduler = JobScheduler(testExecutorService, testJobRunnable, INTERVAL)
   }
 
+  /**
+   * A scheduler with `scheduleLastResultImmediately` off, i.e. the interval applies to every job.
+   */
+  private fun jobSchedulerWithoutLastResultExemption(): JobScheduler =
+      JobScheduler(testExecutorService, testJobRunnable, INTERVAL, false)
+
   private fun fakeEncodedImage(): EncodedImage {
     val buf = Mockito.mock<PooledByteBuffer>(PooledByteBuffer::class.java)
     val ref = CloseableReference.of<PooledByteBuffer?>(buf)
@@ -405,6 +411,28 @@ class JobSchedulerTest {
     fakeClockForWorker.incrementBy(0)
     fakeClockForScheduled.incrementBy(0)
     assertThat(testJobRunnable.jobs.size).isEqualTo(2)
+  }
+
+  @Test
+  fun testProgressiveThrottle_realDecodeAfterIntermediate_isDelayedByFullInterval_whenGateOff() {
+    jobScheduler = jobSchedulerWithoutLastResultExemption()
+    jobScheduler.updateJob(fakeEncodedImage(), Consumer.NO_FLAGS)
+    jobScheduler.scheduleJob()
+    fakeClockForTime.incrementBy(1234)
+    fakeClockForWorker.incrementBy(1234)
+    fakeClockForScheduled.incrementBy(1234)
+    assertThat(testJobRunnable.jobs.size).isEqualTo(1)
+
+    jobScheduler.updateJob(fakeEncodedImage(), Consumer.IS_LAST)
+    jobScheduler.scheduleJob()
+    fakeClockForTime.incrementBy(0)
+    fakeClockForWorker.incrementBy(0)
+    fakeClockForScheduled.incrementBy(0)
+
+    assertThat(testScheduledExecutorService.pendingCount).isEqualTo(1)
+    assertThat(testScheduledExecutorService.getScheduledQueue().getNextPendingCommandDelay())
+        .isEqualTo(INTERVAL.toLong())
+    assertThat(testJobRunnable.jobs.size).isEqualTo(1)
   }
 
   @Test

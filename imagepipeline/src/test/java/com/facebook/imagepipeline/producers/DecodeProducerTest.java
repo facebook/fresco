@@ -153,6 +153,8 @@ public class DecodeProducerTest {
             });
 
     when(mConfig.getExperiments()).thenReturn(mPipelineExperiments);
+    // The mock would otherwise return false, i.e. the opposite of the production default.
+    when(mPipelineExperiments.getScheduleLastResultImmediately()).thenReturn(true);
 
     mDecodeProducer =
         new DecodeProducer(
