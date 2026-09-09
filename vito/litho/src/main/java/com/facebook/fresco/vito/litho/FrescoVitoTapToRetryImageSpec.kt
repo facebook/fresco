@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.litho
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.view.View
 import android.widget.ImageView
@@ -28,8 +29,8 @@ import com.facebook.litho.ComponentContext
 import com.facebook.litho.EventHandler
 import com.facebook.litho.LongClickEvent
 import com.facebook.litho.StateValue
-import com.facebook.litho.Style
 import com.facebook.litho.TouchEvent
+import com.facebook.litho.annotations.ExcuseMySpec
 import com.facebook.litho.annotations.LayoutSpec
 import com.facebook.litho.annotations.OnCreateInitialState
 import com.facebook.litho.annotations.OnCreateLayout
@@ -38,12 +39,13 @@ import com.facebook.litho.annotations.OnPopulateAccessibilityNode
 import com.facebook.litho.annotations.OnUpdateState
 import com.facebook.litho.annotations.Prop
 import com.facebook.litho.annotations.PropDefault
+import com.facebook.litho.annotations.Reason
 import com.facebook.litho.annotations.ResType
 import com.facebook.litho.annotations.State
-import com.facebook.litho.flexbox.aspectRatio
-import com.facebook.litho.view.onClick
-import com.facebook.litho.widget.PrimitiveImage
+import com.facebook.litho.widget.Image
 
+@SuppressLint("DeprecatedClass", "DeprecatedLayoutSpecApiInKotlin")
+@ExcuseMySpec(reason = Reason.COMPONENT_BUILDER_REQUIRED_AT_CALL_SITE)
 @LayoutSpec
 object FrescoVitoTapToRetryImageSpec {
 
@@ -94,13 +96,13 @@ object FrescoVitoTapToRetryImageSpec {
       val scaledRetryDrawable =
           if (retryImageScaleType == null || retryImage == null) retryImage
           else ScaleTypeDrawable(retryImage, retryImageScaleType)
-      return PrimitiveImage(
-          drawable = scaledRetryDrawable,
-          scaleType = ImageView.ScaleType.FIT_XY,
-          style =
-              Style.onClick { FrescoVitoTapToRetryImage.onRetryClickEvent(c).dispatchEvent(it) }
-                  .aspectRatio(imageAspectRatio),
-      )
+      // Use Image for OSS Litho 0.50.1 compatibility; internally it delegates to PrimitiveImage.
+      return Image.create(c)
+          .drawable(scaledRetryDrawable)
+          .scaleType(ImageView.ScaleType.FIT_XY)
+          .clickHandler(FrescoVitoTapToRetryImage.onRetryClickEvent(c))
+          .aspectRatio(imageAspectRatio)
+          .build()
     }
     val internalListener: ImageListener =
         object : BaseImageListener() {

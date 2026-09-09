@@ -16,7 +16,6 @@ import android.graphics.RectF
 import com.facebook.fresco.vito.renderer.BitmapImageDataModel
 import java.io.Closeable
 import org.assertj.core.api.Assertions.assertThat
-import org.assertj.core.api.Assertions.assertThatCode
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
@@ -75,7 +74,7 @@ class KFrescoVitoDrawableRecycleTest {
     drawable.closeable = null
 
     val canvas = RecordingCanvas()
-    assertThatCode { drawable.draw(canvas) }.doesNotThrowAnyException()
+    drawable.draw(canvas)
     assertThat(canvas.drawCalls).isZero()
   }
 
@@ -96,7 +95,7 @@ class KFrescoVitoDrawableRecycleTest {
     assertThat(drawable.hasImage()).isTrue()
 
     val canvas = RecordingCanvas()
-    assertThatCode { drawable.draw(canvas) }.doesNotThrowAnyException()
+    drawable.draw(canvas)
     assertThat(canvas.drawCalls).isGreaterThan(0)
   }
 
