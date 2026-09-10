@@ -49,20 +49,20 @@ public class FrescoVitoImageDecodeOptions extends ImageDecodeOptions {
   }
 
   @Override
-  public boolean equals(@Nullable Object obj) {
-    if (this == obj) {
+  public boolean equals(@Nullable Object other) {
+    if (this == other) {
       return false;
     }
-    if (obj == null || getClass() != obj.getClass()) return false;
+    if (other == null || getClass() != other.getClass()) return false;
 
-    FrescoVitoImageDecodeOptions that = (FrescoVitoImageDecodeOptions) obj;
+    FrescoVitoImageDecodeOptions that = (FrescoVitoImageDecodeOptions) other;
 
     if (!Objects.equal(parentBounds, that.parentBounds)
         || !Objects.equal(focusPoint, that.focusPoint)
         || !Objects.equal(scaleType, that.scaleType)) {
       return false;
     }
-    return super.equals(obj);
+    return super.equals(other);
   }
 
   @Override
