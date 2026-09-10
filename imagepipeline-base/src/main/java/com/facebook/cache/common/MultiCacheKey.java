@@ -44,12 +44,12 @@ public class MultiCacheKey implements CacheKey {
   }
 
   @Override
-  public boolean equals(@Nullable Object o) {
-    if (o == this) {
+  public boolean equals(@Nullable Object other) {
+    if (other == this) {
       return true;
     }
-    if (o instanceof MultiCacheKey) {
-      final MultiCacheKey otherKey = (MultiCacheKey) o;
+    if (other instanceof MultiCacheKey) {
+      final MultiCacheKey otherKey = (MultiCacheKey) other;
       return mCacheKeys.equals(otherKey.mCacheKeys);
     }
     return false;

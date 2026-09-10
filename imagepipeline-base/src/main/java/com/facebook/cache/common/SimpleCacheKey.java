@@ -38,12 +38,12 @@ public class SimpleCacheKey implements CacheKey {
   }
 
   @Override
-  public boolean equals(@Nullable Object o) {
-    if (o == this) {
+  public boolean equals(@Nullable Object other) {
+    if (other == this) {
       return true;
     }
-    if (o instanceof SimpleCacheKey) {
-      final SimpleCacheKey otherKey = (SimpleCacheKey) o;
+    if (other instanceof SimpleCacheKey) {
+      final SimpleCacheKey otherKey = (SimpleCacheKey) other;
       return mKey.equals(otherKey.mKey);
     }
     return false;
