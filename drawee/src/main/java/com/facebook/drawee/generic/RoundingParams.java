@@ -295,15 +295,15 @@ public class RoundingParams {
   }
 
   @Override
-  public boolean equals(@Nullable Object o) {
-    if (this == o) {
+  public boolean equals(@Nullable Object other) {
+    if (this == other) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (other == null || getClass() != other.getClass()) {
       return false;
     }
 
-    RoundingParams that = (RoundingParams) o;
+    RoundingParams that = (RoundingParams) other;
 
     if (mRoundAsCircle != that.mRoundAsCircle) {
       return false;
