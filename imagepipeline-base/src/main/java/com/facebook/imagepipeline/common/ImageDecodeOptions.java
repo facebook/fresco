@@ -119,11 +119,11 @@ public class ImageDecodeOptions {
   }
 
   @Override
-  public boolean equals(@Nullable Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+  public boolean equals(@Nullable Object other) {
+    if (this == other) return true;
+    if (other == null || getClass() != other.getClass()) return false;
 
-    ImageDecodeOptions that = (ImageDecodeOptions) o;
+    ImageDecodeOptions that = (ImageDecodeOptions) other;
 
     if (minDecodeIntervalMs != that.minDecodeIntervalMs) return false;
     if (maxDimensionPx != that.maxDimensionPx) return false;
