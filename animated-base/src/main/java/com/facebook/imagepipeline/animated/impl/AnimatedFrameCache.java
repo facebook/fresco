@@ -48,12 +48,12 @@ public class AnimatedFrameCache {
     }
 
     @Override
-    public boolean equals(@Nullable Object o) {
-      if (o == this) {
+    public boolean equals(@Nullable Object other) {
+      if (other == this) {
         return true;
       }
-      if (o instanceof FrameKey) {
-        FrameKey that = (FrameKey) o;
+      if (other instanceof FrameKey) {
+        FrameKey that = (FrameKey) other;
         return this.mFrameIndex == that.mFrameIndex
             && this.mImageCacheKey.equals(that.mImageCacheKey);
       }
