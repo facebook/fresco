@@ -23,7 +23,7 @@ public interface CacheKey {
   String toString();
 
   /** This method must be implemented, otherwise the cache keys will be be compared by reference. */
-  boolean equals(@Nullable Object o);
+  boolean equals(@Nullable Object other);
 
   /** This method must be implemented with accordance to the {@link #equals} method. */
   int hashCode();
