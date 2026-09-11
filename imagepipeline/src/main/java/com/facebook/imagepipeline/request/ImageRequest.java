@@ -338,11 +338,11 @@ public class ImageRequest {
   }
 
   @Override
-  public boolean equals(@Nullable Object o) {
-    if (!(o instanceof ImageRequest)) {
+  public boolean equals(@Nullable Object other) {
+    if (!(other instanceof ImageRequest)) {
       return false;
     }
-    ImageRequest request = (ImageRequest) o;
+    ImageRequest request = (ImageRequest) other;
     if (sUseCachedHashcodeInEquals) {
       int a = mHashcode;
       int b = request.mHashcode;
