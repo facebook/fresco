@@ -12,7 +12,7 @@ apply_to_regex: 'libraries/fresco/.*\.(kt|java)$'
 ### Language Preference
 - **New code**: Kotlin preferred
 - **Existing Java files**: OK to continue in Java
-- **Tests**: Kotlin with JUnit 5
+- **Tests**: Kotlin with JUnit 4
 
 ### Commit Messages
 ```
