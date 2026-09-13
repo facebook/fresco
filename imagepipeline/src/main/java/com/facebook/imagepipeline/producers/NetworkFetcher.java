@@ -90,7 +90,8 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
    * Gets whether the intermediate results should be propagated.
    *
    * <p>In <i>addition</i> to the requirements of this method, intermediate results are throttled so
-   * that a maximum of one every 100 ms is propagated. This is to conserve CPU and other resources.
+   * that a maximum of one every 100 ms is propagated, and by any {@link #getPartialResultThrottle}.
+   * This is to conserve CPU and other resources.
    *
    * <p>Not applicable if progressive rendering is disabled or not supported for this image.
    *
@@ -98,6 +99,22 @@ public interface NetworkFetcher<FETCH_STATE extends FetchState> {
    * @return whether the intermediate results should be propagated
    */
   boolean shouldPropagate(FETCH_STATE fetchState);
+
+  /**
+   * Gets how far apart this fetch's intermediate results have to be to be propagated, or null to
+   * space them the way the pipeline otherwise would.
+   *
+   * <p>Asked once per fetch, on the first intermediate result that has already passed {@link
+   * #shouldPropagate}, so an implementation backed by configuration reads it only for a fetch that
+   * could go on to propagate something.
+   *
+   * @param fetchState the fetch-specific state
+   * @return the throttle for this fetch, or null for none
+   */
+  @Nullable
+  default PartialResultThrottle getPartialResultThrottle(FETCH_STATE fetchState) {
+    return null;
+  }
 
   /**
    * Called after the fetch completes.

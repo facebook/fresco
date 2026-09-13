@@ -21,6 +21,21 @@ open class FetchState(val consumer: Consumer<EncodedImage?>, val context: Produc
   var lastIntermediateResultTimeMs: Long = 0
 
   /**
+   * Size this response body had reached when it last propagated a partial result, and 0 before the
+   * first one. Advanced only when a partial result really goes out, so one that a later gate holds
+   * back does not consume a threshold, and reset by [NetworkFetchProducer] for every response body,
+   * because a redirect or a retry starts the byte count over on a fresh stream.
+   */
+  var lastIntermediateResultSizeBytes: Int = 0
+
+  /**
+   * How this fetch's partial results are spaced, asked of the [NetworkFetcher] the first time one
+   * is eligible and null until then. Held for the whole fetch so a fetcher that resolves it from
+   * configuration is asked once rather than on every chunk.
+   */
+  var partialResultThrottle: PartialResultThrottle? = null
+
+  /**
    * EXPERIMENTAL: Allows the fetcher to set extra status flags to be included in calls to
    * [ ][Consumer.onNewResult].
    */
