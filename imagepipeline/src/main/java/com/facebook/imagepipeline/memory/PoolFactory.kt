@@ -178,7 +178,12 @@ open class PoolFactory(private val config: PoolConfig) {
     )
   }
 
-  private fun getMemoryChunkPool(@MemoryChunkType memoryChunkType: Int): MemoryChunkPool? {
+  /**
+   * Returns this factory's lazily initialized pool for [memoryChunkType].
+   *
+   * Optional memory-chunk implementations may be unavailable, in which case this returns `null`.
+   */
+  fun getMemoryChunkPool(@MemoryChunkType memoryChunkType: Int): MemoryChunkPool? {
     return when (memoryChunkType) {
       MemoryChunkType.NATIVE_MEMORY -> nativeMemoryChunkPool
       MemoryChunkType.BUFFER_MEMORY -> bufferMemoryChunkPool
