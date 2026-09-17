@@ -27,6 +27,7 @@ class FrameLoaderStrategy(
     private val downscaleFrameToDrawableDimensions: Boolean,
 ) : BitmapFramePreparationStrategy {
 
+  private val hasReusableCacheKey = source != null
   private val cacheKey = source ?: this.hashCode().toString()
   private val animationWidth: Int = animationInformation.width()
   private val animationHeight: Int = animationInformation.height()
@@ -84,6 +85,9 @@ class FrameLoaderStrategy(
       canvasWidth: Int,
       canvasHeight: Int,
   ): CloseableReference<Bitmap>? {
+    if (canvasWidth <= 0 || canvasHeight <= 0 || animationWidth <= 0 || animationHeight <= 0) {
+      return null
+    }
     val frameSize = calculateFrameSize(canvasWidth, canvasHeight)
     val frame = frameLoader?.getFrame(frameNumber, frameSize.width, frameSize.height)
     frame?.let { AnimationCoordinator.onRenderFrame(dynamicFpsRender, it) }
@@ -98,12 +102,16 @@ class FrameLoaderStrategy(
 
   override fun clearFrames() {
     frameLoader?.let {
-      FrameLoaderFactory.saveUnusedFrame(
-          cacheKey,
-          it,
-          frameLoaderFactory.enableUnusedFrameLoaderCleanupSync,
-          frameLoaderFactory.enableUnusedFrameLoaderCleanupSyncAndClear,
-      )
+      if (hasReusableCacheKey) {
+        FrameLoaderFactory.saveUnusedFrame(
+            cacheKey,
+            it,
+            frameLoaderFactory.enableUnusedFrameLoaderCleanupSync,
+            frameLoaderFactory.enableUnusedFrameLoaderCleanupSyncAndClear,
+        )
+      } else {
+        it.clear()
+      }
     }
     frameLoader = null
     isRunning = false
@@ -114,22 +122,15 @@ class FrameLoaderStrategy(
       return FrameSize(animationWidth, animationHeight)
     }
 
-    var bitmapWidth: Int = animationWidth
-    var bitmapHeight: Int = animationHeight
-
-    // The maximum size for the bitmap is the size of the animation if the canvas is bigger
-    if (canvasWidth < animationWidth || canvasHeight < animationHeight) {
-      val ratioW = animationWidth.toDouble().div(animationHeight)
-      if (canvasHeight > canvasWidth) {
-        bitmapHeight = canvasHeight.coerceAtMost(animationHeight)
-        bitmapWidth = bitmapHeight.times(ratioW).toInt()
-      } else {
-        bitmapWidth = canvasWidth.coerceAtMost(animationWidth)
-        bitmapHeight = bitmapWidth.div(ratioW).toInt()
-      }
-    }
-
-    return FrameSize(bitmapWidth, bitmapHeight)
+    val scale = minOf(
+        1.0,
+        canvasWidth.toDouble().div(animationWidth),
+        canvasHeight.toDouble().div(animationHeight),
+    )
+    return FrameSize(
+        animationWidth.times(scale).toInt().coerceAtLeast(1),
+        animationHeight.times(scale).toInt().coerceAtLeast(1),
+    )
   }
 
   private fun AnimationInformation.fps(): Int =

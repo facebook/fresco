@@ -47,6 +47,7 @@ class BufferFrameLoader(
   private val bufferFramesHash = ConcurrentHashMap<Int, BufferFrame>()
   @Volatile private var thresholdFrame: Int
   @Volatile private var isFetching = false
+  @Volatile private var loadGeneration = 0
 
   private val frameSequence = CircularList(animationInformation.frameCount)
   private var lastRenderedFrameNumber: Int = -1
@@ -67,7 +68,7 @@ class BufferFrameLoader(
     val cachedFrameIndex = compressionFrameMap[frameNumber]
 
     // Return the nearest frame if the frame is not in the buffer OR width or height is 0
-    if (enableBufferFrameLoaderFix && (width == 0 || height == 0)) {
+    if (enableBufferFrameLoaderFix && (width <= 0 || height <= 0)) {
       frameLoaderListener?.onZeroFrameDimensions(
           origin = "BufferFrameLoader.getFrame",
           frameNumber,
@@ -113,7 +114,7 @@ class BufferFrameLoader(
       }
     }
 
-    if (width == 0 || height == 0) {
+    if (width <= 0 || height <= 0) {
       return FrameResult(null, FrameResult.FrameType.MISSING)
     }
 
@@ -161,6 +162,8 @@ class BufferFrameLoader(
 
   /** Release all bitmaps */
   override fun clear() {
+    loadGeneration++
+    isFetching = false
     CloseableReference.closeSafely(singleFrameRef)
     singleFrameRef = null
     bufferFramesHash.values.forEach { it.release() }
@@ -169,8 +172,7 @@ class BufferFrameLoader(
   }
 
   private fun loadNextFrames(width: Int, height: Int) {
-    // Skip frame if width or height is 0 OR if the buffer is already loading
-    if ((enableBufferFrameLoaderFix && (width == 0 || height == 0)) || isFetching) {
+    if (enableBufferFrameLoaderFix && (width <= 0 || height <= 0)) {
       frameLoaderListener?.onZeroFrameDimensions(
           origin = "BufferFrameLoader.loadNextFrames",
           frameNumber = lastRenderedFrameNumber.coerceAtLeast(0),
@@ -180,14 +182,26 @@ class BufferFrameLoader(
 
       return
     }
+    if (isFetching) {
+      return
+    }
 
     isFetching = true
+    val generation = loadGeneration
     AnimationLoaderExecutor.execute {
-      do {
-        val targetFrame = lastRenderedFrameNumber.coerceAtLeast(0)
-        val success = extractDemandedFrame(targetFrame, width, height)
-      } while (!success)
-      isFetching = false
+      try {
+        do {
+          if (generation != loadGeneration) {
+            return@execute
+          }
+          val targetFrame = lastRenderedFrameNumber.coerceAtLeast(0)
+          val success = extractDemandedFrame(targetFrame, width, height, generation)
+        } while (!success)
+      } finally {
+        if (generation == loadGeneration) {
+          isFetching = false
+        }
+      }
     }
   }
 
@@ -196,7 +210,7 @@ class BufferFrameLoader(
       targetFrame: Int,
       width: Int,
       height: Int,
-      count: Int = 0,
+      generation: Int,
   ): Boolean {
     val nextWindow =
         frameSequence.sublist(targetFrame, bufferSize).filter {
@@ -207,6 +221,9 @@ class BufferFrameLoader(
 
     // Load new frames
     nextWindow.forEach { newFrameNumber ->
+      if (generation != loadGeneration) {
+        return true
+      }
       if (bufferFramesHash[newFrameNumber] != null) {
         return@forEach
       }
@@ -230,6 +247,13 @@ class BufferFrameLoader(
       }
       bufferFrame.isUpdatingFrame = true
       bitmapRef.use { obtainFrame(it, newFrameNumber, width, height) }
+      if (generation != loadGeneration) {
+        bufferFrame.isUpdatingFrame = false
+        if (bufferFrame !== cachedFrame) {
+          bufferFrame.release()
+        }
+        return true
+      }
       bufferFramesHash.remove(deprecatedFrameNumber)
       bufferFrame.isUpdatingFrame = false
 
