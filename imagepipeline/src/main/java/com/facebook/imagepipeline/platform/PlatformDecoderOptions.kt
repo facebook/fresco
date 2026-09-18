@@ -13,7 +13,6 @@ class PlatformDecoderOptions(
     val enableDecodeDimensionValidation: Boolean = false,
     val catchNativeDecoderErrors: Boolean = false,
     val errorReporter: DecoderErrorReporter? = null,
-    val useEfficientDecoder: Boolean = false,
     val useBitmapFactoryDecoder: Boolean = false,
     val decodeImmutableBitmaps: Boolean = false,
     // BitmapFactory.Options.inDither was deprecated in API 24 and is ignored by the platform on

@@ -32,13 +32,7 @@ object PlatformDecoderFactory {
       useDecodeBufferHelper: Boolean = false,
       platformDecoderOptions: PlatformDecoderOptions,
   ): PlatformDecoder =
-      if (platformDecoderOptions.useEfficientDecoder) {
-        val rawDecoder = EfficientRawBitmapDecoder(
-            createPool(poolFactory, useDecodeBufferHelper),
-            platformDecoderOptions,
-        )
-        EfficientPlatformDecoder(rawDecoder, platformDecoderOptions)
-      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val pool = createPool(poolFactory, useDecodeBufferHelper)
         val rawDecoder = DefaultRawBitmapDecoder(
             pool,
