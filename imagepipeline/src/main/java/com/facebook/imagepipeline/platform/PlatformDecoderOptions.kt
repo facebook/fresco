@@ -13,7 +13,6 @@ class PlatformDecoderOptions(
     val enableDecodeDimensionValidation: Boolean = false,
     val catchNativeDecoderErrors: Boolean = false,
     val errorReporter: DecoderErrorReporter? = null,
-    val useBitmapFactoryDecoder: Boolean = false,
     val decodeImmutableBitmaps: Boolean = false,
     // BitmapFactory.Options.inDither was deprecated in API 24 and is ignored by the platform on
     // API 24+, so toggling this flag has no effect on devices running Android N or newer. Kept
