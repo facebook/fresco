@@ -162,4 +162,10 @@ interface FrescoVitoConfig {
    * `invalidateDrawable` redundant.
    */
   fun skipRedundantIntrinsicSizeWrites(): Boolean = false
+
+  /**
+   * Enables layout-based prefetch telemetry: captures the origin and duration of the prefetch that
+   * populated the cache, and annotates them onto the image load event.
+   */
+  fun enablePrefetchTelemetry(): Boolean = false
 }

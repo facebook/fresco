@@ -45,6 +45,9 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
   // Pipeline and view extras
   private var _extraData: Extras? = null
 
+  // Prefetch telemetry — written from a pipeline thread, read from the UI thread.
+  @Volatile var prefetchData: PrefetchData? = null
+
   fun reset() {
     requestId = null
     imageRequest = null
@@ -58,6 +61,7 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
     visibilityState = VisibilityState.UNKNOWN
     dimensionsInfo = null
     _extraData = null
+    prefetchData = null
     resetPointsTimestamps()
 
     resetLoggingState()
@@ -194,6 +198,7 @@ class ImagePerfState(infra: ImageRenderingInfra) : ImagePerfLoggingState(infra) 
       errorCodeOnFailure,
       densityDpiOnSuccess,
       fallbackImageSetTimeMs,
+      prefetchData,
   )
 
   fun setExtraData(extraData: Extras?) {

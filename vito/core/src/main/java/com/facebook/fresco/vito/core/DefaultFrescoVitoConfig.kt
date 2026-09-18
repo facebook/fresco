@@ -126,6 +126,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun skipRedundantIntrinsicSizeWrites(): Boolean = false
 
+  override fun enablePrefetchTelemetry(): Boolean = false
+
   open class DefaultPrefetchConfig : PrefetchConfig {
     override fun prefetchInOnPrepare(): Boolean = true
 

@@ -45,6 +45,8 @@ interface HasExtraData {
 
     const val KEY_ORIGIN = "origin"
     const val KEY_ORIGIN_SUBCATEGORY = "origin_sub"
+    const val ORIGIN_CANCELLED = "cancelled"
+    const val ORIGIN_FAILED = "failed"
 
     /* number of deduped request in BitmapMemoryCacheKeyMultiplexProducer */
     const val KEY_MULTIPLEX_BITMAP_COUNT = "multiplex_bmp_cnt"
