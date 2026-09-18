@@ -131,13 +131,11 @@ object SampleInfraFactory {
   fun createMemoryCache(
       context: Context,
       useFrescoCache: Boolean,
-      useIgCacheInFresco: Boolean,
   ): InMemoryBitmapCacheIntf {
     val cache =
         IgBitmapMemoryCacheFactory()
             .create(
                 useFrescoCache,
-                useIgCacheInFresco,
                 context,
                 CacheType.JavaBitmap,
                 Configuration.DEFAULT_CONFIG,
@@ -147,7 +145,7 @@ object SampleInfraFactory {
             )
     Log.d(
         TAG,
-        "MemoryCache created: useFrescoCache=$useFrescoCache useIgCacheInFresco=$useIgCacheInFresco type=${cache.javaClass.simpleName}",
+        "MemoryCache created: useFrescoCache=$useFrescoCache type=${cache.javaClass.simpleName}",
     )
     return cache
   }
