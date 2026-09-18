@@ -147,6 +147,11 @@ interface FrescoVitoConfig {
   fun fixResetPlaceholderOnZeroFade(): Boolean = false
 
   /**
+   * Starts a Compose painter's fetch when the painter is created instead of when it is remembered.
+   */
+  fun fetchInVitoPainterInit(): Boolean = false
+
+  /**
    * Releases a Compose painter's drawable via [FrescoController2.releaseDelayed] instead of
    * [FrescoController2.releaseImmediately] when the painter is forgotten. The delayed path
    * completes through `releaseNextFrame`, so it requires both
