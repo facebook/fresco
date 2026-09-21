@@ -88,6 +88,32 @@ The following APIs are NOT available until 4.x:
 - **D99865098**: Migrated to `org.mockito.kotlin.verifyNoInteractions`
   which does not exist in 3.1.0
 
+## 5. AssertJ Is Pinned at 2.9.1
+
+`TestDeps.assertjCore` pins `org.assertj:assertj-core:2.9.1`; later AssertJ APIs
+are unavailable in OSS. Instead of
+`assertThatCode { ... }.doesNotThrowAnyException()`, call the code directly and
+assert the observable effect.
+
+### Evidence
+
+- **D119223405**: removed `assertThatCode` from `KFrescoVitoDrawableRecycleTest`
+
+## 6. Kotlin-Converted Sources Need a Kotlin Plugin
+
+Converting a file to Kotlin (or landing a codemod that does) also requires the
+module's `build.gradle` to compile Kotlin, otherwise Java callers in the OSS
+build fail with unresolved references:
+
+- Android modules: `apply plugin: 'kotlin-android'`
+- JVM modules (e.g. `mockito-config`): `apply plugin: 'kotlin'`
+- Both: `kotlin { jvmToolchain(11) }`, replacing any `java { toolchain { ... } }` block
+
+### Evidence
+
+- **D119215805**, **D119223405**: Kotlin conversions of `NativeJpegTranscoderSoLoader`
+  and the Ashmem memory classes broke the Gradle build until the plugin was added
+
 ## Do NOT Flag
 
 - `import com.meta.*` in FB-internal code (`java/com/facebook/fresco/`, `java/com/meta/images/`)
