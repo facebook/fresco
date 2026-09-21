@@ -59,7 +59,7 @@ class ImagePipelineConfigTest {
   }
 
   @Test
-  fun testImageRequestWhenChangedAndOverriden() {
+  fun testImageRequestWhenChangedAndOverridden() {
     resetDefaultRequestConfig()
     val imageRequest =
         ImageRequestBuilder.newBuilderWithSource(uri).setProgressiveRenderingEnabled(true).build()
