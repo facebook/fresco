@@ -52,12 +52,11 @@ interface DimensionExtractor {
 }
 
 /**
- * Wraps a raw encoded cache key string in an app-specific [CacheKey] subclass that carries
- * additional metadata for downstream consumers (e.g. debugging tools, disk cache eviction).
+ * Produces an app-specific [CacheKey] from an encoded cache key string.
  *
- * The key string itself (used for cache lookup equality) is already finalized by
- * [UnifiedCacheKeyFactory] before this is called. The enricher only attaches metadata — it must not
- * change the key string, or cache lookups will break.
+ * Implementations may transform the key string and attach metadata for downstream consumers (e.g.
+ * debugging tools or disk cache eviction). Any transformation must be deterministic because the
+ * returned [CacheKey] defines cache lookup equality.
  */
 interface EncodedCacheKeyEnricher {
   fun enrich(keyString: String, callerContext: Any?, sourceUri: Uri): CacheKey
