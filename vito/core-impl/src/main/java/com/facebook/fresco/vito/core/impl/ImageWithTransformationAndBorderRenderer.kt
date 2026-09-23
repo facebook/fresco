@@ -7,6 +7,7 @@
 
 package com.facebook.fresco.vito.core.impl
 
+import android.graphics.Canvas
 import android.graphics.Matrix
 import android.graphics.Paint
 import android.graphics.Rect
@@ -15,7 +16,6 @@ import com.facebook.fresco.vito.options.BorderOptions
 import com.facebook.fresco.vito.options.RoundingOptions
 import com.facebook.fresco.vito.renderer.ImageDataModel
 import com.facebook.fresco.vito.renderer.ImageRenderer
-import com.facebook.fresco.vito.renderer.RenderCommand
 import com.facebook.fresco.vito.renderer.Shape
 
 class ImageWithTransformationAndBorderRenderer {
@@ -28,7 +28,7 @@ class ImageWithTransformationAndBorderRenderer {
         bounds: Rect,
         paint: Paint,
         alpha: Int = 255,
-    ): RenderCommand {
+    ): (Canvas) -> Unit {
       val borderPadding: Float = borderOptions?.padding ?: 0f
       val borderWidth: Float = borderOptions?.width ?: 0f
       val hasBorders: Boolean = borderWidth > 0f

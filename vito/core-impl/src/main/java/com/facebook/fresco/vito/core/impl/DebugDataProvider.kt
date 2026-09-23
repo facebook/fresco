@@ -30,7 +30,7 @@ import com.facebook.imageutils.BitmapUtil
 // ============================================================================
 
 /** Provides the current progressive JPEG scan number from CloseableImage extras. */
-val scanNumberProvider = StringDebugDataProvider(
+val scanNumberProvider: StringDebugDataProvider = StringDebugDataProvider(
     "S",
     "Scan Number",
     "The current progressive JPEG scan number",
@@ -46,7 +46,7 @@ val scanNumberProvider = StringDebugDataProvider(
 }
 
 /** Provides image dimensions for KFrescoVitoDrawable. */
-val imageDimensionsProvider =
+val imageDimensionsProvider: StringDebugDataProvider =
     StringDebugDataProvider("I", "Image dimensions", "The dimensions of the decoded image") {
         drawable,
         _ ->
@@ -86,7 +86,7 @@ private fun getOriginExtrasFromDrawable(
 }
 
 /** Provides image origin with color for KFrescoVitoDrawable. */
-val imageOriginProvider =
+val imageOriginProvider: StringAndColorDebugDataProvider =
     StringAndColorDebugDataProvider("o", "Origin", "The source of the image") { drawable, _ ->
       if (drawable is KFrescoVitoDrawable) {
         val origin = drawable.extractOriginExtras()?.get("origin")?.toString() ?: "unknown"
@@ -99,7 +99,8 @@ val imageOriginProvider =
     }
 
 /** Provides image origin subcategory with color for KFrescoVitoDrawable. */
-val imageOriginSubcategoryProvider = StringAndColorDebugDataProvider(
+val imageOriginSubcategoryProvider:
+    StringAndColorDebugDataProvider = StringAndColorDebugDataProvider(
     "o_s",
     "Origin Subcategory",
     "The subcategory of source of the image",
@@ -115,7 +116,7 @@ val imageOriginSubcategoryProvider = StringAndColorDebugDataProvider(
   }
 }
 /** Provides image dimensions with extras support for KFrescoVitoDrawable. */
-val imageDimensionsWithExtrasProvider = StringDebugDataProvider(
+val imageDimensionsWithExtrasProvider: StringDebugDataProvider = StringDebugDataProvider(
     "I",
     "Image dimensions",
     "The dimensions of the decoded image",
@@ -131,7 +132,7 @@ val imageDimensionsWithExtrasProvider = StringDebugDataProvider(
 }
 
 /** Provides image origin with extras support for KFrescoVitoDrawable. */
-val kFrescoImageOriginWithExtrasProvider =
+val kFrescoImageOriginWithExtrasProvider: StringAndColorDebugDataProvider =
     StringAndColorDebugDataProvider("o", "Origin", "The source of the image") { drawable, extras ->
       val originExtras = getOriginExtrasFromDrawable(drawable, extras)
       val origin = originExtras?.get("origin")?.toString() ?: "unknown"

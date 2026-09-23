@@ -10,7 +10,4 @@ package com.facebook.fresco.vito.core.impl
 import com.facebook.common.closeables.AutoCleanupDelegate
 import com.facebook.datasource.DataSource
 
-class DataSourceCleanupDelegate :
-    AutoCleanupDelegate<DataSource<out Any>>(null, dataSourceCleanupFunction)
-
-private val dataSourceCleanupFunction: (DataSource<out Any>) -> Unit = { it.close() }
+class DataSourceCleanupDelegate : AutoCleanupDelegate<DataSource<out Any>>(null, { it.close() })
