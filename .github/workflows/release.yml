@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6
+      with:
+        ref: ${{ inputs.tag || github.ref }}
     - name: Install JDK
       uses: actions/setup-java@v5
       with:
@@ -23,8 +25,6 @@ jobs:
           11
           17
         cache: gradle
-    - name: Setup Android SDK
-      uses: android-actions/setup-android@v3
     - name: Install NDK
       id: setup-ndk
       uses: nttld/setup-ndk@v1
@@ -44,4 +44,4 @@ jobs:
         ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
     - name: Clean secrets
       if: always()
-      run: rm /tmp/secring.gpg
+      run: rm -f /tmp/secring.gpg
