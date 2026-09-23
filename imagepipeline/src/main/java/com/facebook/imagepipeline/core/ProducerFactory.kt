@@ -217,8 +217,14 @@ open class ProducerFactory(
 
   fun newBitmapMemoryCacheKeyMultiplexProducer(
       inputProducer: Producer<CloseableReference<CloseableImage>>,
+  ): BitmapMemoryCacheKeyMultiplexProducer =
+      newBitmapMemoryCacheKeyMultiplexProducer(inputProducer, mCacheKeyFactory)
+
+  fun newBitmapMemoryCacheKeyMultiplexProducer(
+      inputProducer: Producer<CloseableReference<CloseableImage>>,
+      cacheKeyFactory: CacheKeyFactory,
   ): BitmapMemoryCacheKeyMultiplexProducer {
-    return BitmapMemoryCacheKeyMultiplexProducer(mCacheKeyFactory, inputProducer, mConfig)
+    return BitmapMemoryCacheKeyMultiplexProducer(cacheKeyFactory, inputProducer, mConfig)
   }
 
   fun newBitmapMemoryCacheProducer(
