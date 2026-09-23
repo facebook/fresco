@@ -44,6 +44,7 @@ import com.instagram.common.cache.image.networklayer.IgFoAImageTransportRequestF
 import com.instagram.common.cache.image.networklayer.NetworkImageLoaderFactoryImpl
 import com.instagram.common.cache.image.utils.IgImageInfraConstants
 import com.instagram.common.context.AppContext
+import com.instagram.common.io.IgByteArrayPool
 import com.instagram.common.session.Session
 import com.instagram.common.session.UserSession
 import com.instagram.common.storage.cask.IgCask
@@ -185,10 +186,15 @@ object SampleInfraFactory {
       memoryCache: InMemoryBitmapCacheIntf,
       diskCacheFactory: DiskCacheFactory,
   ): IgImageInfraKotlin {
-    val infra =
-        IgImageInfraBuilder(session, NetworkImageLoaderFactoryImpl, memoryCache, diskCacheFactory)
-            .setContext(context)
-            .build()
+    val infra = IgImageInfraBuilder(
+        session,
+        NetworkImageLoaderFactoryImpl,
+        memoryCache,
+        diskCacheFactory,
+        IgByteArrayPool(),
+    )
+        .setContext(context)
+        .build()
     IgImageInfraKotlin.setInstance(infra)
     Log.d(TAG, "Real IgImageInfraKotlin built via IgImageInfraBuilder")
     return infra
