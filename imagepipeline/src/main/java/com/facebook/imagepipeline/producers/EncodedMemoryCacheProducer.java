@@ -16,6 +16,7 @@ import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.cache.BoundedLinkedHashMap;
 import com.facebook.imagepipeline.cache.CacheKeyFactory;
 import com.facebook.imagepipeline.cache.MemoryCache;
+import com.facebook.imagepipeline.cache.UnifiedEncodedMemoryCache;
 import com.facebook.imagepipeline.image.EncodedImage;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.systrace.FrescoSystrace;
@@ -30,7 +31,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
 
   public static final String EXTRA_CACHED_VALUE_FOUND = ProducerConstants.EXTRA_CACHED_VALUE_FOUND;
 
-  private final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
+  private final UnifiedEncodedMemoryCache<PooledByteBuffer> mUnifiedEncodedMemoryCache;
   private final CacheKeyFactory mCacheKeyFactory;
   private final Producer<EncodedImage> mInputProducer;
   private final @Nullable BoundedLinkedHashMap<CacheKey, String> mMetadataCache;
@@ -47,7 +48,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
       CacheKeyFactory cacheKeyFactory,
       Producer<EncodedImage> inputProducer,
       @Nullable BoundedLinkedHashMap<CacheKey, String> metadataCache) {
-    mMemoryCache = memoryCache;
+    mUnifiedEncodedMemoryCache = new UnifiedEncodedMemoryCache<>(memoryCache);
     mCacheKeyFactory = cacheKeyFactory;
     mInputProducer = inputProducer;
     mMetadataCache = metadataCache;
@@ -70,7 +71,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
               .getImageRequest()
               .isCacheEnabled(ImageRequest.CachesLocationsMasks.ENCODED_READ);
       CloseableReference<PooledByteBuffer> cachedReference =
-          isEncodedCacheEnabledForRead ? mMemoryCache.get(cacheKey) : null;
+          isEncodedCacheEnabledForRead ? mUnifiedEncodedMemoryCache.get(cacheKey) : null;
       try {
         EncodedImage cachedEncodedImage =
             cachedReference == null ? null : new EncodedImage(cachedReference);
@@ -116,7 +117,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
         Consumer<EncodedImage> consumerOfInputProducer =
             new EncodedMemoryCacheConsumer(
                 consumer,
-                mMemoryCache,
+                mUnifiedEncodedMemoryCache,
                 cacheKey,
                 producerContext
                     .getImageRequest()
@@ -162,7 +163,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
   private static class EncodedMemoryCacheConsumer
       extends DelegatingConsumer<EncodedImage, EncodedImage> {
 
-    private final MemoryCache<CacheKey, PooledByteBuffer> mMemoryCache;
+    private final UnifiedEncodedMemoryCache<PooledByteBuffer> mUnifiedEncodedMemoryCache;
     private final CacheKey mRequestedCacheKey;
     private final boolean mIsEncodedCacheEnabledForWrite;
     private final boolean mEncodedCacheEnabled;
@@ -170,13 +171,13 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
 
     public EncodedMemoryCacheConsumer(
         Consumer<EncodedImage> consumer,
-        MemoryCache<CacheKey, PooledByteBuffer> memoryCache,
+        UnifiedEncodedMemoryCache<PooledByteBuffer> unifiedEncodedMemoryCache,
         CacheKey requestedCacheKey,
         boolean isEncodedCacheEnabledForWrite,
         boolean encodedCacheEnabled,
         @Nullable BoundedLinkedHashMap<CacheKey, String> metadataCache) {
       super(consumer);
-      mMemoryCache = memoryCache;
+      mUnifiedEncodedMemoryCache = unifiedEncodedMemoryCache;
       mRequestedCacheKey = requestedCacheKey;
       mIsEncodedCacheEnabledForWrite = isEncodedCacheEnabledForWrite;
       mEncodedCacheEnabled = encodedCacheEnabled;
@@ -221,7 +222,7 @@ public class EncodedMemoryCacheProducer implements Producer<EncodedImage> {
           CloseableReference<PooledByteBuffer> cachedResult = null;
           try {
             if (mEncodedCacheEnabled && mIsEncodedCacheEnabledForWrite) {
-              cachedResult = mMemoryCache.cache(mRequestedCacheKey, ref);
+              cachedResult = mUnifiedEncodedMemoryCache.put(mRequestedCacheKey, ref);
               saveMetadata(newResult);
             }
           } finally {

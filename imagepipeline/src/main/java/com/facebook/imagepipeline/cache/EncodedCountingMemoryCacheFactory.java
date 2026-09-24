@@ -20,7 +20,6 @@ public class EncodedCountingMemoryCacheFactory {
       Supplier<MemoryCacheParams> encodedMemoryCacheParamsSupplier,
       MemoryTrimmableRegistry memoryTrimmableRegistry,
       MemoryCache.CacheTrimStrategy cacheTrimStrategy) {
-
     ValueDescriptor<PooledByteBuffer> valueDescriptor =
         new ValueDescriptor<PooledByteBuffer>() {
           @Override
@@ -29,7 +28,19 @@ public class EncodedCountingMemoryCacheFactory {
           }
         };
 
-    CountingMemoryCache<CacheKey, PooledByteBuffer> countingCache =
+    return get(
+        encodedMemoryCacheParamsSupplier,
+        memoryTrimmableRegistry,
+        cacheTrimStrategy,
+        valueDescriptor);
+  }
+
+  public static <V> CountingMemoryCache<CacheKey, V> get(
+      Supplier<MemoryCacheParams> encodedMemoryCacheParamsSupplier,
+      MemoryTrimmableRegistry memoryTrimmableRegistry,
+      MemoryCache.CacheTrimStrategy cacheTrimStrategy,
+      ValueDescriptor<V> valueDescriptor) {
+    CountingMemoryCache<CacheKey, V> countingCache =
         new LruCountingMemoryCache<>(
             valueDescriptor,
             cacheTrimStrategy,
