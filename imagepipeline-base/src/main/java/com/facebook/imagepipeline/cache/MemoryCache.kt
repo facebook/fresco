@@ -111,3 +111,8 @@ interface MemoryCache<K, V> : MemoryTrimmable, HasDebugData {
   /** Gets the total size in bytes of all currently cached items. */
   val sizeInBytes: Int
 }
+
+/** Optional capability for memory caches that support direct key removal. */
+interface MemoryCacheWithExactKeyRemoval<K> {
+  fun remove(key: K): Int
+}

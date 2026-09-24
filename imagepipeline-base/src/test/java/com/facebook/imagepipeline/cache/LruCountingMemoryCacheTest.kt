@@ -562,6 +562,28 @@ class LruCountingMemoryCacheTest {
   }
 
   @Test
+  fun testRemoveExactKey() {
+    val originalRef1 = newReference(110)
+    val valueRef1 = cache.cache(KEYS[1], originalRef1)
+    originalRef1.close()
+    val originalRef2 = newReference(120)
+    val valueRef2 = cache.cache(KEYS[2], originalRef2)
+    originalRef2.close()
+    valueRef2?.close()
+
+    val removedEntries = cache.remove(KEYS[1])
+
+    assertThat(removedEntries).isEqualTo(1)
+    assertNotCached(KEYS[1], 110)
+    assertExclusivelyOwned(KEYS[2], 120)
+    assertTotalSize(1, 120)
+    verify(releaser, never()).release(110)
+
+    valueRef1?.close()
+    verify(releaser).release(110)
+  }
+
+  @Test
   fun testClear() {
     val originalRef1 = newReference(110)
     val cachedRef1 = cache.cache(KEYS[1], originalRef1)

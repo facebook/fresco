@@ -41,7 +41,10 @@ import javax.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 @Nullsafe(Nullsafe.Mode.LOCAL)
 public class LruCountingMemoryCache<K, V>
-    implements CountingMemoryCache<K, V>, MemoryCache<K, V>, HasDebugData {
+    implements CountingMemoryCache<K, V>,
+        MemoryCache<K, V>,
+        MemoryCacheWithExactKeyRemoval<K>,
+        HasDebugData {
 
   private final @Nullable EntryStateObserver<K> mEntryStateObserver;
 
@@ -318,6 +321,27 @@ public class LruCountingMemoryCache<K, V>
     maybeUpdateCacheParams();
     maybeEvictEntries();
     return oldEntries.size();
+  }
+
+  @Override
+  public int remove(K key) {
+    Preconditions.checkNotNull(key);
+    Entry<K, V> oldExclusive;
+    Entry<K, V> oldEntry;
+    CloseableReference<V> oldRefToClose = null;
+    synchronized (this) {
+      oldExclusive = mExclusiveEntries.remove(key);
+      oldEntry = mCachedEntries.remove(key);
+      if (oldEntry != null) {
+        makeOrphan(oldEntry);
+        oldRefToClose = referenceToClose(oldEntry);
+      }
+    }
+    CloseableReference.closeSafely(oldRefToClose);
+    maybeNotifyExclusiveEntryRemoval(oldExclusive);
+    maybeUpdateCacheParams();
+    maybeEvictEntries();
+    return oldEntry == null ? 0 : 1;
   }
 
   /** Removes all the items from the cache. */
