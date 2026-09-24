@@ -10,7 +10,6 @@ import com.facebook.fresco.buildsrc.GradleDeps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
 
 kotlin {
     jvmToolchain(11)

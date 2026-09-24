@@ -10,9 +10,10 @@ package com.facebook.fresco.buildsrc
 object GradleDeps {
 
   object Android {
-    private const val version = "8.10.1"
+    private const val version = "9.2.1"
 
     const val gradlePlugin = "com.android.tools.build:gradle:$version"
+    const val legacyKaptPlugin = "com.android.tools.build:gradle-kotlin:$version"
   }
 
   object Kotlin {
@@ -22,7 +23,7 @@ object GradleDeps {
   }
 
   object Native {
-    const val version = "27.1.12297006"
+    const val version = "28.2.13676358"
   }
 
   object Publishing {

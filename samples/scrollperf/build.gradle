@@ -12,7 +12,6 @@ import com.facebook.fresco.buildsrc.SampleDeps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 
 kotlin {
     jvmToolchain(11)
@@ -64,6 +63,7 @@ dependencies {
     compileOnly Deps.javaxAnnotation
     compileOnly Deps.inferAnnotation
     implementation SampleDeps.AndroidX.appcompat
+    implementation SampleDeps.AndroidX.vectordrawableAnimated
     implementation SampleDeps.AndroidX.recyclerview
     implementation SampleDeps.AndroidX.preference
     implementation project(':fbcore')

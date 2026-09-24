@@ -12,10 +12,12 @@ object SampleDeps {
   object AndroidX {
     const val appcompat = "androidx.appcompat:appcompat:1.0.2"
     const val cardview = "androidx.cardview:cardview:1.0.0"
+    const val fragment = "androidx.fragment:fragment:1.3.5"
     const val multidex = "androidx.multidex:multidex:2.0.1"
     const val preference = "androidx.preference:preference:1.0.0"
-    const val recyclerview = "androidx.recyclerview:recyclerview:1.0.0"
+    const val recyclerview = "androidx.recyclerview:recyclerview:1.2.1"
     const val activityKtx = "androidx.activity:activity-ktx:1.7.2"
+    const val vectordrawableAnimated = "androidx.vectordrawable:vectordrawable-animated:1.1.0"
   }
 
   object Google {

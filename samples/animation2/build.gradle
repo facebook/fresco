@@ -10,7 +10,6 @@ import com.facebook.fresco.buildsrc.GradleDeps
 import com.facebook.fresco.buildsrc.SampleDeps
 
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
 
 kotlin {
     jvmToolchain(11)
@@ -21,6 +20,7 @@ dependencies {
     compileOnly Deps.javaxAnnotation
 
     implementation SampleDeps.AndroidX.appcompat
+    implementation SampleDeps.AndroidX.vectordrawableAnimated
 
     implementation project(':animated-base')
     implementation project(':drawee-backends:drawee-pipeline')
