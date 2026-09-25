@@ -20,7 +20,18 @@ interface FrescoController2 {
 
   fun <T> createDrawable(uiFramework: String?): T where T : Drawable, T : FrescoDrawableInterface
 
-  /** @return true if the image was set immediately, false if it was queued for later */
+  /**
+   * Fetches [imageRequest] into [drawable].
+   *
+   * @param contextChain consumed by wrapping controllers; the bundled implementations use
+   *   [callerContext] only.
+   * @param onFadeListener notified when the actual image fades in or is shown immediately.
+   *   Implementations must forward it to the drawable and clear it on reset/close.
+   * @return true if the image was set immediately, false if it was queued for later. Returning
+   *   false for an unsupported drawable type is allowed; callers must branch on it. Failure to
+   *   decode into a drawable (unmapped image type) is reported through the image listeners, never
+   *   by throwing.
+   */
   fun fetch(
       drawable: FrescoDrawableInterface,
       imageRequest: VitoImageRequest,
