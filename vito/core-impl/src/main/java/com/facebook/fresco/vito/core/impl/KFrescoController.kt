@@ -72,6 +72,9 @@ class KFrescoController(
               ?: when (closeableImage) {
                 is CloseableBitmap -> {
                   val bitmap = closeableImage.underlyingBitmap
+                  if (bitmap == null) {
+                    FLog.w(TAG, "underlyingBitmap is null, image may be closed")
+                  }
                   if (bitmap != null) {
                     if (config.enablePrepareToDrawOnFetch()) {
                       bitmap.prepareToDraw()
