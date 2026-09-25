@@ -11,8 +11,7 @@ import com.facebook.fresco.buildsrc.SampleDeps
 import com.facebook.fresco.buildsrc.TestDeps
 
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'com.android.legacy-kapt'
 
 kotlin {
     jvmToolchain(11)
@@ -101,6 +100,7 @@ dependencies {
 
     implementation SampleDeps.AndroidX.activityKtx
     implementation SampleDeps.AndroidX.appcompat
+    implementation SampleDeps.AndroidX.fragment
     implementation SampleDeps.AndroidX.preference
     implementation SampleDeps.AndroidX.recyclerview
     implementation SampleDeps.AndroidX.cardview

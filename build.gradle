@@ -19,6 +19,7 @@ buildscript {
     }
     dependencies {
         classpath GradleDeps.Android.gradlePlugin
+        classpath GradleDeps.Android.legacyKaptPlugin
         classpath GradleDeps.Kotlin.gradlePlugin
 
         // NOTE: Do not place your application dependencies here; they belong
