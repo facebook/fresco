@@ -5,18 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-package com.facebook.common.webp;
+package com.facebook.common.webp
 
-import android.graphics.Bitmap;
-import com.facebook.infer.annotation.Nullsafe;
+import android.graphics.Bitmap
 
 /**
  * This is a utility class we use in order to allocate a Bitmap that will be wrapped later with a
  * CloseableReference
  */
-@Nullsafe(Nullsafe.Mode.LOCAL)
-public interface BitmapCreator {
-
+fun interface BitmapCreator {
   /**
    * This creates a Bitmap with will be then wrapped with a CloseableReference
    *
@@ -25,5 +22,5 @@ public interface BitmapCreator {
    * @param bitmapConfig The Config object to use
    * @return The Bitmap
    */
-  Bitmap createNakedBitmap(int width, int height, Bitmap.Config bitmapConfig);
+  fun createNakedBitmap(width: Int, height: Int, bitmapConfig: Bitmap.Config): Bitmap?
 }
