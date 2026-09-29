@@ -25,7 +25,6 @@ import com.facebook.imagepipeline.testing.TrivialBufferPooledByteBuffer
 import com.facebook.imagepipeline.testing.TrivialPooledByteBuffer
 import java.io.ByteArrayOutputStream
 import java.io.IOException
-import java.nio.ByteBuffer
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.After
@@ -102,7 +101,7 @@ class GifImageDecoderTest {
     val byteBuffer: TrivialBufferPooledByteBuffer = createDirectByteBuffer()
     whenever(
         GifImage.createFromByteBuffer(
-            ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.byteBuffer),
+            ArgumentMatchers.eq(checkNotNull(byteBuffer.byteBuffer)),
             ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
         ),
     )
@@ -145,7 +144,7 @@ class GifImageDecoderTest {
     val byteBuffer: TrivialBufferPooledByteBuffer = createDirectByteBuffer()
     whenever(
         GifImage.createFromByteBuffer(
-            ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.byteBuffer),
+            ArgumentMatchers.eq(checkNotNull(byteBuffer.byteBuffer)),
             ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
         ),
     )
@@ -196,7 +195,7 @@ class GifImageDecoderTest {
     val byteBuffer: TrivialBufferPooledByteBuffer = createDirectByteBuffer()
     whenever(
         GifImage.createFromByteBuffer(
-            ArgumentMatchers.eq<ByteBuffer?>(byteBuffer.byteBuffer),
+            ArgumentMatchers.eq(checkNotNull(byteBuffer.byteBuffer)),
             ArgumentMatchers.any<ImageDecodeOptions?>(ImageDecodeOptions::class.java),
         ),
     )
