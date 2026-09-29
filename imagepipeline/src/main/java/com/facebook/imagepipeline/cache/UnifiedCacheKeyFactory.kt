@@ -149,7 +149,6 @@ constructor(
       UnifiedCacheKeyGeneratorConfig(
           config.includeDimensionsInBitmapKey,
           config.includeDimensionsInEncodedKey,
-          config.enableDiskSimilarity,
           config.hashThreshold,
           hashEncodedKey = hashEncodedKey,
       ),

@@ -16,5 +16,4 @@ interface UriNormalizer {
 
 data class NormalizedUri(
     val cacheKeyString: String,
-    val groupKey: String? = null,
 )

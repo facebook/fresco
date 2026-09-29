@@ -23,8 +23,6 @@ data class CacheKeyConfig(
     val includeDimensionsInBitmapKey: Boolean = false,
     /** Whether to append image dimensions to encoded cache keys. */
     val includeDimensionsInEncodedKey: Boolean = false,
-    /** When true and [DimensionExtractor] provides dimensions, use groupKey-based format. */
-    val enableDiskSimilarity: Boolean = false,
     /** Key strings longer than this are hashed to their hashCode. */
     val hashThreshold: Int = Int.MAX_VALUE,
     /** Whether to exclude bitmap config from ImageDecodeOptions comparison in cache keys. */

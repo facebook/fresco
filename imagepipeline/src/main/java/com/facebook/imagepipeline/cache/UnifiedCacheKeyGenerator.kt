@@ -24,7 +24,6 @@ data class ResolvedCacheKeyStrings(
 data class UnifiedCacheKeyGeneratorConfig(
     val includeDimensionsInBitmapKey: Boolean = false,
     val includeDimensionsInEncodedKey: Boolean = false,
-    val enableDiskSimilarity: Boolean = false,
     val hashThreshold: Int = Int.MAX_VALUE,
     val hashEncodedKey: Boolean = true,
 )
@@ -51,14 +50,7 @@ class UnifiedCacheKeyGenerator(private val config: UnifiedCacheKeyGeneratorConfi
 
     var encodedKey = customKey ?: input.normalizedUri.cacheKeyString
     if (customKey == null && config.includeDimensionsInEncodedKey) {
-      input.encodedDimensions?.let {
-        encodedKey =
-            if (config.enableDiskSimilarity && input.normalizedUri.groupKey != null) {
-              "${input.normalizedUri.groupKey}_${it.width}_${it.height}"
-            } else {
-              "$encodedKey${it.width}_${it.height}"
-            }
-      }
+      input.encodedDimensions?.let { encodedKey = "$encodedKey${it.width}_${it.height}" }
     }
     if (customKey == null && config.hashEncodedKey && encodedKey.length >= hashThreshold) {
       encodedKey = encodedKey.hashCode().toString()
@@ -72,8 +64,7 @@ class UnifiedCacheKeyGenerator(private val config: UnifiedCacheKeyGeneratorConfi
       customKey: String?,
   ): Boolean =
       customKey != null ||
-          (!config.enableDiskSimilarity &&
-              config.includeDimensionsInBitmapKey == config.includeDimensionsInEncodedKey &&
+          (config.includeDimensionsInBitmapKey == config.includeDimensionsInEncodedKey &&
               (!config.includeDimensionsInBitmapKey ||
                   input.bitmapDimensions == input.encodedDimensions) &&
               config.hashEncodedKey)

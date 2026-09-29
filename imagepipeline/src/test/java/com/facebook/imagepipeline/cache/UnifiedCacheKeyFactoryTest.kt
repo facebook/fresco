@@ -22,7 +22,7 @@ import org.robolectric.RobolectricTestRunner
 class UnifiedCacheKeyFactoryTest {
   private val normalizer =
       object : UriNormalizer {
-        override fun normalize(uri: Uri, callerContext: Any?) = NormalizedUri("normalized", "group")
+        override fun normalize(uri: Uri, callerContext: Any?) = NormalizedUri("normalized")
       }
   private val dimensions =
       object : DimensionExtractor {
@@ -42,7 +42,7 @@ class UnifiedCacheKeyFactoryTest {
 
   @Test
   fun cacheKeyConfig_preservesLegacyPositionalArguments() {
-    val positionalConfig = CacheKeyConfig(false, false, false, Int.MAX_VALUE, true)
+    val positionalConfig = CacheKeyConfig(false, false, Int.MAX_VALUE, true)
 
     assertThat(positionalConfig.excludeBitmapConfigFromComparison).isTrue()
   }
@@ -50,11 +50,11 @@ class UnifiedCacheKeyFactoryTest {
   @Test
   fun publicApi_preservesReleasedJvmSignatures() {
     assertThat(CacheKeyConfig::class.java.declaredConstructors.map { it.parameterTypes.size })
-        .contains(9)
+        .contains(8)
     assertThat(
         CacheKeyConfig::class.java.declaredMethods.single { it.name == "copy" }.parameterTypes.size,
     )
-        .isEqualTo(9)
+        .isEqualTo(8)
     assertThat(
         UnifiedCacheKeyFactory::class
             .java
@@ -146,7 +146,7 @@ class UnifiedCacheKeyFactoryTest {
         }
     val overrideFactory = UnifiedCacheKeyFactory(
         normalizer,
-        config.copy(enableDiskSimilarity = true, hashThreshold = 1),
+        config.copy(hashThreshold = 1),
         hashEncodedKey = false,
         encodedDimensionExtractor = encodedDimensions,
     )
@@ -154,6 +154,6 @@ class UnifiedCacheKeyFactoryTest {
         ImageRequestBuilder.newBuilderWithSource(Uri.parse("https://example.com/image.jpg")).build()
 
     assertThat(overrideFactory.getEncodedCacheKey(request, null))
-        .isEqualTo(SimpleCacheKey("group_10_20"))
+        .isEqualTo(SimpleCacheKey("normalized10_20"))
   }
 }

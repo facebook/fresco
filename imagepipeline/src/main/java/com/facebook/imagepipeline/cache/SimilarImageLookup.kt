@@ -46,20 +46,6 @@ interface SimilarImageLookup {
   ): SimilarImageResult?
 
   /**
-   * Find a larger variant of the same image in the disk cache key tracker.
-   *
-   * Producer contract: the consuming producer must NOT call this when all attached requests are
-   * cache-only (no network-permitted requests). Same cache-only semantics as
-   * [findLargerMemoryCacheKey].
-   *
-   * @param diskCacheKey the disk cache key string (expected format: "groupKey_width_height")
-   * @param callerContext app-specific caller context (e.g., IG passes IgCallerContext).
-   *   Implementations downcast to their app's type and return null for unrecognized types.
-   * @return the cache key of a larger variant, or null if none found or lookup is disabled
-   */
-  fun findLargerDiskCacheKey(diskCacheKey: String, callerContext: Any?): SimilarImageResult?
-
-  /**
    * Track a memory cache key for future similarity lookups. Called on cache insertion.
    *
    * Producers must only call this after a successful decode — not for intermediate or failed
@@ -72,16 +58,6 @@ interface SimilarImageLookup {
    * @param height decoded image height
    */
   fun trackMemoryCacheKey(cacheKeyString: String, groupKey: String?, width: Int, height: Int)
-
-  /**
-   * Track a disk cache key for future similarity lookups. Called on disk cache write.
-   *
-   * @param diskCacheKey the disk cache key string
-   * @param isFullImage true if the image is fully decoded (all scans complete). Partial progressive
-   *   scan data must NOT be tracked, as it would pollute the similarity index with incomplete
-   *   images that cannot serve as valid "larger" sources.
-   */
-  fun trackDiskCacheKey(diskCacheKey: String, isFullImage: Boolean = true)
 
   /** Remove a tracked memory key. Called on cache eviction. */
   fun removeMemoryCacheKey(cacheKeyString: String, groupKey: String?, width: Int, height: Int)

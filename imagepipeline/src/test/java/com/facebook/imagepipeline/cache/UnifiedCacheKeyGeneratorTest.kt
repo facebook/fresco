@@ -17,9 +17,9 @@ class UnifiedCacheKeyGeneratorTest {
     assertThat(generator(dimensions = true).resolve(input(CacheKeyDimensions(100, 200))))
         .isEqualTo(ResolvedCacheKeyStrings("base100_200", "base100_200"))
     assertThat(
-        generator(dimensions = true, similarity = true).resolve(input(CacheKeyDimensions(-1, -1))),
+        generator(dimensions = true).resolve(input(CacheKeyDimensions(-1, -1))),
     )
-        .isEqualTo(ResolvedCacheKeyStrings("base-1_-1", "group_-1_-1"))
+        .isEqualTo(ResolvedCacheKeyStrings("base-1_-1", "base-1_-1"))
   }
 
   @Test
@@ -106,26 +106,25 @@ class UnifiedCacheKeyGeneratorTest {
   @Test
   fun resolve_usesSeparateBitmapAndEncodedDimensions() {
     val result =
-        generator(dimensions = true, similarity = true)
+        generator(dimensions = true)
             .resolve(
                 UnifiedCacheKeyInput(
-                    normalizedUri = NormalizedUri("base", "group"),
+                    normalizedUri = NormalizedUri("base"),
                     bitmapDimensions = CacheKeyDimensions(320, 480),
                     encodedDimensions = CacheKeyDimensions(10, 20),
                 ),
             )
 
-    assertThat(result).isEqualTo(ResolvedCacheKeyStrings("base320_480", "group_10_20"))
+    assertThat(result).isEqualTo(ResolvedCacheKeyStrings("base320_480", "base10_20"))
   }
 
   private fun input(dimensions: CacheKeyDimensions? = null) =
-      UnifiedCacheKeyInput(NormalizedUri("base", "group"), bitmapDimensions = dimensions)
+      UnifiedCacheKeyInput(NormalizedUri("base"), bitmapDimensions = dimensions)
 
   private fun generator(
       dimensions: Boolean = false,
-      similarity: Boolean = false,
       threshold: Int = Int.MAX_VALUE,
   ) = UnifiedCacheKeyGenerator(
-      UnifiedCacheKeyGeneratorConfig(dimensions, dimensions, similarity, threshold),
+      UnifiedCacheKeyGeneratorConfig(dimensions, dimensions, threshold),
   )
 }
