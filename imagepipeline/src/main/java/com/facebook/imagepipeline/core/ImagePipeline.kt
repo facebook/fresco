@@ -23,6 +23,7 @@ import com.facebook.common.util.UriUtil
 import com.facebook.datasource.DataSource
 import com.facebook.datasource.DataSources
 import com.facebook.datasource.SimpleDataSource
+import com.facebook.fresco.middleware.HasExtraData
 import com.facebook.fresco.urimod.UriModifier
 import com.facebook.imagepipeline.cache.CacheKeyFactory
 import com.facebook.imagepipeline.cache.MemoryCache
@@ -480,6 +481,8 @@ class ImagePipeline(
               priority,
               requestListener,
               extras,
+              if (skipBitmapCache) HasExtraData.PREFETCH_DESTINATION_ENCODED
+              else HasExtraData.PREFETCH_DESTINATION_BITMAP,
           )
         } catch (exception: Exception) {
           DataSources.immediateFailedDataSource(exception)
@@ -569,6 +572,7 @@ class ImagePipeline(
             priority,
             requestListener,
             extras,
+            HasExtraData.PREFETCH_DESTINATION_DISK,
         )
       } catch (exception: Exception) {
         DataSources.immediateFailedDataSource(exception)
@@ -665,6 +669,7 @@ class ImagePipeline(
               priority,
               requestListener,
               extras,
+              HasExtraData.PREFETCH_DESTINATION_ENCODED,
           )
         } catch (exception: Exception) {
           DataSources.immediateFailedDataSource(exception)
@@ -1232,6 +1237,7 @@ class ImagePipeline(
       priority: Priority,
       requestListener: RequestListener?,
       extras: Map<String, *>?,
+      prefetchDestination: String,
   ): DataSource<Void?> {
     val requestListener2 = InternalRequestListener(
         getRequestListenerForRequest(imageRequest, requestListener),
@@ -1267,6 +1273,10 @@ class ImagePipeline(
           config,
       )
       settableProducerContext.putExtras(extras)
+      settableProducerContext.putExtra(
+          HasExtraData.KEY_PREFETCH_DESTINATION,
+          prefetchDestination,
+      )
       create(producerSequence, settableProducerContext, requestListener2)
     } catch (exception: Exception) {
       DataSources.immediateFailedDataSource(exception)

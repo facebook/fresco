@@ -48,6 +48,29 @@ interface HasExtraData {
     const val ORIGIN_CANCELLED = "cancelled"
     const val ORIGIN_FAILED = "failed"
 
+    /**
+     * Which cache a prefetch is populating, set only on prefetch requests. The decision is made by
+     * whichever `ImagePipeline.prefetchTo*` entry point the caller used and is not otherwise
+     * recoverable further down the pipeline, where a prefetch to either destination looks the same.
+     */
+    const val KEY_PREFETCH_DESTINATION = "prefetch_destination"
+
+    /** Prefetch that decodes, populating the bitmap memory cache. */
+    const val PREFETCH_DESTINATION_BITMAP = "bitmap"
+
+    /**
+     * Prefetch that stops at encoded bytes, asked for via `prefetchToEncodedCache`.
+     *
+     * Shares a producer sequence with [PREFETCH_DESTINATION_DISK] today, so both populate the
+     * encoded memory cache and the disk cache. They are recorded separately because they are
+     * distinct requests from the caller's side; a consumer that does not care can treat them alike,
+     * but one that collapsed them could not tell them apart again.
+     */
+    const val PREFETCH_DESTINATION_ENCODED = "encoded"
+
+    /** Prefetch that stops at encoded bytes, asked for via `prefetchToDiskCache`. */
+    const val PREFETCH_DESTINATION_DISK = "disk"
+
     /* number of deduped request in BitmapMemoryCacheKeyMultiplexProducer */
     const val KEY_MULTIPLEX_BITMAP_COUNT = "multiplex_bmp_cnt"
 
