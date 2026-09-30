@@ -201,7 +201,7 @@ class DefaultBitmapAnimationDrawableFactory(
                   bufferLengthMilliseconds.get(),
                   enableBufferFrameLoaderFix,
                   frameLoaderListener,
-                  enableSingleFrameRendering,
+                  enableSingleFrameRendering || imageOptions?.enableSingleFrameRendering == true,
                   enableUnusedFrameLoaderCleanupSync,
                   enableUnusedFrameLoaderCleanupSyncAndClear,
                   shouldRoundUpFractionalFrameBudget =
