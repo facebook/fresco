@@ -13,7 +13,7 @@ interface Rounded {
 
   fun setRadius(radius: Float)
 
-  var radii: FloatArray
+  var radii: FloatArray?
 
   fun setBorder(color: Int, width: Float)
 

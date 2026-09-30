@@ -79,9 +79,9 @@ constructor(
     } else {
       canvas.drawPath(mPath, paint)
     }
-    if (mBorderWidth > 0) {
-      borderPaint.strokeWidth = mBorderWidth
-      borderPaint.color = DrawableUtils.multiplyColorAlpha(mBorderColor, paint.alpha)
+    if (borderWidth > 0) {
+      borderPaint.strokeWidth = borderWidth
+      borderPaint.color = DrawableUtils.multiplyColorAlpha(borderColor, paint.alpha)
       canvas.drawPath(mBorderPath, borderPaint)
     }
     canvas.restoreToCount(saveCount)
