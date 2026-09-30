@@ -30,12 +30,21 @@ interface UriModifierInterface {
   /**
    * Modifies the network uri adaptively based on current network or other conditions. No need to
    * provide viewport or scale type since those are extracted from the uri itself.
+   *
+   * @param isPrefetch true when nothing is waiting to display this image yet. Note that a prefetch
+   *   can be joined by a real display request while it is still in flight, so this is only accurate
+   *   as of the moment the fetch starts.
+   * @param prefetchDestination which cache a prefetch is populating — `"bitmap"`, `"encoded"` or
+   *   `"disk"`, the `HasExtraData.PREFETCH_DESTINATION_*` values — or null when this is not a
+   *   prefetch or the destination was not recorded.
    */
   fun modifyNetworkUriForNetworkFetcher(
       uri: Uri,
       viewport: Viewport?,
       callerContext: Any?,
       contextChain: ContextChain? = null,
+      isPrefetch: Boolean = false,
+      prefetchDestination: String? = null,
   ): ModificationResult = ModificationResult.Disabled("Default")
 
   fun unregisterReverseFallbackUri(uri: Uri)
