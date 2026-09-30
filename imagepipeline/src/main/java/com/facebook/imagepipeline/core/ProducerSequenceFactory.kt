@@ -20,6 +20,7 @@ import com.facebook.common.references.CloseableReference
 import com.facebook.imagepipeline.common.SourceUriType
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.image.EncodedImage
+import com.facebook.imagepipeline.producers.CustomBasicDecodedImageSequenceFactory
 import com.facebook.imagepipeline.producers.CustomProducerSequenceFactory
 import com.facebook.imagepipeline.producers.NetworkFetcher
 import com.facebook.imagepipeline.producers.Producer
@@ -50,6 +51,7 @@ class ProducerSequenceFactory(
     private val loadThumbnailFromContentResolverFirst: Boolean,
     private val loadThumbnailFromContentResolverForContentUriOnly: Boolean,
     private val usePostprocessorDuringDecodedPrefetch: Boolean,
+    private val customBasicDecodedImageSequenceFactory: CustomBasicDecodedImageSequenceFactory?,
 ) {
 
   @VisibleForTesting
@@ -215,7 +217,21 @@ class ProducerSequenceFactory(
   private fun getBasicDecodedImageSequence(
       imageRequest: ImageRequest,
   ): Producer<CloseableReference<CloseableImage>> =
-      traceSection("ProducerSequenceFactory#getBasicDecodedImageSequence") {
+      customBasicDecodedImageSequenceFactory?.getBasicDecodedImageSequence(
+          imageRequest,
+          this,
+          producerFactory,
+          threadHandoffProducerQueue,
+      ) ?: getDefaultBasicDecodedImageSequence(imageRequest)
+
+  /**
+   * The basic decoded sequence [imageRequest] gets from the standard dispatch on its source URI
+   * type, ignoring any [CustomBasicDecodedImageSequenceFactory].
+   */
+  fun getDefaultBasicDecodedImageSequence(
+      imageRequest: ImageRequest,
+  ): Producer<CloseableReference<CloseableImage>> =
+      traceSection("ProducerSequenceFactory#getDefaultBasicDecodedImageSequence") {
         val uri = imageRequest.sourceUri
         checkNotNull(uri) { "Uri is null." }
         when (imageRequest.sourceUriType) {

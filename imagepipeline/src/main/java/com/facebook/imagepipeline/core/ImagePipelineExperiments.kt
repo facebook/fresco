@@ -26,6 +26,7 @@ import com.facebook.imagepipeline.decoder.ImageDecoder
 import com.facebook.imagepipeline.decoder.ProgressiveJpegConfig
 import com.facebook.imagepipeline.image.CloseableImage
 import com.facebook.imagepipeline.platform.PlatformDecoderOptions
+import com.facebook.imagepipeline.producers.CustomBasicDecodedImageSequenceFactory
 import com.facebook.imagepipeline.request.ImageRequest
 import com.facebook.imageutils.BitmapUtil
 
@@ -56,6 +57,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val downscaleFrameToDrawableDimensions: Boolean
   val suppressBitmapPrefetchingSupplier: Supplier<Boolean>
   val allowCustomNetworkSequences: Supplier<Boolean>
+  val customBasicDecodedImageSequenceFactory: CustomBasicDecodedImageSequenceFactory?
   val isExperimentalThreadHandoffQueueEnabled: Boolean
   val throttlingProducerMaxSimultaneousRequests: Long
   val memoryType: Long
@@ -127,6 +129,9 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var suppressBitmapPrefetchingSupplier = Suppliers.of(false)
 
     @JvmField var allowCustomNetworkSequences: Supplier<Boolean> = Suppliers.of(false)
+
+    @JvmField
+    var customBasicDecodedImageSequenceFactory: CustomBasicDecodedImageSequenceFactory? = null
 
     @JvmField var experimentalThreadHandoffQueueEnabled = false
 
@@ -337,6 +342,17 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
      */
     fun setAllowCustomNetworkSequences(allowCustomNetworkSequences: Supplier<Boolean>) = asBuilder {
       this.allowCustomNetworkSequences = allowCustomNetworkSequences
+    }
+
+    /**
+     * Lets [customBasicDecodedImageSequenceFactory] choose the basic decoded sequence for every
+     * request instead of the standard dispatch on source URI type. Null (the default) keeps the
+     * standard dispatch.
+     */
+    fun setCustomBasicDecodedImageSequenceFactory(
+        customBasicDecodedImageSequenceFactory: CustomBasicDecodedImageSequenceFactory?,
+    ) = asBuilder {
+      this.customBasicDecodedImageSequenceFactory = customBasicDecodedImageSequenceFactory
     }
 
     fun setExperimentalThreadHandoffQueueEnabled(experimentalThreadHandoffQueueEnabled: Boolean) =
@@ -604,6 +620,7 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     downscaleFrameToDrawableDimensions = builder.downscaleFrameToDrawableDimensions
     suppressBitmapPrefetchingSupplier = builder.suppressBitmapPrefetchingSupplier
     allowCustomNetworkSequences = builder.allowCustomNetworkSequences
+    customBasicDecodedImageSequenceFactory = builder.customBasicDecodedImageSequenceFactory
     isExperimentalThreadHandoffQueueEnabled = builder.experimentalThreadHandoffQueueEnabled
     throttlingProducerMaxSimultaneousRequests = builder.throttlingProducerMaxSimultaneousRequests
     memoryType = builder.memoryType

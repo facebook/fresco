@@ -32,6 +32,7 @@ import com.facebook.common.util.UriUtil;
 import com.facebook.imageformat.ImageFormat;
 import com.facebook.imagepipeline.image.CloseableImage;
 import com.facebook.imagepipeline.producers.Consumer;
+import com.facebook.imagepipeline.producers.CustomBasicDecodedImageSequenceFactory;
 import com.facebook.imagepipeline.producers.CustomProducerSequenceFactory;
 import com.facebook.imagepipeline.producers.NetworkFetcher;
 import com.facebook.imagepipeline.producers.Producer;
@@ -42,7 +43,9 @@ import com.facebook.imagepipeline.request.Postprocessor;
 import com.facebook.imagepipeline.transcoder.ImageTranscoder;
 import com.facebook.imagepipeline.transcoder.ImageTranscoderFactory;
 import com.facebook.infer.annotation.Nullsafe;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import javax.annotation.Nullable;
 import org.junit.After;
 import org.junit.Before;
@@ -105,7 +108,8 @@ public class ProducerSequenceFactoryTest {
             5,
             false,
             false,
-            false);
+            false,
+            null);
 
     when(mImageRequest.getLowestPermittedRequestLevel())
         .thenReturn(ImageRequest.RequestLevel.FULL_FETCH);
@@ -203,6 +207,51 @@ public class ProducerSequenceFactoryTest {
     Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
 
     assertThat(customFactory.isCalled).isSameAs(false);
+    assertThat(producer).isSameAs(mProducerSequenceFactory.getLocalImageFileFetchSequence());
+  }
+
+  @Test
+  public void testCustomBasicSequenceIsUsedForEverySourceType() {
+    DummyProducer custom = new DummyProducer();
+    List<ImageRequest> requests = new ArrayList<>();
+    internalUseSequenceFactoryWithCustomBasicSequence(
+        (imageRequest, producerSequenceFactory, producerFactory, threadHandoffProducerQueue) -> {
+          requests.add(imageRequest);
+          return custom;
+        });
+
+    for (int sourceUriType :
+        new int[] {SOURCE_TYPE_NETWORK, SOURCE_TYPE_LOCAL_IMAGE_FILE, SOURCE_TYPE_UNKNOWN}) {
+      when(mImageRequest.getSourceUriType()).thenReturn(sourceUriType);
+      assertThat(mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest))
+          .isSameAs(custom);
+    }
+    assertThat(requests).hasSize(3);
+  }
+
+  @Test
+  public void testCustomBasicSequenceStillGetsThePostprocessorStages() {
+    DummyProducer custom = new DummyProducer();
+    internalUseSequenceFactoryWithCustomBasicSequence(
+        (imageRequest, producerSequenceFactory, producerFactory, threadHandoffProducerQueue) ->
+            custom);
+    when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_NETWORK);
+    when(mImageRequest.getPostprocessor()).thenReturn(mPostprocessor);
+
+    Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
+
+    assertThat(producer).isSameAs(mProducerSequenceFactory.getPostprocessorSequences().get(custom));
+  }
+
+  @Test
+  public void testCustomBasicSequenceCanDelegateToTheDefault() {
+    internalUseSequenceFactoryWithCustomBasicSequence(
+        (imageRequest, producerSequenceFactory, producerFactory, threadHandoffProducerQueue) ->
+            producerSequenceFactory.getDefaultBasicDecodedImageSequence(imageRequest));
+    when(mImageRequest.getSourceUriType()).thenReturn(SOURCE_TYPE_LOCAL_IMAGE_FILE);
+
+    Producer producer = mProducerSequenceFactory.getDecodedImageProducerSequence(mImageRequest);
+
     assertThat(producer).isSameAs(mProducerSequenceFactory.getLocalImageFileFetchSequence());
   }
 
@@ -492,6 +541,35 @@ public class ProducerSequenceFactoryTest {
                         .get(mProducerSequenceFactory.getNetworkFetchSequence())));
   }
 
+  private void internalUseSequenceFactoryWithCustomBasicSequence(
+      CustomBasicDecodedImageSequenceFactory customBasicDecodedImageSequenceFactory) {
+    ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
+    ImageTranscoderFactory imageTranscoderFactory = mock(ImageTranscoderFactory.class);
+
+    mProducerSequenceFactory =
+        new ProducerSequenceFactory(
+            RuntimeEnvironment.application.getContentResolver(),
+            producerFactory,
+            mNetworkFetcher,
+            true,
+            mThreadHandoffProducerQueue,
+            DownsampleMode.AUTO,
+            false,
+            false,
+            true,
+            imageTranscoderFactory,
+            false,
+            false,
+            false,
+            null,
+            Suppliers.of(false),
+            5,
+            false,
+            false,
+            false,
+            customBasicDecodedImageSequenceFactory);
+  }
+
   private void internalUseSequenceFactoryWithBitmapPrepare() {
     ProducerFactory producerFactory = mock(ProducerFactory.class, RETURNS_MOCKS);
     ImageTranscoderFactory imageTranscoderFactory = mock(ImageTranscoderFactory.class);
@@ -516,7 +594,8 @@ public class ProducerSequenceFactoryTest {
             5,
             false,
             false,
-            false);
+            false,
+            null);
   }
 
   private void internalUseSequenceFactoryWithCustomSequence(
@@ -545,7 +624,8 @@ public class ProducerSequenceFactoryTest {
             5,
             false,
             false,
-            false);
+            false,
+            null);
   }
 
   private void internalUseSequenceFactoryWithCustomSequence(
@@ -573,7 +653,8 @@ public class ProducerSequenceFactoryTest {
             5,
             false,
             false,
-            false);
+            false,
+            null);
   }
 
   private static class RecordingCustomProducerSequenceFactoryIsCalled
