@@ -61,6 +61,7 @@ open class ArrayDrawable(layers: Array<out Drawable?>) :
    */
   init {
     checkNotNull(layers) { "Layers cannot be null" }
+    @Suppress("UNCHECKED_CAST")
     this.layers = layers as Array<Drawable?>
     for (i in this.layers.indices) {
       DrawableUtils.setCallbacks(this.layers[i], this, this)
