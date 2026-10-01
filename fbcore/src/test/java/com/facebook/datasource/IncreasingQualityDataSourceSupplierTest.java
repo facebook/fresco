@@ -7,9 +7,24 @@
 
 package com.facebook.datasource;
 
-import static com.facebook.datasource.DataSourceTestUtils.*;
-import static org.mockito.Mockito.*;
+import static com.facebook.datasource.DataSourceTestUtils.CLOSED;
+import static com.facebook.datasource.DataSourceTestUtils.FAILED;
+import static com.facebook.datasource.DataSourceTestUtils.FINISHED;
+import static com.facebook.datasource.DataSourceTestUtils.NOT_CLOSED;
+import static com.facebook.datasource.DataSourceTestUtils.NOT_FAILED;
+import static com.facebook.datasource.DataSourceTestUtils.NOT_FINISHED;
+import static com.facebook.datasource.DataSourceTestUtils.NO_INTERACTIONS;
+import static com.facebook.datasource.DataSourceTestUtils.ON_CANCELLATION;
+import static com.facebook.datasource.DataSourceTestUtils.ON_FAILURE;
+import static com.facebook.datasource.DataSourceTestUtils.ON_NEW_RESULT;
+import static com.facebook.datasource.DataSourceTestUtils.WITHOUT_RESULT;
+import static com.facebook.datasource.DataSourceTestUtils.WITH_RESULT;
+import static com.facebook.datasource.DataSourceTestUtils.setState;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
+import com.facebook.datasource.DataSourceTestUtils.AbstractDataSourceSupplier;
+import java.util.Arrays;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -88,6 +103,40 @@ public class IncreasingQualityDataSourceSupplierTest extends AbstractDataSourceS
     verifyState(dataSource, mSrc3, NOT_CLOSED, FINISHED, WITH_RESULT, result, FAILED, throwable);
 
     testClose(dataSource, mSrc3);
+    verifyState(dataSource, null, CLOSED, FINISHED, WITHOUT_RESULT, null, FAILED, throwable);
+  }
+
+  /**
+   * A lower-quality data source can emit multiple results before the highest-quality source fails.
+   */
+  @Test
+  public void testLifecycle_I2_S2_F1_C() {
+    mDataSourceSupplier =
+        IncreasingQualityDataSourceSupplier.create(
+            Arrays.asList(mDataSourceSupplier1, mDataSourceSupplier2));
+    DataSource<Object> dataSource = getAndSubscribe();
+    DataSubscriber<Object> subscriber1 = verifyGetAndSubscribeM(mDataSourceSupplier1, mSrc1);
+    DataSubscriber<Object> subscriber2 = verifyGetAndSubscribeM(mDataSourceSupplier2, mSrc2);
+
+    Object intermediateResult = mock(Object.class);
+    setState(mSrc2, NOT_CLOSED, NOT_FINISHED, WITH_RESULT, intermediateResult, NOT_FAILED, null);
+    subscriber2.onNewResult(mSrc2);
+    verifySubscriber(dataSource, mSrc2, ON_NEW_RESULT);
+
+    Object finalResult = mock(Object.class);
+    setState(mSrc2, NOT_CLOSED, FINISHED, WITH_RESULT, finalResult, NOT_FAILED, null);
+    subscriber2.onNewResult(mSrc2);
+    verifySubscriber(dataSource, mSrc2, ON_NEW_RESULT);
+
+    Throwable throwable = mock(Throwable.class);
+    setState(mSrc1, NOT_CLOSED, FINISHED, WITHOUT_RESULT, null, FAILED, throwable);
+    subscriber1.onFailure(mSrc1);
+    mInOrder.verify(mSrc1).close();
+    verifySubscriber(dataSource, mSrc1, ON_FAILURE);
+    verifyState(
+        dataSource, mSrc2, NOT_CLOSED, FINISHED, WITH_RESULT, finalResult, FAILED, throwable);
+
+    testClose(dataSource, mSrc2);
     verifyState(dataSource, null, CLOSED, FINISHED, WITHOUT_RESULT, null, FAILED, throwable);
   }
 
@@ -414,6 +463,75 @@ public class IncreasingQualityDataSourceSupplierTest extends AbstractDataSourceS
 
     testClose(dataSource, mSrc1);
     verifyState(dataSource, null, CLOSED, FINISHED, WITHOUT_RESULT, null, NOT_FAILED, null);
+  }
+
+  /** Immediate intermediate result of the highest-quality source followed by its failure. */
+  @Test
+  public void testLifecycle_ImmediateHighResFailure() {
+    Object intermediateResult = mock(Object.class);
+    setState(mSrc1, NOT_CLOSED, NOT_FINISHED, WITH_RESULT, intermediateResult, NOT_FAILED, null);
+    respondOnSubscribe(mSrc1, ON_NEW_RESULT);
+
+    DataSource<Object> dataSource = getAndSubscribe();
+    DataSubscriber<Object> subscriber1 = verifyGetAndSubscribeM(mDataSourceSupplier1, mSrc1);
+    verifySubscriber(dataSource, mSrc1, ON_NEW_RESULT);
+
+    Throwable throwable = mock(Throwable.class);
+    setState(mSrc1, NOT_CLOSED, FINISHED, WITHOUT_RESULT, null, FAILED, throwable);
+    subscriber1.onFailure(mSrc1);
+    mInOrder.verify(mSrc1).getFailureCause();
+    mInOrder.verify(mDataSubscriber).onFailure(dataSource);
+    verifyNoMoreInteractionsAll();
+    verifyState(dataSource, mSrc1, NOT_CLOSED, FINISHED, WITHOUT_RESULT, null, FAILED, throwable);
+
+    testClose(dataSource, mSrc1);
+    verifyState(dataSource, null, CLOSED, FINISHED, WITHOUT_RESULT, null, FAILED, throwable);
+  }
+
+  /** Nested low-resolution source finishes after all disk-only candidates miss. */
+  @Test
+  public void testLifecycle_NestedDiskMiss_F1_C() {
+    TestDataSource primary = new TestDataSource();
+    TestDataSource disk1 = new TestDataSource();
+    TestDataSource disk2 = new TestDataSource();
+    TestDataSource memory = new TestDataSource();
+    mDataSourceSupplier =
+        IncreasingQualityDataSourceSupplier.create(
+            Arrays.asList(
+                () -> primary,
+                IncreasingQualityDataSourceSupplier.create(
+                    Arrays.asList(
+                        FirstAvailableDataSourceSupplier.create(
+                            Arrays.asList(() -> disk1, () -> disk2)),
+                        () -> memory))));
+    DataSource<Object> dataSource = getAndSubscribe();
+
+    Object preview = mock(Object.class);
+    memory.setFinalResult(preview);
+    disk1.finishWithoutResult();
+    disk2.finishWithoutResult();
+    Throwable throwable = mock(Throwable.class);
+    primary.fail(throwable);
+
+    verify(mDataSubscriber).onFailure(dataSource);
+    DataSourceTestUtils.verifyState(
+        dataSource, NOT_CLOSED, FINISHED, WITH_RESULT, preview, FAILED, throwable);
+
+    dataSource.close();
+  }
+
+  private static class TestDataSource extends AbstractDataSource<Object> {
+    void setFinalResult(Object result) {
+      setResult(result, true, null);
+    }
+
+    void finishWithoutResult() {
+      setResult(null, true, null);
+    }
+
+    void fail(Throwable throwable) {
+      setFailure(throwable);
+    }
   }
 
   /**

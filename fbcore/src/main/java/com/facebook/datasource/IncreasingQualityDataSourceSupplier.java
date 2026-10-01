@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicIntegerArray;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
@@ -113,7 +114,9 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
 
     private int mNumberOfDataSources;
     // NULLSAFE_FIXME[Field Not Initialized]
-    private AtomicInteger mFinishedDataSources;
+    private AtomicInteger mFinishedDataSourceCount;
+    // NULLSAFE_FIXME[Field Not Initialized]
+    private AtomicIntegerArray mFinishedDataSources;
     private @Nullable Throwable mDelayedError;
     private @Nullable Map<String, Object> mDelayedExtras;
 
@@ -124,14 +127,15 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
     }
 
     private void ensureDataSourceInitialized() {
-      if (mFinishedDataSources != null) {
+      if (mFinishedDataSourceCount != null) {
         return;
       }
 
       synchronized (IncreasingQualityDataSource.this) {
-        if (mFinishedDataSources == null) {
-          mFinishedDataSources = new AtomicInteger(0);
+        if (mFinishedDataSourceCount == null) {
+          mFinishedDataSourceCount = new AtomicInteger(0);
           final int n = mDataSourceSuppliers.size();
+          mFinishedDataSources = new AtomicIntegerArray(n);
           mNumberOfDataSources = n;
           mIndexOfDataSourceWithResult = n;
           mDataSources = new ArrayList<>(n);
@@ -142,6 +146,9 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
             // there's no point in creating data sources of lower quality
             // if the data source of a higher quality has some result already
             if (dataSource.hasResult()) {
+              for (int j = i + 1; j < n; j++) {
+                maybeFinish(j);
+              }
               break;
             }
           }
@@ -216,7 +223,9 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
       if (dataSource == getDataSourceWithResult()) {
         setResult(null, (index == 0) && dataSource.isFinished(), dataSource.getExtras());
       }
-      maybeSetFailure();
+      if (dataSource.isFinished()) {
+        maybeFinish(index);
+      }
     }
 
     private void onDataSourceFailed(int index, DataSource<T> dataSource) {
@@ -226,13 +235,20 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
         mDelayedError = dataSource.getFailureCause();
         mDelayedExtras = dataSource.getExtras();
       }
-      maybeSetFailure();
+      maybeFinish(index);
     }
 
-    private void maybeSetFailure() {
-      int finished = mFinishedDataSources.incrementAndGet();
-      if (finished == mNumberOfDataSources && mDelayedError != null) {
-        setFailure(mDelayedError, mDelayedExtras);
+    private void maybeFinish(int index) {
+      if (!mFinishedDataSources.compareAndSet(index, 0, 1)) {
+        return;
+      }
+      int finished = mFinishedDataSourceCount.incrementAndGet();
+      if (finished == mNumberOfDataSources) {
+        if (mDelayedError != null) {
+          setFailure(mDelayedError, mDelayedExtras);
+        } else {
+          setResult(null, true, mDelayedExtras);
+        }
       }
     }
 
@@ -259,8 +275,11 @@ public class IncreasingQualityDataSourceSupplier<T> implements Supplier<DataSour
       }
       // close data sources of lower quality than the one with the result
       for (int i = oldIndexOfDataSourceWithResult; i > newIndexOfDataSourceWithResult; i--) {
-        // NULLSAFE_FIXME[Parameter Not Nullable]
-        closeSafely(getAndClearDataSource(i));
+        DataSource<T> dataSourceToClose = getAndClearDataSource(i);
+        if (dataSourceToClose != null) {
+          closeSafely(dataSourceToClose);
+          maybeFinish(i);
+        }
       }
     }
 
