@@ -17,6 +17,7 @@ import com.facebook.common.closeables.AutoCleanupDelegate
 import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
 import com.facebook.drawee.drawable.VisibilityCallback
+import com.facebook.fresco.ui.common.OnFadeListener
 import com.facebook.fresco.vito.core.CombinedImageListener
 import com.facebook.fresco.vito.core.FrescoDrawableInterface
 import com.facebook.fresco.vito.core.ImagePerfLoggingListener
@@ -91,6 +92,8 @@ class KFrescoVitoDrawable(
 
   override var refetchRunnable: Runnable? = null
 
+  var onFadeListener: OnFadeListener? = null
+
   override fun getImagePerfLoggingListener(): ImagePerfLoggingListener? =
       listenerManager.getImagePerfLoggingListener()
 
@@ -141,6 +144,8 @@ class KFrescoVitoDrawable(
   }
 
   fun reset() {
+    // Clear before the layers reset: ending their animators fires fade-end callbacks.
+    onFadeListener = null
     offerBackOnRelease?.invoke()
     offerBackOnRelease = null
     imageRequest?.let { listenerManager.onRelease(imageId, it, obtainExtras()) }

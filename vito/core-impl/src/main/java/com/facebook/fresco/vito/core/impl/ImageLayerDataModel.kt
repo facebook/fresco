@@ -135,7 +135,7 @@ class ImageLayerDataModel(
     fadeAnimator = null
   }
 
-  fun fadeIn(durationMs: Int) {
+  fun fadeIn(durationMs: Int, onAnimationEnd: (() -> Unit)? = null) {
     fadeAnimator?.end()
     if (durationMs == 0) {
       paint.alpha = 255
@@ -146,6 +146,15 @@ class ImageLayerDataModel(
         ValueAnimator.ofInt(0, 255).apply {
           duration = durationMs.toLong()
           addUpdateListener(animatorUpdateListener)
+          if (onAnimationEnd != null) {
+            addListener(
+                object : AnimatorListenerAdapter() {
+                  override fun onAnimationEnd(animation: Animator) {
+                    onAnimationEnd()
+                  }
+                },
+            )
+          }
           start()
         }
   }

@@ -184,6 +184,7 @@ class KFrescoController(
       d.imageRequest = imageRequest
       d.callerContext = callerContext
       d.imageListener = listener
+      d.onFadeListener = if (config.fixKotlinOnFadeListener()) onFadeListener else null
       d.listenerManager.setVitoImageRequestListener(globalImageRequestListener)
       d.listenerManager.setLocalVitoImageRequestListener(vitoImageRequestListener)
 
@@ -341,6 +342,7 @@ class KFrescoController(
         extras,
         drawable.actualImageDrawable,
     )
+    drawable.onFadeListener?.onShownImmediately()
     debugOverlayHandler?.update(drawable)
   }
 
@@ -416,6 +418,7 @@ class KFrescoController(
               actualImageDrawable,
           )
         }
+        onFadeListener?.onShownImmediately()
         debugOverlayHandler?.update(this)
         return true
       } finally {

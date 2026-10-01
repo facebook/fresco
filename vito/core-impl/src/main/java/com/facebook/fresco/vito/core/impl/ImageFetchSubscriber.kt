@@ -49,8 +49,22 @@ class ImageFetchSubscriber(
         imageToDataModelMapper,
     )
     invalidationExecutor?.execute {
-      drawable.actualImageLayer.fadeIn(request.imageOptions.fadeDurationMs)
-      drawable.placeholderLayer.fadeOut(request.imageOptions.fadeDurationMs, true)
+      val fadeListener = drawable.onFadeListener
+      val fadeDurationMs = request.imageOptions.fadeDurationMs
+      if (fadeListener != null && fadeDurationMs > 0) {
+        fadeListener.onFadeStarted()
+        drawable.actualImageLayer.fadeIn(fadeDurationMs) {
+          // A reset cuts the fade short and clears the listener: only the still-current
+          // listener gets the finish callback (FadeDrawable fires none on reset).
+          if (drawable.onFadeListener === fadeListener) {
+            fadeListener.onFadeFinished()
+          }
+        }
+      } else {
+        drawable.actualImageLayer.fadeIn(fadeDurationMs)
+        fadeListener?.onShownImmediately()
+      }
+      drawable.placeholderLayer.fadeOut(fadeDurationMs, true)
     }
     // Remove the progress image
     if (dataSource.isFinished) {
@@ -78,6 +92,7 @@ class ImageFetchSubscriber(
     }
     val request = drawable.imageRequest ?: return
     drawable.actualImageLayer.setError(request.resources, request.imageOptions)
+    drawable.onFadeListener?.onShownImmediately()
     if (dataSource.isFinished) {
       drawable.hideProgressLayer()
     }

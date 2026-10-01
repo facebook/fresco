@@ -150,6 +150,13 @@ interface FrescoVitoConfig {
    */
   fun fixKotlinDataSourceRace(): Boolean = false
 
+  /**
+   * Forwards `onFadeListener` to the Kotlin drawable (FrescoController2Impl parity) instead of
+   * dropping it, firing started/finished around actual-image fades and shown-immediately for
+   * direct, cached, and error images.
+   */
+  fun fixKotlinOnFadeListener(): Boolean = false
+
   /** Clears the placeholder layer when the actual image is set with a fade duration of 0. */
   fun fixResetPlaceholderOnZeroFade(): Boolean = false
 
