@@ -306,7 +306,11 @@ class KFrescoController(
             if (config.handleImageResultInBackground()) lightweightBackgroundThreadExecutor
             else uiThreadExecutor,
         ) // Keyframes require callbacks to be on the main thread.
-        drawable.dataSource = dataSource
+        if (config.fixKotlinDataSourceRace()) {
+          drawable.setDataSource(imageId, dataSource)
+        } else {
+          drawable.dataSource = dataSource
+        }
       }
       drawable.setFetchSubmitted(true)
       drawable.invalidateSelf()

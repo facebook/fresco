@@ -143,6 +143,13 @@ interface FrescoVitoConfig {
   /** Prevents draw passes from using an image after its owning reference is closed. */
   fun fixClearActualImageLayerOnClose(): Boolean = false
 
+  /**
+   * Assigns the Kotlin drawable's fetch data source through a synchronized, imageId-guarded setter
+   * (FrescoController2Impl parity) instead of an unguarded background-thread write, so a stale
+   * fetch cannot overwrite and cancel a newer in-flight fetch.
+   */
+  fun fixKotlinDataSourceRace(): Boolean = false
+
   /** Clears the placeholder layer when the actual image is set with a fade duration of 0. */
   fun fixResetPlaceholderOnZeroFade(): Boolean = false
 

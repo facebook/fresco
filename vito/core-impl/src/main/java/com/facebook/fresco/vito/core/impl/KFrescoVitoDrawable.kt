@@ -14,6 +14,7 @@ import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
 import com.facebook.common.closeables.AutoCleanupDelegate
+import com.facebook.common.references.CloseableReference
 import com.facebook.datasource.DataSource
 import com.facebook.drawee.drawable.VisibilityCallback
 import com.facebook.fresco.vito.core.CombinedImageListener
@@ -23,6 +24,7 @@ import com.facebook.fresco.vito.core.VitoImagePerfListener
 import com.facebook.fresco.vito.core.VitoImageRequest
 import com.facebook.fresco.vito.listener.ImageListener
 import com.facebook.fresco.vito.renderer.DrawableImageDataModel
+import com.facebook.imagepipeline.image.CloseableImage
 import java.io.Closeable
 import java.io.IOException
 
@@ -50,6 +52,14 @@ class KFrescoVitoDrawable(
   override var extras: Any? = null
   var viewportDimensions: Rect? = null
   var dataSource: DataSource<out Any>? by DataSourceCleanupDelegate()
+
+  @Synchronized
+  fun setDataSource(imageId: Long, dataSource: DataSource<CloseableReference<CloseableImage>>?) {
+    if (imageId != _imageId) {
+      return
+    }
+    this.dataSource = dataSource
+  }
 
   val releaseState = ImageReleaseScheduler.createReleaseState(this)
   private var hasBoundsSet = false
