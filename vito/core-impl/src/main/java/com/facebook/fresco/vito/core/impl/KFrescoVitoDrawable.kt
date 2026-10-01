@@ -38,6 +38,7 @@ class KFrescoVitoDrawable(
     private val optimizeAlphaHandling: Boolean = false,
     private val clearActualImageLayerOnClose: Boolean = false,
     private val resetPlaceholderOnZeroFade: Boolean = false,
+    private val fixActualImageBounds: Boolean = false,
 ) : Drawable(), FrescoDrawableInterface, Drawable.Callback {
 
   var _imageId: Long = 0
@@ -265,8 +266,16 @@ class KFrescoVitoDrawable(
   }
 
   override fun getActualImageBounds(outBounds: RectF) {
-    // TODO
-    throw UnsupportedOperationException("Not implemented for KVito")
+    if (!fixActualImageBounds) {
+      throw UnsupportedOperationException("Not implemented for KVito")
+    }
+    val model = actualImageLayer.getDataModel()
+    val matrix = actualImageLayer.canvasTransformationHandler.getMatrix()
+    if (model == null || matrix == null) {
+      return
+    }
+    outBounds.set(0f, 0f, model.width.toFloat(), model.height.toFloat())
+    matrix.mapRect(outBounds)
   }
 
   override fun hasBitmapWithGainmap(): Boolean = actualImageLayer.hasBitmapWithGainmap() == true

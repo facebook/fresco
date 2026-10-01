@@ -118,6 +118,7 @@ class KFrescoController(
           config.experimentalOptimizeAlphaHandling(),
           config.fixClearActualImageLayerOnClose(),
           config.fixResetPlaceholderOnZeroFade(),
+          config.fixKotlinActualImageBounds(),
       )
       drawable.uiFramework = uiFramework
       imagePerfLoggingListenerSupplier

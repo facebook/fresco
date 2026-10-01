@@ -157,6 +157,13 @@ interface FrescoVitoConfig {
    */
   fun fixKotlinOnFadeListener(): Boolean = false
 
+  /**
+   * Implements `getActualImageBounds` on the Kotlin drawable (FrescoController2Impl parity) instead
+   * of throwing `UnsupportedOperationException`, mapping the actual-image model rect through the
+   * layer transform.
+   */
+  fun fixKotlinActualImageBounds(): Boolean = false
+
   /** Clears the placeholder layer when the actual image is set with a fade duration of 0. */
   fun fixResetPlaceholderOnZeroFade(): Boolean = false
 

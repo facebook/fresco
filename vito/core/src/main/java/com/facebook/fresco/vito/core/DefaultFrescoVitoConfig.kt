@@ -124,6 +124,8 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun fixKotlinOnFadeListener(): Boolean = false
 
+  override fun fixKotlinActualImageBounds(): Boolean = false
+
   override fun fixResetPlaceholderOnZeroFade(): Boolean = false
 
   override fun useReleaseDelayedInCompose(): Boolean = false
