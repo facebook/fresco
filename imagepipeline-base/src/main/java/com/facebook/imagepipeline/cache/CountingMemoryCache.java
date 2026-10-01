@@ -21,7 +21,7 @@ public interface CountingMemoryCache<K, V> extends MemoryCache<K, V>, MemoryTrim
 
   @Nullable
   CloseableReference<V> cache(
-      K key, CloseableReference<V> valueRef, EntryStateObserver<K> observer);
+      K key, CloseableReference<V> valueRef, @Nullable EntryStateObserver<K> observer);
 
   @Nullable
   CloseableReference<V> reuse(K key);
