@@ -267,7 +267,7 @@ open class LruCountingMemoryCache<K : Any, V : Any>(
       if (oldExclusive != null) {
         val entry = mCachedEntries.remove(key)
         checkNotNull(entry)
-        check(entry!!.clientCount == 0)
+        check(entry.clientCount == 0)
         // optimization: instead of cloning and then closing the original reference,
         // we just do a move
         clientRef = entry.valueRef
