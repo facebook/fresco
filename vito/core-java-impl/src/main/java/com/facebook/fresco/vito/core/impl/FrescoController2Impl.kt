@@ -508,17 +508,11 @@ open class FrescoController2Impl(
       // Offer the image back to the memory cache before the drawable closes its reference, so
       // weakly held entries (e.g. WeakBitmapCountingMemoryCache) can extend their second life and
       // be re-served on scroll-back. Mirrors KFrescoController's offer-back hook.
-      val useOfferBackBitmap = config.useOfferBackOnRelease()
-      val useOfferBackNonBitmap = config.useOfferBackOnReleaseForNonBitmapImage()
-      if (useOfferBackBitmap || useOfferBackNonBitmap) {
+      if (config.useOfferBackOnRelease()) {
         val ref = drawable.imageReference
         val image = ref?.get()
-        if (ref != null && CloseableReference.isValid(ref) && image != null) {
-          val shouldOfferBack =
-              if (image is CloseableBitmap) useOfferBackBitmap else useOfferBackNonBitmap
-          if (shouldOfferBack) {
-            imagePipeline.returnImageToCache(imageRequest, ref)
-          }
+        if (ref != null && CloseableReference.isValid(ref) && image is CloseableBitmap) {
+          imagePipeline.returnImageToCache(imageRequest, ref)
         }
       }
       // Notify listeners

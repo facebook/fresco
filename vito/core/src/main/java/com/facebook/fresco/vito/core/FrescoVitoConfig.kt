@@ -119,17 +119,9 @@ interface FrescoVitoConfig {
    * reference is re-offered to the memory cache when the Vito drawable is reset, instead of being
    * closed immediately — letting the cache potentially reuse the entry on the next request.
    *
-   * Applies only to `CloseableBitmap` instances; for non-bitmap images use
-   * [useOfferBackOnReleaseForNonBitmapImage].
+   * Applies only to `CloseableBitmap` instances.
    */
   fun useOfferBackOnRelease(): Boolean = false
-
-  /**
-   * Enables offer-back-on-release for non-`CloseableBitmap` images (animated images, XML/SVG
-   * decodes, etc.). When the new non-bitmap memory cache is enabled via
-   * `experiments.useSeparateNonBitmapImageCache`, offered-back entries land in that cache.
-   */
-  fun useOfferBackOnReleaseForNonBitmapImage(): Boolean = false
 
   /**
    * When on, an image is released immediately when its view becomes non-visible (e.g. scrolled off

@@ -114,8 +114,6 @@ constructor(override val prefetchConfig: PrefetchConfig = DefaultPrefetchConfig(
 
   override fun useOfferBackOnRelease(): Boolean = false
 
-  override fun useOfferBackOnReleaseForNonBitmapImage(): Boolean = false
-
   override fun releaseImageOnVisibilityGoneImmediately(): Boolean = false
 
   override fun fixClearActualImageLayerOnClose(): Boolean = false

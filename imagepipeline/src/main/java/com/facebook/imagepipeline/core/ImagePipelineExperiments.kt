@@ -101,7 +101,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   val throwCacheMissExceptionOnCacheMiss: Boolean
   val usePostProcessedCacheKey: Boolean
   val usePostprocessorDuringDecodedPrefetch: Boolean
-  val useSeparateNonBitmapImageCache: Boolean
   val encodedImageRequestTransformer: ((ImageRequest) -> ImageRequest)?
 
   class Builder(private val configBuilder: ImagePipelineConfig.Builder) {
@@ -190,8 +189,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     @JvmField var usePostProcessedCacheKey = false
 
     @JvmField var usePostprocessorDuringDecodedPrefetch = false
-
-    @JvmField var useSeparateNonBitmapImageCache = false
 
     @JvmField var encodedImageRequestTransformer: ((ImageRequest) -> ImageRequest)? = null
 
@@ -501,15 +498,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         }
 
     /**
-     * If true, non-`CloseableBitmap` images (e.g. `CloseableAnimatedImage`, XML/SVG decodes) are
-     * stored in a separate memory cache from static bitmaps. A/B test gate for splitting the shared
-     * bitmap memory cache.
-     */
-    fun setUseSeparateNonBitmapImageCache(useSeparateNonBitmapImageCache: Boolean) = asBuilder {
-      this.useSeparateNonBitmapImageCache = useSeparateNonBitmapImageCache
-    }
-
-    /**
      * Optional transformer applied to every `fetchEncodedImage` request before it is submitted
      * (identity when unset). A generic hook that lets the app rewrite a request (e.g. to redirect
      * it to a different cache keyspace) without the pipeline carrying any feature-specific logic.
@@ -670,7 +658,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     throwCacheMissExceptionOnCacheMiss = builder.throwCacheMissExceptionOnCacheMiss
     usePostProcessedCacheKey = builder.usePostProcessedCacheKey
     usePostprocessorDuringDecodedPrefetch = builder.usePostprocessorDuringDecodedPrefetch
-    useSeparateNonBitmapImageCache = builder.useSeparateNonBitmapImageCache
     // Null when unset: fetchEncodedImage submits the request unchanged (identity).
     encodedImageRequestTransformer = builder.encodedImageRequestTransformer
   }
