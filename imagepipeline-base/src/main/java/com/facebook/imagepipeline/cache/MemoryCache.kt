@@ -44,9 +44,8 @@ interface MemoryCache<K, V> : MemoryTrimmable, HasDebugData {
    * Caches a value that is being released by its last UI holder — i.e. Vito's "offer-back" on
    * detach (see [com.facebook.imagepipeline.core.ImagePipeline.returnImageToCache]).
    *
-   * Defaults to [cache]. GC-managed caches that hold values only weakly may override this to give
-   * the released value a bounded strong-reference "second life", so it survives GC long enough to
-   * be re-served on scroll-back without raising steady-state peak memory.
+   * Defaults to [cache]. Cache implementations may override this when release-time insertion needs
+   * different handling from a normal cache write.
    *
    * Wrapping/delegating caches MUST forward this to their delegate(s) rather than inheriting the
    * default — otherwise the override on the wrapped cache is never reached.

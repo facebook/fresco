@@ -505,9 +505,8 @@ open class FrescoController2Impl(
   override fun onRelease(drawable: FrescoDrawable2Impl) {
     val imageRequest = drawable.imageRequest
     if (imageRequest != null) {
-      // Offer the image back to the memory cache before the drawable closes its reference, so
-      // weakly held entries (e.g. WeakBitmapCountingMemoryCache) can extend their second life and
-      // be re-served on scroll-back. Mirrors KFrescoController's offer-back hook.
+      // Offer the image back to the memory cache before the drawable closes its reference so it
+      // can be re-served on scroll-back. Mirrors KFrescoController's offer-back hook.
       if (config.useOfferBackOnRelease()) {
         val ref = drawable.imageReference
         val image = ref?.get()

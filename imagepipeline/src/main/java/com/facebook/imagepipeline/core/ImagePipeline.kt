@@ -1118,8 +1118,8 @@ class ImagePipeline(
   }
 
   /**
-   * Returns an image reference to the bitmap memory cache. Used by Vito on detach to give recently
-   * displayed images a second life in the cache, improving scroll-back hit rate.
+   * Returns an image reference to the bitmap memory cache. Used by Vito on detach to make recently
+   * displayed images available for reuse, improving scroll-back hit rate.
    *
    * Accepts any [CloseableImage] (static bitmaps as well as animated or XML/SVG decodes). Callers
    * (Vito) are responsible for only offering back the image types they intend via the typed
