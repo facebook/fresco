@@ -23,6 +23,7 @@ import com.facebook.fresco.vito.core.impl.FrescoDrawable2
  * @param showFormat Show the image format (JPEG, PNG, WEBP, etc.)
  * @param showUri Show the image URI (truncated)
  * @param showScaleType Show the scale type
+ * @param showHdr Show whether the displayed bitmap has an HDR gain map
  */
 data class LightweightDebugOverlayConfig(
     val showOrigin: Boolean = true,
@@ -31,6 +32,7 @@ data class LightweightDebugOverlayConfig(
     val showFormat: Boolean = false,
     val showUri: Boolean = false,
     val showScaleType: Boolean = false,
+    val showHdr: Boolean = true,
 )
 
 /**
@@ -132,6 +134,10 @@ class LightweightDebugOverlayFactory2(
   /** Builds debug text based on the [LightweightDebugOverlayConfig]. */
   private fun buildDebugTextFromConfig(drawable: FrescoDrawable2, extras: Extras?): String {
     val parts = mutableListOf<String>()
+
+    if (config.showHdr) {
+      parts.add("HDR ${if (drawable.hasBitmapWithGainmap()) "y" else "n"}")
+    }
 
     // Add origin (abbreviated) using the shared provider
     if (config.showOrigin) {
