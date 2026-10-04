@@ -60,7 +60,7 @@ open class ArrayDrawable(layers: Array<out Drawable?>) :
    * @param layers the layers that this drawable displays
    */
   init {
-    checkNotNull(layers) { "Layers cannot be null" }
+
     for (i in this.layers.indices) {
       DrawableUtils.setCallbacks(this.layers[i], this, this)
     }
