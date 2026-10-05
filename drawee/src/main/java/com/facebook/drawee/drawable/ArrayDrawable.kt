@@ -7,7 +7,6 @@
 
 package com.facebook.drawee.drawable
 
-import android.annotation.TargetApi
 import android.graphics.Canvas
 import android.graphics.ColorFilter
 import android.graphics.Matrix
@@ -15,7 +14,6 @@ import android.graphics.PixelFormat
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
-import android.os.Build
 import kotlin.math.max
 
 /**
@@ -317,7 +315,6 @@ open class ArrayDrawable(layers: Array<out Drawable?>) :
     }
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   override fun setHotspot(x: Float, y: Float) {
     for (i in layers.indices) {
       val drawable = layers[i]

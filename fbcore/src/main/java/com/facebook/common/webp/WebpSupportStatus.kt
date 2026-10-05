@@ -13,9 +13,7 @@ object WebpSupportStatus {
 
   const val sIsSimpleWebpSupported: Boolean = true
 
-  private const val isExtendedWebpSupported: Boolean = true
-
-  const val sIsExtendedWebpSupported: Boolean = isExtendedWebpSupported
+  const val sIsExtendedWebpSupported: Boolean = true
 
   @JvmField var sWebpBitmapFactory: WebpBitmapFactory? = null
 
@@ -78,22 +76,12 @@ object WebpSupportStatus {
       offset: Int,
       headerSize: Int,
   ): Boolean {
-    if (isSimpleWebpHeader(imageHeaderBytes, offset)) {
-      return sIsSimpleWebpSupported
-    }
-
-    if (isLosslessWebpHeader(imageHeaderBytes, offset)) {
-      return sIsExtendedWebpSupported
-    }
-
-    if (isExtendedWebpHeader(imageHeaderBytes, offset, headerSize)) {
-      if (isAnimatedWebpHeader(imageHeaderBytes, offset)) {
-        return false
-      }
-      return sIsExtendedWebpSupported
-    }
-
-    return false
+    // Android supports all static WebP formats at our minimum API level. Animated WebP still
+    // requires a separate decoder on older supported versions.
+    return isSimpleWebpHeader(imageHeaderBytes, offset) ||
+        isLosslessWebpHeader(imageHeaderBytes, offset) ||
+        (isExtendedWebpHeader(imageHeaderBytes, offset, headerSize) &&
+            !isAnimatedWebpHeader(imageHeaderBytes, offset))
   }
 
   @JvmStatic

@@ -7,17 +7,14 @@
 
 package com.facebook.imagepipeline.bitmaps
 
-import android.annotation.TargetApi
 import android.graphics.Bitmap
-import android.os.Build
 import com.facebook.common.references.CloseableReference
 import com.facebook.imagepipeline.core.CloseableReferenceFactory
 import com.facebook.imagepipeline.memory.BitmapPool
 import com.facebook.imageutils.BitmapUtil
 import javax.annotation.concurrent.ThreadSafe
 
-/** Bitmap factory for ART VM (Lollipop and up). */
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+/** Bitmap factory for ART VM. */
 @ThreadSafe
 open class ArtBitmapFactory(
     private val bitmapPool: BitmapPool,

@@ -8,17 +8,14 @@
 package com.facebook.imagepipeline.platform
 
 import android.annotation.SuppressLint
-import android.annotation.TargetApi
 import android.graphics.BitmapFactory.Options
-import android.os.Build
 import androidx.core.util.Pools
 import com.facebook.imagepipeline.memory.BitmapPool
 import com.facebook.imageutils.BitmapUtil
 import java.nio.ByteBuffer
 import javax.annotation.concurrent.ThreadSafe
 
-/** Bitmap decoder for ART VM (Lollipop and up). */
-@TargetApi(Build.VERSION_CODES.LOLLIPOP)
+/** Bitmap decoder for ART VM. */
 @ThreadSafe
 class ArtDecoder(
     bitmapPool: BitmapPool,

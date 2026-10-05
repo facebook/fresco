@@ -7,12 +7,10 @@
 
 package com.facebook.drawee.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.util.AttributeSet;
 import androidx.annotation.DrawableRes;
 import com.facebook.common.internal.Preconditions;
@@ -77,7 +75,6 @@ public class SimpleDraweeView extends GenericDraweeView {
     init(context, attrs);
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public SimpleDraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     init(context, attrs);

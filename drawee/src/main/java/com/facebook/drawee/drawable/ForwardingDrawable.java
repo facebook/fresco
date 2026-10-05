@@ -7,7 +7,6 @@
 
 package com.facebook.drawee.drawable;
 
-import android.annotation.TargetApi;
 import android.graphics.Canvas;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
@@ -15,7 +14,6 @@ import android.graphics.PixelFormat;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
@@ -306,7 +304,6 @@ public class ForwardingDrawable extends Drawable
   }
 
   @Override
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public void setHotspot(float x, float y) {
     if (mCurrentDelegate != null) {
       mCurrentDelegate.setHotspot(x, y);

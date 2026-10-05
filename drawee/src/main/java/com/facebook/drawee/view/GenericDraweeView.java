@@ -7,9 +7,7 @@
 
 package com.facebook.drawee.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
-import android.os.Build;
 import android.util.AttributeSet;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -50,7 +48,6 @@ public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
     inflateHierarchy(context, attrs);
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
   public GenericDraweeView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     inflateHierarchy(context, attrs);

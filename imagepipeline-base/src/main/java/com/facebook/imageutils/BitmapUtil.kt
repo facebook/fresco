@@ -4,6 +4,7 @@
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 package com.facebook.imageutils
 
 import android.annotation.SuppressLint
@@ -41,20 +42,12 @@ object BitmapUtil {
 
   /** @return size in bytes of the underlying bitmap */
   @JvmStatic
-  @SuppressLint("NewApi")
   fun getSizeInBytes(bitmap: Bitmap?): Int {
     if (bitmap == null) {
       return 0
     }
 
-    // There's a known issue in KitKat where getAllocationByteCount() can throw an NPE. This was
-    // apparently fixed in MR1: http://bit.ly/1IvdRpd. We catch any potential NPEs just to be safe.
-    try {
-      return bitmap.allocationByteCount
-    } catch (npe: NullPointerException) {
-      // Swallow exception and try fallbacks.
-    }
-    return bitmap.byteCount
+    return bitmap.allocationByteCount
   }
 
   /**

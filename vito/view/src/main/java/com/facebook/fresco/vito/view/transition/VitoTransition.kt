@@ -10,10 +10,8 @@ package com.facebook.vito.view.transition
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.ValueAnimator
-import android.annotation.TargetApi
 import android.graphics.PointF
 import android.graphics.Rect
-import android.os.Build
 import android.transition.ChangeBounds
 import android.transition.Transition
 import android.transition.TransitionSet
@@ -30,7 +28,6 @@ import com.facebook.fresco.vito.view.VitoView
  * In combination with ChangeBounds, VitoTransition allows ImageViews that change size, shape, or
  * [ScalingUtils.ScaleType] to animate contents smoothly.
  */
-@TargetApi(Build.VERSION_CODES.KITKAT)
 class VitoTransition
 @JvmOverloads
 constructor(

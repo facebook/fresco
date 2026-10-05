@@ -10,10 +10,8 @@ package com.facebook.drawee.view;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
-import android.annotation.TargetApi;
 import android.graphics.PointF;
 import android.graphics.Rect;
-import android.os.Build;
 import android.transition.ChangeBounds;
 import android.transition.Transition;
 import android.transition.TransitionSet;
@@ -30,7 +28,6 @@ import javax.annotation.Nullable;
  * shape, or {@link ScalingUtils.ScaleType} to animate contents smoothly.
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
-@TargetApi(Build.VERSION_CODES.KITKAT)
 public class DraweeTransition extends Transition {
 
   private static final String PROPNAME_BOUNDS = "draweeTransition:bounds";

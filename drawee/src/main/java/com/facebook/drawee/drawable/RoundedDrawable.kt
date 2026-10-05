@@ -16,8 +16,6 @@ import android.graphics.PorterDuff
 import android.graphics.Rect
 import android.graphics.RectF
 import android.graphics.drawable.Drawable
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.annotation.VisibleForTesting
 import com.facebook.imagepipeline.systrace.FrescoSystrace
 import java.util.Arrays
@@ -336,14 +334,13 @@ internal constructor(private val delegate: Drawable) : Drawable(), Rounded, Tran
     delegate.colorFilter = colorFilter
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
   override fun getColorFilter(): ColorFilter? = delegate.colorFilter
 
   override fun clearColorFilter() {
     delegate.clearColorFilter()
   }
 
-  @RequiresApi(api = Build.VERSION_CODES.KITKAT) override fun getAlpha(): Int = delegate.alpha
+  override fun getAlpha(): Int = delegate.alpha
 
   override fun setAlpha(alpha: Int) {
     delegate.alpha = alpha
