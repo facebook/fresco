@@ -86,20 +86,80 @@ class FrameLoaderStrategyTest {
   }
 
   @Test
-  fun onStop_withoutSource_clearsUnreusableFrames() {
+  fun onStop_withoutSource_retainsFramesForRestart() {
     val strategy = createStrategy(animationWidth = 100, animationHeight = 100, source = null)
     strategy.prepareFrames(canvasWidth = 100, canvasHeight = 100, onAnimationLoaded = null)
 
     strategy.onStop()
 
     verify(frameLoader).onStop()
-    verify(frameLoader).clear()
+    verify(frameLoader, org.mockito.Mockito.never()).clear()
+  }
+
+  @Test
+  fun onStop_withoutSource_reusesTheSameLoaderOnRestart() {
+    val factory = FrameLoaderFactory(
+        platformBitmapFactory = mock(),
+        maxFpsRender = 30,
+        bufferLengthMilliseconds = 1000,
+        enableSingleFrameRendering = true,
+    )
+    val strategy = createStrategy(
+        animationWidth = 100,
+        animationHeight = 100,
+        source = null,
+        factory = factory,
+    )
+    val loaderField = FrameLoaderStrategy::class.java.getDeclaredField("frameLoader")
+    loaderField.isAccessible = true
+    strategy.prepareFrames(canvasWidth = 100, canvasHeight = 100, onAnimationLoaded = null)
+    val beforeStop = loaderField.get(strategy)
+
+    strategy.onStop()
+    strategy.prepareFrames(canvasWidth = 100, canvasHeight = 100, onAnimationLoaded = null)
+
+    org.junit.Assert.assertSame(beforeStop, loaderField.get(strategy))
+    val secondStrategy = createStrategy(
+        animationWidth = 100,
+        animationHeight = 100,
+        source = null,
+        factory = factory,
+    )
+    secondStrategy.prepareFrames(canvasWidth = 100, canvasHeight = 100, onAnimationLoaded = null)
+    org.junit.Assert.assertNotSame(beforeStop, loaderField.get(secondStrategy))
+  }
+
+  @Test
+  fun onStop_withoutSource_expiredLoaderIsClearedAndNotReused() {
+    val factory = FrameLoaderFactory(
+        platformBitmapFactory = mock(),
+        maxFpsRender = 30,
+        bufferLengthMilliseconds = 1000,
+        enableSingleFrameRendering = true,
+    )
+    val strategy = createStrategy(
+        animationWidth = 100,
+        animationHeight = 100,
+        source = null,
+        factory = factory,
+    )
+    val loaderField = FrameLoaderStrategy::class.java.getDeclaredField("frameLoader")
+    loaderField.isAccessible = true
+    strategy.prepareFrames(canvasWidth = 100, canvasHeight = 100, onAnimationLoaded = null)
+    val beforeStop = loaderField.get(strategy)
+
+    strategy.onStop()
+    FrameLoaderFactory.clearUnusedUntil(java.util.Date(Long.MAX_VALUE))
+    strategy.prepareFrames(canvasWidth = 100, canvasHeight = 100, onAnimationLoaded = null)
+
+    org.junit.Assert.assertNotSame(beforeStop, loaderField.get(strategy))
   }
 
   private fun createStrategy(
       animationWidth: Int,
       animationHeight: Int,
       source: String? = "test",
+      factory: FrameLoaderFactory = frameLoaderFactory,
   ): FrameLoaderStrategy {
     val animationInformation = mock<AnimationInformation>()
     whenever(animationInformation.width()).thenReturn(animationWidth)
@@ -110,7 +170,7 @@ class FrameLoaderStrategyTest {
         source = source,
         animationInformation = animationInformation,
         bitmapFrameRenderer = bitmapFrameRenderer,
-        frameLoaderFactory = frameLoaderFactory,
+        frameLoaderFactory = factory,
         downscaleFrameToDrawableDimensions = true,
     )
   }

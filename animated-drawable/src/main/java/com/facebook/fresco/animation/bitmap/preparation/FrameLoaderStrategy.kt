@@ -27,7 +27,7 @@ class FrameLoaderStrategy(
     private val downscaleFrameToDrawableDimensions: Boolean,
 ) : BitmapFramePreparationStrategy {
 
-  private val hasReusableCacheKey = source != null
+  private val hasAnonymousCacheKey = source == null
   private val cacheKey = source ?: this.hashCode().toString()
   private val animationWidth: Int = animationInformation.width()
   private val animationHeight: Int = animationInformation.height()
@@ -102,16 +102,13 @@ class FrameLoaderStrategy(
 
   override fun clearFrames() {
     frameLoader?.let {
-      if (hasReusableCacheKey) {
-        FrameLoaderFactory.saveUnusedFrame(
-            cacheKey,
-            it,
-            frameLoaderFactory.enableUnusedFrameLoaderCleanupSync,
-            frameLoaderFactory.enableUnusedFrameLoaderCleanupSyncAndClear,
-        )
-      } else {
-        it.clear()
-      }
+      // Anonymous strategies need their frames on restart, but must not orphan displaced loaders.
+      FrameLoaderFactory.saveUnusedFrame(
+          cacheKey,
+          it,
+          frameLoaderFactory.enableUnusedFrameLoaderCleanupSync || hasAnonymousCacheKey,
+          frameLoaderFactory.enableUnusedFrameLoaderCleanupSyncAndClear || hasAnonymousCacheKey,
+      )
     }
     frameLoader = null
     isRunning = false
