@@ -10,6 +10,7 @@ package com.facebook.fresco.vito.core
 import android.net.Uri
 import com.facebook.common.callercontext.ContextChain
 import com.facebook.common.internal.Supplier
+import java.util.concurrent.Executor
 
 interface FrescoVitoConfig {
   val prefetchConfig: PrefetchConfig
@@ -163,6 +164,15 @@ interface FrescoVitoConfig {
    * Starts a Compose painter's fetch when the painter is created instead of when it is remembered.
    */
   fun fetchInVitoPainterInit(): Boolean = false
+
+  /**
+   * Executor used to create a Compose painter's image request away from the main thread. A null
+   * executor preserves synchronous request creation.
+   *
+   * This only applies when [fetchInVitoPainterInit] is enabled. Drawable attachment, controller
+   * fetch, and Compose state updates still run on the main thread.
+   */
+  fun composeImageRequestExecutor(): Executor? = null
 
   /**
    * Releases a Compose painter's drawable via [FrescoController2.releaseDelayed] instead of
