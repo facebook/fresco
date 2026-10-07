@@ -144,7 +144,7 @@ class DiskStorageCacheTest {
     verifyListenerOnMiss(missingKey)
 
     this@DiskStorageCacheTest.cache!!.clearAll()
-    Mockito.verify<CacheEventListener?>(cacheEventListener).onCleared()
+    Mockito.verify<CacheEventListener>(checkNotNull(cacheEventListener)).onCleared()
 
     Mockito.verifyNoMoreInteractions(cacheEventListener)
   }
@@ -680,7 +680,7 @@ class DiskStorageCacheTest {
   private fun verifyListenerOnHit(key: CacheKey?, resourceId: String?) {
     val cacheEventCaptor = ArgumentCaptor.forClass<CacheEvent?, CacheEvent?>(CacheEvent::class.java)
     cacheEventListenerInOrder!!
-        .verify<CacheEventListener?>(cacheEventListener)
+        .verify<CacheEventListener>(checkNotNull(cacheEventListener))
         .onHit(cacheEventCaptor.capture())
 
     for (event in cacheEventCaptor.getAllValues()) {
@@ -691,7 +691,7 @@ class DiskStorageCacheTest {
   private fun verifyListenerOnMiss(key: CacheKey?) {
     val cacheEventCaptor = ArgumentCaptor.forClass<CacheEvent?, CacheEvent?>(CacheEvent::class.java)
     cacheEventListenerInOrder!!
-        .verify<CacheEventListener?>(cacheEventListener)
+        .verify<CacheEventListener>(checkNotNull(cacheEventListener))
         .onMiss(cacheEventCaptor.capture())
 
     for (event in cacheEventCaptor.getAllValues()) {
@@ -702,7 +702,7 @@ class DiskStorageCacheTest {
   private fun verifyListenerOnWriteAttempt(key: CacheKey?) {
     val cacheEventCaptor = ArgumentCaptor.forClass<CacheEvent?, CacheEvent?>(CacheEvent::class.java)
     cacheEventListenerInOrder!!
-        .verify<CacheEventListener?>(cacheEventListener)
+        .verify<CacheEventListener>(checkNotNull(cacheEventListener))
         .onWriteAttempt(cacheEventCaptor.capture())
 
     CacheEventAssert.assertThat(cacheEventCaptor.getValue()).isNotNull().hasCacheKey(key)
@@ -714,7 +714,7 @@ class DiskStorageCacheTest {
   ): String? {
     val cacheEventCaptor = ArgumentCaptor.forClass<CacheEvent?, CacheEvent?>(CacheEvent::class.java)
     cacheEventListenerInOrder!!
-        .verify<CacheEventListener?>(cacheEventListener)
+        .verify<CacheEventListener>(checkNotNull(cacheEventListener))
         .onWriteSuccess(cacheEventCaptor.capture())
 
     val cacheEvent = cacheEventCaptor.getValue()
@@ -730,7 +730,7 @@ class DiskStorageCacheTest {
   private fun verifyListenerOnWriteException(key: CacheKey?, exception: IOException?) {
     val cacheEventCaptor = ArgumentCaptor.forClass<CacheEvent?, CacheEvent?>(CacheEvent::class.java)
     cacheEventListenerInOrder!!
-        .verify<CacheEventListener?>(cacheEventListener)
+        .verify<CacheEventListener>(checkNotNull(cacheEventListener))
         .onWriteException(cacheEventCaptor.capture())
 
     CacheEventAssert.assertThat(cacheEventCaptor.getValue())
@@ -742,7 +742,7 @@ class DiskStorageCacheTest {
   private fun verifyListenerOnReadException(key: CacheKey?, exception: IOException?) {
     val cacheEventCaptor = ArgumentCaptor.forClass<CacheEvent?, CacheEvent?>(CacheEvent::class.java)
     cacheEventListenerInOrder!!
-        .verify<CacheEventListener?>(cacheEventListener)
+        .verify<CacheEventListener>(checkNotNull(cacheEventListener))
         .onReadException(cacheEventCaptor.capture())
 
     CacheEventAssert.assertThat(cacheEventCaptor.getValue())
