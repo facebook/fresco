@@ -44,8 +44,10 @@ public class GifImage implements AnimatedImage, AnimatedImageDecoder {
 
   private static synchronized void ensure() {
     if (!sInitialized) {
-      sInitialized = true;
+      // Only latch after a successful load, otherwise a swallowed first failure makes every later
+      // native call fail with a misleading UnsatisfiedLinkError (NO_IMPL_FOUND).
       NativeLoader.loadLibrary("gifimage");
+      sInitialized = true;
     }
   }
 
