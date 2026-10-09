@@ -99,20 +99,20 @@ assert the observable effect.
 
 - **D119223405**: removed `assertThatCode` from `KFrescoVitoDrawableRecycleTest`
 
-## 6. Kotlin-Converted Sources Need a Kotlin Plugin
+## 6. Kotlin-Converted Sources Need the Module's Kotlin Setup
 
 Converting a file to Kotlin (or landing a codemod that does) also requires the
 module's `build.gradle` to compile Kotlin, otherwise Java callers in the OSS
 build fail with unresolved references:
 
-- Android modules: `apply plugin: 'kotlin-android'`
+- Android modules on AGP 9: built-in Kotlin support; no `kotlin-android` plugin
 - JVM modules (e.g. `mockito-config`): `apply plugin: 'kotlin'`
 - Both: `kotlin { jvmToolchain(11) }`, replacing any `java { toolchain { ... } }` block
 
 ### Evidence
 
-- **D119215805**, **D119223405**: Kotlin conversions of `NativeJpegTranscoderSoLoader`
-  and the Ashmem memory classes broke the Gradle build until the plugin was added
+- **D121799286**: removed `kotlin-android` after the AGP 9 upgrade
+- **D119215805**, **D119223405**: added the Kotlin plugin and toolchain setup
 
 ## Do NOT Flag
 
