@@ -29,6 +29,16 @@ fun ImageLayerDataModel.setActualImage(
   )
 }
 
+fun ImageLayerDataModel.setActualImage(imageOptions: ImageOptions, dataModel: ImageDataModel?) {
+  configure(
+      dataModel = dataModel,
+      canvasTransformation = imageOptions.createActualImageCanvasTransformation(),
+      roundingOptions = imageOptions.roundingOptions,
+      borderOptions = imageOptions.borderOptions,
+      colorFilter = imageOptions.actualImageColorFilter,
+  )
+}
+
 fun ImageLayerDataModel.setActualImageDrawable(
     imageOptions: ImageOptions,
     actualImageDrawable: Drawable,

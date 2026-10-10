@@ -291,17 +291,30 @@ class KFrescoController(
         }
         val dataSource: DataSource<CloseableReference<CloseableImage>> =
             vitoImagePipeline.fetchDecodedImage(imageRequest, callerContext, null, imageId)
-        dataSource.subscribe(
-            ImageFetchSubscriber(
-                imageId,
-                drawable,
-                imageToDataModelMapper,
-                debugOverlayHandler,
-                uiThreadExecutor,
-            ),
-            if (config.handleImageResultInBackground()) lightweightBackgroundThreadExecutor
-            else uiThreadExecutor,
-        ) // Keyframes require callbacks to be on the main thread.
+        if (config.handleImageResultInBackground()) {
+          dataSource.subscribe(
+              BitmapPreparingImageFetchSubscriber(
+                  imageId,
+                  drawable,
+                  imageToDataModelMapper,
+                  debugOverlayHandler,
+                  uiThreadExecutor,
+                  lightweightBackgroundThreadExecutor,
+              ),
+              uiThreadExecutor,
+          )
+        } else {
+          dataSource.subscribe(
+              ImageFetchSubscriber(
+                  imageId,
+                  drawable,
+                  imageToDataModelMapper,
+                  debugOverlayHandler,
+                  uiThreadExecutor,
+              ),
+              uiThreadExecutor,
+          )
+        }
         if (config.fixKotlinDataSourceRace()) {
           drawable.setDataSource(imageId, dataSource)
         } else {
