@@ -30,6 +30,7 @@ import com.facebook.common.internal.Suppliers;
 import com.facebook.common.memory.ByteArrayPool;
 import com.facebook.common.memory.PooledByteBuffer;
 import com.facebook.common.references.CloseableReference;
+import com.facebook.fresco.middleware.HasExtraData;
 import com.facebook.imageformat.DefaultImageFormats;
 import com.facebook.imagepipeline.common.ImageDecodeOptions;
 import com.facebook.imagepipeline.common.Priority;
@@ -531,6 +532,33 @@ public class DecodeProducerTest {
         .onProducerFinishWithSuccess(
             eq(mProducerContext), eq(DecodeProducer.PRODUCER_NAME), nullable(Map.class));
     inOrder.verifyNoMoreInteractions();
+  }
+
+  @Test
+  public void testDecodeFailure_recordsFailedIntermediateScan() throws Exception {
+    setupNetworkUri();
+    Consumer<EncodedImage> consumer = produceResults();
+    RuntimeException exception = new RuntimeException("intermediate decode failed");
+
+    when(mJobScheduler.updateJob(mEncodedImage, Consumer.NO_FLAGS)).thenReturn(true);
+    when(mProgressiveJpegParser.parseMoreData(mEncodedImage)).thenReturn(true);
+    when(mProgressiveJpegParser.getBestScanNumber()).thenReturn(PREVIEW_SCAN);
+    when(mProgressiveJpegParser.getBestScanEndOffset()).thenReturn(200);
+    when(mImageDecoder.decode(
+            mEncodedImage,
+            200,
+            mProgressiveJpegConfig.getQualityInfo(mImageRequest, PREVIEW_SCAN),
+            IMAGE_DECODE_OPTIONS))
+        .thenThrow(exception);
+
+    consumer.onNewResult(mEncodedImage, Consumer.NO_FLAGS);
+    getJobRunnable().run(mEncodedImage, Consumer.NO_FLAGS);
+
+    assertThat((Integer) mProducerContext.getExtra(HasExtraData.KEY_FAILED_SCAN_NUMBER))
+        .isEqualTo(PREVIEW_SCAN);
+    assertThat((Boolean) mProducerContext.getExtra(HasExtraData.KEY_FAILED_SCAN_IS_INTERMEDIATE))
+        .isEqualTo(true);
+    verify(mConsumer).onFailure(exception);
   }
 
   @Test

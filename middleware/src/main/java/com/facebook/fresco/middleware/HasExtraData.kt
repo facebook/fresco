@@ -77,6 +77,8 @@ interface HasExtraData {
     /* number of deduped request in EncodedCacheKeyMultiplexProducer */
     const val KEY_MULTIPLEX_ENCODED_COUNT = "multiplex_enc_cnt"
     const val KEY_LAST_SCAN_NUMBER = "last_scan_num"
+    const val KEY_FAILED_SCAN_NUMBER = "failed_scan_num"
+    const val KEY_FAILED_SCAN_IS_INTERMEDIATE = "failed_scan_intermediate"
     const val TARGET_SCAN = "target_scan"
 
     const val KEY_IMAGE_SOURCE_EXTRAS = "image_source_extras"
