@@ -74,14 +74,6 @@ data class SampleToggle(
             category = ToggleCategory.CACHE,
             defaultValue = false,
         ),
-        SampleToggle(
-            key = "enable_fresco_disk_cache",
-            label = "Fresco Disk Cache",
-            description =
-                "ON: SharedDiskCacheFactory (shared with Fresco). OFF: DiskCacheFactoryImpl (IG-only)",
-            category = ToggleCategory.CACHE,
-            defaultValue = false,
-        ),
     )
 
     fun loadStates(context: Context): Map<String, Boolean> {

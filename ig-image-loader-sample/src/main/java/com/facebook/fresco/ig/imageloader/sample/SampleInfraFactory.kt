@@ -31,7 +31,6 @@ import com.instagram.common.cache.igdiskcache.intf.SnapshotInputStream
 import com.instagram.common.cache.igdiskcache.intf.SnapshotMetadata
 import com.instagram.common.cache.image.IgImageInfraBuilder
 import com.instagram.common.cache.image.IgImageInfraKotlin
-import com.instagram.common.cache.image.diskcachelayer.DiskCacheFactoryImpl
 import com.instagram.common.cache.image.diskcachelayer.SharedDiskCacheFactory
 import com.instagram.common.cache.image.diskcachelayer.intf.DiskCacheFactory
 import com.instagram.common.cache.image.memorycachelayer.data.CacheType
@@ -79,7 +78,7 @@ object SampleInfraFactory {
    * Bootstrap IG's storage chain: [IGAppsStorageDependencySupplier] → [IgCask].
    *
    * Must be called before [createDiskCacheFactory]. If it fails (e.g., CriticalPath blocker), disk
-   * cache toggles fall back to no-op.
+   * cache falls back to no-op.
    */
   fun bootstrapStorage(context: Context) {
     try {
@@ -125,7 +124,7 @@ object SampleInfraFactory {
       storageBootstrapped = true
       Log.d(TAG, "Storage chain bootstrapped successfully")
     } catch (e: Throwable) {
-      Log.e(TAG, "Storage chain bootstrap failed — disk cache toggles disabled", e)
+      Log.e(TAG, "Storage chain bootstrap failed — disk cache disabled", e)
     }
   }
 
@@ -151,33 +150,19 @@ object SampleInfraFactory {
     return cache
   }
 
-  fun createDiskCacheFactory(
-      context: Context,
-      useSharedCache: Boolean,
-  ): DiskCacheFactory {
+  fun createDiskCacheFactory(context: Context): DiskCacheFactory {
     if (!storageBootstrapped) {
       Log.w(TAG, "Storage not bootstrapped — using no-op disk cache")
       return NoOpDiskCacheFactory
     }
-    return if (useSharedCache) {
-      Log.d(TAG, "DiskCache created: SharedDiskCacheFactory (shared with Fresco)")
-      SharedDiskCacheFactory(
-          context,
-          DISK_CACHE_DIR,
-          DISK_CACHE_SIZE_BYTES,
-          DISK_CACHE_TRIM_FACTOR,
-          DISK_CACHE_STALE_DAYS,
-      )
-    } else {
-      Log.d(TAG, "DiskCache created: DiskCacheFactoryImpl (IG-only)")
-      DiskCacheFactoryImpl(
-          context,
-          DISK_CACHE_DIR,
-          DISK_CACHE_SIZE_BYTES,
-          DISK_CACHE_TRIM_FACTOR,
-          DISK_CACHE_STALE_DAYS,
-      )
-    }
+    Log.d(TAG, "DiskCache created: SharedDiskCacheFactory (shared with Fresco)")
+    return SharedDiskCacheFactory(
+        context,
+        DISK_CACHE_DIR,
+        DISK_CACHE_SIZE_BYTES,
+        DISK_CACHE_TRIM_FACTOR,
+        DISK_CACHE_STALE_DAYS,
+    )
   }
 
   fun buildIgImageInfra(
