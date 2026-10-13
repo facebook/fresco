@@ -377,19 +377,23 @@ public class EncodedImage implements Closeable, HasExtraData {
         ImageFormatChecker.getImageFormat_WrapIOException(getInputStream());
     mImageFormat = imageFormat;
     // A format may register a dimensions decoder for headers BitmapFactory cannot parse (e.g. a
-    // custom container); consult it before the generic BitmapFactory path. The registry is empty
-    // unless a format opts in, so existing formats are unaffected.
+    // custom container) or parses slowly; consult it before the default paths below, which still
+    // run if it returns no dimensions. The registry is empty unless a format opts in, so existing
+    // formats are unaffected.
     final EncodedImageDimensionsDecoder dimensionsDecoder =
         EncodedImageDimensionsDecoderRegistry.get(imageFormat);
-    // BitmapUtil.decodeDimensions has a bug where it will return 100x100 for some WebPs even though
-    // those are not its actual dimensions
-    final Pair<Integer, Integer> dimensions;
+    Pair<Integer, Integer> dimensions = null;
     if (dimensionsDecoder != null) {
       dimensions = readCustomImageSize(dimensionsDecoder);
-    } else if (DefaultImageFormats.isWebpFormat(imageFormat)) {
-      dimensions = readWebPImageSize();
-    } else {
-      dimensions = readImageMetaData().getDimensions();
+    }
+    if (dimensions == null) {
+      // BitmapUtil.decodeDimensions has a bug where it will return 100x100 for some WebPs even
+      // though those are not its actual dimensions
+      if (DefaultImageFormats.isWebpFormat(imageFormat)) {
+        dimensions = readWebPImageSize();
+      } else {
+        dimensions = readImageMetaData().getDimensions();
+      }
     }
     if (imageFormat == DefaultImageFormats.JPEG && mRotationAngle == UNKNOWN_ROTATION_ANGLE) {
       // Load the JPEG rotation angle only if we have the dimensions
@@ -423,7 +427,7 @@ public class EncodedImage implements Closeable, HasExtraData {
       return dimensions;
     } catch (IOException | RuntimeException e) {
       // A truncated/broken stream (or a misbehaving decoder) must not let dimension parsing escape
-      // parseMetaData(): match the WebP/generic paths, which leave dimensions unknown on failure.
+      // parseMetaData(); returning null hands the image to the default path instead.
       return null;
     } finally {
       try {

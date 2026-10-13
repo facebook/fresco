@@ -28,5 +28,10 @@ object EncodedImageDimensionsDecoderRegistry {
   }
 
   @JvmStatic
+  fun unregister(imageFormat: ImageFormat) {
+    decoders.remove(imageFormat)
+  }
+
+  @JvmStatic
   fun get(imageFormat: ImageFormat): EncodedImageDimensionsDecoder? = decoders[imageFormat]
 }

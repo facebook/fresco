@@ -19,6 +19,7 @@ import com.facebook.imageutils.JfifUtil
 import java.io.FileInputStream
 import java.io.IOException
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -43,6 +44,11 @@ class EncodedImageTest {
             return inputStream
           }
         }
+  }
+
+  @After
+  fun tearDown() {
+    EncodedImageDimensionsDecoderRegistry.unregister(DefaultImageFormats.PNG)
   }
 
   @Test
@@ -188,6 +194,51 @@ class EncodedImageTest {
     assertThat(encodedImage.rotationAngle).isEqualTo(0)
     assertThat(encodedImage.exifOrientation).isEqualTo(0)
   }
+
+  @Test
+  @Throws(IOException::class)
+  fun testParseMetaData_registeredDimensionsDecoderIsUsed() {
+    EncodedImageDimensionsDecoderRegistry.register(DefaultImageFormats.PNG) { Pair(12, 34) }
+    val encodedImage = pngEncodedImage()
+    encodedImage.parseMetaData()
+    assertThat(encodedImage.imageFormat).isSameAs(DefaultImageFormats.PNG)
+    assertThat(encodedImage.width).isEqualTo(12)
+    assertThat(encodedImage.height).isEqualTo(34)
+    assertThat(encodedImage.rotationAngle).isEqualTo(0)
+  }
+
+  @Test
+  @Throws(IOException::class)
+  fun testParseMetaData_registeredDimensionsDecoderReturningNullFallsBack() {
+    EncodedImageDimensionsDecoderRegistry.register(DefaultImageFormats.PNG) { null }
+    val encodedImage = pngEncodedImage()
+    encodedImage.parseMetaData()
+    assertThat(encodedImage.imageFormat).isSameAs(DefaultImageFormats.PNG)
+    assertThat(encodedImage.width).isEqualTo(800)
+    assertThat(encodedImage.height).isEqualTo(600)
+  }
+
+  @Test
+  @Throws(IOException::class)
+  fun testParseMetaData_registeredDimensionsDecoderThrowingFallsBack() {
+    EncodedImageDimensionsDecoderRegistry.register(DefaultImageFormats.PNG) {
+      throw IOException("truncated")
+    }
+    val encodedImage = pngEncodedImage()
+    encodedImage.parseMetaData()
+    assertThat(encodedImage.width).isEqualTo(800)
+    assertThat(encodedImage.height).isEqualTo(600)
+  }
+
+  private fun pngEncodedImage(): EncodedImage = EncodedImage(
+      CloseableReference.of(
+          TrivialPooledByteBuffer(
+              ByteStreams.toByteArray(
+                  EncodedImageTest::class.java.getResourceAsStream("images/image.png")!!,
+              ),
+          ),
+      ),
+  )
 
   @Throws(IOException::class)
   private fun checkWebpImage(
