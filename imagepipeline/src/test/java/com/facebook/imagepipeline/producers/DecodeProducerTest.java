@@ -563,6 +563,14 @@ public class DecodeProducerTest {
         .isEqualTo(PREVIEW_SCAN);
     assertThat((Boolean) mProducerContext.getExtra(HasExtraData.KEY_FAILED_SCAN_IS_INTERMEDIATE))
         .isEqualTo(true);
+    assertThat((Integer) mProducerContext.getExtra(HasExtraData.KEY_FIRST_FAILED_SCAN_NUMBER))
+        .isEqualTo(PREVIEW_SCAN);
+    assertThat((Integer) mProducerContext.getExtra(HasExtraData.KEY_FAILED_SCAN_COUNT))
+        .isEqualTo(1);
+    assertThat((Integer) mProducerContext.getExtra(HasExtraData.KEY_FAILED_SCAN_END_OFFSET))
+        .isEqualTo(200);
+    assertThat((String) mProducerContext.getExtra(HasExtraData.KEY_FAILED_SCAN_ERROR_CLASS))
+        .isEqualTo(RuntimeException.class.getName());
     verify(mConsumer).onFailure(exception);
   }
 

@@ -458,6 +458,14 @@ class DecodeProducer(
             newStatus = status or Consumer.IS_RESIZING_DONE
           }
         } catch (e: Exception) {
+          val failedScanCount =
+              (producerContext.getExtra(HasExtraData.KEY_FAILED_SCAN_COUNT) as? Int ?: 0) + 1
+          if (producerContext.getExtra<Int>(HasExtraData.KEY_FIRST_FAILED_SCAN_NUMBER) == null) {
+            producerContext.putExtra(
+                HasExtraData.KEY_FIRST_FAILED_SCAN_NUMBER,
+                lastScheduledScanNumber,
+            )
+          }
           producerContext.putExtra(
               HasExtraData.KEY_FAILED_SCAN_NUMBER,
               lastScheduledScanNumber,
@@ -466,6 +474,9 @@ class DecodeProducer(
               HasExtraData.KEY_FAILED_SCAN_IS_INTERMEDIATE,
               !isLast,
           )
+          producerContext.putExtra(HasExtraData.KEY_FAILED_SCAN_COUNT, failedScanCount)
+          producerContext.putExtra(HasExtraData.KEY_FAILED_SCAN_END_OFFSET, length)
+          producerContext.putExtra(HasExtraData.KEY_FAILED_SCAN_ERROR_CLASS, e.javaClass.name)
           val extraMap = getExtraMap(
               image,
               queueTime,

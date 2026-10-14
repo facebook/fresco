@@ -79,6 +79,10 @@ interface HasExtraData {
     const val KEY_LAST_SCAN_NUMBER = "last_scan_num"
     const val KEY_FAILED_SCAN_NUMBER = "failed_scan_num"
     const val KEY_FAILED_SCAN_IS_INTERMEDIATE = "failed_scan_intermediate"
+    const val KEY_FIRST_FAILED_SCAN_NUMBER = "first_failed_scan_num"
+    const val KEY_FAILED_SCAN_COUNT = "failed_scan_count"
+    const val KEY_FAILED_SCAN_END_OFFSET = "failed_scan_end_offset"
+    const val KEY_FAILED_SCAN_ERROR_CLASS = "failed_scan_error_class"
     const val TARGET_SCAN = "target_scan"
 
     const val KEY_IMAGE_SOURCE_EXTRAS = "image_source_extras"
