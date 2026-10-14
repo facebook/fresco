@@ -32,4 +32,9 @@ public interface ProgressiveJpegConfig {
   default long getTimeBetweenPartialResultsMs(ImageRequest imageRequest) {
     return DEFAULT_TIME_BETWEEN_PARTIAL_RESULTS_MS;
   }
+
+  /** Whether an intermediate progressive JPEG decode failure may wait for a later scan. */
+  default boolean recoverFromIntermediateDecodeFailure(ImageRequest imageRequest) {
+    return false;
+  }
 }

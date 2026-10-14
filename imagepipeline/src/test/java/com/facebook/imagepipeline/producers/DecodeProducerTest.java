@@ -19,6 +19,7 @@ import static org.mockito.Mockito.mockConstruction;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.nullable;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -157,6 +158,19 @@ public class DecodeProducerTest {
     // The mock would otherwise return false, i.e. the opposite of the production default.
     when(mPipelineExperiments.getScheduleLastResultImmediately()).thenReturn(true);
 
+    createDecodeProducer();
+
+    PooledByteBuffer pooledByteBuffer = mockPooledByteBuffer(IMAGE_SIZE);
+    mByteBufferRef = CloseableReference.of(pooledByteBuffer);
+    mEncodedImage = new EncodedImage(mByteBufferRef);
+    mEncodedImage.setImageFormat(DefaultImageFormats.JPEG);
+    mEncodedImage.setWidth(IMAGE_WIDTH);
+    mEncodedImage.setHeight(IMAGE_HEIGHT);
+    mEncodedImage.setRotationAngle(IMAGE_ROTATION_ANGLE);
+    mEncodedImage.setExifOrientation(IMAGE_EXIF_ORIENTATION);
+  }
+
+  private void createDecodeProducer() {
     mDecodeProducer =
         new DecodeProducer(
             mByteArrayPool,
@@ -172,15 +186,6 @@ public class DecodeProducerTest {
             null,
             Suppliers.BOOLEAN_FALSE,
             null);
-
-    PooledByteBuffer pooledByteBuffer = mockPooledByteBuffer(IMAGE_SIZE);
-    mByteBufferRef = CloseableReference.of(pooledByteBuffer);
-    mEncodedImage = new EncodedImage(mByteBufferRef);
-    mEncodedImage.setImageFormat(DefaultImageFormats.JPEG);
-    mEncodedImage.setWidth(IMAGE_WIDTH);
-    mEncodedImage.setHeight(IMAGE_HEIGHT);
-    mEncodedImage.setRotationAngle(IMAGE_ROTATION_ANGLE);
-    mEncodedImage.setExifOrientation(IMAGE_EXIF_ORIENTATION);
   }
 
   private static EncodedImage mockEncodedJpeg(CloseableReference<PooledByteBuffer> ref) {
@@ -558,6 +563,58 @@ public class DecodeProducerTest {
         .isEqualTo(PREVIEW_SCAN);
     assertThat((Boolean) mProducerContext.getExtra(HasExtraData.KEY_FAILED_SCAN_IS_INTERMEDIATE))
         .isEqualTo(true);
+    verify(mConsumer).onFailure(exception);
+  }
+
+  @Test
+  public void testDecodeFailure_recoveryEnabled_waitsForFinalScan() throws Exception {
+    setupNetworkUri();
+    mProgressiveJpegConfig = spy(mProgressiveJpegConfig);
+    when(mProgressiveJpegConfig.recoverFromIntermediateDecodeFailure(mImageRequest))
+        .thenReturn(true);
+    createDecodeProducer();
+    Consumer<EncodedImage> consumer = produceResults();
+    RuntimeException exception = new RuntimeException("intermediate decode failed");
+
+    when(mJobScheduler.updateJob(mEncodedImage, Consumer.NO_FLAGS)).thenReturn(true);
+    when(mProgressiveJpegParser.parseMoreData(mEncodedImage)).thenReturn(true);
+    when(mProgressiveJpegParser.getBestScanNumber()).thenReturn(PREVIEW_SCAN);
+    when(mProgressiveJpegParser.getBestScanEndOffset()).thenReturn(200);
+    when(mImageDecoder.decode(
+            mEncodedImage,
+            200,
+            mProgressiveJpegConfig.getQualityInfo(mImageRequest, PREVIEW_SCAN),
+            IMAGE_DECODE_OPTIONS))
+        .thenThrow(exception);
+
+    consumer.onNewResult(mEncodedImage, Consumer.NO_FLAGS);
+    getJobRunnable().run(mEncodedImage, Consumer.NO_FLAGS);
+    verify(mConsumer, never()).onFailure(any());
+
+    EncodedImage finalEncodedImage = mockEncodedJpeg(mByteBufferRef.clone());
+    getJobRunnable().run(finalEncodedImage, Consumer.IS_LAST);
+
+    verify(mImageDecoder)
+        .decode(
+            finalEncodedImage, IMAGE_SIZE, ImmutableQualityInfo.FULL_QUALITY, IMAGE_DECODE_OPTIONS);
+    verify(mConsumer, never()).onFailure(any());
+  }
+
+  @Test
+  public void testDecodeFailure_recoveryEnabled_doesNotSuppressFinalFailure() throws Exception {
+    setupNetworkUri();
+    mProgressiveJpegConfig = spy(mProgressiveJpegConfig);
+    when(mProgressiveJpegConfig.recoverFromIntermediateDecodeFailure(mImageRequest))
+        .thenReturn(true);
+    createDecodeProducer();
+    produceResults();
+    RuntimeException exception = new RuntimeException("final decode failed");
+    when(mImageDecoder.decode(
+            mEncodedImage, IMAGE_SIZE, ImmutableQualityInfo.FULL_QUALITY, IMAGE_DECODE_OPTIONS))
+        .thenThrow(exception);
+
+    getJobRunnable().run(mEncodedImage, Consumer.IS_LAST);
+
     verify(mConsumer).onFailure(exception);
   }
 

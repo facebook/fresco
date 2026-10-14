@@ -477,6 +477,15 @@ class DecodeProducer(
               sampleSize,
           )
           producerListener.onProducerFinishWithFailure(producerContext, PRODUCER_NAME, e, extraMap)
+          if (
+              !isLast &&
+                  encodedImage.imageFormat === DefaultImageFormats.JPEG &&
+                  progressiveJpegConfig.recoverFromIntermediateDecodeFailure(
+                      producerContext.imageRequest,
+                  )
+          ) {
+            return
+          }
           handleError(e)
           return
         }
