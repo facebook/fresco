@@ -23,6 +23,7 @@ import com.facebook.fresco.vito.listener.BaseImageListener;
 import com.facebook.fresco.vito.options.ImageOptions;
 import com.facebook.fresco.vito.view.VitoView;
 import com.facebook.imagepipeline.image.ImageInfo;
+import com.facebook.infer.annotation.Nullsafe;
 import javax.annotation.Nullable;
 
 /**
@@ -30,6 +31,7 @@ import javax.annotation.Nullable;
  *
  * <p>Once the image loads, pinch-to-zoom and translation gestures are enabled.
  */
+@Nullsafe(Nullsafe.Mode.LOCAL)
 public class ZoomableVitoView extends ImageView implements ScrollingView {
 
   private static final Class<?> TAG = ZoomableVitoView.class;
