@@ -7,9 +7,10 @@
 
 package com.facebook.imagepipeline.producers
 
+// Meta's ImmutableMap, not Guava's (temporary-lint alias).
 import android.annotation.SuppressLint
 import androidx.annotation.VisibleForTesting
-import com.facebook.common.internal.ImmutableMap
+import com.facebook.common.internal.ImmutableMap as FbImmutableMap
 import com.facebook.common.internal.Preconditions
 import com.facebook.common.references.CloseableReference
 import com.facebook.imagepipeline.bitmaps.PlatformBitmapFactory
@@ -229,7 +230,7 @@ class PostprocessorProducer(
       if (!listener.requiresExtraMap(producerContext, NAME)) {
         return null
       }
-      return ImmutableMap.of<String?, String?>(POSTPROCESSOR, postprocessor!!.getName())
+      return FbImmutableMap.of<String?, String?>(POSTPROCESSOR, postprocessor!!.getName())
     }
 
     fun shouldPostprocess(sourceImage: CloseableImage?): Boolean {

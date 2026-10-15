@@ -98,7 +98,7 @@ class BasePoolTest {
     Assertions.assertThat(mPool!!.inUseValues.contains(b1)).isTrue()
     mStats!!.refresh()
     Assertions.assertThat<Int?, IntPair?>(mStats!!.bucketStats)
-        .isEqualTo(ImmutableMap.of<Int?, IntPair?>(2, IntPair(1, 0)))
+        .isEqualTo(ImmutableMap.of<Int, IntPair>(2, IntPair(1, 0)))
     Assertions.assertThat(mStats!!.freeBytes).isEqualTo(0)
     Assertions.assertThat(mStats!!.usedBytes).isEqualTo(2)
     Assertions.assertThat(mStats!!.freeCount).isEqualTo(0)
@@ -115,7 +115,7 @@ class BasePoolTest {
     Assertions.assertThat(mPool!!.inUseValues.contains(b2)).isTrue()
     mStats!!.refresh()
     Assertions.assertThat<Int?, IntPair?>(mStats!!.bucketStats)
-        .isEqualTo(ImmutableMap.of<Int?, IntPair?>(2, IntPair(0, 1), 4, IntPair(1, 0)))
+        .isEqualTo(ImmutableMap.of<Int, IntPair>(2, IntPair(0, 1), 4, IntPair(1, 0)))
     Assertions.assertThat(mStats!!.freeBytes).isEqualTo(2)
     Assertions.assertThat(mStats!!.usedBytes).isEqualTo(4)
     Assertions.assertThat(mStats!!.freeCount).isEqualTo(1)
@@ -133,7 +133,7 @@ class BasePoolTest {
     Assertions.assertThat(b1.size).isEqualTo(2)
     mStats!!.refresh()
     Assertions.assertThat<Int?, IntPair?>(mStats!!.bucketStats)
-        .isEqualTo(ImmutableMap.of<Int?, IntPair?>(2, IntPair(0, 1)))
+        .isEqualTo(ImmutableMap.of<Int, IntPair>(2, IntPair(0, 1)))
     Assertions.assertThat(mStats!!.freeBytes).isEqualTo(2)
     Assertions.assertThat(mStats!!.usedBytes).isEqualTo(0)
     Assertions.assertThat(mStats!!.freeCount).isEqualTo(1)
@@ -146,7 +146,7 @@ class BasePoolTest {
     Assertions.assertThat(mPool!!.inUseValues.contains(b2)).isTrue()
     mStats!!.refresh()
     Assertions.assertThat<Int?, IntPair?>(mStats!!.bucketStats)
-        .isEqualTo(ImmutableMap.of<Int?, IntPair?>(2, IntPair(1, 0)))
+        .isEqualTo(ImmutableMap.of<Int, IntPair>(2, IntPair(1, 0)))
     Assertions.assertThat(mStats!!.freeBytes).isEqualTo(0)
     Assertions.assertThat(mStats!!.usedBytes).isEqualTo(2)
     Assertions.assertThat(mStats!!.freeCount).isEqualTo(0)
@@ -165,7 +165,7 @@ class BasePoolTest {
     // verify stats
     mStats!!.refresh()
     Assertions.assertThat<Int?, IntPair?>(mStats!!.bucketStats)
-        .isEqualTo(ImmutableMap.of<Int?, IntPair?>(2, IntPair(0, 1)))
+        .isEqualTo(ImmutableMap.of<Int, IntPair>(2, IntPair(0, 1)))
     Assertions.assertThat(mStats!!.freeBytes).isEqualTo(2)
     Assertions.assertThat(mStats!!.usedBytes).isEqualTo(0)
     Assertions.assertThat(mStats!!.freeCount).isEqualTo(1)
@@ -184,7 +184,7 @@ class BasePoolTest {
     mPool!!.get(2)
     mStats!!.refresh()
     Assertions.assertThat<Int?, IntPair?>(mStats!!.bucketStats)
-        .isEqualTo(ImmutableMap.of<Int?, IntPair?>(2, IntPair(3, 0)))
+        .isEqualTo(ImmutableMap.of<Int, IntPair>(2, IntPair(3, 0)))
     Assertions.assertThat(mStats!!.usedBytes).isEqualTo(6)
     Assertions.assertThat(mStats!!.usedCount).isEqualTo(3)
     Assertions.assertThat(mStats!!.freeBytes).isEqualTo(0)
@@ -195,7 +195,7 @@ class BasePoolTest {
 
     mStats!!.refresh()
     Assertions.assertThat<Int?, IntPair?>(mStats!!.bucketStats)
-        .isEqualTo(ImmutableMap.of<Int?, IntPair?>(2, IntPair(2, 0)))
+        .isEqualTo(ImmutableMap.of<Int, IntPair>(2, IntPair(2, 0)))
     Assertions.assertThat(mStats!!.usedBytes).isEqualTo(4)
     Assertions.assertThat(mStats!!.usedCount).isEqualTo(2)
     Assertions.assertThat(mStats!!.freeBytes).isEqualTo(0)
@@ -217,7 +217,7 @@ class BasePoolTest {
     // verify stats
     mStats!!.refresh()
     Assertions.assertThat<Int?, IntPair?>(mStats!!.bucketStats)
-        .isEqualTo(ImmutableMap.of<Int?, IntPair?>(2, IntPair(1, 0)))
+        .isEqualTo(ImmutableMap.of<Int, IntPair>(2, IntPair(1, 0)))
     Assertions.assertThat(mStats!!.freeBytes).isEqualTo(0)
     Assertions.assertThat(mStats!!.usedBytes).isEqualTo(2)
     Assertions.assertThat(mStats!!.freeCount).isEqualTo(0)
@@ -239,7 +239,7 @@ class BasePoolTest {
     // verify stats
     mStats!!.refresh()
     Assertions.assertThat<Int?, IntPair?>(mStats!!.bucketStats)
-        .isEqualTo(ImmutableMap.of<Int?, IntPair?>(2, IntPair(0, 0)))
+        .isEqualTo(ImmutableMap.of<Int, IntPair>(2, IntPair(0, 0)))
     Assertions.assertThat(mStats!!.freeBytes).isEqualTo(0)
     Assertions.assertThat(mStats!!.usedBytes).isEqualTo(0)
     Assertions.assertThat(mStats!!.freeCount).isEqualTo(0)
@@ -339,7 +339,7 @@ class BasePoolTest {
     Assertions.assertThat(mStats!!.usedBytes).isEqualTo(2)
     Assertions.assertThat<Int?, IntPair?>(mStats!!.bucketStats)
         .isEqualTo(
-            ImmutableMap.of<Int?, IntPair?>(2, IntPair(1, 0), 4, IntPair(0, 0), 6, IntPair(0, 1)),
+            ImmutableMap.of<Int, IntPair>(2, IntPair(1, 0), 4, IntPair(0, 0), 6, IntPair(0, 1)),
         )
 
     // perform another trim
@@ -349,7 +349,7 @@ class BasePoolTest {
     Assertions.assertThat(mStats!!.usedBytes).isEqualTo(2)
     Assertions.assertThat<Int?, IntPair?>(mStats!!.bucketStats)
         .isEqualTo(
-            ImmutableMap.of<Int?, IntPair?>(2, IntPair(1, 0), 4, IntPair(0, 0), 6, IntPair(0, 0)),
+            ImmutableMap.of<Int, IntPair>(2, IntPair(1, 0), 4, IntPair(0, 0), 6, IntPair(0, 0)),
         )
   }
 
