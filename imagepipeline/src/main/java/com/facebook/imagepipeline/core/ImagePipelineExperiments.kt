@@ -97,7 +97,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
    * intermediate scan.
    */
   val scheduleLastResultImmediately: Boolean
-  val streamingDecodeEnabled: Boolean
   val throwCacheMissExceptionOnCacheMiss: Boolean
   val usePostProcessedCacheKey: Boolean
   val usePostprocessorDuringDecodedPrefetch: Boolean
@@ -179,10 +178,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
     // Defaults on: this is the shipped behavior, and the flag exists so it can be turned off for
     // the control group of an A/B test.
     @JvmField var scheduleLastResultImmediately = true
-
-    // Kill switch for the whole StreamingImageDecoder path in DecodeProducer. Off means partial
-    // results are handled exactly as before, whatever decoders are registered.
-    @JvmField var streamingDecodeEnabled = false
 
     @JvmField var throwCacheMissExceptionOnCacheMiss = false
 
@@ -440,10 +435,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
       this.scheduleLastResultImmediately = scheduleLastResultImmediately
     }
 
-    fun setStreamingDecodeEnabled(streamingDecodeEnabled: Boolean) = asBuilder {
-      this.streamingDecodeEnabled = streamingDecodeEnabled
-    }
-
     fun setPlatformDecoderOptions(platformDecoderOptions: PlatformDecoderOptions) = asBuilder {
       this.platformDecoderOptions = platformDecoderOptions
     }
@@ -654,7 +645,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
         builder.intermediateProgressUpdatesForPrefetchDisabled
     skipNonJpegIntermediateDecodeScheduling = builder.skipNonJpegIntermediateDecodeScheduling
     scheduleLastResultImmediately = builder.scheduleLastResultImmediately
-    streamingDecodeEnabled = builder.streamingDecodeEnabled
     throwCacheMissExceptionOnCacheMiss = builder.throwCacheMissExceptionOnCacheMiss
     usePostProcessedCacheKey = builder.usePostProcessedCacheKey
     usePostprocessorDuringDecodedPrefetch = builder.usePostprocessorDuringDecodedPrefetch
@@ -663,15 +653,6 @@ class ImagePipelineExperiments private constructor(builder: Builder) {
   }
 
   companion object {
-    /**
-     * Suffix appended to the encoded cache key for `fetchEncodedImage` raw-bytes requests by the
-     * AVIF predecode [encodedImageRequestTransformer], keeping them in a separate keyspace from any
-     * AVIF predecode recompressed blob stored under the plain encoded key. Kept here (rather than
-     * in the predecode feature module) so the core cache-key normalization (`FbCacheKeyFactory`)
-     * can reference it without depending on that feature module.
-     */
-    const val AVIF_PREDECODE_RAW_ENCODED_KEY_SUFFIX: String = ":avif-raw-encoded"
-
     @JvmStatic
     fun newBuilder(configBuilder: ImagePipelineConfig.Builder): Builder = Builder(configBuilder)
   }

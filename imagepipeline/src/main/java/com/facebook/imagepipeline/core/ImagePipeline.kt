@@ -391,10 +391,9 @@ class ImagePipeline(
         imageRequest = ImageRequestBuilder.fromRequest(imageRequest).setResizeOptions(null).build()
       }
       // Apply the configured encoded-image-request transformer if one is set (null = identity).
-      // This
-      // is the generic hook a feature uses to rewrite the request -- e.g. AVIF predecode moves
-      // raw-bytes consumers (save/share/upload) into a separate encoded keyspace -- so no
-      // image-format-specific logic lives in the generic pipeline here.
+      // This is the generic hook a feature uses to rewrite the request (e.g. to move it into a
+      // separate encoded cache keyspace), so no image-format-specific logic lives in the generic
+      // pipeline here.
       imageRequest =
           config.experiments.encodedImageRequestTransformer?.invoke(imageRequest) ?: imageRequest
       submitFetchRequest(

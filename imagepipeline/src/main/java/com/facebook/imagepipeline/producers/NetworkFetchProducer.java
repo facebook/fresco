@@ -29,8 +29,7 @@ import javax.annotation.Nullable;
  * A producer to actually fetch images from the network.
  *
  * <p>Downloaded bytes may be passed to the consumer as they are downloaded, but not more often than
- * {@link #TIME_BETWEEN_PARTIAL_RESULTS_MS}, and no closer together than any {@link
- * PartialResultThrottle} the {@link NetworkFetcher} sets.
+ * {@link #TIME_BETWEEN_PARTIAL_RESULTS_MS}.
  *
  * <p>Clients should provide an instance of {@link NetworkFetcher} to make use of their networking
  * stack. Use {@link HttpUrlConnectionNetworkFetcher} as a model.
@@ -104,9 +103,6 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
     } else {
       pooledOutputStream = mPooledByteBufferFactory.newOutputStream();
     }
-    // A redirect or a retry drives a second response body through the same fetch state, against a
-    // stream whose size starts over at zero.
-    fetchState.setLastIntermediateResultSizeBytes(0);
     final byte[] ioArray = mByteArrayPool.get(READ_SIZE);
     try {
       int length;
@@ -147,35 +143,24 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
 
   protected void maybeHandleIntermediateResult(
       PooledByteBufferOutputStream pooledOutputStream, FetchState fetchState) {
-    if (!shouldPropagateIntermediateResults(fetchState, fetchState.getContext())) {
-      return;
+    final long nowMs;
+    if (shouldPropagateIntermediateResults(fetchState, fetchState.getContext())
+        && (nowMs = getSystemUptime()) - fetchState.getLastIntermediateResultTimeMs()
+            >= getTimeBetweenPartialResultsMs(fetchState)) {
+      fetchState.setLastIntermediateResultTimeMs(nowMs);
+      fetchState.getContext().putOriginExtra("network");
+      fetchState
+          .getListener()
+          .onProducerEvent(
+              fetchState.getContext(), PRODUCER_NAME, INTERMEDIATE_RESULT_PRODUCER_EVENT);
+      notifyConsumer(
+          pooledOutputStream,
+          fetchState.getOnNewResultStatusFlags(),
+          fetchState.getResponseBytesRange(),
+          fetchState.getConsumer(),
+          fetchState.getContext(),
+          fetchState.getQuery());
     }
-    final PartialResultThrottle throttle = resolvePartialResultThrottle(fetchState);
-    final long nowMs = getSystemUptime();
-    if (nowMs - fetchState.getLastIntermediateResultTimeMs()
-        < throttle.minIntervalMsOr(getTimeBetweenPartialResultsMs(fetchState))) {
-      return;
-    }
-    final int sizeBytes = pooledOutputStream.size();
-    if (!throttle.allowsPropagationAt(sizeBytes, fetchState.getLastIntermediateResultSizeBytes())) {
-      return;
-    }
-    // Both counters advance here rather than alongside the checks above, so a partial result one
-    // gate lets through and another holds back does not consume the other's budget.
-    fetchState.setLastIntermediateResultTimeMs(nowMs);
-    fetchState.setLastIntermediateResultSizeBytes(sizeBytes);
-    fetchState.getContext().putOriginExtra("network");
-    fetchState
-        .getListener()
-        .onProducerEvent(
-            fetchState.getContext(), PRODUCER_NAME, INTERMEDIATE_RESULT_PRODUCER_EVENT);
-    notifyConsumer(
-        pooledOutputStream,
-        fetchState.getOnNewResultStatusFlags(),
-        fetchState.getResponseBytesRange(),
-        fetchState.getConsumer(),
-        fetchState.getContext(),
-        fetchState.getQuery());
   }
 
   protected void handleFinalResult(
@@ -248,24 +233,6 @@ public class NetworkFetchProducer implements Producer<EncodedImage> {
       return false;
     }
     return mNetworkFetcher.shouldPropagate(fetchState);
-  }
-
-  /**
-   * Caches the fetcher's answer for the rest of the fetch, so a fetcher that resolves it from
-   * configuration is asked once rather than on every chunk of the response body. {@link
-   * PartialResultThrottle#NONE} stands in for "asked, and there is none", leaving null to mean "not
-   * asked yet".
-   */
-  private PartialResultThrottle resolvePartialResultThrottle(FetchState fetchState) {
-    PartialResultThrottle throttle = fetchState.getPartialResultThrottle();
-    if (throttle == null) {
-      throttle = mNetworkFetcher.getPartialResultThrottle(fetchState);
-      if (throttle == null) {
-        throttle = PartialResultThrottle.NONE;
-      }
-      fetchState.setPartialResultThrottle(throttle);
-    }
-    return throttle;
   }
 
   @Nullable

@@ -8,7 +8,6 @@
 package com.facebook.imagepipeline.producers
 
 import android.net.Uri
-import com.facebook.imageformat.ImageFormat
 import com.facebook.imagepipeline.common.BytesRange
 import com.facebook.imagepipeline.image.EncodedImage
 
@@ -21,21 +20,6 @@ open class FetchState(val consumer: Consumer<EncodedImage?>, val context: Produc
   var lastIntermediateResultTimeMs: Long = 0
 
   /**
-   * Size this response body had reached when it last propagated a partial result, and 0 before the
-   * first one. Advanced only when a partial result really goes out, so one that a later gate holds
-   * back does not consume a threshold, and reset by [NetworkFetchProducer] for every response body,
-   * because a redirect or a retry starts the byte count over on a fresh stream.
-   */
-  var lastIntermediateResultSizeBytes: Int = 0
-
-  /**
-   * How this fetch's partial results are spaced, asked of the [NetworkFetcher] the first time one
-   * is eligible and null until then. Held for the whole fetch so a fetcher that resolves it from
-   * configuration is asked once rather than on every chunk.
-   */
-  var partialResultThrottle: PartialResultThrottle? = null
-
-  /**
    * EXPERIMENTAL: Allows the fetcher to set extra status flags to be included in calls to
    * [ ][Consumer.onNewResult].
    */
@@ -46,15 +30,6 @@ open class FetchState(val consumer: Consumer<EncodedImage?>, val context: Produc
    * the whole image by defining the range of bytes being provided.
    */
   var responseBytesRange: BytesRange? = null
-
-  /**
-   * Format of the response body, sniffed from its first bytes once they arrive, and null before
-   * that or for a body no registered checker recognises. Set by fetchers that identify the body
-   * before handing it on, so that decisions which are format-specific — whether partial results are
-   * worth propagating, in particular — can be made from what actually came back rather than from
-   * the URL that asked for it.
-   */
-  @Volatile var responseImageFormat: ImageFormat? = null
 
   val id: String
     get() = context.id
