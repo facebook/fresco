@@ -28,6 +28,7 @@ class ImageLayerDataModel(
     var invalidateLayerCallback: (() -> Unit)? = null,
     val optimizeAlphaHandling: Boolean = false,
     val resetOnZeroDurationFadeOut: Boolean = false,
+    private val skipRedundantImageClip: Boolean = false,
 ) {
   private var dataModel: ImageDataModel? = null
   private var roundingOptions: RoundingOptions? = null
@@ -107,6 +108,7 @@ class ImageLayerDataModel(
             bounds,
             paint,
             alpha,
+            skipRedundantImageClip = skipRedundantImageClip,
         )
   }
 

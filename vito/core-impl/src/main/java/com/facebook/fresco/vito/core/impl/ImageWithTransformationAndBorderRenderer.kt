@@ -28,6 +28,7 @@ class ImageWithTransformationAndBorderRenderer {
         bounds: Rect,
         paint: Paint,
         alpha: Int = 255,
+        skipRedundantImageClip: Boolean = false,
     ): (Canvas) -> Unit {
       val borderPadding: Float = borderOptions?.padding ?: 0f
       val borderWidth: Float = borderOptions?.width ?: 0f
@@ -65,10 +66,15 @@ class ImageWithTransformationAndBorderRenderer {
             // Prevent repeated pixels from CLAMP shader tile mode by clipping the rect to the
             // transformed
             // image dimensions
-            // We could optimize this to only clip if we actually would have repeated pixels.
             val imageRect = RectF(0f, 0f, model.width.toFloat(), model.height.toFloat())
             imageTransform?.mapRect(imageRect)
-            imageRect
+            imageRect.takeUnless {
+              skipRedundantImageClip &&
+                  it.left < layerBounds.left &&
+                  it.top < layerBounds.top &&
+                  it.right > layerBounds.right &&
+                  it.bottom > layerBounds.bottom
+            }
           } else {
             null
           }

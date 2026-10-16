@@ -119,6 +119,7 @@ class KFrescoController(
           config.fixClearActualImageLayerOnClose(),
           config.fixResetPlaceholderOnZeroFade(),
           config.fixKotlinActualImageBounds(),
+          skipRedundantImageClip = uiFramework == "compose" && config.enableComposeImagePathFixes(),
       )
       drawable.uiFramework = uiFramework
       imagePerfLoggingListenerSupplier

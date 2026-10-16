@@ -39,6 +39,7 @@ class KFrescoVitoDrawable(
     private val clearActualImageLayerOnClose: Boolean = false,
     private val resetPlaceholderOnZeroFade: Boolean = false,
     private val fixActualImageBounds: Boolean = false,
+    private val skipRedundantImageClip: Boolean = false,
 ) : Drawable(), FrescoDrawableInterface, Drawable.Callback {
 
   var _imageId: Long = 0
@@ -242,6 +243,7 @@ class KFrescoVitoDrawable(
       invalidateLayerCallback,
       optimizeAlphaHandling,
       resetPlaceholderOnZeroFade,
+      skipRedundantImageClip = skipRedundantImageClip,
   )
 
   override fun invalidateDrawable(who: Drawable) {

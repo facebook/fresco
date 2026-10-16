@@ -165,6 +165,8 @@ interface FrescoVitoConfig {
    */
   fun fetchInVitoPainterInit(): Boolean = false
 
+  fun enableComposeImagePathFixes(): Boolean = false
+
   /**
    * Executor used to create a Compose painter's image request away from the main thread. A null
    * executor preserves synchronous request creation.
