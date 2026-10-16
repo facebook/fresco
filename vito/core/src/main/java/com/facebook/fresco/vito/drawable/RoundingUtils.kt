@@ -121,6 +121,7 @@ object RoundingUtils {
         applyRounding(getRoundedDrawable(resources, drawable), borderOptions, roundingOptions)
       }
 
+  @Suppress("UNCHECKED_CAST")
   private fun <T> getRoundedDrawable(resources: Resources, drawable: Drawable): T
       where T : Drawable, T : Rounded =
       when (drawable) {
@@ -146,6 +147,7 @@ object RoundingUtils {
       // We use the same rounded corner drawable to draw the border without applying rounding
       roundedCornerDrawable(drawable, borderOptions, null)
 
+  @Suppress("UNCHECKED_CAST")
   private fun <T> getRoundedDrawable(resources: Resources, bitmap: Bitmap?): T
       where T : Drawable, T : Rounded = RoundedBitmapDrawable(resources, bitmap) as T
 

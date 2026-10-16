@@ -68,6 +68,7 @@ class ControllerListenerWrapper(private val controllerListener: ControllerListen
     controllerListener.onRelease(toStringId(id))
   }
 
+  @Suppress("UNCHECKED_CAST")
   override fun onImageDrawn(id: String, imageInfo: ImageInfo, dimensionsInfo: DimensionsInfo) {
     (controllerListener as? OnDrawControllerListener<ImageInfo>)?.onImageDrawn(
         id,
