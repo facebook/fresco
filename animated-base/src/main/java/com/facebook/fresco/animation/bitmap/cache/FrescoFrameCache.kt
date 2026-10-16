@@ -185,12 +185,10 @@ class FrescoFrameCache(
                 closeableImage!!.get() is CloseableStaticBitmap
         ) {
           val closeableStaticBitmap = closeableImage.get() as CloseableStaticBitmap
-          if (closeableStaticBitmap != null) {
-            // We return a clone of the underlying bitmap reference that has to be manually closed
-            // and then close the passed CloseableStaticBitmap in order to preserve correct
-            // cache size calculations.
-            return closeableStaticBitmap.cloneUnderlyingBitmapReference()
-          }
+          // We return a clone of the underlying bitmap reference that has to be manually closed
+          // and then close the passed CloseableStaticBitmap in order to preserve correct
+          // cache size calculations.
+          return closeableStaticBitmap.cloneUnderlyingBitmapReference()
         }
         // Not a bitmap reference, so we return null
         return null

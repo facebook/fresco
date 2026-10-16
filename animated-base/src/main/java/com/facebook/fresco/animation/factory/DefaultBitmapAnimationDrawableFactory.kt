@@ -128,7 +128,7 @@ class DefaultBitmapAnimationDrawableFactory(
         .getOrElse { e ->
           when (e) {
             is NullPointerException -> {
-              val uri = closeableImage.getExtra<Any?>(HasExtraData.KEY_URI_SOURCE)
+              val uri: Any? = closeableImage.getExtra(HasExtraData.KEY_URI_SOURCE)
               if (uri != null) {
                 throw NullPointerException("${e.message} uri=${uri}")
               } else {

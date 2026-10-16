@@ -70,7 +70,7 @@ class AnimatedDrawableUtil {
    * @return the frame index for the timestamp or the last frame number if the timestamp is outside
    *   the duration of the entire animation
    */
-  fun getFrameForTimestampMs(frameTimestampsMs: IntArray?, timestampMs: Int): Int {
+  fun getFrameForTimestampMs(frameTimestampsMs: IntArray, timestampMs: Int): Int {
     val index = Arrays.binarySearch(frameTimestampsMs, timestampMs)
     return if (index < 0) {
       -index - 1 - 1
