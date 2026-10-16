@@ -147,7 +147,7 @@ class MainActivity : AppCompatActivity() {
             PackageManager.PERMISSION_GRANTED)
   }
 
-  protected override fun onSaveInstanceState(outState: Bundle) {
+  override fun onSaveInstanceState(outState: Bundle) {
     super.onSaveInstanceState(outState)
     outState.putBoolean(EXTRA_ALLOW_ANIMATIONS, mAllowAnimations)
     outState.putInt(EXTRA_CURRENT_ADAPTER_INDEX, mCurrentLoaderAdapterIndex)

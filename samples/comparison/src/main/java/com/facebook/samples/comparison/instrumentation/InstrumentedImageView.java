@@ -25,6 +25,7 @@ public class InstrumentedImageView extends ImageView implements Instrumented {
 
   private final Instrumentation mInstrumentation;
 
+  @SuppressWarnings("this-escape")
   public InstrumentedImageView(final Context context) {
     super(context);
     mInstrumentation = new Instrumentation(this);

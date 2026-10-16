@@ -21,6 +21,7 @@ import com.facebook.imagepipeline.image.ImageInfo;
 import javax.annotation.Nullable;
 
 /** {@link ImageView} with instrumentation using Vito. */
+@SuppressWarnings("this-escape")
 public class InstrumentedDraweeView extends ImageView implements Instrumented {
 
   private Instrumentation mInstrumentation;

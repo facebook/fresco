@@ -50,6 +50,7 @@ public class AnimationControlsManager {
         }
       };
 
+  @SuppressWarnings("this-escape")
   public AnimationControlsManager(
       AnimatedDrawable2 animatedDrawable,
       @Nullable SeekBar seekBar,

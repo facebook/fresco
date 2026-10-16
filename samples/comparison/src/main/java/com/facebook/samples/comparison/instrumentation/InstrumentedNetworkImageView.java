@@ -21,6 +21,7 @@ public class InstrumentedNetworkImageView extends NetworkImageView implements In
 
   private final Instrumentation mInstrumentation;
 
+  @SuppressWarnings("this-escape")
   public InstrumentedNetworkImageView(final Context context) {
     super(context);
     mInstrumentation = new Instrumentation(this);
