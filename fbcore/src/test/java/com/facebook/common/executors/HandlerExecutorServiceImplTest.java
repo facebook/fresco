@@ -10,7 +10,6 @@ package com.facebook.common.executors;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import android.os.Handler;
-import android.os.Looper;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.Before;
@@ -18,13 +17,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
-import org.robolectric.annotation.LooperMode;
-import org.robolectric.shadow.api.Shadow;
 import org.robolectric.shadows.ShadowLooper;
 
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest = Config.NONE)
-@LooperMode(LooperMode.Mode.LEGACY) // Required for pausing and unpausing the looper
 public class HandlerExecutorServiceImplTest {
 
   private final AtomicInteger mCounter = new AtomicInteger();
@@ -47,10 +43,9 @@ public class HandlerExecutorServiceImplTest {
 
   @Test
   public void testSimpleExecute() {
-    ShadowLooper.pauseMainLooper();
     mExecutorService.execute(mIncrementCounterRunnable);
     assertThat(mCounter.get()).isEqualTo(0);
-    ShadowLooper.unPauseMainLooper();
+    ShadowLooper.idleMainLooper();
     assertThat(mCounter.get()).isEqualTo(1);
   }
 
@@ -58,7 +53,7 @@ public class HandlerExecutorServiceImplTest {
   public void testDelay() {
     mExecutorService.schedule(mIncrementCounterRunnable, 30, TimeUnit.SECONDS);
     assertThat(mCounter.get()).isEqualTo(0);
-    ((ShadowLooper) Shadow.extract(Looper.getMainLooper())).getScheduler().advanceBy(30 * 1000);
+    ShadowLooper.idleMainLooper(30, TimeUnit.SECONDS);
     assertThat(mCounter.get()).isEqualTo(1);
   }
 }
