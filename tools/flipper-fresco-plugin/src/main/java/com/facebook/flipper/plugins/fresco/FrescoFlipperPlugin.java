@@ -96,6 +96,7 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
   @Nullable private final FrescoFlipperDebugPrefHelper mDebugPrefHelper;
   private final List<FlipperObject> mEvents = new ArrayList<>();
 
+  @SuppressWarnings("this-escape")
   public FrescoFlipperPlugin(
       DebugImageTracker imageTracker,
       PlatformBitmapFactory bitmapFactory,
@@ -166,6 +167,7 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
     connection.receive(
         "listImages",
         new FlipperReceiver() {
+          @SuppressWarnings({"rawtypes", "unchecked"})
           @Override
           public void onReceive(FlipperObject params, FlipperResponder responder) throws Exception {
             if (!ensureFrescoInitialized()) {
@@ -397,6 +399,7 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
     return "data:image/jpeg;base64," + Base64.encodeToString(encodedArray, Base64.DEFAULT);
   }
 
+  @SuppressWarnings({"rawtypes", "unchecked"})
   private FlipperObject getImageList(
       final CountingMemoryCacheInspector.DumpInfo bitmapMemoryCache,
       final CountingMemoryCacheInspector.DumpInfo encodedMemoryCache,
@@ -425,6 +428,7 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
     return new FlipperObject.Builder().put("levels", levelsBuilder.build()).build();
   }
 
+  @SuppressWarnings({"rawtypes", "unchecked"})
   private FlipperObject getUsedStats(
       final String cacheType, final CountingMemoryCacheInspector.DumpInfo memoryCache) {
     return new FlipperObject.Builder()
@@ -434,6 +438,7 @@ public class FrescoFlipperPlugin extends BufferingFlipperPlugin
         .build();
   }
 
+  @SuppressWarnings({"rawtypes", "unchecked"})
   private FlipperObject getCachedStats(
       final String cacheType, final CountingMemoryCacheInspector.DumpInfo memoryCache) {
     return new FlipperObject.Builder()
