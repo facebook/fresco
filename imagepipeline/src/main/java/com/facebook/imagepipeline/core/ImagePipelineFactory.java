@@ -164,7 +164,7 @@ public class ImagePipelineFactory {
   @Nullable private ImageDecoder mImageDecoder;
   @Nullable private ImageTranscoderFactory mImageTranscoderFactory;
   @Nullable private ProducerFactory mProducerFactory;
-  @Nullable private ProducerSequenceFactory mProducerSequenceFactory;
+  @Nullable private ProducerSequenceFactoryInterface mProducerSequenceFactory;
   @Nullable private PlatformBitmapFactory mPlatformBitmapFactory;
   @Nullable private PlatformDecoder mPlatformDecoder;
 
@@ -420,7 +420,11 @@ public class ImagePipelineFactory {
     return mProducerFactory;
   }
 
-  private ProducerSequenceFactory getProducerSequenceFactory() {
+  private ProducerSequenceFactoryInterface getProducerSequenceFactory() {
+    ProducerSequenceFactoryInterface configuredFactory = mConfig.getProducerSequenceFactory();
+    if (configuredFactory != null) {
+      return configuredFactory;
+    }
     // before Android N the Bitmap#prepareToDraw method is no-op so do not need this
     final boolean useBitmapPrepareToDraw =
         Build.VERSION.SDK_INT >= 24 // Build.VERSION_CODES.NOUGAT

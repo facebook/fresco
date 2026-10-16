@@ -107,6 +107,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
   override val requestListeners: Set<RequestListener>
   override val requestListener2s: Set<RequestListener2>
   override val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>
+  override val producerSequenceFactory: ProducerSequenceFactoryInterface?
   override val isResizeAndRotateEnabledForNetwork: Boolean
   override val smallImageDiskCacheConfig: DiskCacheConfig
   override val imageDecoderConfig: ImageDecoderConfig?
@@ -174,6 +175,7 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     requestListener2s = builder.requestListener2s ?: emptySet()
     decodedOriginalImageAnalyzers = builder.decodedOriginalImageAnalyzers ?: emptySet()
     customProducerSequenceFactories = builder.customProducerSequenceFactories ?: emptySet()
+    producerSequenceFactory = builder.producerSequenceFactory
     isResizeAndRotateEnabledForNetwork = builder.resizeAndRotateEnabledForNetwork
     smallImageDiskCacheConfig = builder.smallImageDiskCacheConfig ?: mainDiskCacheConfig
     imageDecoderConfig = builder.imageDecoderConfig
@@ -287,6 +289,9 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
       private set
 
     var customProducerSequenceFactories: Set<CustomProducerSequenceFactory>? = null
+      private set
+
+    var producerSequenceFactory: ProducerSequenceFactoryInterface? = null
       private set
 
     var resizeAndRotateEnabledForNetwork = true
@@ -479,6 +484,14 @@ class ImagePipelineConfig private constructor(builder: Builder) : ImagePipelineC
     fun setCustomFetchSequenceFactories(
         customProducerSequenceFactories: Set<CustomProducerSequenceFactory>?,
     ): Builder = apply { this.customProducerSequenceFactories = customProducerSequenceFactories }
+
+    /**
+     * Replaces the default factory, including its custom sequence hooks and postprocessing stages.
+     * Pass null to use [ProducerSequenceFactory].
+     */
+    fun setProducerSequenceFactory(
+        producerSequenceFactory: ProducerSequenceFactoryInterface?,
+    ): Builder = apply { this.producerSequenceFactory = producerSequenceFactory }
 
     fun setResizeAndRotateEnabledForNetwork(resizeAndRotateEnabledForNetwork: Boolean): Builder =
         apply {

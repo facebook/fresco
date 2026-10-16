@@ -94,6 +94,10 @@ interface ImagePipelineConfigInterface {
   @get:MemoryChunkType val memoryChunkType: Int
   val memoryTrimmableRegistry: MemoryTrimmableRegistry
   val customProducerSequenceFactories: Set<CustomProducerSequenceFactory>
+  /** Replaces all default sequences and bypasses construction of [ProducerSequenceFactory]. */
+  val producerSequenceFactory: ProducerSequenceFactoryInterface?
+    get() = null
+
   val closeableReferenceLeakTracker: CloseableReferenceLeakTracker
   val poolFactory: PoolFactory
 

@@ -38,6 +38,7 @@ dependencies {
     testImplementation Deps.inferAnnotation
     testImplementation project(':imagepipeline-test')
     testImplementation project(':imagepipeline-base-test')
+    testImplementation project(':memory-types:simple')
     testImplementation project(':native-imagetranscoder')
     testImplementation TestDeps.assertjCore
     testImplementation TestDeps.junit

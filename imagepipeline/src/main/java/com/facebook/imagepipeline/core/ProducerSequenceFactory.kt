@@ -52,7 +52,7 @@ class ProducerSequenceFactory(
     private val loadThumbnailFromContentResolverForContentUriOnly: Boolean,
     private val usePostprocessorDuringDecodedPrefetch: Boolean,
     private val customBasicDecodedImageSequenceFactory: CustomBasicDecodedImageSequenceFactory?,
-) {
+) : ProducerSequenceFactoryInterface {
 
   @VisibleForTesting
   var postprocessorSequences:
@@ -82,7 +82,7 @@ class ProducerSequenceFactory(
    * @param imageRequest the request that will be submitted
    * @return the sequence that should be used to process the request
    */
-  fun getEncodedImageProducerSequence(
+  override fun getEncodedImageProducerSequence(
       imageRequest: ImageRequest,
   ): Producer<CloseableReference<PooledByteBuffer>> =
       traceSection("ProducerSequenceFactory#getEncodedImageProducerSequence") {
@@ -157,7 +157,9 @@ class ProducerSequenceFactory(
    * @param imageRequest the request that will be submitted
    * @return the sequence that should be used to process the request
    */
-  fun getEncodedImagePrefetchProducerSequence(imageRequest: ImageRequest): Producer<Void?> {
+  override fun getEncodedImagePrefetchProducerSequence(
+      imageRequest: ImageRequest,
+  ): Producer<Void?> {
     validateEncodedImageRequest(imageRequest)
     return when (imageRequest.sourceUriType) {
       SourceUriType.SOURCE_TYPE_NETWORK ->
@@ -180,7 +182,7 @@ class ProducerSequenceFactory(
    * @param imageRequest the request that will be submitted
    * @return the sequence that should be used to process the request
    */
-  fun getDecodedImageProducerSequence(
+  override fun getDecodedImageProducerSequence(
       imageRequest: ImageRequest,
   ): Producer<CloseableReference<CloseableImage>> =
       traceSection("ProducerSequenceFactory#getDecodedImageProducerSequence") {
@@ -203,7 +205,9 @@ class ProducerSequenceFactory(
    * @param imageRequest the request that will be submitted
    * @return the sequence that should be used to process the request
    */
-  fun getDecodedImagePrefetchProducerSequence(imageRequest: ImageRequest): Producer<Void?> {
+  override fun getDecodedImagePrefetchProducerSequence(
+      imageRequest: ImageRequest,
+  ): Producer<Void?> {
     var inputProducer = getBasicDecodedImageSequence(imageRequest)
     if (imageRequest.postprocessor != null && usePostprocessorDuringDecodedPrefetch) {
       inputProducer = getPostprocessorSequence(inputProducer)

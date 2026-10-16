@@ -51,7 +51,7 @@ import javax.annotation.concurrent.ThreadSafe
 /** The entry point for the image pipeline. */
 @ThreadSafe
 class ImagePipeline(
-    val producerSequenceFactory: ProducerSequenceFactory,
+    val producerSequenceFactory: ProducerSequenceFactoryInterface,
     requestListeners: Set<RequestListener?>,
     requestListener2s: Set<RequestListener2?>,
     private val isPrefetchEnabledSupplier: Supplier<Boolean>,
