@@ -35,8 +35,9 @@ class ImagePipelineFactorySequenceOverrideTest {
             get() = error("Default network fetcher must not be used")
         }
     val factory = ImagePipelineFactory(config)
-    val pipeline =
-        ReflectionHelpers.callInstanceMethod<ImagePipeline>(factory, "createImagePipeline")
+    val pipeline = checkNotNull(
+        ReflectionHelpers.callInstanceMethod<ImagePipeline>(factory, "createImagePipeline"),
+    )
 
     assertThat(pipeline.producerSequenceFactory).isSameAs(replacement)
   }
@@ -51,8 +52,9 @@ class ImagePipelineFactorySequenceOverrideTest {
             .apply { experiment().setNativeCodeDisabled(true) }
             .build()
     val factory = ImagePipelineFactory(config)
-    val pipeline =
-        ReflectionHelpers.callInstanceMethod<ImagePipeline>(factory, "createImagePipeline")
+    val pipeline = checkNotNull(
+        ReflectionHelpers.callInstanceMethod<ImagePipeline>(factory, "createImagePipeline"),
+    )
 
     assertThat(pipeline.producerSequenceFactory).isInstanceOf(ProducerSequenceFactory::class.java)
   }
