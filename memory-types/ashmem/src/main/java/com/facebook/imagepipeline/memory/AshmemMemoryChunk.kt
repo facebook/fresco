@@ -17,16 +17,16 @@ import java.nio.ByteBuffer
 
 /** Wrapper around chunk of ashmem memory. */
 @TargetApi(27)
-open class AshmemMemoryChunk : MemoryChunk, Closeable {
+open class AshmemMemoryChunk @VisibleForTesting constructor() : MemoryChunk, Closeable {
 
   private var sharedMemory: SharedMemory? = null
   final override var byteBuffer: ByteBuffer? = null
     private set
 
   /** Unique identifier of the chunk */
-  final override val uniqueId: Long
+  final override val uniqueId: Long = System.identityHashCode(this).toLong()
 
-  constructor(size: Int) {
+  constructor(size: Int) : this() {
     require(size > 0)
     try {
       sharedMemory = SharedMemory.create(TAG, size)
@@ -34,14 +34,6 @@ open class AshmemMemoryChunk : MemoryChunk, Closeable {
     } catch (e: ErrnoException) {
       throw RuntimeException("Fail to create AshmemMemory", e)
     }
-    this.uniqueId = System.identityHashCode(this).toLong()
-  }
-
-  @VisibleForTesting
-  constructor() {
-    sharedMemory = null
-    byteBuffer = null
-    this.uniqueId = System.identityHashCode(this).toLong()
   }
 
   @Synchronized

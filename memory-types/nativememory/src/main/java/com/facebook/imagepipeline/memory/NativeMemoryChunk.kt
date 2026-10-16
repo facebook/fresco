@@ -22,30 +22,25 @@ import java.nio.ByteBuffer
  * Native code used by this class is shipped as part of libimagepipeline.so @ThreadSafe
  */
 @DoNotStrip
-open class NativeMemoryChunk : MemoryChunk, Closeable {
+open class NativeMemoryChunk
+private constructor(
+    ptr: Long,
+    size: Int,
+    closed: Boolean,
+) : MemoryChunk, Closeable {
 
   /** Address of memory chunk wrapped by this NativeMemoryChunk */
-  private val mNativePtr: Long
+  private val mNativePtr: Long = ptr
 
   /** size of the memory region */
-  private val mSize: Int
+  private val mSize: Int = size
 
   /** flag indicating if this object was closed @GuardedBy("this") */
-  private var _isClosed: Boolean
+  private var _isClosed: Boolean = closed
 
-  constructor(size: Int) {
-    require(size > 0)
-    mSize = size
-    mNativePtr = nativeAllocate(mSize)
-    _isClosed = false
-  }
+  constructor(size: Int) : this(nativeAllocate(size.also { require(it > 0) }), size, false)
 
-  @VisibleForTesting
-  constructor() {
-    mSize = 0
-    mNativePtr = 0
-    _isClosed = true
-  }
+  @VisibleForTesting constructor() : this(0, 0, true)
 
   override val size: Int
     get() = mSize
