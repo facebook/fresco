@@ -36,6 +36,7 @@ import javax.annotation.Nullable;
  */
 @Deprecated
 @Nullsafe(Nullsafe.Mode.LOCAL)
+@SuppressWarnings({"rawtypes", "unchecked", "this-escape"})
 public class SimpleDraweeView extends GenericDraweeView {
 
   @Nullable

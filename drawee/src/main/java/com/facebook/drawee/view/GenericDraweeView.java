@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
 @Deprecated
+@SuppressWarnings("this-escape")
 public class GenericDraweeView extends DraweeView<GenericDraweeHierarchy> {
 
   public GenericDraweeView(Context context, GenericDraweeHierarchy hierarchy) {

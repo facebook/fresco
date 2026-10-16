@@ -142,7 +142,7 @@ class DefaultDiskStorage(rootDirectory: File, version: Int, cacheErrorLogger: Ca
   /** Calculates which should be the CONTENT file for the given key */
   @VisibleForTesting
   fun getContentFileFor(resourceId: String?): File {
-    return File(getFilename(resourceId))
+    return File(getFilename(resourceId)!!)
   }
 
   /**
@@ -171,7 +171,7 @@ class DefaultDiskStorage(rootDirectory: File, version: Int, cacheErrorLogger: Ca
    * valid content files. It's used in entriesIterator method.
    */
   private inner class EntriesCollector : FileTreeVisitor {
-    private val result: MutableList<DiskStorage.Entry?> = ArrayList<DiskStorage.Entry?>()
+    private val result: MutableList<DiskStorage.Entry> = ArrayList<DiskStorage.Entry>()
 
     override fun preVisitDirectory(directory: File?) = Unit
 
@@ -186,7 +186,7 @@ class DefaultDiskStorage(rootDirectory: File, version: Int, cacheErrorLogger: Ca
 
     val entries: MutableList<DiskStorage.Entry>
       /** Returns an immutable list of the entries. */
-      get() = Collections.unmodifiableList<DiskStorage.Entry?>(result)
+      get() = Collections.unmodifiableList<DiskStorage.Entry>(result)
   }
 
   /**

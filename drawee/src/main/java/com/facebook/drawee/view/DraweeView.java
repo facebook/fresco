@@ -43,6 +43,7 @@ import javax.annotation.Nullable;
  */
 @Deprecated
 @Nullsafe(Nullsafe.Mode.LOCAL)
+@SuppressWarnings("this-escape")
 public class DraweeView<DH extends DraweeHierarchy> extends ImageView {
 
   private final AspectRatioMeasure.Spec mMeasureSpec = new AspectRatioMeasure.Spec();
