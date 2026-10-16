@@ -23,6 +23,7 @@ import com.facebook.widget.text.span.BetterImageSpan;
  * <p>{@see DraweeHolder}
  */
 @Nullsafe(Nullsafe.Mode.LOCAL)
+@SuppressWarnings("rawtypes")
 public class DraweeSpan extends BetterImageSpan {
 
   private final DraweeHolder mDraweeHolder;

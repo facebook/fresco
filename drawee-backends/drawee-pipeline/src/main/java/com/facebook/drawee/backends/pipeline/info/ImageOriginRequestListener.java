@@ -22,6 +22,7 @@ public class ImageOriginRequestListener extends BaseRequestListener {
   private String mControllerId;
   private final @Nullable ImageOriginListener mImageOriginLister;
 
+  @SuppressWarnings("this-escape")
   public ImageOriginRequestListener(
       String controllerId, @Nullable ImageOriginListener imageOriginLister) {
     mImageOriginLister = imageOriginLister;

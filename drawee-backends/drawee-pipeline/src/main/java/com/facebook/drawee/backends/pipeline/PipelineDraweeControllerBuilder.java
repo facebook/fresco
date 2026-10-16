@@ -52,6 +52,7 @@ public class PipelineDraweeControllerBuilder
   @Nullable private ImmutableList<DrawableFactory> mCustomDrawableFactories;
   @Nullable private ImagePerfDataListener mImagePerfDataListener;
 
+  @SuppressWarnings("rawtypes")
   public PipelineDraweeControllerBuilder(
       Context context,
       PipelineDraweeControllerFactory pipelineDraweeControllerFactory,

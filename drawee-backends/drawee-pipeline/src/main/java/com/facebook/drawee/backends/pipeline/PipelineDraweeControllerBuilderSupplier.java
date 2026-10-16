@@ -21,6 +21,7 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 @Nullsafe(Nullsafe.Mode.LOCAL)
+@SuppressWarnings("rawtypes")
 public class PipelineDraweeControllerBuilderSupplier
     implements Supplier<PipelineDraweeControllerBuilder> {
 
