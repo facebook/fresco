@@ -46,7 +46,7 @@ class FrescoVitoLithoImageOptionsConfigFragment : BaseShowcaseFragment() {
 
     val container = view.findViewById<FrameLayout>(R.id.container)
 
-    lithoView = LithoView.create(componentContext!!, createImage(imageOptionsBuilder.build()))
+    lithoView = LithoView.create(componentContext, createImage(imageOptionsBuilder.build()))
     container.addView(lithoView)
 
     container.setOnClickListener { refresh() }
