@@ -17,6 +17,7 @@ import com.facebook.callercontext.CallerContextVerifier
 import com.facebook.common.internal.Objects
 import com.facebook.common.internal.Predicate
 import com.facebook.common.internal.Supplier
+import com.facebook.common.internal.Suppliers
 import com.facebook.common.memory.PooledByteBuffer
 import com.facebook.common.references.CloseableReference
 import com.facebook.common.util.UriUtil
@@ -57,14 +58,41 @@ class ImagePipeline(
     private val isPrefetchEnabledSupplier: Supplier<Boolean>,
     bitmapMemoryCache: MemoryCache<CacheKey, CloseableImage>,
     encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>,
-    private val diskCachesStoreSupplier: Supplier<DiskCachesStore>,
+    private val diskCachesStoreSupplier: Supplier<DiskCachesStore>?,
     cacheKeyFactory: CacheKeyFactory,
     threadHandoffProducerQueue: ThreadHandoffProducerQueue,
     suppressBitmapPrefetchingSupplier: Supplier<Boolean>,
     lazyDataSource: Supplier<Boolean>,
     callerContextVerifier: CallerContextVerifier?,
-    config: ImagePipelineConfigInterface,
+    config: ImagePipelineConfigInterface?,
 ) {
+
+  /**
+   * For producer sequences that own fetching, decoding and caching without Fresco configuration.
+   * Requires consumers and producers that do not read [config] or the producer context's config.
+   * Memory-cache hits complete bitmap and encoded prefetch requests immediately.
+   */
+  constructor(
+      producerSequenceFactory: ProducerSequenceFactoryInterface,
+      bitmapMemoryCache: MemoryCache<CacheKey, CloseableImage>,
+      encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>,
+      cacheKeyFactory: CacheKeyFactory,
+      threadHandoffProducerQueue: ThreadHandoffProducerQueue,
+  ) : this(
+      producerSequenceFactory,
+      emptySet(),
+      emptySet(),
+      Suppliers.BOOLEAN_TRUE,
+      bitmapMemoryCache,
+      encodedMemoryCache,
+      null,
+      cacheKeyFactory,
+      threadHandoffProducerQueue,
+      Suppliers.BOOLEAN_FALSE,
+      Suppliers.BOOLEAN_FALSE,
+      null,
+      null,
+  )
 
   private val requestListener: RequestListener = ForwardingRequestListener(requestListeners)
   private val requestListener2: RequestListener2 = ForwardingRequestListener2(requestListener2s)
@@ -80,7 +108,15 @@ class ImagePipeline(
   private val idCounter: AtomicLong = AtomicLong()
   val isLazyDataSource: Supplier<Boolean>
   private val callerContextVerifier: CallerContextVerifier?
+  private val imagePipelineConfig: ImagePipelineConfigInterface?
+
+  /**
+   * Only available for pipelines constructed with Fresco configuration.
+   *
+   * @throws UnsupportedOperationException for pipelines constructed without configuration.
+   */
   val config: ImagePipelineConfigInterface
+    get() = imagePipelineConfig ?: throw UnsupportedOperationException("No ImagePipelineConfig")
 
   /**
    * Generates unique id for RequestFuture.
@@ -395,7 +431,8 @@ class ImagePipeline(
       // separate encoded cache keyspace), so no image-format-specific logic lives in the generic
       // pipeline here.
       imageRequest =
-          config.experiments.encodedImageRequestTransformer?.invoke(imageRequest) ?: imageRequest
+          imagePipelineConfig?.experiments?.encodedImageRequestTransformer?.invoke(imageRequest)
+              ?: imageRequest
       submitFetchRequest(
           producerSequence,
           imageRequest,
@@ -457,7 +494,10 @@ class ImagePipeline(
           return DataSources.immediateFailedDataSource(PREFETCH_EXCEPTION)
         }
         try {
-          if (config.experiments.prefetchShortcutEnabled && isInBitmapMemoryCache(imageRequest)) {
+          if (
+              imagePipelineConfig?.experiments?.prefetchShortcutEnabled != false &&
+                  isInBitmapMemoryCache(imageRequest)
+          ) {
             return DataSources.immediateSuccessfulDataSource()
           }
           checkNotNull(imageRequest)
@@ -655,7 +695,10 @@ class ImagePipeline(
           return DataSources.immediateFailedDataSource(NULL_IMAGEREQUEST_EXCEPTION)
         }
         try {
-          if (config.experiments.prefetchShortcutEnabled && isInEncodedMemoryCache(imageRequest)) {
+          if (
+              imagePipelineConfig?.experiments?.prefetchShortcutEnabled != false &&
+                  isInEncodedMemoryCache(imageRequest)
+          ) {
             return DataSources.immediateSuccessfulDataSource()
           }
           val producerSequence =
@@ -745,8 +788,8 @@ class ImagePipeline(
     if (imageRequest == null) {
       return
     }
+    val diskCachesStore = diskCachesStoreSupplier?.get() ?: return
     val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, callerContext)
-    val diskCachesStore = diskCachesStoreSupplier.get()
     diskCachesStore.mainBufferedDiskCache.remove(cacheKey)
     diskCachesStore.smallImageBufferedDiskCache.remove(cacheKey)
     diskCachesStore.dynamicBufferedDiskCaches.forEach { it.value.remove(cacheKey) }
@@ -794,7 +837,7 @@ class ImagePipeline(
    * the dynamic disk caches registered, will be cleared.
    */
   fun clearSpecificDiskCache(cacheChoice: CacheChoice, diskCacheId: String?) {
-    val diskCachesStore = diskCachesStoreSupplier.get()
+    val diskCachesStore = diskCachesStoreSupplier?.get() ?: return
     if (cacheChoice == CacheChoice.SMALL) {
       diskCachesStore.smallImageBufferedDiskCache.clearAll()
     } else if (cacheChoice == CacheChoice.DEFAULT) {
@@ -811,7 +854,7 @@ class ImagePipeline(
 
   /** Clear disk caches */
   fun clearDiskCaches() {
-    val diskCachesStore = diskCachesStoreSupplier.get()
+    val diskCachesStore = diskCachesStoreSupplier?.get() ?: return
     diskCachesStore.mainBufferedDiskCache.clearAll()
     diskCachesStore.smallImageBufferedDiskCache.clearAll()
     diskCachesStore.dynamicBufferedDiskCaches.forEach { it.value.clearAll() }
@@ -824,7 +867,7 @@ class ImagePipeline(
      * @return size in Bytes
      */
     get() {
-      val diskCachesStore = diskCachesStoreSupplier.get()
+      val diskCachesStore = diskCachesStoreSupplier?.get() ?: return 0
       return diskCachesStore.mainBufferedDiskCache.size +
           diskCachesStore.smallImageBufferedDiskCache.size +
           diskCachesStore.dynamicBufferedDiskCaches.values.sumOf { it.size }
@@ -937,7 +980,7 @@ class ImagePipeline(
    * we will search ALL Dynamic Disk Caches.
    */
   private fun isInDynamicDiskCachesSync(imageRequest: ImageRequest): Boolean {
-    val diskCachesStore = diskCachesStoreSupplier.get()
+    val diskCachesStore = diskCachesStoreSupplier?.get() ?: return false
     val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, null)
     val diskCacheId = imageRequest.diskCacheId
     if (diskCacheId != null) {
@@ -961,7 +1004,7 @@ class ImagePipeline(
    * @return true if the image was found in the disk cache, false otherwise.
    */
   fun isInDiskCacheSync(imageRequest: ImageRequest): Boolean {
-    val diskCachesStore = diskCachesStoreSupplier.get()
+    val diskCachesStore = diskCachesStoreSupplier?.get() ?: return false
     val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, null)
     val cacheChoice = imageRequest.cacheChoice
     val oldPolicy = StrictMode.allowThreadDiskReads()
@@ -995,7 +1038,7 @@ class ImagePipeline(
       intermediateContinuation: Continuation<Boolean, Void>,
       cts: CancellationTokenSource,
   ): Task<Boolean> {
-    val diskCachesStore = diskCachesStoreSupplier.get()
+    val diskCachesStore = diskCachesStoreSupplier?.get() ?: return Task.forResult(false)
     val diskCacheId = imageRequest?.diskCacheId
     if (diskCacheId != null) {
       return diskCachesStore.dynamicBufferedDiskCaches[diskCacheId]?.contains(cacheKey)
@@ -1040,7 +1083,9 @@ class ImagePipeline(
     if (imageRequest == null) {
       return DataSources.immediateFailedDataSource(NULL_IMAGEREQUEST_EXCEPTION)
     }
-    val diskCachesStore = diskCachesStoreSupplier.get()
+    val diskCachesStore =
+        diskCachesStoreSupplier?.get()
+            ?: return SimpleDataSource.create<Boolean>().apply { setResult(false) }
     val cacheKey = cacheKeyFactory.getEncodedCacheKey(imageRequest, null)
     val dataSource = SimpleDataSource.create<Boolean>()
     val cts = CancellationTokenSource()
@@ -1195,7 +1240,7 @@ class ImagePipeline(
               imageRequest.progressiveRenderingEnabled ||
                   !UriUtil.isNetworkUri(imageRequest.sourceUri),
               imageRequest.priority,
-              config,
+              imagePipelineConfig,
           )
           settableProducerContext.putExtras(extras)
           CloseableProducerToDataSourceAdapter.create(
@@ -1264,10 +1309,10 @@ class ImagePipeline(
           callerContext,
           lowestPermittedRequestLevel, /* isPrefetch */
           true,
-          config.experiments.allowProgressiveOnPrefetch == true &&
+          imagePipelineConfig?.experiments?.allowProgressiveOnPrefetch == true &&
               imageRequest.progressiveRenderingEnabled,
           priority,
-          config,
+          imagePipelineConfig,
       )
       settableProducerContext.putExtras(extras)
       settableProducerContext.putExtra(
@@ -1330,7 +1375,7 @@ class ImagePipeline(
     this.suppressBitmapPrefetchingSupplier = suppressBitmapPrefetchingSupplier
     isLazyDataSource = lazyDataSource
     this.callerContextVerifier = callerContextVerifier
-    this.config = config
+    this.imagePipelineConfig = config
   }
 
   fun init() {

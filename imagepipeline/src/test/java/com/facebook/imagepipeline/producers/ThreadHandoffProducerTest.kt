@@ -80,6 +80,27 @@ class ThreadHandoffProducerTest {
   }
 
   @Test
+  fun contextWithoutConfigRunsImmediately() {
+    val context = SettableProducerContext(
+        imageRequest,
+        requestId,
+        producerListener,
+        null,
+        ImageRequest.RequestLevel.FULL_FETCH,
+        false,
+        false,
+        Priority.MEDIUM,
+        null,
+    )
+
+    for (requestContext in listOf(context, object : ProducerContext by context {})) {
+      threadHandoffProducer.produceResults(consumer, requestContext)
+
+      Mockito.verify(inputProducer).produceResults(consumer, requestContext)
+    }
+  }
+
+  @Test
   fun testCancellation() {
     threadHandoffProducer.produceResults(consumer, producerContext)
     producerContext.cancel()

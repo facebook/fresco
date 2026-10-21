@@ -64,7 +64,9 @@ class ThreadHandoffProducer<T>(
     }
 
     private fun shouldRunImmediately(context: ProducerContext): Boolean {
-      return !context.imagePipelineConfig.experiments.isCriticalThread()
+      return BaseProducerContext.getImagePipelineConfigOrNull(context)?.let {
+        !it.experiments.isCriticalThread()
+      } ?: true
     }
   }
 }
