@@ -131,4 +131,89 @@ class ImageRequestTest {
     assertThat(originalImageRequest.newImageRequestFromImageRequestBuilder(newBuilder))
         .isEqualTo(newBuilder.build())
   }
+
+  @Test
+  fun testExtras_areCarriedFromBuilderToRequest() {
+    val request = newBuilder().setExtra(SIZE_EXTRA, 3).setExtra(LABEL_EXTRA, "feed").build()
+
+    assertThat(request.getExtra(SIZE_EXTRA)).isEqualTo(3)
+    assertThat(request.getExtra(LABEL_EXTRA)).isEqualTo("feed")
+    assertThat(request.extras).hasSize(2)
+  }
+
+  @Test
+  fun testExtras_nullValueRemovesExtra() {
+    val request = newBuilder().setExtra(SIZE_EXTRA, 3).setExtra(SIZE_EXTRA, null).build()
+
+    assertThat(request.getExtra(SIZE_EXTRA)).isNull()
+    assertThat(request.extras).isNull()
+  }
+
+  @Test
+  fun testExtras_areCopiedByFromRequest() {
+    val original = newBuilder().setExtra(SIZE_EXTRA, 3).setExtra(LABEL_EXTRA, "feed").build()
+
+    val copy = ImageRequestBuilder.fromRequest(original).build()
+
+    assertThat(copy.getExtra(SIZE_EXTRA)).isEqualTo(3)
+    assertThat(copy.getExtra(LABEL_EXTRA)).isEqualTo("feed")
+    assertThat(copy).isEqualTo(original)
+  }
+
+  @Test
+  fun testExtras_requestIsNotAffectedByLaterBuilderChanges() {
+    val builder = newBuilder().setExtra(SIZE_EXTRA, 3)
+    val request = builder.build()
+
+    builder.setExtra(SIZE_EXTRA, 4)
+
+    assertThat(request.getExtra(SIZE_EXTRA)).isEqualTo(3)
+  }
+
+  @Test(expected = UnsupportedOperationException::class)
+  fun testExtras_requestExtrasAreReadOnly() {
+    val request = newBuilder().setExtra(SIZE_EXTRA, 3).build()
+
+    request.extras?.clear()
+  }
+
+  @Test
+  fun testExtras_equalityExtraDistinguishesRequests() {
+    val small = newBuilder().setExtra(SIZE_EXTRA, 1).build()
+    val large = newBuilder().setExtra(SIZE_EXTRA, 2).build()
+    val none = newBuilder().build()
+
+    assertThat(small).isNotEqualTo(large)
+    assertThat(small).isNotEqualTo(none)
+    assertThat(none).isNotEqualTo(small)
+  }
+
+  @Test
+  fun testExtras_nonEqualityExtraKeepsRequestsEqual() {
+    val feed = newBuilder().setExtra(LABEL_EXTRA, "feed").build()
+    val explore = newBuilder().setExtra(LABEL_EXTRA, "explore").build()
+    val none = newBuilder().build()
+
+    assertThat(feed).isEqualTo(explore)
+    assertThat(feed).isEqualTo(none)
+    assertThat(feed.hashCode()).isEqualTo(explore.hashCode())
+    assertThat(feed.hashCode()).isEqualTo(none.hashCode())
+  }
+
+  @Test
+  fun testExtras_equalRequestsHaveEqualHashCodes() {
+    val first = newBuilder().setExtra(SIZE_EXTRA, 3).build()
+    val second = newBuilder().setExtra(SIZE_EXTRA, 3).build()
+
+    assertThat(first).isEqualTo(second)
+    assertThat(first.hashCode()).isEqualTo(second.hashCode())
+  }
+
+  private fun newBuilder(): ImageRequestBuilder =
+      ImageRequestBuilder.newBuilderWithSource(Uri.parse("http://frescolib.org/image.jpg"))
+
+  private companion object {
+    val SIZE_EXTRA = ImageRequestExtra<Int>("size")
+    val LABEL_EXTRA = ImageRequestExtra<String>("label", affectsEquality = false)
+  }
 }

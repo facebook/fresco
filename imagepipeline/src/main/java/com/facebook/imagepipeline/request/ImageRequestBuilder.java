@@ -24,7 +24,10 @@ import com.facebook.imagepipeline.core.ImagePipelineConfig;
 import com.facebook.imagepipeline.core.ImagePipelineExperiments;
 import com.facebook.imagepipeline.listener.RequestListener;
 import com.facebook.infer.annotation.FalseOnNull;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.annotation.Nullable;
 
@@ -55,6 +58,7 @@ public class ImageRequestBuilder {
   private @Nullable String mDiskCacheId = null;
   private @Nullable String mCustomCacheKey = null;
   private Boolean mIsFirstFrameThumbnailEnabled = false;
+  private @Nullable Map<ImageRequestExtra<?>, Object> mExtras = null;
 
   /**
    * Creates a new request builder instance. The setting will be done according to the source type.
@@ -116,7 +120,8 @@ public class ImageRequestBuilder {
         .setResizingAllowedOverride(imageRequest.getResizingAllowedOverride())
         .setIsFirstFrameThumbnailEnabled(imageRequest.isFirstFrameThumbnailEnabled())
         .setSkipEncodedPartialImagesInCachesNotInRequestRange(
-            imageRequest.getSkipEncodedPartialImagesInCachesNotInRequestRange());
+            imageRequest.getSkipEncodedPartialImagesInCachesNotInRequestRange())
+        .setExtras(imageRequest.getExtras());
   }
 
   public static void addCustomUriNetworkScheme(String scheme) {
@@ -529,6 +534,43 @@ public class ImageRequestBuilder {
   public ImageRequestBuilder setDelayMs(int delayMs) {
     this.mDelayMs = delayMs;
     return this;
+  }
+
+  /**
+   * Sets an app-defined extra on the request. Passing a null value removes the extra.
+   *
+   * @param key the typed key of the extra
+   * @param value the value to set, or null to remove the extra
+   * @return the modified builder instance
+   */
+  public <T> ImageRequestBuilder setExtra(ImageRequestExtra<T> key, @Nullable T value) {
+    if (value == null) {
+      if (mExtras != null) {
+        mExtras.remove(key);
+      }
+      return this;
+    }
+    if (mExtras == null) {
+      mExtras = new HashMap<>();
+    }
+    mExtras.put(key, value);
+    return this;
+  }
+
+  private ImageRequestBuilder setExtras(@Nullable Map<ImageRequestExtra<?>, Object> extras) {
+    mExtras = extras == null ? null : new HashMap<>(extras);
+    return this;
+  }
+
+  /** Gets the extra set for the given key, or null if there is none. */
+  @SuppressWarnings("unchecked")
+  public @Nullable <T> T getExtra(ImageRequestExtra<T> key) {
+    return mExtras == null ? null : (T) mExtras.get(key);
+  }
+
+  /** Gets all extras set on this builder, or null if none were set. */
+  public @Nullable Map<ImageRequestExtra<?>, Object> getExtras() {
+    return mExtras == null ? null : Collections.unmodifiableMap(mExtras);
   }
 
   /** An exception class for builder methods. */
