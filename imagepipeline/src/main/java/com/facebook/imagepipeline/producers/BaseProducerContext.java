@@ -332,7 +332,7 @@ public class BaseProducerContext implements ProducerContext {
   }
 
   @Override
-  public void putExtra(String key, @Nullable Object value) {
+  public <E> void putExtra(String key, @Nullable E value) {
     if (INITIAL_KEYS.contains(key)) return;
     mExtras.put(key, value);
   }
