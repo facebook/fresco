@@ -11,6 +11,7 @@ import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.LruCache
+import com.facebook.drawee.drawable.SizingHint
 import com.facebook.fresco.middleware.HasExtraData
 
 /**
@@ -113,6 +114,55 @@ object ImageSourceProvider {
 
     return forUri(uri, extras)
   }
+
+  /**
+   * Create a Smart Fetch image source for a given image URI.
+   *
+   * A null URI gives the same empty image source as [forUri]. An empty URI also gives that empty
+   * image source when [treatEmptyUriAsImageSource] is true. Every other URI gives a
+   * [SmartImageSource].
+   *
+   * @param uri the image URI to use
+   * @param smartFetchOptIn the Smart Fetch behavior to request
+   * @param sizingHint the sizing hint for the Smart Fetch request
+   * @param extras optional extra metadata of the image source
+   * @return the ImageSource to be passed to the UI component
+   */
+  @JvmOverloads
+  @JvmStatic
+  fun smartForUri(
+      uri: Uri?,
+      smartFetchOptIn: SmartFetchOptIn,
+      sizingHint: SizingHint = SizingHint.DEFAULT,
+      extras: Map<String, Any>? = null,
+  ): ImageSource =
+      if (uri == null) {
+        nullUriImageSource
+      } else if (treatEmptyUriAsImageSource && uri.toString().isEmpty()) {
+        emptyUriImageSource
+      } else {
+        SmartImageSource(uri, sizingHint, extras, smartFetchOptIn)
+      }
+
+  /**
+   * Create a Smart Fetch image source for a given image URI String. [uriParser] parses the String,
+   * as in [forUri].
+   *
+   * @param uriString the image URI String to use
+   * @param smartFetchOptIn the Smart Fetch behavior to request
+   * @param sizingHint the sizing hint for the Smart Fetch request
+   * @param extras optional extra metadata of the image source
+   * @return the ImageSource to be passed to the UI component
+   */
+  @JvmOverloads
+  @JvmStatic
+  fun smartForUri(
+      uriString: String?,
+      smartFetchOptIn: SmartFetchOptIn,
+      sizingHint: SizingHint = SizingHint.DEFAULT,
+      extras: Map<String, Any>? = null,
+  ): ImageSource =
+      smartForUri(uriString?.let { uriParser(it) }, smartFetchOptIn, sizingHint, extras)
 
   /**
    * Create a multi image source for a given set of sources. Image sources are obtained in order.
