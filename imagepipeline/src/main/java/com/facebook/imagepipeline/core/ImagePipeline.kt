@@ -60,7 +60,7 @@ class ImagePipeline(
     encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>,
     private val diskCachesStoreSupplier: Supplier<DiskCachesStore>?,
     cacheKeyFactory: CacheKeyFactory,
-    threadHandoffProducerQueue: ThreadHandoffProducerQueue,
+    threadHandoffProducerQueue: ThreadHandoffProducerQueue?,
     suppressBitmapPrefetchingSupplier: Supplier<Boolean>,
     lazyDataSource: Supplier<Boolean>,
     callerContextVerifier: CallerContextVerifier?,
@@ -77,7 +77,7 @@ class ImagePipeline(
       bitmapMemoryCache: MemoryCache<CacheKey, CloseableImage>,
       encodedMemoryCache: MemoryCache<CacheKey, PooledByteBuffer>,
       cacheKeyFactory: CacheKeyFactory,
-      threadHandoffProducerQueue: ThreadHandoffProducerQueue,
+      threadHandoffProducerQueue: ThreadHandoffProducerQueue? = null,
   ) : this(
       producerSequenceFactory,
       emptySet(),
@@ -103,7 +103,7 @@ class ImagePipeline(
 
   /** @return The CacheKeyFactory implementation used by ImagePipeline */
   val cacheKeyFactory: CacheKeyFactory
-  private val threadHandoffProducerQueue: ThreadHandoffProducerQueue
+  private val threadHandoffProducerQueue: ThreadHandoffProducerQueue?
   private val suppressBitmapPrefetchingSupplier: Supplier<Boolean>
   private val idCounter: AtomicLong = AtomicLong()
   val isLazyDataSource: Supplier<Boolean>
@@ -1357,15 +1357,15 @@ class ImagePipeline(
   }
 
   fun pause() {
-    threadHandoffProducerQueue.startQueueing()
+    threadHandoffProducerQueue?.startQueueing()
   }
 
   fun resume() {
-    threadHandoffProducerQueue.stopQueuing()
+    threadHandoffProducerQueue?.stopQueuing()
   }
 
   val isPaused: Boolean
-    get() = threadHandoffProducerQueue.isQueueing
+    get() = threadHandoffProducerQueue?.isQueueing ?: false
 
   init {
     this.bitmapMemoryCache = bitmapMemoryCache

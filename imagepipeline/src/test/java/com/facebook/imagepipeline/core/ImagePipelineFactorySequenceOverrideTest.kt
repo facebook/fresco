@@ -184,6 +184,21 @@ class ImagePipelineFactorySequenceOverrideTest {
       }
 
   @Test
+  fun directPipelineWithoutHandoffQueueDoesNotPause() {
+    val pipeline = ImagePipeline(
+        typedMock(),
+        typedMock(),
+        typedMock(),
+        DefaultCacheKeyFactory.getInstance(),
+    )
+
+    pipeline.pause()
+    assertThat(pipeline.isPaused).isFalse()
+    pipeline.resume()
+    assertThat(pipeline.isPaused).isFalse()
+  }
+
+  @Test
   fun directPipelineSubmitsRequestsWithoutConfigOrFactory() {
     val replacement = mock(ProducerSequenceFactoryInterface::class.java)
     val request = requireNotNull(ImageRequest.fromUri("https://example.com/image"))
