@@ -77,6 +77,7 @@ open class FrescoController2Impl(
           config.experimentalResetLocalVitoImageRequestListener(),
           config.experimentalResetLocalImagePerfStateListener(),
           config.experimentalResetControllerListener2(),
+          config.preservePendingReleaseOnImageUpdate(),
       )
           as T
 

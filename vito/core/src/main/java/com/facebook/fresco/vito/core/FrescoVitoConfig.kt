@@ -39,6 +39,8 @@ interface FrescoVitoConfig {
 
   fun useNewReleaseCallback(): Boolean
 
+  fun preservePendingReleaseOnImageUpdate(): Boolean = false
+
   fun useNativeRounding(): Supplier<Boolean>?
 
   fun layoutPrefetchingEnabled(callerContext: Any?): Boolean
